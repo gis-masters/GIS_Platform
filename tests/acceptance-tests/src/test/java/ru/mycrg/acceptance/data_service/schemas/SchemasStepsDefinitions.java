@@ -47,7 +47,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         // Проверяем что получили ровно одну схему
         assertEquals(1, schemas.size());
 
-        Map<String, Object> schema = schemas.get(0);
+        Map<String, Object> schema = schemas.getFirst();
         // Проверяем title схемы
         assertEquals("Схема задач специализации 1", schema.get("title"));
     }
@@ -200,9 +200,10 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     }
 
     public void getCurrentSchema(String schemaName) {
-        response = getBaseRequestWithCurrentCookie()
+        response = getBaseRequestWithCurrentCookie().
+                queryParam("schemaIds", schemaName)
                 .when().
-                        get("?schemaIds=" + schemaName);
+                        get();
     }
 
     private void createSchemaWithRandomName() {
@@ -227,8 +228,9 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
     private void getAllSchemas() {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("schemaIds", "")
                 .when().
-                        get("?schemaIds=");
+                        get();
     }
 
     private void updateSchema(SchemaDto dto) {

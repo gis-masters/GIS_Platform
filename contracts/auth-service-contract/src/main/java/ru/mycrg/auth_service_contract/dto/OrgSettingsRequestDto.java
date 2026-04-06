@@ -1,7 +1,8 @@
 package ru.mycrg.auth_service_contract.dto;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.Map;
 import java.util.Objects;
 

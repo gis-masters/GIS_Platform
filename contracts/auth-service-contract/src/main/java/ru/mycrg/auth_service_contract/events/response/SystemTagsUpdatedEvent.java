@@ -11,12 +11,10 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.SYSTEM_TAGS_UPDA
 
 public class SystemTagsUpdatedEvent extends DefaultMessageBusRequestEvent {
 
-    private final List<String> tags;
+    private List<String> tags = new ArrayList<>();
 
     public SystemTagsUpdatedEvent() {
         super();
-
-        this.tags = new ArrayList<>();
     }
 
     public SystemTagsUpdatedEvent(List<String> tags) {
@@ -27,5 +25,9 @@ public class SystemTagsUpdatedEvent extends DefaultMessageBusRequestEvent {
 
     public List<String> getTags() {
         return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

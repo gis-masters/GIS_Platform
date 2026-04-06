@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.service.projects;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,7 @@ import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.service.ProjectProtector;
+import tools.jackson.databind.JsonNode;
 
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;

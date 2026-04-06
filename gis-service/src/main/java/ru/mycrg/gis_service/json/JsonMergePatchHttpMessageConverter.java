@@ -1,5 +1,8 @@
 package ru.mycrg.gis_service.json;
 
+import jakarta.json.Json;
+import jakarta.json.JsonMergePatch;
+import jakarta.json.JsonReader;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
-
-import javax.json.Json;
-import javax.json.JsonMergePatch;
-import javax.json.JsonReader;
 
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
@@ -36,7 +35,7 @@ public class JsonMergePatchHttpMessageConverter extends AbstractHttpMessageConve
         try (JsonReader reader = Json.createReader(inputMessage.getBody())) {
             return Json.createMergePatch(reader.readValue());
         } catch (Exception e) {
-            throw new HttpMessageNotReadableException(e.getMessage(), e.getCause());
+            throw new HttpMessageNotReadableException(e.getMessage(), e.getCause(), inputMessage);
         }
     }
 

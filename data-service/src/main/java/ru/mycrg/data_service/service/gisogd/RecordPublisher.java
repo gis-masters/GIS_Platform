@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.gisogd;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import ru.mycrg.data_service_contract.dto.TypeUrlData;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.URLDecoder;
 import java.util.*;
@@ -37,13 +37,13 @@ import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
-import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.LogUtil.withoutHeavyFields;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.GUID;
 import static ru.mycrg.data_service_contract.enums.ValueType.DOCUMENT;
 import static ru.mycrg.data_service_contract.enums.ValueType.URL;
+import static ru.mycrg.http_client.JsonConverter.asJsonString;
+import static ru.mycrg.http_client.JsonConverter.convertValue;
 
 @Component
 public class RecordPublisher {
@@ -268,9 +268,9 @@ public class RecordPublisher {
                 return new ArrayList<>();
             }
 
-            List<TypeDocumentData> records = mapper.readValue(asString,
-                                                              new TypeReference<List<TypeDocumentData>>() {
-                                                              });
+            List<TypeDocumentData> records = convertValue(asString,
+                                                          new TypeReference<>() {
+                                                          });
 
             log.debug("Для свойства: '{}' найдено {} документ(ов)", name, records.size());
 
@@ -445,9 +445,9 @@ public class RecordPublisher {
         try {
             value = parentContent.get(property.getName());
             if (value != null) {
-                urls = mapper.readValue(value.toString(),
-                                        new TypeReference<List<TypeUrlData>>() {
-                                        });
+                urls = convertValue(value.toString(),
+                                    new TypeReference<>() {
+                                    });
             }
         } catch (Exception e) {
             log.error("Задано некорректное значение в поле: [{}]. Не соответствует типу TypeUrlData", value, e);
@@ -468,10 +468,9 @@ public class RecordPublisher {
                 }
 
                 for (String feature: features) {
-                    Map<String, Map<String, List<Long>>> data =
-                            mapper.readValue(feature,
-                                             new TypeReference<Map<String, Map<String, List<Long>>>>() {
-                                             });
+                    Map<String, Map<String, List<Long>>> data = convertValue(feature,
+                                                                             new TypeReference<>() {
+                                                                             });
                     data.forEach((schema, featureAsMap) -> {
                         featureAsMap.forEach((tableName, ids) -> {
                             for (Long id: ids) {

@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.util;
 
-import org.geotools.referencing.CRS;
 import org.junit.Test;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -46,7 +45,7 @@ public class CrsHandlerTest {
     public void defineCrsByXCoordinateSixZone() throws FactoryException {
         //Arrange
         double xToDefine6Zone = 6184759.15;
-        CoordinateReferenceSystem correctCrs = CRS.decode("EPSG: 28406");
+        CoordinateReferenceSystem correctCrs = epsgCodes.getCrsBySrid(28406);
 
         //Act
         CoordinateReferenceSystem crsDefined = CrsHandler.defineCrsByX(xToDefine6Zone);

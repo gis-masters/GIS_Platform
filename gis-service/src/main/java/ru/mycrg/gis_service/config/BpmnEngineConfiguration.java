@@ -2,13 +2,13 @@ package ru.mycrg.gis_service.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
-import org.camunda.bpm.engine.impl.jobexecutor.DefaultJobExecutor;
 import org.camunda.bpm.engine.spring.ProcessEngineFactoryBean;
 import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration;
-import org.camunda.bpm.spring.boot.starter.actuator.JobExecutorHealthIndicator;
+import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,8 +27,8 @@ public class BpmnEngineConfiguration {
 
     @Bean
     @Primary
-    public JobExecutorHealthIndicator jobExecutorHealthIndicator() {
-        return new CrgJobExecutorHealthIndicator(new DefaultJobExecutor());
+    public HealthIndicator jobExecutorHealthIndicator() {
+        return new CrgJobExecutorHealthIndicator();
     }
 
     @Bean
@@ -49,6 +49,7 @@ public class BpmnEngineConfiguration {
 
         config.setDataSource(dataSource);
         config.setTransactionManager(transactionManager);
+        config.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
         config.setJobExecutorActivate(true);
         config.setHistory("full");
 

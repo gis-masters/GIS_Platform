@@ -1,9 +1,9 @@
 package ru.mycrg.data_service.mappers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.StringNode;
 
 import static ru.mycrg.http_client.JsonConverter.fromJson;
 
@@ -31,7 +31,7 @@ public class SchemaMapper {
             return null;
         }
 
-        if (json instanceof TextNode) {
+        if (json instanceof StringNode) {
             return fromJson(json.asText(), SchemaDto.class).orElse(null);
         }
 

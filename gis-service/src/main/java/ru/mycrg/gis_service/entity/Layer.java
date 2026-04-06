@@ -1,17 +1,15 @@
 package ru.mycrg.gis_service.entity;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.hateoas.Identifiable;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "layers")
-public class Layer implements Identifiable<Long> {
+public class Layer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -133,7 +131,6 @@ public class Layer implements Identifiable<Long> {
         this.project = project;
     }
 
-    @Override
     public Long getId() {
         return id;
     }

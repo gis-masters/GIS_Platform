@@ -4,7 +4,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.common_contracts.generated.data_service.GeometryValidationResultDto;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class CheckGeometryValidRequest implements IRequest<GeometryValidationResultDto> {
 

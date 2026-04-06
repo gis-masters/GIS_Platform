@@ -1,14 +1,13 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.schemas.IEntityProperty;
+import tools.jackson.databind.JsonNode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
@@ -17,10 +16,6 @@ import static java.time.LocalDateTime.now;
 @Table(
         name = "entity_properties",
         uniqueConstraints = @UniqueConstraint(columnNames = {"id", "name", "propertyType", "title"})
-)
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
 )
 public class EntityProperty {
 
@@ -167,7 +162,7 @@ public class EntityProperty {
     @ColumnDefault(value = "false")
     private boolean isEmbedded;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private JsonNode additional;
 

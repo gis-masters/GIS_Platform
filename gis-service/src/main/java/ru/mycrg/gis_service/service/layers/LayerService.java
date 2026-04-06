@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.service.layers;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.json.JsonMergePatch;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.common_contracts.generated.gis_service.LayerType;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.gis_service.dto.RelatedLayersModel;
@@ -27,8 +26,8 @@ import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.service.ProjectProtector;
 import ru.mycrg.gis_service.service.projects.ProjectService;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
+import tools.jackson.databind.JsonNode;
 
-import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -225,17 +224,13 @@ public class LayerService {
             return new ArrayList<>();
         }
 
-        List<Layer> relatedLayers;
-        if ("table".equals(field)) {
-            relatedLayers = layerRepository.findRelatedByResourceId(value, projectIds);
-        } else if ("nativeCRS".equals(field)) {
-            relatedLayers = layerRepository.findByNativeCRS(value);
-        } else if ("dataset".equals(field)) {
-            relatedLayers = layerRepository.findRelatedByDataset(value, projectIds);
-        } else {
-            throw new BadRequestException("Not support related field: " + field,
-                                          new ErrorInfo("field", "Allowed: 'dataset', 'table'"));
-        }
+        List<Layer> relatedLayers = switch (field) {
+            case "table" -> layerRepository.findRelatedByResourceId(value, projectIds);
+            case "nativeCRS" -> layerRepository.findByNativeCRS(value);
+            case "dataset" -> layerRepository.findRelatedByDataset(value, projectIds);
+            case null, default -> throw new BadRequestException("Not support related field: " + field,
+                                                                new ErrorInfo("field", "Allowed: 'dataset', 'table'"));
+        };
 
         return mapToRelatedLayersModel(relatedLayers);
     }

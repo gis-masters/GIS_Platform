@@ -13,7 +13,9 @@ server:
   port: 8084
 
 spring:
-  profiles: fiz-dev
+  config:
+    activate:
+      on-profile: fiz-dev
   datasource:
     platform: postgres
     url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
@@ -41,10 +43,11 @@ spring:
     multipart:
       max-file-size: 1001MB
       max-request-size: 1001MB
-  redis:
-    host: ${SPRING_REDIS_HOST}
-    port: ${SPRING_REDIS_PORT}
-    password: ${SPRING_REDIS_PASSWORD}
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: ${SPRING_DATA_REDIS_PORT}
+      password: ${SPRING_DATA_REDIS_PASSWORD}
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST}
     port: ${SPRING_RABBITMQ_PORT}

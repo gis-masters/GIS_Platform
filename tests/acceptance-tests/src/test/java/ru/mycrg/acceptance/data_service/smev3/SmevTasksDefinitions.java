@@ -114,9 +114,13 @@ public class SmevTasksDefinitions extends BaseStepsDefinitions {
         //Поля которые должны различаться в зависимости от типа
         assertEquals("Неверное значение content_type_id", expectedType, task.get("content_type_id"));
         String inboxDataConnection = task.get("inbox_data_key_data_connection").toString();
+
+        String expected = "[ {\n  \"id\" : " + maxExistingId + "," +
+                "\n  \"libraryTableName\" : \"dl_data_inbox_data\"," +
+                "\n  \"title\" : \"" + expectedView + "\"\n} ]";
         assertEquals("Неверное значение inbox_data_key_data_connection",
-                     "[{\"id\":" + maxExistingId + ",\"title\":\"" + expectedView + "\",\"libraryTableName" +
-                             "\":\"dl_data_inbox_data\"}]", inboxDataConnection);
+                     expected,
+                     inboxDataConnection);
     }
 
     @And("прикреплённый документ в новой задаче заполнен ожидаемо {string}")

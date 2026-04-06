@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.service;
 
+import jakarta.json.JsonMergePatch;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import ru.mycrg.gis_service.dto.PermissionProjection;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.entity.Role;
-import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
@@ -19,8 +19,6 @@ import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.RoleRepository;
 import ru.mycrg.gis_service.service.projects.ProjectService;
 
-import javax.json.JsonMergePatch;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @Transactional
@@ -121,11 +120,7 @@ public class PermissionsService {
 
     private void patchPermission(Permission permissionForUpdate, JsonMergePatch patchDto) {
         PermissionCreateDto dto;
-        try {
-            dto = objectMapper.readValue(patchDto.toJsonValue().toString(), PermissionCreateDto.class);
-        } catch (IOException e) {
-            throw new BadRequestException("Передано не корректное тело. " + e.getMessage());
-        }
+        dto = objectMapper.treeToValue(toJsonNode(patchDto.toJsonValue()), PermissionCreateDto.class);
 
         if (dto.getPrincipalId() != null) {
             permissionForUpdate.setPrincipalId(dto.getPrincipalId());
@@ -167,7 +162,7 @@ public class PermissionsService {
         List<Permission> identicalPermissions =
                 permissionRepository.findIdentical(principalType, principalId, roleId, projectId);
         if (!identicalPermissions.isEmpty()) {
-            throw new ConflictException("Такое правило уже существует: " + identicalPermissions.get(0).toString());
+            throw new ConflictException("Такое правило уже существует: " + identicalPermissions.getFirst().toString());
         }
     }
 
@@ -181,7 +176,7 @@ public class PermissionsService {
                 permissionRepository.findOverlapping(principalType, principalId, projectId, originPermissionId);
         if (!overlappingPermissions.isEmpty()) {
             throw new ConflictException("Переопределение правила. Отредактируйте существующее правило: "
-                                                + overlappingPermissions.get(0).toString());
+                                                + overlappingPermissions.getFirst().toString());
         }
     }
 

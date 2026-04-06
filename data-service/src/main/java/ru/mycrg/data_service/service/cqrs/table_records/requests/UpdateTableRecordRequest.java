@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.table_records.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
@@ -20,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class UpdateTableRecordRequest implements IRequest<Voidy>, Auditable, IUpdateFilesRelation {
 
@@ -61,7 +60,7 @@ public class UpdateTableRecordRequest implements IRequest<Voidy>, Auditable, IUp
             entityName = rQualifier.getTable();
         }
 
-        return new CrgAuditEvent(mapper.convertValue(newFeature, JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(newFeature),
                                  "UPDATE",
                                  entityName,
                                  FEATURE.name(),

@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.DataFromGpkgPlacementModel;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgLayersPlacementModel;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsFeatures;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsTiles;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemas;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.entity.File;
@@ -52,9 +52,8 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.FileType.GPKG;
-import static ru.mycrg.http_client.JsonConverter.toJsonNode;
+import static ru.mycrg.http_client.JsonConverter.*;
 
 @Component
 public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFilePlacer {
@@ -165,8 +164,9 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
     @Override
     public IExecutor<GpkgProcessReport> initialize(Object data) {
         try {
-            this.dataFromGpkgPlacementModel = mapper.convertValue(data,
-                                                                  DataFromGpkgPlacementModel.class);
+            this.dataFromGpkgPlacementModel = fromJson(getJsonString(data),
+                                                       DataFromGpkgPlacementModel.class)
+                    .orElseThrow(() -> new IllegalArgumentException("Данные невозможно сконвертировать!"));
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель GPKG импорта: '%s'", data);
             log.error(msg, e.getCause());

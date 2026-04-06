@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -12,10 +12,11 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
+import java.util.List;
 import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "processes", path = "processes")
-public interface ProcessRepository extends PagingAndSortingRepository<Process, Long> {
+public interface ProcessRepository extends JpaRepository<Process, Long> {
 
     @Query("SELECT p FROM Process p WHERE " +
             "(:status IS NULL OR p.status = :status) AND " +
@@ -36,7 +37,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
     @Override
     @RestResource(exported = false)
-    Iterable<Process> findAll(Sort sort);
+    List<Process> findAll(Sort sort);
 
     @Override
     @RestResource(exported = false)
@@ -44,7 +45,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
     @Override
     @RestResource(exported = false)
-    <S extends Process> Iterable<S> saveAll(Iterable<S> iterable);
+    <S extends Process> List<S> saveAll(Iterable<S> iterable);
 
     @Override
     @RestResource(exported = false)
@@ -56,7 +57,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
     @Override
     @RestResource(exported = false)
-    Iterable<Process> findAllById(Iterable<Long> iterable);
+    List<Process> findAllById(Iterable<Long> iterable);
 
     @Override
     @RestResource(exported = false)

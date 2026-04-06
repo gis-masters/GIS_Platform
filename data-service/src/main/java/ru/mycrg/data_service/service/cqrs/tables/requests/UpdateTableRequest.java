@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.tables.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.dto.TableUpdateDto;
@@ -10,7 +9,7 @@ import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class UpdateTableRequest implements IRequest<Voidy>, Auditable {
 
@@ -30,7 +29,7 @@ public class UpdateTableRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(tableModel, JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(tableModel),
                                  "UPDATE",
                                  tableModel.getIdentifier(),
                                  TABLE.name(),

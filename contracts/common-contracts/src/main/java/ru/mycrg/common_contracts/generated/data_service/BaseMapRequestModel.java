@@ -1,8 +1,7 @@
 package ru.mycrg.common_contracts.generated.data_service;
 
+import jakarta.validation.constraints.*;
 import ru.mycrg.common_contracts.OnCreate;
-
-import javax.validation.constraints.*;
 
 public class BaseMapRequestModel {
 

@@ -2,7 +2,7 @@ package ru.mycrg.data_service.entity;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity

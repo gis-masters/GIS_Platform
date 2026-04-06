@@ -15,7 +15,7 @@ import ru.mycrg.data_service.service.cqrs.libraries.requests.UpdateLibraryReques
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.mediator.Mediator;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;

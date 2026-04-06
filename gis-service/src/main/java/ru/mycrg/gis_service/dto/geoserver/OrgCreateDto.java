@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.dto.geoserver;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class OrgCreateDto {
 

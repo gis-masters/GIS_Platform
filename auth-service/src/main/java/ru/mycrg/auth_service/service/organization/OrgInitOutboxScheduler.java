@@ -15,7 +15,7 @@ import ru.mycrg.auth_service.service.AuthService;
 import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -162,4 +162,3 @@ public class OrgInitOutboxScheduler {
         }
     }
 }
-

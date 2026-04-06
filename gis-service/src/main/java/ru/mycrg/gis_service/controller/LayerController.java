@@ -1,8 +1,10 @@
 package ru.mycrg.gis_service.controller;
 
+import jakarta.json.JsonMergePatch;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -16,8 +18,6 @@ import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
-import javax.json.JsonMergePatch;
-import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -55,11 +55,11 @@ public class LayerController {
 
     @GetMapping("/layers/{layerId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<LayerProjection> getLayerById(@PathVariable(name = "projectId") long projectId,
-                                                  @PathVariable(name = "layerId") long layerId) {
+    public EntityModel<LayerProjection> getLayerById(@PathVariable(name = "projectId") long projectId,
+                                                     @PathVariable(name = "layerId") long layerId) {
         LayerProjection layerProjection = layerService.getById(projectId, layerId);
 
-        return new Resource<>(layerProjection);
+        return EntityModel.of(layerProjection);
     }
 
     @PostMapping("/layers")
@@ -78,8 +78,8 @@ public class LayerController {
         }
 
         return layerService.create(projectId, dto)
-                           .map(layerProjection -> new ResponseEntity<>(layerProjection, CREATED))
-                           .orElseGet(() -> new ResponseEntity<>(null, NO_CONTENT));
+                           .map(layerProjection -> ResponseEntity.status(CREATED).body(layerProjection))
+                           .orElseGet(() -> ResponseEntity.<LayerProjection>status(NO_CONTENT).build());
     }
 
     @PatchMapping(path = "/layers/{layerId}", consumes = APPLICATION_JSON_MERGE_PATCH)

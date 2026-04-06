@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.service.specialization;
 
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -10,7 +11,6 @@ import ru.mycrg.gis_service.exceptions.CrgPSqlException;
 import ru.mycrg.gis_service.exceptions.GisServiceException;
 
 import javax.sql.DataSource;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

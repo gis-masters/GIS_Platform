@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "acl_roles")

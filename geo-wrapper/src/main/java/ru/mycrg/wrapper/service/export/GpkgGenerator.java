@@ -166,7 +166,7 @@ public class GpkgGenerator {
     private Optional<String> generateNewGpkgFromRaster(String pathToTif, String layerIdentifier) {
         try {
             String basePath = crgProperties.getExportStoragePath();
-            String randomName = basePath + "/" + UUID.randomUUID() + ".gpkg";
+            String randomName = basePath + UUID.randomUUID() + ".gpkg";
 
             String command = String.format("gdal_translate -of GPKG -co RASTER_TABLE=%s %s %s",
                                            layerIdentifier,

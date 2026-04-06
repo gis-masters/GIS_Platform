@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.table_records.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
@@ -14,7 +13,7 @@ import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class DeleteTableRecordRequest implements IRequest<Voidy>, Auditable, IDeleteFilesRelation {
 
@@ -42,7 +41,7 @@ public class DeleteTableRecordRequest implements IRequest<Voidy>, Auditable, IDe
             entityName = rQualifier.getTable();
         }
 
-        return new CrgAuditEvent(mapper.convertValue(feature.getId(), JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(feature.getId()),
                                  "DELETE",
                                  entityName,
                                  FEATURE.name(),

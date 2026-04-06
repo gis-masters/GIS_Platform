@@ -1,12 +1,11 @@
 package ru.mycrg.gis_service.controller.geoserver;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.geoserver_client.dto.UserGeoserverDto;
 import ru.mycrg.gis_service.service.geoserver.UserGeoserverService;
-
-import javax.validation.Valid;
 
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 

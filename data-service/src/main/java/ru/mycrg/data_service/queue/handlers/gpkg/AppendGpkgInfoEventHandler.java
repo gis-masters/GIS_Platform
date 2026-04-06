@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.queue.handlers.gpkg;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +19,7 @@ import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
+import tools.jackson.databind.JsonNode;
 
 import java.util.HashSet;
 import java.util.List;

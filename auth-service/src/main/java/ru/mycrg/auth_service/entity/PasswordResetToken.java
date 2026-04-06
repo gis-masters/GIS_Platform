@@ -1,6 +1,6 @@
 package ru.mycrg.auth_service.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity

@@ -21,7 +21,7 @@ import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageExcep
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;

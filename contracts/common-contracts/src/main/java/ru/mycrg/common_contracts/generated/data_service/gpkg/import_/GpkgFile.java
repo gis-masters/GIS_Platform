@@ -1,6 +1,8 @@
 package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
+
+import tools.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 import java.util.UUID;

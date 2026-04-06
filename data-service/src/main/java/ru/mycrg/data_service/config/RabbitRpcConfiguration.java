@@ -7,8 +7,7 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,10 +20,10 @@ public class RabbitRpcConfiguration {
 
     private final int MAX_MESSAGE_AGE = 60_000;
 
-    private final Jackson2JsonMessageConverter producerJackson2MessageConverter;
+    private final JacksonJsonMessageConverter jacksonJsonMessageConverter;
 
-    public RabbitRpcConfiguration(Jackson2JsonMessageConverter producerJackson2MessageConverter) {
-        this.producerJackson2MessageConverter = producerJackson2MessageConverter;
+    public RabbitRpcConfiguration(JacksonJsonMessageConverter jacksonJsonMessageConverter) {
+        this.jacksonJsonMessageConverter = jacksonJsonMessageConverter;
     }
 
     @Bean
@@ -59,7 +58,7 @@ public class RabbitRpcConfiguration {
     @Bean
     RabbitTemplate rabbitRpcTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setMessageConverter(producerJackson2MessageConverter);
+        template.setMessageConverter(jacksonJsonMessageConverter);
         template.setReplyAddress(RPC_REPLY_QUEUE);
         template.setReplyTimeout(50000);
 

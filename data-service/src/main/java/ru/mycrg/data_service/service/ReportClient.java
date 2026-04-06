@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.slf4j.Logger;
@@ -13,6 +12,7 @@ import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,10 +39,11 @@ public class ReportClient {
     public ResponseModel<List<TemplateShortProjection>> getAll() throws MalformedURLException, HttpClientException {
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
-                .url(new URL(reportServiceUrl, "/templates/"))
+                .url(new URL(reportServiceUrl, "/templates"))
                 .get()
                 .build();
 
-        return httpClient.handleRequest(request, new TypeReference<List<TemplateShortProjection>>() {});
+        return httpClient.handleRequest(request, new TypeReference<>() {
+        });
     }
 }

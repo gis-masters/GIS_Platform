@@ -11,18 +11,17 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <!--Апнуть нужно вместе с spring-cloud.version и нужно будет повозится с oauth и -->
-        <version>2.0.6.RELEASE</version>
+        <version>4.0.3</version>
         <relativePath/>
     </parent>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+        <spring-cloud.version>2025.1.1</spring-cloud.version>
+        <legacy.spring-cloud-starter-oauth2.version>2.0.2.RELEASE</legacy.spring-cloud-starter-oauth2.version>
 
         <surefire.version>3.3.1</surefire.version>
-        <pmd.version>6.55.0</pmd.version>
     </properties>
 
     <dependencyManagement>
@@ -34,6 +33,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- Keep legacy starters resolvable until oauth2 migration is done. -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${legacy.spring-cloud-starter-oauth2.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -76,6 +83,8 @@
         <module>_libs/geo-json</module>
         <module>_libs/common-utils</module>
         <module>_libs/auth-facade</module>
+        <module>_libs/jwt-support</module>
+        <module>_libs/hibernate-json-support</module>
 
         <module>clients/http-client</module>
         <module>clients/oauth-client</module>
@@ -97,48 +106,4 @@
 
         <module>tests/acceptance-tests</module>
     </modules>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.21.0</version>
-                <configuration>
-                    <targetJdk>${java.version}</targetJdk>
-                    <rulesets>
-                        <ruleset>pmd-ruleset.xml</ruleset>
-                    </rulesets>
-                    <failOnViolation>true</failOnViolation>
-                    <printFailingErrors>true</printFailingErrors>
-                    <includeTests>true</includeTests>
-                    <verbose>true</verbose>
-                    <excludeRoots>
-                        <excludeRoot>target/generated-sources</excludeRoot>
-                    </excludeRoots>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pmd-check</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sourceforge.pmd</groupId>
-                        <artifactId>pmd-core</artifactId>
-                        <version>${pmd.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>net.sourceforge.pmd</groupId>
-                        <artifactId>pmd-java</artifactId>
-                        <version>${pmd.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
 </project>

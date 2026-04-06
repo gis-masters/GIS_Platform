@@ -15,7 +15,6 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
 import ru.mycrg.data_service_contract.dto.import_.MatchingPair;
 import ru.mycrg.data_service_contract.dto.import_.TargetAttribute;
-import ru.mycrg.wrapper.service.validation.Util;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
@@ -103,7 +103,7 @@ public class BaseDaoService {
                 .batchUpdate(upsert, violations, violations.size(),
                              (ps, violation) -> {
                                  ps.setInt(1, Integer.parseInt(violation.getObjectId()));
-                                 ps.setString(2, Util.convertToJson(violation).toString());
+                                 ps.setString(2, toJsonNode(violation).toString());
                                  ps.setInt(3, Integer.parseInt(violation.getxMin()));
                                  ps.setBoolean(4, isValid(violation));
                                  ps.setInt(5, stringToInt(violation.getClassId()));

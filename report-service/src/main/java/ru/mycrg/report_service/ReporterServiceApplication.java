@@ -2,14 +2,11 @@ package ru.mycrg.report_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import ru.mycrg.report_service.services.dao.migrations.ReportMigrationHandler;
 
-@SpringBootApplication(exclude = {
-        RabbitAutoConfiguration.class
-})
+@SpringBootApplication
 public class ReporterServiceApplication {
 
     private final ReportMigrationHandler migrationHandler;

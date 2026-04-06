@@ -1,17 +1,15 @@
 package ru.mycrg.gis_service.entity;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.hateoas.Identifiable;
 import ru.mycrg.gis_service.dto.GroupCreateDto;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "groups")
-public class Group implements Identifiable<Long> {
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,7 +64,6 @@ public class Group implements Identifiable<Long> {
         this.lastModified = LocalDateTime.now();
     }
 
-    @Override
     public Long getId() {
         return id;
     }

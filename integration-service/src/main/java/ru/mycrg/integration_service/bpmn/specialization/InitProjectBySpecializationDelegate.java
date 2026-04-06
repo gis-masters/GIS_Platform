@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.bpmn.specialization;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -17,6 +16,7 @@ import ru.mycrg.common_contracts.specialization.Specialization;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.integration_service.dto.SpecializationLayerPublicationModel;
 import ru.mycrg.integration_service.service.SpecializationManager;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.URL;
 import java.util.HashMap;

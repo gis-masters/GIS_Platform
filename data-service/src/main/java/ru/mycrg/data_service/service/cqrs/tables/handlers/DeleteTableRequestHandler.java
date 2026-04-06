@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -21,6 +23,8 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
 
 @Component
 public class DeleteTableRequestHandler implements IRequestHandler<DeleteTableRequest, Voidy> {
+
+    private final Logger log = LoggerFactory.getLogger(DeleteTableRequestHandler.class);
 
     private final FtsDao ftsDao;
     private final DdlTablesBase ddlTablesBase;

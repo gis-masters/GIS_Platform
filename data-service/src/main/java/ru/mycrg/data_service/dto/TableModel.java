@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.server.core.Relation;
 import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 

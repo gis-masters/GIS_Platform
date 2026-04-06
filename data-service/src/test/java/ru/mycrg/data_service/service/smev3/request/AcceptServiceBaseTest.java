@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,16 +18,14 @@ import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
-import ru.mycrg.data_service.util.JsonConverter;
-
-import static org.mockito.ArgumentMatchers.eq;
+import ru.mycrg.http_client.JsonConverter;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

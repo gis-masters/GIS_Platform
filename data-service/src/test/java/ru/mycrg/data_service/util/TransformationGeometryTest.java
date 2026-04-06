@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.util;
 
-import org.geotools.referencing.CRS;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class TransformationGeometryTest {
         geometry = geometryFactory.createMultiPolygon(polygons.toArray(org.locationtech.jts.geom.Polygon[]::new));
         crs5Zone = epsgCodes.getCrsBySrid(314314);
         crs4Zone = epsgCodes.getCrsBySrid(314315);
-        crs6Zone = CRS.decode("EPSG: 28406");
+        crs6Zone = epsgCodes.getCrsBySrid(28406);
     }
 
     @After

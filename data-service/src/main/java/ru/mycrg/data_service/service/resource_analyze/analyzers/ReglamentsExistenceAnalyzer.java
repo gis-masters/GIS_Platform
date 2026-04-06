@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.resource_analyze.analyzers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -14,7 +13,6 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
@@ -24,6 +22,7 @@ import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerResult;
 import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceAnalyzerResult;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceDefinition;
+import tools.jackson.databind.JsonNode;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.http_client.JsonConverter.toJsonNodeFromString;
 
 @Service
 public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
@@ -171,7 +171,7 @@ public class ReglamentsExistenceAnalyzer implements IResourceAnalyzer {
         Map<String, String> urls = new HashMap<>();
         recordDtos.forEach(r -> {
             if (nonNull(r.getContent().get("link"))) {
-                JsonNode linkNode = JsonConverter.toJsonNodeFromString(
+                JsonNode linkNode = toJsonNodeFromString(
                         r.getContent().get("link").toString());
                 String objectId = r.getContent().get(PRIMARY_KEY).toString();
                 if (nonNull(linkNode.get("url"))) {

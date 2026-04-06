@@ -2,15 +2,16 @@ package ru.mycrg.data_service.service.validation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.common_contracts.generated.data_service.GeometryValidationResultDto;
+import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Service
 public class GeometryValidationService {
@@ -49,20 +50,14 @@ public class GeometryValidationService {
             throw new BadRequestException("Ошибка валидации геометрии", errorInfo);
         }
 
-        try {
-            String geometryJson = JsonConverter.getJsonString(feature.getGeometry());
+        String geometryJson = getJsonString(feature.getGeometry());
 
-            // Проверка корректности геометрии
-            validateResult(spatialRecordsDao.validateGeometry(geometryJson));
+        // Проверка корректности геометрии
+        validateResult(spatialRecordsDao.validateGeometry(geometryJson));
 
-            // Проверка попадания в границы земной поверхности
-            String modSrc = srs.contains(":") ? srs.substring(srs.indexOf(':') + 1) : srs;
-            validateResult(spatialRecordsDao.checkOnEarthSurface(geometryJson, modSrc));
-        } catch (JsonProcessingException e) {
-            ErrorInfo errorInfo = new ErrorInfo("geometry", "Ошибка сериализации геометрии: " + e.getMessage());
-
-            throw new BadRequestException("Ошибка обработки геометрии", errorInfo);
-        }
+        // Проверка попадания в границы земной поверхности
+        String modSrc = srs.contains(":") ? srs.substring(srs.indexOf(':') + 1) : srs;
+        validateResult(spatialRecordsDao.checkOnEarthSurface(geometryJson, modSrc));
     }
 
     public static String translateMessage(String message) {

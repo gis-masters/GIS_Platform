@@ -1,14 +1,14 @@
 package ru.mycrg.gis_service.exceptions;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import javax.validation.ConstraintViolation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class CrgValidationException extends javax.validation.ValidationException {
+public class CrgValidationException extends ValidationException {
 
     public <T> CrgValidationException(Set<ConstraintViolation<T>> violations) {
         super(violations != null ? toString(violations) : "");

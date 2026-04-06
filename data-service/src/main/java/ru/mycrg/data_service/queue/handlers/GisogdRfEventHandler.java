@@ -20,9 +20,10 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
-import static ru.mycrg.data_service.util.JsonConverter.getJsonString;
+
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.LAST_MODIFIED;
 import static ru.mycrg.gisog_service_contract.dto.Status.SUCCESS;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Component
 public class GisogdRfEventHandler implements IEventHandler {

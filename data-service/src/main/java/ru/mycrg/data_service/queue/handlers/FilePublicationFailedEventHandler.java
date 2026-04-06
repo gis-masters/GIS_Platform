@@ -17,10 +17,10 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service_contract.enums.FileType.DXF;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 public class FilePublicationFailedEventHandler implements IEventHandler {

@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.gpkg.export;
 
+import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -15,14 +16,14 @@ import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.service.export.ExportType.GPKG;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Service
 public class GpkgExportHandler implements Exporter {
@@ -61,10 +62,8 @@ public class GpkgExportHandler implements Exporter {
 
         ExportGpkgPayload exportGpkgPayload;
         try {
-            exportGpkgPayload = mapper.convertValue(request.getPayload(), ExportGpkgPayload.class);
-            if (exportGpkgPayload == null) {
-                throw new BadRequestException(msg);
-            }
+            exportGpkgPayload = fromJson(getJsonString(request.getPayload()), ExportGpkgPayload.class).orElseThrow(
+                    () -> new IllegalArgumentException("Данные невозможно сконвертировать!"));
 
             GpkgExportType gpkgExportType = exportGpkgPayload.getType();
             if (gpkgExportType == null) {
@@ -102,7 +101,7 @@ public class GpkgExportHandler implements Exporter {
             throw new BadRequestException(errorMsg + " Массив переданных объектов пустой!!!");
         }
 
-        Object firstItem = payloadList.get(0);
+        Object firstItem = payloadList.getFirst();
 
         if (type == GpkgExportType.LAYER && !(firstItem instanceof Number)) {
             throw new BadRequestException(errorMsg);

@@ -15,7 +15,7 @@ import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
 import static java.time.LocalDateTime.now;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Component
 public class UpdateDocLibrarySchemaRequestHandler implements IRequestHandler<UpdateDocLibrarySchemaRequest, Voidy> {

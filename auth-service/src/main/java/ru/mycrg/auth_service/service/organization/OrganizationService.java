@@ -20,7 +20,7 @@ import ru.mycrg.auth_service_contract.dto.OrganizationUpdateDto;
 import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;

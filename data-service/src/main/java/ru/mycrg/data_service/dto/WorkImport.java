@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
 public class WorkImport extends BaseRequest {

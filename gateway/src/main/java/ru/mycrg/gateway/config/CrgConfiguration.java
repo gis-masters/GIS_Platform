@@ -1,7 +1,7 @@
 package ru.mycrg.gateway.config;
 
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -14,12 +14,16 @@ import ru.mycrg.oauth_client.OAuthClient;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-@Log4j2
 @Configuration
 public class CrgConfiguration {
 
-    @Autowired
-    private Environment environment;
+    private static final Logger log = LoggerFactory.getLogger(CrgConfiguration.class);
+
+    private final Environment environment;
+
+    public CrgConfiguration(Environment environment) {
+        this.environment = environment;
+    }
 
     @Bean
     public OAuthClient authClient() throws MalformedURLException {

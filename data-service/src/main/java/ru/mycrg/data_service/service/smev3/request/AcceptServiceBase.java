@@ -1,8 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.minio.Result;
 import io.minio.messages.Item;
 import org.apache.commons.io.FilenameUtils;
@@ -38,12 +35,13 @@ import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import javax.xml.bind.JAXBException;
 import java.io.ByteArrayInputStream;
@@ -69,12 +67,11 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.DL_DATA_SECTION_DELIVERY_DATA_TABLE;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.TABLE_13;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskIntermediateStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
+import static ru.mycrg.http_client.JsonConverter.*;
 
 public abstract class AcceptServiceBase {
 
@@ -199,7 +196,7 @@ public abstract class AcceptServiceBase {
             throw new BadRequestException("Блок " + INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE + " у задачи не заполнен");
         }
 
-        Optional<List<TypeDocumentData>> oInboxDocs = JsonConverter.fromJson(
+        Optional<List<TypeDocumentData>> oInboxDocs = fromJson(
                 String.valueOf(task.get(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE)),
                 new TypeReference<List<TypeDocumentData>>() {
                 });
@@ -214,7 +211,7 @@ public abstract class AcceptServiceBase {
                     "Пустой массив в блоке " + INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE + " у задачи");
         }
 
-        Long docId = inboxDocuments.get(0).getId();
+        Long docId = inboxDocuments.getFirst().getId();
         ResourceQualifier libraryQualifier = libraryRecordQualifier(INBOX_LIBRARY_ID, docId);
         SchemaDto rnvSchema = libraryRepository
                 .findByTableName(INBOX_LIBRARY_ID)
@@ -243,7 +240,7 @@ public abstract class AcceptServiceBase {
                 throw new BadRequestException("Блок data_key_data_connection у задачи не заполнен");
             }
 
-            Optional<List<TypeDocumentData>> oDataSectionDocs = JsonConverter.fromJson(
+            Optional<List<TypeDocumentData>> oDataSectionDocs = fromJson(
                     String.valueOf(task.get(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE)),
                     new TypeReference<List<TypeDocumentData>>() {
                     });
@@ -275,7 +272,7 @@ public abstract class AcceptServiceBase {
                 throw new BadRequestException("Поле File у связанного документа не заполнено");
             }
 
-            Optional<List<FileDescription>> oFileDescriptions = JsonConverter.fromJson(
+            Optional<List<FileDescription>> oFileDescriptions = fromJson(
                     inboxDocRecord.getAsString(FILE_ATTRIBUTE),
                     new TypeReference<List<FileDescription>>() {
                     });
@@ -637,14 +634,14 @@ public abstract class AcceptServiceBase {
         saveMultipartFile(fileDescriptions, jsonNode, type, xmlDocumentFile);
         collectFileDescriptions(queryResult, fileResQualifier, fileQualifier, fileDescriptions);
 
-        String jacksonData = JsonConverter.getJsonString(fileDescriptions);
+        String jacksonData = getJsonString(fileDescriptions);
         Map<String, Object> payload = savedDocument.getContent();
         payload.put(FILE_ATTRIBUTE, jacksonData);
         ResourceQualifier rnvResQualifier = ResourceQualifier.libraryRecordQualifier(INBOX_LIBRARY_ID, savedDocumentId);
         recordsDao.updateRecordById(rnvResQualifier, payload, rnvSchema);
 
         TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitle, INBOX_LIBRARY_ID);
-        taskContent.put(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE, mapper.writeValueAsString(List.of(documentData)));
+        taskContent.put(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE, getJsonString(List.of(documentData)));
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
@@ -652,7 +649,7 @@ public abstract class AcceptServiceBase {
         recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskContent, tasksSchema);
     }
 
-    private String createLibraryDocJson(String permitNumber) throws JsonProcessingException {
+    private String createLibraryDocJson(String permitNumber) {
         ResourceQualifier libraryQualifier = libraryQualifier(TABLE_13);
         LibraryModel libraryModel = libraryRepository
                 .findByTableName(TABLE_13)
@@ -666,7 +663,7 @@ public abstract class AcceptServiceBase {
                 .map(iRecord -> new TypeDocumentData(iRecord.getId(), iRecord.getTitle(), TABLE_13))
                 .collect(Collectors.toList());
 
-        return JsonConverter.getJsonString(documentsData);
+        return getJsonString(documentsData);
     }
 
     private <T> void collectFileDescriptions(T queryResult,

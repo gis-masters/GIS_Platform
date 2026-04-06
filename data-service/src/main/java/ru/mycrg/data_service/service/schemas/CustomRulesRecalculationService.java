@@ -63,7 +63,7 @@ public class CustomRulesRecalculationService {
             while (true) {
                 List<Feature> oldFeatures = baseDao.findAll(rQualifier,
                                                             null,
-                                                            PageRequest.of(page, size, new Sort(ASC, PRIMARY_KEY)),
+                                                            PageRequest.of(page, size, Sort.by(ASC, PRIMARY_KEY)),
                                                             new FeatureRowMapper(schema));
                 page++;
 

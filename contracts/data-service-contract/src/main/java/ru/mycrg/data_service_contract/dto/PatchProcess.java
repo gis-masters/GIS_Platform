@@ -2,7 +2,7 @@ package ru.mycrg.data_service_contract.dto;
 
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class PatchProcess {
 

@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.files;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,18 +11,21 @@ import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.FileType;
+import tools.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.common_utils.CrgGlobalProperties.joinByDouble;
-import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 public class FileUtil {
 
@@ -73,20 +75,14 @@ public class FileUtil {
 
     public static List<FileDescription> getFilesDescription(Map<String, Object> record, String fieldName) {
         Object payload = record.get(fieldName);
-        if (payload != null) {
-            try {
-                return mapper.readValue(payload.toString(),
-                                        new TypeReference<List<FileDescription>>() {
-                                        });
-            } catch (IOException e) {
-                String msg = "Содержимое поля типа FILE имеет не корректное тело: " + payload;
-                logError(msg, e);
-
-                return new ArrayList<>();
-            }
-        } else {
-            return new ArrayList<>();
+        if (payload == null) {
+            return Collections.emptyList();
         }
+
+        return fromJson(payload.toString(),
+                        new TypeReference<List<FileDescription>>() {
+                        }
+        ).orElseGet(Collections::emptyList);
     }
 
     @NotNull

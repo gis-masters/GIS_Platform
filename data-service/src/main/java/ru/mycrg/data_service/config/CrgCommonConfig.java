@@ -47,12 +47,7 @@ public class CrgCommonConfig {
     public static final MediaType DEFAULT_MEDIA_TYPE = Objects.requireNonNull(MediaType.parse(DEFAULT_CONTENT_TYPE));
 
     @Bean
-    public CrgScriptEngine crgScriptEngine() {
-        return new CrgScriptEngine();
-    }
-
-    @Bean
-    public ScriptCalculator scriptCalculator() {
-        return new ScriptCalculator(crgScriptEngine());
+    public ScriptCalculator scriptCalculator(CrgScriptEngine crgScriptEngine) {
+        return new ScriptCalculator(crgScriptEngine);
     }
 }

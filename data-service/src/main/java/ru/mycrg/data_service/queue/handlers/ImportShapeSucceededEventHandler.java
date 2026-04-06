@@ -13,7 +13,6 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.SimplePropertyCollector;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ImportShapeReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -34,6 +33,7 @@ import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.util.GeometryHandler.isGeometryTypeMatch;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 public class ImportShapeSucceededEventHandler implements IEventHandler {
@@ -115,7 +115,7 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
 
             processService.complete(requestEvent.getDbName(),
                                     requestEvent.getProcessId(),
-                                    JsonConverter.toJsonNode(importShapeReport));
+                                    toJsonNode(importShapeReport));
 
             log.debug("Процесс успешно завершен");
         } catch (ClientException e) {
@@ -128,7 +128,7 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
 
             processService.error(requestEvent.getDbName(),
                                  requestEvent.getProcessId(),
-                                 JsonConverter.toJsonNode(importShapeReport));
+                                 toJsonNode(importShapeReport));
         } catch (DataAccessException e) {
             log.debug("Столкнулись с: {} !!! Пробуем перенести только геометрию", String.valueOf(e));
             String copyQuery = buildCopyGeometryQuery(sourceTable, targetTable);
@@ -144,7 +144,7 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
 
             processService.complete(requestEvent.getDbName(),
                                     requestEvent.getProcessId(),
-                                    JsonConverter.toJsonNode(importShapeReport));
+                                    toJsonNode(importShapeReport));
 
             log.debug("Была импортирована только геометрия");
         } catch (Exception e) {
@@ -157,7 +157,7 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
 
             processService.error(requestEvent.getDbName(),
                                  requestEvent.getProcessId(),
-                                 JsonConverter.toJsonNode(importShapeReport));
+                                 toJsonNode(importShapeReport));
         }
 
         coreTemplateDao.execute(jdbcTemplate, buildDeleteTableQuery(sourceTable));

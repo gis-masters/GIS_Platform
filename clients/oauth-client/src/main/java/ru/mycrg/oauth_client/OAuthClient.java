@@ -1,6 +1,6 @@
 package ru.mycrg.oauth_client;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+ 
 import okhttp3.*;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
@@ -12,6 +12,7 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import ru.mycrg.http_client.handlers.IHttpRequestHandler;
 import ru.mycrg.http_client.handlers.RetryableRequestHandler;
+import tools.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.net.URL;

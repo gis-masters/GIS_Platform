@@ -1,28 +1,23 @@
 package ru.mycrg.data_service.entity.smev;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.config.CrgCommonConfig;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
+import tools.jackson.databind.JsonNode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Entity
 @Table(name = "smev_message_meta")
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
 public class SmevMessageMetaEntity {
 
     @Id
@@ -43,15 +38,15 @@ public class SmevMessageMetaEntity {
     private UUID referenceReestrIncoming;
     @Column(name = "reference_reestr_outgoing")
     private UUID referenceReestrOutgoing;
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "xml_object")
     private JsonNode xmlObject;
     @Column(columnDefinition = "xml_string")
     private String xmlString;
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "records")
     private JsonNode records;
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "attachments")
     private JsonNode attachments;
 

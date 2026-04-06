@@ -20,7 +20,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
                 .addEndpoint("/crg-ws-endpoint")
-                .setAllowedOrigins("*").withSockJS()
+                .setAllowedOriginPatterns("*").withSockJS()
                 .setSessionCookieNeeded(false);
     }
 }

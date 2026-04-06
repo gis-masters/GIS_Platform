@@ -1,9 +1,10 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.hibernate.annotations.Type;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import tools.jackson.databind.JsonNode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
@@ -21,7 +22,7 @@ public class TaskLog {
     private Long taskId;
 
     @Column
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     private JsonNode message;
 
     @Column(name = "event_type")

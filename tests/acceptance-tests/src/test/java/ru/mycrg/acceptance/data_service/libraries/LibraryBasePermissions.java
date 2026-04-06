@@ -21,9 +21,10 @@ public class LibraryBasePermissions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/api/data/document-libraries");
     }
 
+    //TODO метод изменён при переходе на  java 25. Если всё ок удалить комментарий 30.09.2026
     public static String makeLibraryPermissionUrl(String libraryName, Integer permissionId) {
-        return String.format("%s:%d/api/data/document-libraries/%s/roleAssignment/%s",
-                             testServerHost, testServerPort, libraryName, permissionId);
+        return String.format("%s:%d/document-libraries/%s/roleAssignment/%s",
+                             "http://crg-data-service", 8084, libraryName, permissionId);
     }
 
     /**

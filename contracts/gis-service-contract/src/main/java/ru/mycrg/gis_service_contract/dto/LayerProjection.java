@@ -8,33 +8,33 @@ import java.time.LocalDateTime;
 
 public class LayerProjection implements Serializable {
 
-    private final Long id;
-    private final String title;
-    private final String type;
+    private Long id;
+    private String title;
+    private String type;
     private String dataset;
     private String resourceId;
-    private final boolean enabled;
-    private final Integer position;
-    private final int transparency;
-    private final int maxZoom;
-    private final int minZoom;
+    private boolean enabled;
+    private Integer position;
+    private int transparency;
+    private int maxZoom;
+    private int minZoom;
     private String styleName;
-    private final String nativeCRS;
-    private final String dataSourceUri;
+    private String nativeCRS;
+    private String dataSourceUri;
     private Long parentId;
     private Long projectId;
-    private final String complexName;
-    private final String sourceId;
-    private final String sourceType;
-    private final Long sourceRecordId;
+    private String complexName;
+    private String sourceId;
+    private String sourceType;
+    private Long sourceRecordId;
     private String dataStoreName;
-    private final String contentType;
-    private final String view;
-    private final String errorText;
-    private final String style;
-    private final String photoMode;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime lastModified;
+    private String contentType;
+    private String view;
+    private String errorText;
+    private String style;
+    private String photoMode;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModified;
 
     // Конструктор для JSON десериализации - только с полями, которые приходят в JSON
     @JsonCreator
@@ -135,12 +135,24 @@ public class LayerProjection implements Serializable {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDataset() {
@@ -163,20 +175,40 @@ public class LayerProjection implements Serializable {
         return enabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Integer getPosition() {
         return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public int getTransparency() {
         return transparency;
     }
 
+    public void setTransparency(int transparency) {
+        this.transparency = transparency;
+    }
+
     public int getMaxZoom() {
         return maxZoom;
     }
 
+    public void setMaxZoom(int maxZoom) {
+        this.maxZoom = maxZoom;
+    }
+
     public int getMinZoom() {
         return minZoom;
+    }
+
+    public void setMinZoom(int minZoom) {
+        this.minZoom = minZoom;
     }
 
     public String getStyleName() {
@@ -191,8 +223,16 @@ public class LayerProjection implements Serializable {
         return nativeCRS;
     }
 
+    public void setNativeCRS(String nativeCRS) {
+        this.nativeCRS = nativeCRS;
+    }
+
     public String getDataSourceUri() {
         return dataSourceUri;
+    }
+
+    public void setDataSourceUri(String dataSourceUri) {
+        this.dataSourceUri = dataSourceUri;
     }
 
     public Long getParentId() {
@@ -215,16 +255,32 @@ public class LayerProjection implements Serializable {
         return complexName;
     }
 
+    public void setComplexName(String complexName) {
+        this.complexName = complexName;
+    }
+
     public String getSourceId() {
         return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
     public String getSourceType() {
         return sourceType;
     }
 
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
+
     public Long getSourceRecordId() {
         return sourceRecordId;
+    }
+
+    public void setSourceRecordId(Long sourceRecordId) {
+        this.sourceRecordId = sourceRecordId;
     }
 
     public String getDataStoreName() {
@@ -239,28 +295,56 @@ public class LayerProjection implements Serializable {
         return contentType;
     }
 
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
     public String getView() {
         return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
     }
 
     public String getErrorText() {
         return errorText;
     }
 
+    public void setErrorText(String errorText) {
+        this.errorText = errorText;
+    }
+
     public String getStyle() {
         return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 
     public String getPhotoMode() {
         return photoMode;
     }
 
+    public void setPhotoMode(String photoMode) {
+        this.photoMode = photoMode;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getLastModified() {
         return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
     }
 
     @Override

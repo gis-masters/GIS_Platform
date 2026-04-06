@@ -37,12 +37,13 @@ import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 import static ru.mycrg.data_service.mappers.FileResourceQualifierMapper.mapToFileQualifier;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.StringUtil.extractHash;
 import static ru.mycrg.data_service.util.StringUtil.hashCodeAsString;
 import static ru.mycrg.data_service_contract.enums.FileType.MID;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 @Component
 public class MidMifPlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
@@ -192,7 +193,9 @@ public class MidMifPlacementExecutor implements IExecutor<ImportReport>, IFilePl
         this.wsMsgId = UUID.randomUUID();
 
         try {
-            this.payload = mapper.convertValue(data, FilePlacementPayloadModel.class);
+            this.payload =
+                    fromJson(toJson(data), FilePlacementPayloadModel.class).orElseThrow(
+                            () -> new IllegalArgumentException("Невозможно конвертировать значение!!!"));
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель импорта: %s", data);
             log.error(msg, e.getCause());
@@ -247,7 +250,7 @@ public class MidMifPlacementExecutor implements IExecutor<ImportReport>, IFilePl
             return 1;
         }
 
-        String etalonPath = stripFilenameExtension(files.get(0).getPath());
+        String etalonPath = stripFilenameExtension(files.getFirst().getPath());
 
         return files.stream()
                     .map(file -> stripFilenameExtension(file.getPath()))

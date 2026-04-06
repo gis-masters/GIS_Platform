@@ -1,14 +1,15 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+ 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import tools.jackson.databind.JsonNode;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,10 +17,6 @@ import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "files")
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
 public class File {
 
     @Id
@@ -52,7 +49,7 @@ public class File {
     @Column(length = 20)
     private String resourceType;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private JsonNode resourceQualifier;
 

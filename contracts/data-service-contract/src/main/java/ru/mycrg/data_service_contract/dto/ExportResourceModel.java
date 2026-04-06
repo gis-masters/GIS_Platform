@@ -1,6 +1,6 @@
 package ru.mycrg.data_service_contract.dto;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Objects;
 

@@ -38,8 +38,8 @@ Feature: Работа с записями в таблицах
     When В текущем слое создаётся запись с title: "<title>"
     And  атрибут "properties.title" имеет значение "<title>"
     Examples:
-      | title                      |
-      | Some ' title               |
+      | title                       |
+      | Some ' title                |
       | Полная ерунда: $@%^$%^*&$!' |
 
   Scenario: Запрещено копировать записи в таблицу только для чтения

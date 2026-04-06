@@ -1,18 +1,19 @@
 package ru.mycrg.gis_service.controller;
 
+import jakarta.json.JsonMergePatch;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.GroupCreateDto;
 import ru.mycrg.gis_service.dto.GroupProjection;
+ 
 import ru.mycrg.gis_service.service.GroupService;
 
-import javax.json.JsonMergePatch;
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -49,11 +50,11 @@ public class GroupController {
 
     @GetMapping("/groups/{group_id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<GroupProjection> getGroupById(@PathVariable(name = "project_id") long projectId,
-                                                  @PathVariable(name = "group_id") long groupId) {
+    public EntityModel<GroupProjection> getGroupById(@PathVariable(name = "project_id") long projectId,
+                                                     @PathVariable(name = "group_id") long groupId) {
         GroupProjection group = groupService.findById(projectId, groupId);
 
-        return new Resource<>(group);
+        return EntityModel.of(group);
     }
 
     @PatchMapping(path = "/groups/{group_id}", consumes = APPLICATION_JSON_MERGE_PATCH)

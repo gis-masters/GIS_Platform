@@ -2,7 +2,7 @@ package ru.mycrg.data_service.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;

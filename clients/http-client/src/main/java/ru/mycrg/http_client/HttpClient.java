@@ -1,6 +1,6 @@
 package ru.mycrg.http_client;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+ 
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.http_client.handlers.IHttpRequestHandler;
+import tools.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.net.URL;

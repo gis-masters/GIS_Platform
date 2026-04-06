@@ -1,12 +1,12 @@
 package unit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.mycrg.geoserver_client.services.rule.RulesUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.mycrg.geoserver_client.services.rule.GeoServerPermissions.*;
 import static ru.mycrg.geoserver_client.services.rule.RulesUtil.deleteRole;
 import static ru.mycrg.geoserver_client.services.rule.RulesUtil.insertNewRole;

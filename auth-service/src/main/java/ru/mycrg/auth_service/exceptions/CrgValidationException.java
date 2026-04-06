@@ -3,8 +3,8 @@ package ru.mycrg.auth_service.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ValidationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ValidationException;
 import java.util.Set;
 import java.util.stream.Collectors;
 

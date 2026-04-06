@@ -1,11 +1,13 @@
 package ru.mycrg.gateway.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -16,33 +18,42 @@ import ru.mycrg.gateway.domain.TokenHandler;
 import ru.mycrg.gateway.filters.MainAuthFilter;
 import ru.mycrg.gateway.queue.MessageBusProducer;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
+@Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
 
-    @Autowired
-    private CookieProducer cookieProducer;
+    private final CookieProducer cookieProducer;
+    private final Authenticator authenticator;
+    private final MessageBusProducer messageBus;
+    private final TokenHandler tokenHandler;
 
-    @Autowired
-    private Authenticator authenticator;
-
-    @Autowired
-    private MessageBusProducer messageBus;
-
-    @Autowired
-    private TokenHandler tokenHandler;
+    public SecurityConfiguration(CookieProducer cookieProducer,
+                                 Authenticator authenticator,
+                                 MessageBusProducer messageBus,
+                                 TokenHandler tokenHandler) {
+        this.cookieProducer = cookieProducer;
+        this.authenticator = authenticator;
+        this.messageBus = messageBus;
+        this.tokenHandler = tokenHandler;
+    }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public MainAuthFilter mainAuthFilter() {
+        return new MainAuthFilter(cookieProducer, authenticator, messageBus, tokenHandler);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -51,35 +62,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, MainAuthFilter mainAuthFilter) throws Exception {
         http
-                .cors().and()
-                .csrf().disable()
-                // make sure we use stateless session; session won't be used to store user's state.
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                // handle an authorized attempts
-                .exceptionHandling().authenticationEntryPoint(
-                        (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-                .and()
-                // Add a filter to validate the tokens with every request
-                .addFilterAfter(new MainAuthFilter(cookieProducer, authenticator, messageBus, tokenHandler),
-                                UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests() // authorization requests config
-                .antMatchers(POST,
-                             "/oauth/token",
-                             "/organizations/init",
-                             "/organizations/intents",
-                             "/perform_logout",
-                             "/integration/statement/import",
-                             "/request-password-reset",
-                             "/password-reset").permitAll()
-                .antMatchers(GET,
-                             "/actuator/health",
-                             "/password-reset",
-                             "/specializations",
-                             "/esia/**").permitAll()
-                .anyRequest().authenticated(); // Any other request must be authenticated
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(
+                        (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                .addFilterAfter(mainAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(POST,
+                                         "/oauth/token",
+                                         "/organizations/init",
+                                         "/organizations/intents",
+                                         "/perform_logout",
+                                         "/integration/statement/import",
+                                         "/request-password-reset",
+                                         "/password-reset").permitAll()
+                        .requestMatchers(GET,
+                                         "/actuator/health",
+                                         "/password-reset",
+                                         "/specializations",
+                                         "/esia/**").permitAll()
+                        .anyRequest().authenticated());
+
+        return http.build();
     }
 }

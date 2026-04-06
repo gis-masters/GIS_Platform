@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.export;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.detached.ValidationResultDao;
-import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.dto.record.IRecord;
@@ -20,13 +18,11 @@ import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
-import ru.mycrg.data_service_contract.dto.ResourceReport;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.dto.ValidationReportModel;
+import ru.mycrg.data_service_contract.dto.*;
+import ru.mycrg.http_client.JsonConverter;
+import tools.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.util.*;
@@ -41,6 +37,7 @@ import static ru.mycrg.data_service.service.schemas.SchemaUtil.getEnumerationTit
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyByName;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.VALIDATION_REPORT;
+import static ru.mycrg.http_client.JsonConverter.toJsonNodeFromString;
 
 @Service
 public class LayerValidationReportService {
@@ -82,7 +79,7 @@ public class LayerValidationReportService {
     public Process generateReport(ValidationRequestDto request) {
         final List<ExportResourceModel> resources = request.getResources();
         final String title = String.format("Экспорт отчета об ошибках. Кол-во слоев: %d", resources.size());
-        final String filePath = fileStorageService.getExportStoragePath() + "/" +  initFileName();
+        final String filePath = fileStorageService.getExportStoragePath() + "/" + initFileName();
         final String dbName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
         final Map<String, SchemaDto> schemas = fetchSchemas(resources);
         final Process process = processService.create(authenticationFacade.getLogin(),
@@ -216,7 +213,7 @@ public class LayerValidationReportService {
     }
 
     private JsonNode extractViolations(IRecord record) {
-        return JsonConverter.toJsonNodeFromString((String) record.getContent().get("violations"));
+        return toJsonNodeFromString((String) record.getContent().get("violations"));
     }
 
     private String prepareValue(String value) {

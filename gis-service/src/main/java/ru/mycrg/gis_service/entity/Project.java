@@ -1,20 +1,18 @@
 package ru.mycrg.gis_service.entity;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.hateoas.Identifiable;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "projects")
-public class Project implements Identifiable<Long> {
+public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,7 +80,6 @@ public class Project implements Identifiable<Long> {
         this.organizationId = organizationId;
     }
 
-    @Override
     public Long getId() {
         return id;
     }

@@ -1,14 +1,15 @@
 package ru.mycrg.data_service.dao.mappers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.jdbc.core.RowMapper;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
+import tools.jackson.databind.JsonNode;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class ProcessRowMapper implements RowMapper<Process> {
 
@@ -23,13 +24,13 @@ public class ProcessRowMapper implements RowMapper<Process> {
 
         final Object extra = rs.getObject("extra");
         if (extra != null) {
-            JsonNode jsonNode = JsonConverter.toJsonNode(extra);
+            JsonNode jsonNode = toJsonNode(extra);
             process.setExtra(jsonNode.findValue("value"));
         }
 
         final Object details = rs.getObject("details");
         if (details != null) {
-            JsonNode jsonNode = JsonConverter.toJsonNode(details);
+            JsonNode jsonNode = toJsonNode(details);
             process.setDetails(jsonNode.findValue("value"));
         }
 

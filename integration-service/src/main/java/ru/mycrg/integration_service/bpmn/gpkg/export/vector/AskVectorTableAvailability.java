@@ -1,7 +1,5 @@
 package ru.mycrg.integration_service.bpmn.gpkg.export.vector;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.camunda.bpm.engine.delegate.BpmnError;
@@ -17,6 +15,8 @@ import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.net.URL;
@@ -133,7 +133,7 @@ public class AskVectorTableAvailability implements JavaDelegate {
                     JsonNode rootNode = objectMapper.readTree(responseBody);
                     JsonNode contentNode = rootNode.has("content") ? rootNode.get("content") : rootNode;
                     String permission;
-                    if (contentNode.isArray() && contentNode.size() > 0) {
+                    if (contentNode.isArray() && !contentNode.isEmpty()) {
                         permission = contentNode.get(0).get("role").asText();
                     } else {
                         permission = contentNode.get("role").asText(); // для случая когда это не массив

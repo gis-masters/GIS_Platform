@@ -1,7 +1,5 @@
 package ru.mycrg.auth_service.service.organization.settings;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_service.entity.Organization;
@@ -10,6 +8,8 @@ import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,6 +18,7 @@ import static ru.mycrg.auth_service.service.organization.settings.OrganizationSe
 import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSettings;
 import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSystemSettings;
 import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.processSettings;
+import static ru.mycrg.http_client.JsonConverter.convertValue;
 
 @Component
 public class OrganizationSettingsRepository {
@@ -95,7 +96,8 @@ public class OrganizationSettingsRepository {
                                                   .orElseThrow(() -> new NotFoundException(orgId))
                                                   .getSettings();
         if (settings != null) {
-            result = JacksonUtil.fromString(settings.toString(), Map.class);
+            result = convertValue(settings, new TypeReference<>() {
+            });
         }
 
         return processSettings(schema, result);

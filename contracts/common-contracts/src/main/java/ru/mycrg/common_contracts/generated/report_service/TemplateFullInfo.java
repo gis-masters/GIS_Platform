@@ -1,6 +1,6 @@
 package ru.mycrg.common_contracts.generated.report_service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 public class TemplateFullInfo extends TemplateCreateDto {
 

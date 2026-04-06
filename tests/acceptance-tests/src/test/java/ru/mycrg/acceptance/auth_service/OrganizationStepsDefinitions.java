@@ -78,7 +78,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             data = List.of(testDto);
         }
 
-        OrganizationTestDto testDto = data.get(0);
+        OrganizationTestDto testDto = data.getFirst();
 
         String ownerEmail = generateString(testDto.getOwnerEmail());
 
@@ -161,9 +161,9 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             assertEquals(jsonPath.get("status"), status);
             assertEquals(jsonPath.get("name"), orgDto.getName());
             assertEquals(jsonPath.get("phone"), orgDto.getPhone());
-            assertEquals(jsonPath.getList("users.name").get(0), owner.getName());
-            assertEquals(jsonPath.getList("users.surname").get(0), owner.getSurname());
-            assertEquals(jsonPath.getList("users.email").get(0), owner.getEmail());
+            assertEquals(jsonPath.getList("users.name").getFirst(), owner.getName());
+            assertEquals(jsonPath.getList("users.surname").getFirst(), owner.getSurname());
+            assertEquals(jsonPath.getList("users.email").getFirst(), owner.getEmail());
             assertNotNull(jsonPath.get("settings"));
             assertNotNull(jsonPath.get("createdAt"));
         }
@@ -256,9 +256,9 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(jsonPath.get("name"), orgDto.getName());
         assertEquals(jsonPath.get("phone"), orgDto.getPhone());
         assertEquals(jsonPath.get("description"), orgDto.getDescription());
-        assertEquals(jsonPath.getList("users.name").get(0), orgDto.getOwner().getName());
-        assertEquals(jsonPath.getList("users.surname").get(0), orgDto.getOwner().getSurname());
-        assertEquals(jsonPath.getList("users.email").get(0), orgDto.getOwner().getEmail());
+        assertEquals(jsonPath.getList("users.name").getFirst(), orgDto.getOwner().getName());
+        assertEquals(jsonPath.getList("users.surname").getFirst(), orgDto.getOwner().getSurname());
+        assertEquals(jsonPath.getList("users.email").getFirst(), orgDto.getOwner().getEmail());
     }
 
     @And("Настройки организации включены в зависимости от выбранной специализации {string}")
@@ -316,7 +316,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     @Given("Существует организация")
     public void initOrg(DataTable dataTable) throws InterruptedException {
         List<OrganizationTestDto> data = dataTable.asList(OrganizationTestDto.class);
-        OrganizationTestDto testDto = data.get(0);
+        OrganizationTestDto testDto = data.getFirst();
 
         boolean isPassedEmailRandom = testDto.getOwnerEmail().split("_")[0].equals("EMAIL");
         String eMail = generateString(testDto.getOwnerEmail());
@@ -391,7 +391,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     @Given("Существует другая организация")
     public void createOrgForFeature(DataTable dataTable) throws InterruptedException {
         List<OrganizationTestDto> data = dataTable.asList(OrganizationTestDto.class);
-        OrganizationTestDto testDto = data.get(0);
+        OrganizationTestDto testDto = data.getFirst();
 
         if (emailForFeature == null) {
             emailForFeature = generateString(testDto.getOwnerEmail());
@@ -562,7 +562,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Текущий пользователь делает запросы на обновление текущей организации")
     public void updatesOrganization(DataTable dataTable) {
-        List<String> data = dataTable.asLists(String.class).get(0);
+        List<String> data = dataTable.asLists(String.class).getFirst();
 
         OrganizationUpdateDto newOrgUpdate = new OrganizationUpdateDto(generateString(data.get(0)),
                                                                        generateString(data.get(1)),
@@ -677,7 +677,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                                                        .collect(Collectors.toList());
 
         if (!availableOrgIds.isEmpty()) {
-            Integer anotherOrgId = availableOrgIds.get(0);
+            Integer anotherOrgId = availableOrgIds.getFirst();
             System.out.println("Найдена другая организация с ID: " + anotherOrgId);
 
             orgId = anotherOrgId;
@@ -818,7 +818,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private void getAllOrganizations() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/organizations/");
+                        get("/organizations");
     }
 
     private void getOrganization(Integer id) {

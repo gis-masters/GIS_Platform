@@ -24,9 +24,9 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE_WITH_WARNINGS;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Component
 public class ProcessHandler {

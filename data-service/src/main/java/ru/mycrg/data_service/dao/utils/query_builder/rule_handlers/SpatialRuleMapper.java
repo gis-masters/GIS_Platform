@@ -3,11 +3,7 @@ package ru.mycrg.data_service.dao.utils.query_builder.rule_handlers;
 import com.healthmarketscience.sqlbuilder.Condition;
 import com.healthmarketscience.sqlbuilder.CustomCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.CRS;
 import org.locationtech.jts.geom.*;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import ru.mycrg.data_service.dto.styles.RuleFilter;
 import ru.mycrg.data_service.dto.styles.SpatialLiteral;
@@ -17,23 +13,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.geotools.referencing.crs.DefaultGeographicCRS.WGS84;
-import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
 import static ru.mycrg.data_service.dto.styles.SpatialLiteralType.MULTIPOLYGON;
 
 public class SpatialRuleMapper implements RuleMapper {
 
-    private final MathTransform mathTransform;
+    private static final double WEB_MERCATOR_RADIUS = 6378137d;
     private final GeometryFactory geometryFactory;
 
-    public SpatialRuleMapper() throws FactoryException {
+    public SpatialRuleMapper() {
         this.geometryFactory = new GeometryFactory();
-        this.mathTransform = CRS.findMathTransform(CRS.decode(DEFAULT_EPSG_METRE), WGS84);
     }
 
     @Override
-    public Condition map(RuleFilter ruleFilter) throws FactoryException, TransformException {
+    public Condition map(RuleFilter ruleFilter) throws TransformException {
         final SpatialRuleFilter filter = (SpatialRuleFilter) ruleFilter;
         final SpatialLiteral spatialLiteral = filter.getLiteral();
 
@@ -42,9 +35,7 @@ public class SpatialRuleMapper implements RuleMapper {
         }
 
         final Polygon[] polygons = extractPolygons(spatialLiteral.getCoordinates());
-        final MultiPolygon multiPolygon = geometryFactory.createMultiPolygon(polygons);
-
-        final Geometry transformed = JTS.transform(multiPolygon, mathTransform);
+        final MultiPolygon transformed = geometryFactory.createMultiPolygon(polygons);
         transformed.setSRID(Integer.parseInt(DEFAULT_SRID_DEGREE));
 
         return new CustomCondition(
@@ -88,13 +79,21 @@ public class SpatialRuleMapper implements RuleMapper {
                  .forEach(i -> {
                      Object point = ringPoints.get(i);
                      List<Double> points = (List<Double>) point;
-                     final CoordinateXY coordinateXY = new CoordinateXY(
-                             Double.parseDouble(String.valueOf(points.get(0))),
-                             Double.parseDouble(String.valueOf(points.get(1))));
+                     final double x = Double.parseDouble(String.valueOf(points.get(0)));
+                     final double y = Double.parseDouble(String.valueOf(points.get(1)));
+                     final CoordinateXY coordinateXY = new CoordinateXY(toLongitude(x), toLatitude(y));
 
                      pointsArray[i] = coordinateXY;
                  });
 
         return pointsArray;
+    }
+
+    private double toLongitude(double x) {
+        return Math.toDegrees(x / WEB_MERCATOR_RADIUS);
+    }
+
+    private double toLatitude(double y) {
+        return Math.toDegrees(Math.atan(Math.sinh(y / WEB_MERCATOR_RADIUS)));
     }
 }

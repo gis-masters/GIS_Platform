@@ -11,7 +11,7 @@ import ru.mycrg.data_service.dto.kpt_import.ImportKptRequest;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.service.import_.kpt.ImportKptService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 

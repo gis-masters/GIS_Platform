@@ -6,7 +6,10 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.config.JsonParserType;
+import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
+import jakarta.validation.constraints.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
@@ -17,7 +20,6 @@ import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -435,7 +437,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         }
 
         String field = "firstproperty";
-        jsonPath = response.jsonPath();
+        jsonPath = response.jsonPath(new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3));
         List<DocumentVersioningDto> versions = jsonPath.getList("", DocumentVersioningDto.class);
         assertEquals(2, versions.size());
 
@@ -945,22 +947,22 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     public void getRecordsAsRegistry(String ecqlFilter, String libraryId) {
-        String url = String.format("/%s/records/as_registry?filter=%s", libraryId, ecqlFilter);
+        String normalizedFilter = ecqlFilter.replace("+", " ");
 
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("filter", normalizedFilter)
                 .when().
-                       get(url);
+                       get("/" + libraryId + "/records/as_registry");
     }
 
     public void getRecordByEcqlFilterAndRecordId(String ecqlFilter, String recordId, String libraryId) {
-        String url = String.format("/%s/records/as_registry?filter=%s&recordId=%s",
-                                   libraryId,
-                                   ecqlFilter,
-                                   recordId);
+        String normalizedFilter = ecqlFilter.replace("+", " ");
 
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("filter", normalizedFilter)
+                .queryParam("recordId", recordId)
                 .when().
-                        get(url);
+                        get("/" + libraryId + "/records/as_registry");
     }
 
     public void createDocumentAndWriteAsCurrent(String body, String libraryId) {
@@ -1086,14 +1088,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                                          String sortingDirection,
                                                          String filter,
                                                          String libraryId) {
+        String normalizedFilter = Objects.toString(filter, "").replace("+", " ");
+
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("sort", sortingFiled + "," + sortingDirection)
+                .queryParam("filter", normalizedFilter)
+                .queryParam("size", 1000)
                 .when().
-                        get(String.format("/%s/records/as_registry?sort=%s,%s&filter=%s&%s",
-                                          libraryId,
-                                          sortingFiled,
-                                          sortingDirection,
-                                          filter,
-                                          "size=1000"));
+                       get(String.format("/%s/records/as_registry", libraryId));
     }
 
     private String getRecordBodyForDlDefaultWithCorrectField() {

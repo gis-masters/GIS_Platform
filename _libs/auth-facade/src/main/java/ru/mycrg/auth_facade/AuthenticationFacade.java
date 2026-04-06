@@ -11,7 +11,13 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static ru.mycrg.auth_facade.JwtDetails.*;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
@@ -23,12 +29,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
     @Override
     public String getAccessToken() {
-        Object details = getAuthentication().getDetails();
-        if (details != null) {
-            return ((OAuth2AuthenticationDetails) details).getTokenValue();
-        } else {
-            return "";
-        }
+        return extractTokenValue(getAuthentication()).orElse("");
     }
 
     @Override
@@ -109,7 +110,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
                 Map<String, Object> firstOrg = (Map<String, Object>) ((ArrayList) oOrganization.get()).get(0);
                 Optional<Object> oValue = getValue(firstOrg, "id");
 
-                return oValue.map(o -> ((Integer) o).longValue()).orElse(-1L);
+                return oValue.map(this::toLong).orElse(-1L);
             } else {
                 return -1L;
             }
@@ -120,15 +121,28 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
     private Map<String, Object> decode(Principal principal) {
         try {
-            OAuth2Authentication authentication = (OAuth2Authentication) principal;
-            OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
+            if (!(principal instanceof Authentication authentication)) {
+                return Collections.emptyMap();
+            }
 
-            return (Map<String, Object>) details.getDecodedDetails();
+            Object details = authentication.getDetails();
+            if (details instanceof OAuth2AuthenticationDetails oAuth2Details) {
+                Object decodedDetails = oAuth2Details.getDecodedDetails();
+                if (decodedDetails instanceof Map<?, ?> map) {
+                    return asStringMap(map);
+                }
+            }
+            if (details instanceof JwtAuthenticationDetails jwtDetails) {
+                return jwtDetails.getDecodedDetails();
+            }
+            if (details instanceof Map<?, ?> map) {
+                return asStringMap(map);
+            }
         } catch (Exception e) {
             log.error("Не удалось прочесть Principal => {}", e.getMessage(), e);
-
-            return new HashMap<>();
         }
+
+        return new HashMap<>();
     }
 
     private Optional<Object> getValue(Map<String, Object> data, String target) {
@@ -150,5 +164,36 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
     private Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    private Optional<String> extractTokenValue(Authentication authentication) {
+        if (authentication == null) {
+            return Optional.empty();
+        }
+
+        Object details = authentication.getDetails();
+        if (details instanceof OAuth2AuthenticationDetails oAuth2Details) {
+            return Optional.ofNullable(oAuth2Details.getTokenValue());
+        }
+        if (details instanceof JwtAuthenticationDetails jwtDetails) {
+            return Optional.ofNullable(jwtDetails.getTokenValue());
+        }
+
+        return Optional.empty();
+    }
+
+    private Map<String, Object> asStringMap(Map<?, ?> source) {
+        Map<String, Object> result = new HashMap<>();
+        source.forEach((key, value) -> result.put(String.valueOf(key), value));
+
+        return result;
+    }
+
+    private Long toLong(Object value) {
+        if (value instanceof Number number) {
+            return number.longValue();
+        }
+
+        return Long.valueOf(String.valueOf(value));
     }
 }

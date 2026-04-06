@@ -5,7 +5,9 @@ spring:
 ---
 
 spring:
-  profiles: fiz-dev
+  config:
+    activate:
+      on-profile: fiz-dev
   datasource:
     platform: postgres
     url: jdbc:postgresql://127.0.0.1:5434/postgres

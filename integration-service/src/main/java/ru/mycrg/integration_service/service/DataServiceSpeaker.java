@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,6 +11,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;

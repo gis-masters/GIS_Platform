@@ -635,12 +635,11 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         updateProject(projectId, jsonBody);
     }
 
-    private Response getByParent(String parentId) {
+    private void getByParent(String parentId) {
         response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/?parent=" + parentId);
-
-        return response;
+                .queryParam("parent", parentId)
+                .when().log().all().
+                        get();
     }
 
     private Response forcedDeleteProjectItemById(String id) {

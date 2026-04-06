@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +34,7 @@ import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import tools.jackson.databind.JsonNode;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,10 +52,10 @@ import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @ConditionalOnProperty(
@@ -195,8 +194,7 @@ public class AcceptKptService {
                                       String clientId,
                                       ResourceQualifier qualifier,
                                       SchemaDto schema,
-                                      String attachId)
-            throws CrgDaoException, JsonProcessingException {
+                                      String attachId) throws CrgDaoException {
         Long docId = docRecord.getId();
         log.debug("Найден документ с id: {}", docId);
         byte[] fileBytes;
@@ -234,7 +232,7 @@ public class AcceptKptService {
         fileMap.put(ID.getName(), savedEntity.getId().toString());
         fileMap.put(TITLE.getName(), savedEntity.getTitle());
         fileMap.put(SIZE.getName(), savedEntity.getSize());
-        String jacksonData = mapper.writeValueAsString(fileMap);
+        String jacksonData = getJsonString(fileMap);
         Map<String, Object> payload = docRecord.getContent();
         payload.remove(TITLE.getName());
         payload.put(FILE_ATTRIBUTE, List.of(jacksonData));

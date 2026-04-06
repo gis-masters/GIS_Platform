@@ -6,8 +6,8 @@ Feature: Аудит работы со слоями
 
   Scenario Outline: Создание слоя заносится в аудит лог
     Given Существует проект "STRING_10"
-    Given Существует набор данных
-    Given Существует таблица
+    *     Существует набор данных
+    *     Существует таблица
     When  Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type" "style"
     And   Создан аудит лог о создании слоя, с корректным телом
     Examples:

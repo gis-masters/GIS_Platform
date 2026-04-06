@@ -1,10 +1,9 @@
 package ru.mycrg.gateway.domain;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import lombok.extern.log4j.Log4j2;
+import jakarta.servlet.http.HttpServletRequest;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,24 +13,30 @@ import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.gateway.exceptions.CrgGatewayException;
 import ru.mycrg.http_client.exceptions.HttpClientException;
+import ru.mycrg.jwt_support.JwtClaimNames;
+import ru.mycrg.jwt_support.JwtClaimsDecoder;
+import ru.mycrg.jwt_support.JwtExpiredException;
 import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.auth_facade.JwtDetails.USER_NAME;
 import static ru.mycrg.auth_facade.JwtDetails.VERSION;
 
-@Log4j2
 @Service
 public class Authenticator {
 
+    private static final Logger log = LoggerFactory.getLogger(Authenticator.class);
+
     private final OAuthClient authClient;
     private final TokenHandler tokenHandler;
+    private final JwtClaimsDecoder jwtClaimsDecoder = new JwtClaimsDecoder();
     private final String secret;
     private final String basicAuthAsBase64;
 
@@ -55,7 +60,7 @@ public class Authenticator {
 
         final JwtToken token = oToken.get();
         try {
-            final Claims claims = validateToken(token);
+            final Map<String, Object> claims = validateToken(token);
 
             checkIfTokenNeedUpdated(token, claims);
 
@@ -64,7 +69,7 @@ public class Authenticator {
             } else {
                 return new AuthConclusion(token, "IncorrectClaims");
             }
-        } catch (ExpiredJwtException expired) {
+        } catch (JwtExpiredException expired) {
             log.debug("Access token expired");
 
             if (token.getRefresh_token() == null) {
@@ -81,7 +86,7 @@ public class Authenticator {
             }
 
             final JwtToken refreshedToken = oToken.get();
-            final Claims claims = validateToken(refreshedToken);
+            final Map<String, Object> claims = validateToken(refreshedToken);
             if (setAuthentication(claims)) {
                 return new AuthConclusion(refreshedToken, "authByRefreshToken");
             } else {
@@ -126,33 +131,36 @@ public class Authenticator {
         return result;
     }
 
-    private void checkIfTokenNeedUpdated(JwtToken token, Claims claims) throws HttpClientException {
+    private void checkIfTokenNeedUpdated(JwtToken token, Map<String, Object> claims) throws HttpClientException {
         UserInfoModel currentUser = authClient.getCurrentUser(token.getAccess_token());
         log.debug("Пользователь {}", currentUser);
         if (!currentUser.isEnabled()) {
             throw new CrgGatewayException("Пользователь не активен");
         }
         Short userVersion = currentUser.getVersion();
-        Short tokenVersion = claims.get(VERSION, Short.class);
+        Short tokenVersion = toShort(claims.get(VERSION));
         if (nonNull(userVersion) && !userVersion.equals(tokenVersion)) {
-            throw new ExpiredJwtException(null, claims, "Токен пользователя устарел");
+            throw new JwtExpiredException("Токен пользователя устарел");
         }
     }
 
     @NotNull
-    private Boolean setAuthentication(Claims claims) {
+    private Boolean setAuthentication(Map<String, Object> claims) {
         log.debug("Claims: {}", claims);
 
-        String username = claims.get("user_name").toString();
+        Object usernameClaim = claims.get(USER_NAME);
+        String username = usernameClaim == null ? null : String.valueOf(usernameClaim);
         if (username != null) {
-            @SuppressWarnings("unchecked")
-            List<String> authorities = (List<String>) claims.get("authorities");
+            List<?> authorities = claims.get(JwtClaimNames.AUTHORITIES) instanceof List<?> rawAuthorities
+                    ? rawAuthorities
+                    : List.of();
 
             // Create auth object: UsernamePasswordAuthenticationToken: A built-in object, used by spring to represent
             // the current authenticated / being authenticated user.
             // It needs a list of authorities, which has type of GrantedAuthority interface, where
             // SimpleGrantedAuthority is an implementation of that interface
             final List<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
+                                                                               .map(String::valueOf)
                                                                                .map(SimpleGrantedAuthority::new)
                                                                                .collect(Collectors.toList());
 
@@ -168,11 +176,8 @@ public class Authenticator {
         }
     }
 
-    private Claims validateToken(JwtToken tokenModel) throws ExpiredJwtException {
-        return Jwts.parser()
-                   .setSigningKey(secret.getBytes())
-                   .parseClaimsJws(tokenModel.getAccess_token())
-                   .getBody();
+    private Map<String, Object> validateToken(JwtToken tokenModel) throws JwtExpiredException {
+        return jwtClaimsDecoder.decodeClaims(tokenModel.getAccess_token(), secret);
     }
 
     private Optional<JwtToken> refreshToken(JwtToken tokenModel) {
@@ -190,5 +195,16 @@ public class Authenticator {
 
             return Optional.empty();
         }
+    }
+
+    private Short toShort(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Number number) {
+            return number.shortValue();
+        }
+
+        return Short.valueOf(String.valueOf(value));
     }
 }

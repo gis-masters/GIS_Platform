@@ -37,12 +37,13 @@ import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 import static ru.mycrg.data_service.mappers.FileResourceQualifierMapper.mapToFileQualifier;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.StringUtil.extractHash;
 import static ru.mycrg.data_service.util.StringUtil.hashCodeAsString;
 import static ru.mycrg.data_service_contract.enums.FileType.TAB;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Component
 public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
@@ -198,7 +199,8 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         this.wsMsgId = UUID.randomUUID();
 
         try {
-            this.payload = mapper.convertValue(data, FilePlacementPayloadModel.class);
+            this.payload = fromJson(getJsonString(data), FilePlacementPayloadModel.class).orElseThrow(
+                    () -> new IllegalArgumentException("Данные невозможно сконвертировать!"));
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель импорта: %s", data);
             log.error(msg, e.getCause());
@@ -253,7 +255,7 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
             return 1;
         }
 
-        String etalonPath = stripFilenameExtension(files.get(0).getPath());
+        String etalonPath = stripFilenameExtension(files.getFirst().getPath());
 
         return files.stream()
                     .map(file -> stripFilenameExtension(file.getPath()))

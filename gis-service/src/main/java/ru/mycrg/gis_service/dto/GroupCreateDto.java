@@ -1,17 +1,16 @@
 package ru.mycrg.gis_service.dto;
 
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import ru.mycrg.gis_service.validators.CrgParentGroup;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.NotBlank;
 
 public class GroupCreateDto {
 
     @NotBlank
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String title;
 
     @CrgParentGroup

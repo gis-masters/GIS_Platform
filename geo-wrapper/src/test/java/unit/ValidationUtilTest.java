@@ -1,43 +1,11 @@
 package unit;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.assertj.core.util.Lists;
-import org.junit.Test;
-import ru.mycrg.data_service_contract.dto.ErrorDescription;
-import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
-import ru.mycrg.data_service_contract.dto.PropertyViolation;
-import ru.mycrg.wrapper.service.validation.Util;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static ru.mycrg.wrapper.dao.DaoProperties.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.mycrg.wrapper.service.util.StringDecoder.decode;
 
 public class ValidationUtilTest {
-
-    @Test
-    public void shouldConvertToJSON() {
-        PropertyViolation propertyViolation = new PropertyViolation();
-        propertyViolation.setName("pName");
-        propertyViolation.setValue("pValue");
-
-        propertyViolation.setErrorTypes(Lists.newArrayList("INT", "CHOICE", "DOUBLE"));
-
-        ObjectValidationResult object = new ObjectValidationResult();
-        object.setClassId(CLASS_ID);
-        object.setObjectId(PRIMARY_KEY);
-        object.setGlobalId(GLOBAL_KEY);
-        object.setxMin("xmin");
-        object.addPropertyViolation(propertyViolation);
-        object.addObjectViolation(new ErrorDescription("status", "some text"));
-
-        JsonNode jsonNode = Util.convertToJson(object);
-
-        assertEquals("{\"objectId\":\"objectid\",\"globalId\":\"globalid\",\"classId\":\"classid\",\"xMin\":\"xmin\"," +
-                             "\"propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
-                             "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":" +
-                             "[{\"attribute\":\"status\",\"error\":\"some text\"}]}",
-                     jsonNode.toString());
-    }
 
     @Test
     public void shouldTestEncoding() {

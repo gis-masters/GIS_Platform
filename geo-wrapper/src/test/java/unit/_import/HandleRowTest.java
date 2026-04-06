@@ -1,15 +1,16 @@
 package unit._import;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.postgresql.util.PGobject;
 import ru.mycrg.common_utils.CrgScriptEngine;
+import ru.mycrg.common_utils.ScriptCalculator;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.wrapper.service.import_.DataHandler;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +21,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static ru.mycrg.wrapper.dao.DaoProperties.NULL_MARKER;
 
-@RunWith(MockitoJUnitRunner.class)
 public class HandleRowTest {
 
     @InjectMocks
@@ -34,8 +34,16 @@ public class HandleRowTest {
     @Mock
     CrgScriptEngine scriptEngine;
 
+    @Mock
+    ScriptCalculator scriptCalculator;
+
     private ObjectMapper mapper = new ObjectMapper();
     private ClassLoader classLoader = getClass().getClassLoader();
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void shouldEncodingStrings() throws IOException, URISyntaxException {

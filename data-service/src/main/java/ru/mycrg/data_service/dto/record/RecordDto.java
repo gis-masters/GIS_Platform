@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto.record;
 
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Map;
 

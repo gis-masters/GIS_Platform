@@ -2,8 +2,8 @@ package ru.mycrg.report_service.config.custom_annotation;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.Status;
 import org.springframework.stereotype.Component;
 import ru.mycrg.report_service.exceptions.CarboneUnavailableException;
 import ru.mycrg.report_service.services.CarboneHealthIndicator;

@@ -3,7 +3,7 @@ package ru.mycrg.data_service.dto;
 import ru.mycrg.data_service.validators.ValidateEnum;
 import ru.mycrg.common_contracts.enums.Roles;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 public class PermissionCreateDto {
 

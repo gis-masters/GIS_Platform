@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.table_records.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class UpdateMultipleTableRecordRequest implements IRequest<Voidy>, Auditable {
 
@@ -59,10 +58,10 @@ public class UpdateMultipleTableRecordRequest implements IRequest<Voidy>, Audita
             entityName = qualifier.getTable();
         }
 
-        return new CrgAuditEvent(mapper.convertValue(properties, JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(properties),
                                  "MULTIPLE_UPDATE",
                                  entityName,
                                  FEATURE.name(),
-                                 mapper.convertValue(ids, JsonNode.class));
+                                 toJsonNode(ids));
     }
 }

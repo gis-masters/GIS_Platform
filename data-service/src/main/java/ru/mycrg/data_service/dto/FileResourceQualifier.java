@@ -53,6 +53,9 @@ public class FileResourceQualifier {
     }
 
     @Override
+    /*
+      Нельзя менять чтобы в будущем строился корректный запрос на geoserver с фронта через gate-way
+     */
     public String toString() {
         return join(
                 table == null || table.isBlank() ? "" : table,

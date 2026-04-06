@@ -613,8 +613,10 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
         for (int i = 0; i <= totalPages; i++) {
             response = getBaseRequestWithCurrentCookie()
+                    .queryParam("size", entitiesPerPage)
+                    .queryParam("page", i)
                     .when().
-                            get(String.format("/?size=%s&page=%s", entitiesPerPage, i));
+                            get();
 
             jsonPath = response.jsonPath();
             List<Long> userIds = jsonPath.getList("content.id");

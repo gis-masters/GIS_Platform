@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.resources.protectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -9,11 +8,12 @@ import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import tools.jackson.databind.JsonNode;
 
 import java.util.Optional;
 
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Component
 public class FileResourceProtector implements IFileResourceProtector {
@@ -101,8 +101,11 @@ public class FileResourceProtector implements IFileResourceProtector {
         }
 
         try {
-            FileResourceQualifier frQualifier = mapper.readValue(resourceQualifier.toString(),
-                                                                 FileResourceQualifier.class);
+            Optional<FileResourceQualifier> oFrQualifier = fromJson(resourceQualifier.toString(),
+                                                                    FileResourceQualifier.class);
+
+            FileResourceQualifier frQualifier =
+                    oFrQualifier.orElseThrow(() -> new IllegalArgumentException(resourceType));
 
             return Optional.of(
                     new ResourceQualifier(frQualifier.getSchema(),

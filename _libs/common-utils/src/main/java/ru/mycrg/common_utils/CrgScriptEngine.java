@@ -11,9 +11,22 @@ public class CrgScriptEngine {
 
     private final Logger log = LoggerFactory.getLogger(CrgScriptEngine.class);
 
-    private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-    private final Compilable compilable = (Compilable) engine;
-    private final Invocable invocable = (Invocable) engine;
+    private final Compilable compilable;
+    private final Invocable invocable;
+
+    public CrgScriptEngine() {
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+        if (engine == null) {
+            throw new IllegalStateException("JavaScript engine 'nashorn' is not available. " +
+                                                    "Add org.openjdk.nashorn:nashorn-core to the runtime classpath.");
+        }
+        if (!(engine instanceof Compilable) || !(engine instanceof Invocable)) {
+            throw new IllegalStateException("JavaScript engine 'nashorn' must implement both Compilable and Invocable.");
+        }
+
+        this.compilable = (Compilable) engine;
+        this.invocable = (Invocable) engine;
+    }
 
     /**
      * Вызов функции с обьектом в качестве параметра.

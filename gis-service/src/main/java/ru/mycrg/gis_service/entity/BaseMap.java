@@ -1,16 +1,14 @@
 package ru.mycrg.gis_service.entity;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.hateoas.Identifiable;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "basemaps")
-public class BaseMap implements Identifiable<Long> {
+public class BaseMap {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +52,6 @@ public class BaseMap implements Identifiable<Long> {
         this.lastModified = LocalDateTime.now();
     }
 
-    @Override
     public Long getId() {
         return id;
     }

@@ -1,5 +1,6 @@
 package ru.mycrg.report_service.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,6 @@ import ru.mycrg.report_service.config.custom_annotation.RequiresCarboneHealth;
 import ru.mycrg.report_service.exceptions.BadRequestException;
 import ru.mycrg.report_service.services.IReportService;
 
-import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController

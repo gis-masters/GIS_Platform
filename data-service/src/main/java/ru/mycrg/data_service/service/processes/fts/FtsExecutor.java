@@ -18,7 +18,8 @@ import ru.mycrg.mediator.Mediator;
 import java.util.List;
 import java.util.Map;
 
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Component
 public class FtsExecutor implements IExecutor<PageableResources<FtsResponseDto>> {
@@ -49,7 +50,10 @@ public class FtsExecutor implements IExecutor<PageableResources<FtsResponseDto>>
         try {
             Map<String, Object> data = (Map<String, Object>) payload;
 
-            this.payload = mapper.convertValue(data.get("ftsDto"), FtsRequestDto.class);
+            this.payload = fromJson(getJsonString(data.get("ftsDto")),
+                                    FtsRequestDto.class).orElseThrow(
+                    () -> new IllegalArgumentException("Данные невозможно сконвертировать!"));
+
             this.pageable = (Pageable) data.get("pageable");
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель FTS поиска: %s", payload);

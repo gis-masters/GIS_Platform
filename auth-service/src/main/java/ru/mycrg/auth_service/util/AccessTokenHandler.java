@@ -1,15 +1,14 @@
 package ru.mycrg.auth_service.util;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.type.TypeReference;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
-import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 public class AccessTokenHandler {
 
@@ -21,23 +20,22 @@ public class AccessTokenHandler {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String extractUserSbjId(String esiaToken) throws IOException {
+    public static String extractUserSbjId(String esiaToken) {
         String[] accessParts = esiaToken.split("\\.");
 
         String content = new String(Base64.getUrlDecoder().decode(accessParts[1]), StandardCharsets.UTF_8);
 
-        Map<String, String> result = asMap(content);
+        Map<String, Object> result = asMap(content);
 
         log.debug("Content successfully read: {}", result);
 
         return String.valueOf(result.get(URN_ESIA_SBJ_ID_KEY));
     }
 
-    public static Map<String, String> asMap(String content) throws IOException {
+    public static Map<String, Object> asMap(String content) {
         log.debug("Try read as map, accessToken content: {}", content);
 
-        return mapper.readValue(content,
-                                new TypeReference<Map<String, Object>>() {
-                                });
+        return fromJson(content, new TypeReference<Map<String, Object>>() {})
+                .orElseThrow(() -> new IllegalArgumentException("Не удалось прочитать access token как JSON"));
     }
 }

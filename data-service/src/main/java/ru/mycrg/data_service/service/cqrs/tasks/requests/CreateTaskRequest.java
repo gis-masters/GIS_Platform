@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.tasks.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse;
@@ -18,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class CreateTaskRequest implements IRequest<IRecord>, Auditable, ICreateFilesRelation {
 
@@ -41,7 +40,7 @@ public class CreateTaskRequest implements IRequest<IRecord>, Auditable, ICreateF
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(record, JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(record),
                                  "CREATE",
                                  qualifier.getTable() == null ? "unknown" : qualifier.getTable(),
                                  TASK.name(),

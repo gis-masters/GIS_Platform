@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.controller;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +32,7 @@ public class FtsController {
 
     @PostMapping("/fts")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Resource<Process>> fullTextSearch(@RequestBody FtsRequestDto dto, Pageable pageable) {
+    public ResponseEntity<EntityModel<Process>> fullTextSearch(@RequestBody FtsRequestDto dto, Pageable pageable) {
         if (dto.getText() == null || dto.getText().isBlank()) {
             throw new BadRequestException("Некорректный запрос",
                                           List.of(new ErrorInfo("text", "Поле обязательно к заполнению")));
@@ -50,7 +50,7 @@ public class FtsController {
 
     @PostMapping("/fts/reload")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Resource<Process>> reloadFTSData() {
+    public ResponseEntity<EntityModel<Process>> reloadFTSData() {
         ProcessDto processDto = new ProcessDto();
         processDto.setType(FTS_RELOAD.name());
 

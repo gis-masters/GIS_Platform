@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.service;
 
+import jakarta.json.JsonMergePatch;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +13,11 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
+
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.GroupRepository;
 import ru.mycrg.gis_service.service.projects.ProjectService;
 
-import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

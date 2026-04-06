@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Request;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -19,6 +18,7 @@ import ru.mycrg.integration_service.dto.ResourceAnalyzeModel;
 import ru.mycrg.integration_service.dto.ResourceAnalyzeTask;
 import ru.mycrg.integration_service.exceptions.NotFoundException;
 import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.MalformedURLException;
 import java.net.URL;

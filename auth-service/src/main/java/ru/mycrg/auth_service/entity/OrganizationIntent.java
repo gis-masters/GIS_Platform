@@ -2,7 +2,7 @@ package ru.mycrg.auth_service.entity;
 
 import ru.mycrg.auth_service_contract.dto.OrganizationIntentDto;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

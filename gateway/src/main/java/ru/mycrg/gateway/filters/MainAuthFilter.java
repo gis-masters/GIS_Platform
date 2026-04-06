@@ -1,8 +1,14 @@
 package ru.mycrg.gateway.filters;
 
-import lombok.extern.log4j.Log4j2;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
@@ -13,10 +19,6 @@ import ru.mycrg.gateway.domain.TokenHandler;
 import ru.mycrg.gateway.queue.MessageBusProducer;
 import ru.mycrg.oauth_client.JwtToken;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,8 +26,9 @@ import static org.apache.commons.lang.CharEncoding.UTF_8;
 import static ru.mycrg.gateway.GatewayApplication.objectMapper;
 import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
-@Log4j2
-public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
+public class MainAuthFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(MainAuthFilter.class);
 
     private final CookieProducer cookieProducer;
     private final Authenticator authenticator;
@@ -53,6 +56,8 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         } else if (isGetTokenRequest(request)) {
             log.debug("isGetTokenRequest");
 
+            //TODO: не понятно почему в параметрах и не понятно почему с фронта и с api работает а с бруно нет.
+            // разберёмся
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             if (username == null || password == null) {
@@ -163,20 +168,14 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         if ("authByAccessToken".equals(authConclusion.getCause())) {
             log.debug("Успешно авторизованы по access-токену");
 
-            // Передаем далее только access токен
-            request.setAttribute(TEMPLATE_ATTRIBUTE, token.getAccess_token());
-
-            gotoNextFilter(request, response, chain);
+            gotoNextFilter(withAccessToken(request, token), response, chain);
         } else if ("authByRefreshToken".equals(authConclusion.getCause())) {
             log.debug("Успешно авторизованы по refresh-токену");
-
-            // Передаем далее только access токен
-            request.setAttribute(TEMPLATE_ATTRIBUTE, token.getAccess_token());
 
             // Обновим куку свежим токеном
             response.addCookie(cookieProducer.makeFromJwtToken(token));
 
-            gotoNextFilter(request, response, chain);
+            gotoNextFilter(withAccessToken(request, token), response, chain);
         } else if ("refreshTokenNotPassed".equals(authConclusion.getCause())) {
             log.warn("Refresh-токен не предоставлен");
 
@@ -292,5 +291,12 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         } catch (IOException e) {
             log.error("Response failed: ", e);
         }
+    }
+
+    private HttpServletRequest withAccessToken(HttpServletRequest request, JwtToken token) {
+        MutableHttpServletRequest wrappedRequest = new MutableHttpServletRequest(request);
+        wrappedRequest.putHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccess_token());
+
+        return wrappedRequest;
     }
 }

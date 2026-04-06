@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.ddl.columns.DdlColumnBase;
 import ru.mycrg.data_service.dto.LibraryUpdateDto;
 import ru.mycrg.data_service.entity.DocumentLibrary;
@@ -14,7 +15,6 @@ import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtecto
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import static java.util.Objects.nonNull;

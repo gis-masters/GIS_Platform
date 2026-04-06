@@ -1,6 +1,6 @@
 package ru.mycrg.auth_service_contract.dto;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 public class GroupUpdateDto {
 

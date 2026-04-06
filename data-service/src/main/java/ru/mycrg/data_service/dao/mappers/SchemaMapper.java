@@ -2,10 +2,11 @@ package ru.mycrg.data_service.dao.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import ru.mycrg.data_service.entity.SchemaTemplate;
-import ru.mycrg.data_service.util.JsonConverter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class SchemaMapper implements RowMapper<SchemaTemplate> {
 
@@ -18,7 +19,7 @@ public class SchemaMapper implements RowMapper<SchemaTemplate> {
         schemaTemplate.setCustomRule(rs.getString("custom_rule"));
 
         String classRule = rs.getString("class_rule");
-        schemaTemplate.setClassRule(JsonConverter.toJsonNode(classRule));
+        schemaTemplate.setClassRule(toJsonNode(classRule));
 
         return schemaTemplate;
     }

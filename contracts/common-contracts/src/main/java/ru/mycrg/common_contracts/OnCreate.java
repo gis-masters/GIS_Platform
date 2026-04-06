@@ -1,6 +1,6 @@
 package ru.mycrg.common_contracts;
 
-import javax.validation.groups.Default;
+import jakarta.validation.groups.Default;
 
 public interface OnCreate extends Default {
 

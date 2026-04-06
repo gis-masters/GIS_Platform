@@ -1,22 +1,19 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+ 
+import org.hibernate.annotations.JdbcTypeCode;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.type.SqlTypes;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import tools.jackson.databind.JsonNode;
+
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
 
 @Entity
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
 @Table(name = "doc_libraries")
 public class DocumentLibrary {
 
@@ -37,7 +34,7 @@ public class DocumentLibrary {
     @Column(nullable = false)
     private String tableName;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private JsonNode schema;
 

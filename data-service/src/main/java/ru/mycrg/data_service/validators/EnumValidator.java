@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.validators;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;

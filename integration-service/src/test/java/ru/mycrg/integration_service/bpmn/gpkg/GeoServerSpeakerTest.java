@@ -1,16 +1,16 @@
 package ru.mycrg.integration_service.bpmn.gpkg;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GeoServerSpeakerTest {
 
     @Test
-    public void testFindSvgRelativePathInSld() {
+    void testFindSvgRelativePathInSld() {
         String sld11 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<StyledLayerDescriptor xmlns=\"http://www.opengis.net/sld\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n" +
                 "    xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +

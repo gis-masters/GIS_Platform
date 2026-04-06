@@ -52,7 +52,7 @@ public class ResourceAnalyzerStepsDefinitions extends BaseStepsDefinitions {
         // Check active process
         final Response responseActive = super.getBaseRequestWithCurrentTokenAndPort(8338)
                                              .basePath("/rest/process-instance/")
-                                             .when().
+                                             .when().log().all().
                                                      get(analyzeProcessId);
 
         // Check process in history

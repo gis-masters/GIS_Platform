@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.service.processes;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,18 +14,16 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.ProcessRepository;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
+import tools.jackson.databind.JsonNode;
 
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
+import static ru.mycrg.http_client.JsonConverter.*;
 
 @Service
 public class ProcessService {
@@ -83,7 +81,7 @@ public class ProcessService {
     }
 
     public Process create(String userName, String title, ProcessType type, Object payload) {
-        final Process newProcess = new Process(userName, title, type, JsonConverter.toJsonNode(payload));
+        final Process newProcess = new Process(userName, title, type, toJsonNodeSafe(payload));
 
         return processRepository.save(newProcess);
     }
@@ -119,41 +117,40 @@ public class ProcessService {
     }
 
     public void addTask(Process process, ProcessModel processModel) {
-        try {
-            log.debug("Add subStep to process: {}", process.getId());
+        log.debug("Add subStep to process: {}", process.getId());
 
-            String content = "{}";
-            if (process.getDetails() != null) {
-                content = process.getDetails().toString();
-            }
-
-            DetailsModel details = mapper.readValue(content, DetailsModel.class);
-            details.addTask(processModel);
-
-            JsonNode jsonNode = JsonConverter.toJsonNode(details);
-
-            process.setDetails(jsonNode);
-        } catch (IOException e) {
-            log.error("Failed write details to process / Error: {}", e.getMessage());
+        String content = "{}";
+        if (process.getDetails() != null) {
+            content = process.getDetails().toString();
         }
+
+        DetailsModel details = fromJson(content, DetailsModel.class)
+                .orElseThrow(() -> new IllegalStateException("Невозможно конвертировать значение!!!"));
+        details.addTask(processModel);
+
+        JsonNode jsonNode = toJsonNode(details);
+
+        process.setDetails(jsonNode);
     }
 
     @NotNull
     public String getWsUiId(Process process) {
         try {
             JsonNode extra = process.getExtra();
-            if (extra == null) {
+            if (extra == null || extra.isNull()) {
                 throw new IllegalStateException("extra данные не заполнены");
             }
 
-            JsonNode jsonNode;
-            if (extra.isValueNode()) {
-                jsonNode = mapper.readTree(extra.asText());
-            } else {
-                jsonNode = mapper.readTree(extra.toString());
+            JsonNode jsonNode = extra.isTextual()
+                    ? toJsonNodeFromString(extra.asText())
+                    : extra;
+
+            JsonNode wsUiIdNode = jsonNode.get("wsUiId");
+            if (wsUiIdNode == null || wsUiIdNode.isNull()) {
+                throw new IllegalStateException("в extra отсутствует поле wsUiId");
             }
 
-            return jsonNode.get("wsUiId").asText();
+            return wsUiIdNode.asText();
         } catch (Exception e) {
             throw new DataServiceException("Не удалось получить ws идентификатор UI клиента => " + e.getMessage());
         }

@@ -15,10 +15,11 @@ import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.UUID;
+
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @ConditionalOnProperty(
@@ -44,7 +45,7 @@ public class GetCadastrialPlanResponseService extends ResponseProcessor {
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
-                    JsonConverter.toJsonNode(queryResult),
+                    toJsonNode(queryResult),
                     null,
                     null
             );
@@ -52,7 +53,7 @@ public class GetCadastrialPlanResponseService extends ResponseProcessor {
             switch (messageType(queryResult)) {
                 case REJECT: {
                     log.debug("Тип сообщения - REJECT");
-                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().getFirst();
 
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
                             .setXmlBuildMeta(metaInfo)

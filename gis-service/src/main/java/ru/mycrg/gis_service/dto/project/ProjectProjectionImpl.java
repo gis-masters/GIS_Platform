@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.dto.project;
 
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.server.core.Relation;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service_contract.dto.ProjectBaseProjection;
 

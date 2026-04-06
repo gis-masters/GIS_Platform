@@ -376,14 +376,16 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
 
     private void getTasks(String filter) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("filter", filter)
                 .when().
-                        get("?filter=" + filter);
+                        get();
     }
 
     private void getTasksByRecords(String taskIds) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("recordId", taskIds)
                 .when().
-                        get("?recordId=" + taskIds);
+                        get();
     }
 
     private void deleteAllTasks() {

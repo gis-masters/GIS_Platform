@@ -1,53 +1,45 @@
 package ru.mycrg.report_service.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.mycrg.auth_facade.AuthenticationFacade;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.jwt_support.JwtAuthenticationFilter;
 
 @Configuration
-@EnableResourceServer
-public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
+@EnableMethodSecurity(prePostEnabled = true)
+public class ResourceServerSecurityConfig {
 
-    @Value("${crg-options.jwt.secret}")
-    private String secret;
-
-    private final CustomAccessTokenConverter customAccessTokenConverter;
-
-    public ResourceServerSecurityConfig(CustomAccessTokenConverter customAccessTokenConverter) {
-        this.customAccessTokenConverter = customAccessTokenConverter;
-    }
-
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-                .cors().and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
-                .anyRequest().authenticated();
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(
+                        (request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                        .anyRequest().authenticated());
+
+        return http.build();
     }
 
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setAccessTokenConverter(customAccessTokenConverter);
-        converter.setSigningKey(secret);
-
-        return converter;
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+    JwtAuthenticationFilter jwtAuthenticationFilter(@Value("${crg-options.jwt.secret}") String secret) {
+        return new JwtAuthenticationFilter(secret);
     }
 
     @Bean

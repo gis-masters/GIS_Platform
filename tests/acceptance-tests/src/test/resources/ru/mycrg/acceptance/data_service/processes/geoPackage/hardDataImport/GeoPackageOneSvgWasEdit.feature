@@ -69,7 +69,7 @@ Feature: Импорт GeoPackage с изменённой svg
       | field_fias__oktmo   | 58                                                                       |
       | field_fias__address | Радуемся                                                                 |
       | field_fias__id      | 85                                                                       |
-      | field_file          | [{id=4ee6f273-25d8-451d-8ffa-96314ac3a588, title=empty.xlsx, size=4336}] |
+      | field_file          | [{id=4ee6f273-25d8-451d-8ffa-96314ac3a588, size=4336, title=empty.xlsx}] |
       | field_document      | [{"id":1,"title":"dw","libraryTableName":"dl_data_kpt"}]                 |
       | field_uuid          | cfbde192-08a8-4f0b-bd09-a0e417ec11ef                                     |
       | updated_by          |                                                                          |

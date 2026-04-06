@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class SchemasAndTablesMapper implements RowMapper<SchemasAndTables> {
 
@@ -23,8 +23,7 @@ public class SchemasAndTablesMapper implements RowMapper<SchemasAndTables> {
         sat.setIdentifier(rs.getString("identifier"));
         sat.setPath(rs.getString(PATH.getName()));
         sat.setCrs(rs.getString("crs"));
-        sat.setSchema(
-                toJsonNode(rs.getString("schema")));
+        sat.setSchema(toJsonNode(rs.getString("schema")));
         sat.setItemsCount(rs.getInt("items_count"));
 
         Timestamp createdAt = rs.getTimestamp("created_at");

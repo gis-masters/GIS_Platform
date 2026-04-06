@@ -1,6 +1,7 @@
 package ru.mycrg.report_service.controller;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -19,8 +20,6 @@ import ru.mycrg.report_service.exceptions.BadRequestException;
 import ru.mycrg.report_service.services.FileService;
 import ru.mycrg.report_service.services.TemplateService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,7 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
+import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.report_service.mappers.TemplateMapper.mapToTemplateFullInfo;
 import static ru.mycrg.report_service.services.DataServiceSpeaker.FILE_MEDIA_TYPE;
 
@@ -93,9 +92,9 @@ public class TemplateCrudController {
     }
 
     @PostMapping()
-    @PreAuthorize(ORG_ADMIN)
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<TemplateShortInfo> createNewTemplate(@Valid @RequestPart("dto") TemplateCreateDto dto,
-                                                               @NotNull @RequestPart("file") MultipartFile file) {
+                                                               @RequestPart("file") MultipartFile file) {
         validateCreateTemplateRequest(dto);
         log.debug("Попытка сохранения шаблона {}", dto);
         TemplateShortInfo createdTemplateId = templateService.createTemplate(dto, file);
@@ -104,7 +103,7 @@ public class TemplateCrudController {
     }
 
     @DeleteMapping("/{name}")
-    @PreAuthorize(ORG_ADMIN)
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteTemplateById(@PathVariable String name) {
         log.debug("Попросили удалить шаблон по имени = {}", name);
 
@@ -123,7 +122,6 @@ public class TemplateCrudController {
         }
     }
 
-    @NotNull
     private String defineFileContentType(HttpServletRequest request, Resource resource) {
         String contentType = null;
         try {

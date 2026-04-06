@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao.mappers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +8,14 @@ import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
+import tools.jackson.core.type.TypeReference;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,10 +23,10 @@ import java.util.Optional;
 import static java.sql.Types.*;
 import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
-import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyByName;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 public class BySchemaRowMapper {
 
@@ -96,10 +97,9 @@ public class BySchemaRowMapper {
         try {
             // Костыляка для 'versions' - поле не добавляется в схему
             if (VERSIONS.name().equalsIgnoreCase(columnName)) {
-                List<DocumentVersioningDto> descriptions = mapper
-                        .readValue(object.toString(),
-                                   new TypeReference<List<DocumentVersioningDto>>() {
-                                   });
+                List<DocumentVersioningDto> descriptions = fromJson(object.toString(),
+                                                                    new TypeReference<List<DocumentVersioningDto>>() {
+                                                                    }).orElseGet(ArrayList::new);
 
                 properties.put(columnName, descriptions);
 
@@ -117,9 +117,9 @@ public class BySchemaRowMapper {
             SimplePropertyDto property = oProperty.get();
             ValueType valueType = property.getValueTypeAsEnum();
             if (valueType.equals(FILE)) {
-                List<FileDescription> descriptions = mapper.readValue(object.toString(),
-                                                                      new TypeReference<List<FileDescription>>() {
-                                                                      });
+                List<FileDescription> descriptions = fromJson(object.toString(),
+                                                              new TypeReference<List<FileDescription>>() {
+                                                              }).orElseGet(ArrayList::new);
 
                 properties.put(columnName, descriptions);
             } else if (valueType.equals(UUID)) {

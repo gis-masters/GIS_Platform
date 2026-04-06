@@ -12,10 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
-import ru.mycrg.data_service.service.smev3.config.Smev3Config;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.dto.record.ResponseWithReport;
@@ -33,6 +32,7 @@ import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
@@ -60,10 +60,10 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQ
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @ConditionalOnProperty(
@@ -285,17 +285,18 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         propsMap.put(TASK_ASSIGNED_TO_PROPERTY, propsMap.get(PERFORMER_PROPERTY));
         propsMap.put(TASK_OWNER_ID_PROPERTY, propsMap.get(PERFORMER_PROPERTY));
 
-        taskLogService.create(new TaskLogDto(eventType, taskId, authenticationFacade.getUserDetails().getUserId()), propsMap);
+        taskLogService.create(new TaskLogDto(eventType, taskId, authenticationFacade.getUserDetails().getUserId()),
+                              propsMap);
     }
 
-    private void linkFolderToTask(IRecord folder, IRecord task) throws JsonProcessingException, CrgDaoException {
+    private void linkFolderToTask(IRecord folder, IRecord task) throws CrgDaoException {
         TypeDocumentData documentData = new TypeDocumentData(folder.getId(),
                                                              "Заказ номер " + task.getId(),
                                                              KPT_LIBRARY_ID);
 
         Map<String, Object> taskPayload = task.getContent();
         taskPayload.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE,
-                        mapper.writeValueAsString(List.of(documentData)));
+                        getJsonString(List.of(documentData)));
 
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)

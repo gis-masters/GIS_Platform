@@ -4,14 +4,15 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
+import ru.mycrg.data_service.repository.FileRepository;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -23,9 +24,11 @@ public class FileSigner {
     private static final Logger log = LoggerFactory.getLogger(FileSigner.class);
 
     private final EcpVerifier ecpVerifier;
+    private final FileRepository fileRepository;
 
-    public FileSigner(EcpVerifier ecpVerifier) {
+    public FileSigner(EcpVerifier ecpVerifier, FileRepository fileRepository) {
         this.ecpVerifier = ecpVerifier;
+        this.fileRepository = fileRepository;
     }
 
     @Transactional
@@ -68,6 +71,7 @@ public class FileSigner {
         }
 
         file.setEcp(ecpAsBytes);
+        fileRepository.save(file);
         log.debug("Файл: '{}' подписан: {}", file.getId(), newEcpVerifyResponse);
     }
 

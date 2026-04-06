@@ -1,9 +1,9 @@
 package ru.mycrg.geo_json;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.mycrg.geo_json.jackson.LngLatAltDeserializer;
 import ru.mycrg.geo_json.jackson.LngLatAltSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 import java.util.Arrays;

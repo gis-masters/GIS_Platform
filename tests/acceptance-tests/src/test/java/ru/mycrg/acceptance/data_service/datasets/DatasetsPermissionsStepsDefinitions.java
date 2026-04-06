@@ -78,8 +78,9 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
     @When("Текущий пользователь запрашивает правила для текущего набора, с размером страницы: {string}")
     public void makePageableRequest(String pageSize) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("size", pageSize)
                 .when().
-                        get(currentDatasetIdentifier + "/roleAssignment/?size=" + pageSize);
+                        get(currentDatasetIdentifier + "/roleAssignment");
     }
 
     @When("Пользователь запрашивает правила для текущего набора")
@@ -129,8 +130,9 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
                                        random.nextBoolean() ? "CONTRIBUTOR" : "VIEWER");
     }
 
+    //TODO метод изменён при переходе на  java 25. Если всё ок удалить комментарий 30.09.2026
     private String makeDatasetPermissionUrl(String datasetName, Integer permissionId) {
-        return String.format("%s:%d/api/data/datasets/%s/roleAssignment/%s",
-                             testServerHost, testServerPort, datasetName, permissionId);
+        return String.format("%s:%d/datasets/%s/roleAssignment/%s",
+                             "http://crg-data-service", 8084, datasetName, permissionId);
     }
 }

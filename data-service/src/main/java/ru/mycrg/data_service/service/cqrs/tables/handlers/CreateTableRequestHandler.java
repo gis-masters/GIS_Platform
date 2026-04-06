@@ -21,7 +21,6 @@ import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -43,7 +42,8 @@ import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.http_client.JsonConverter.asJsonString;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Component
 public class CreateTableRequestHandler implements IRequestHandler<CreateTableRequest, TableModel> {
@@ -102,7 +102,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         dto.setName(tableName);
 
         log.debug("Создаем таблицу в '{}' по схеме: [{}], DTO: [{}]",
-                  dataset.getIdentifier(), JsonConverter.asJsonString(schema), dto);
+                  dataset.getIdentifier(), asJsonString(schema), dto);
         createTable(schema, dataset.getIdentifier(), dto);
 
         // Create FTS triggers
@@ -217,7 +217,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
 
         schemaProperties.removeIf(prop -> PRIMARY_KEY.equals(prop.getName()));
 
-        schemaProperties.add(0, objectId);
+        schemaProperties.addFirst(objectId);
     }
 
     public String buildTableName(String nameFromSchema, long datasetId, String requiredName) {

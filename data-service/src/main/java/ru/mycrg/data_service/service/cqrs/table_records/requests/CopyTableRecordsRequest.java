@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.table_records.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -11,7 +10,7 @@ import ru.mycrg.mediator.Voidy;
 import java.util.List;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class CopyTableRecordsRequest implements IRequest<Voidy>, Auditable {
 
@@ -40,7 +39,7 @@ public class CopyTableRecordsRequest implements IRequest<Voidy>, Auditable {
         return new CrgAuditEvent("COPYING",
                                  targetQualifier.getTable(),
                                  FEATURE.name(),
-                                 mapper.convertValue(featureIds, JsonNode.class));
+                                 toJsonNode(featureIds));
     }
 
     public SchemaDto getSchemaSource() {

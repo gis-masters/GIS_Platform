@@ -5,8 +5,8 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_utils.CrgGlobalProperties;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 import ru.mycrg.gis_service.entity.Project;
@@ -27,14 +27,17 @@ public class OrganizationService {
 
     private final ProjectRepository projectRepository;
 
-    public OrganizationService(RuntimeService bpmnRuntimeService, ProjectRepository projectRepository) {
+    private final IAuthenticationFacade authenticationFacade;
+
+    public OrganizationService(RuntimeService bpmnRuntimeService,
+                               ProjectRepository projectRepository,
+                               IAuthenticationFacade authenticationFacade) {
         this.bpmnRuntimeService = bpmnRuntimeService;
         this.projectRepository = projectRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public ProcessInstance create(OrgCreateDto dto, Authentication authentication) {
-        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
-
         String login = dto.getGeoserverLogin();
         dto.setOwnerEmail(login);
         dto.setOwnerUserName(login);
@@ -42,7 +45,7 @@ public class OrganizationService {
         VariableMap variables = Variables
                 .createVariables()
                 .putValue(CREATE_DTO_VAR_NAME.getValue(), dto.toJsonString())
-                .putValue(TOKEN_VAR_NAME.getValue(), details.getTokenValue());
+                .putValue(TOKEN_VAR_NAME.getValue(), authenticationFacade.getAccessToken());
 
         return bpmnRuntimeService.startProcessInstanceByKey(
                 CREATE_ORGANIZATION.getValue(),
@@ -51,8 +54,6 @@ public class OrganizationService {
     }
 
     public ProcessInstance delete(Long id, List<String> geoserverLogins, Authentication authentication) {
-        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
-
         List<String> workspaces = projectRepository
                 .findAllByOrganizationId(id).stream()
                 .map(Project::getId)
@@ -65,7 +66,7 @@ public class OrganizationService {
                 .putValue(ORG_ID_VAR_NAME.getValue(), id)
                 .putValue(WORKSPACES_VAR_NAME.getValue(), workspaces)
                 .putValue(USERS_VAR_NAME.getValue(), geoserverLogins)
-                .putValue(TOKEN_VAR_NAME.getValue(), details.getTokenValue());
+                .putValue(TOKEN_VAR_NAME.getValue(), authenticationFacade.getAccessToken());
 
         return bpmnRuntimeService.startProcessInstanceByKey(
                 REMOVE_ORGANIZATION.getValue(),

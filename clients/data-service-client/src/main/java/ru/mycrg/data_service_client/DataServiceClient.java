@@ -1,6 +1,5 @@
 package ru.mycrg.data_service_client;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.URL;
 import java.util.ArrayList;

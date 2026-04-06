@@ -1,6 +1,6 @@
 package ru.mycrg.report_service.services.dao.migrations;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -9,6 +9,7 @@ import ru.mycrg.common_contracts.generated.report_service.TemplateCreateDto;
 import ru.mycrg.report_service.entity.Template;
 import ru.mycrg.report_service.services.FileService;
 import ru.mycrg.report_service.services.TemplateService;
+import tools.jackson.databind.JsonNode;
 
 import java.io.File;
 import java.util.*;

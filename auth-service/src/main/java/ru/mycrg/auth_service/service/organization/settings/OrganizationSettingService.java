@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.service.organization.settings;
 
-import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,11 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
 import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSettings;
-import static ru.mycrg.auth_service.service.organization.settings.SpecializationSettingsHandler.fillSettingsBySpecialization;
 import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.*;
+import static ru.mycrg.auth_service.service.organization.settings.SpecializationSettingsHandler.fillSettingsBySpecialization;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @Transactional
@@ -102,8 +102,7 @@ public class OrganizationSettingService {
                 systemSettings.add(new OrgSettingsRequestDto(targetOrgId, newClearedSettings));
             }
 
-            systemOrganization.setSettings(
-                    toJsonNode(JacksonUtil.toString(systemSettings)));
+            systemOrganization.setSettings(toJsonNode(systemSettings));
 
             organizationRepository.save(systemOrganization);
 
@@ -125,7 +124,7 @@ public class OrganizationSettingService {
             Map<String, Object> resultOrgSettings = overlapOldSettings(schema,
                                                                        mapToSettings(organization.getSettings()),
                                                                        newClearedSettings);
-            organization.setSettings(JacksonUtil.toJsonNode(JacksonUtil.toString(resultOrgSettings)));
+            organization.setSettings(toJsonNode(resultOrgSettings));
 
             organizationRepository.save(organization);
 
@@ -160,14 +159,13 @@ public class OrganizationSettingService {
         Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
                                                                 .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
 
-        String settingAsJson = JacksonUtil.toString(systemSettings);
-        log.info("Update system settings to: '{}'", settingAsJson);
-        systemOrganization.setSettings(toJsonNode(settingAsJson));
+        log.info("Update system settings to: '{}'", getJsonString(systemSettings));
+        systemOrganization.setSettings(toJsonNode(systemSettings));
 
         organizationRepository.save(systemOrganization);
 
         // init in organization settings
-        organization.setSettings(toJsonNode(JacksonUtil.toString(orgSettings)));
+        organization.setSettings(toJsonNode(orgSettings));
 
         organizationRepository.save(organization);
     }

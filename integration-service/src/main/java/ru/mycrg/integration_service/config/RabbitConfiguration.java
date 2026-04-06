@@ -1,11 +1,11 @@
 package ru.mycrg.integration_service.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.aopalliance.aop.Advice;
 import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
@@ -13,9 +13,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-
-import org.springframework.amqp.AmqpRejectAndDontRequeueException;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.RetryCallback;
@@ -25,11 +23,13 @@ import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 
 @Configuration
@@ -60,11 +60,16 @@ public class RabbitConfiguration {
 
     // Common configuration
     @Bean
-    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
-                    .registerModule(new JavaTimeModule());
+    public JacksonJsonMessageConverter producerJackson2MessageConverter() {
+        JsonMapper jsonMapper = JsonMapper.builder()
+                                          .changeDefaultPropertyInclusion(incl ->
+                                                                                  incl.withValueInclusion(
+                                                                                          JsonInclude.Include.NON_NULL))
+                                          .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                                          .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+                                          .build();
 
-        return new Jackson2JsonMessageConverter(objectMapper);
+        return new JacksonJsonMessageConverter(jsonMapper);
     }
 
     @Bean
@@ -94,6 +99,7 @@ public class RabbitConfiguration {
         interceptor.setRetryOperations(retryTemplate());
         interceptor.setRecoverer((args, cause) -> {
             log.error("Rejecting message after retry exhaustion", cause);
+
             throw new AmqpRejectAndDontRequeueException(cause);
         });
         return interceptor;

@@ -1,21 +1,17 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+ 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import tools.jackson.databind.JsonNode;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Entity
 @Table(name = "schemas")
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
 public class SchemaTemplate {
 
     @Id
@@ -26,16 +22,14 @@ public class SchemaTemplate {
     @Column
     private String name;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private JsonNode classRule;
 
-    @Column
-    @Type(type="text")
+    @Column(columnDefinition = "text")
     private String customRule;
 
-    @Column
-    @Type(type="text")
+    @Column(columnDefinition = "text")
     private String calculatedFields;
 
     public SchemaTemplate() {

@@ -141,7 +141,7 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
     public void checkLayersAvailabilityInProject() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(format("/projects/%d/layers/", projectId));
+                        get(format("/projects/%d/layers", projectId));
 
         JsonPath path = response.jsonPath();
         List<LinkedHashMap<Integer, Object>> layers = path.get();
@@ -150,11 +150,11 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
         if (resourceIds == null || resourceIds.isEmpty()) {
             throw new IllegalStateException("Не корректное тело ответа, не найден resourceId");
         }
-        tableName = resourceIds.get(0).toString();
+        tableName = resourceIds.getFirst().toString();
 
         assertThat(layers.isEmpty(), is(not(true)));
 
-        layerId = (Integer) layers.get(0).get("id");
+        layerId = (Integer) layers.getFirst().get("id");
     }
 
     private String getImportTasksForFunctionalZone() {

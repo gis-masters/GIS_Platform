@@ -4,7 +4,7 @@ import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public interface IProcessExecutorsFactory {
 

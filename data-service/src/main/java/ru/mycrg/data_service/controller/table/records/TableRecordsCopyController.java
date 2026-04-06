@@ -17,7 +17,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 

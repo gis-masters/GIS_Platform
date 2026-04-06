@@ -1,10 +1,9 @@
 package ru.mycrg.gateway.domain;
 
+import jakarta.servlet.http.Cookie;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.oauth_client.JwtToken;
-
-import javax.servlet.http.Cookie;
 
 import static java.lang.Integer.MAX_VALUE;
 

@@ -7,7 +7,7 @@ import ru.mycrg.auth_service.dto.IntentProjection;
 import ru.mycrg.auth_service.service.OrganizationIntentService;
 import ru.mycrg.auth_service_contract.dto.OrganizationIntentDto;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/organizations")

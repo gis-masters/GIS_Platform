@@ -1,24 +1,20 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+ 
+import org.hibernate.annotations.JdbcTypeCode;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.hateoas.Identifiable;
+import org.hibernate.type.SqlTypes;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import tools.jackson.databind.JsonNode;
+
 import java.util.Objects;
 
 @Entity
 @Table(name="processes")
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
-public class Process implements Identifiable<Long> {
+public class Process {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +33,11 @@ public class Process implements Identifiable<Long> {
     @Enumerated(value = EnumType.STRING)
     private ProcessType type;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private JsonNode extra;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private JsonNode details;
 
@@ -60,7 +56,6 @@ public class Process implements Identifiable<Long> {
         this.extra = extra;
     }
 
-    @Override
     public Long getId() {
         return id;
     }

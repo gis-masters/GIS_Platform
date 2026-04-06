@@ -141,7 +141,10 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
             String title = response.jsonPath().getString("title");
             String fileTitle = response.jsonPath().getString("details.fileTitle");
 
-            if (status == DONE && type == IMPORT && title.equals("Импорт GPKG") && fileTitle.equals(fileName)) {
+            if (status == DONE &&
+                    type == IMPORT &&
+                    title.equals("Импорт GPKG " + fileName) &&
+                    fileTitle.equals(fileName)) {
                 System.out.println("Текущий процесс уже идеальный, будем использовать его.");
                 currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
 
@@ -164,7 +167,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
             System.out.println("Вынуждены запустить новый процесс.");
         }
 
-        FileDescriptionModel fdm = currentFiles.get(currentFiles.size() - 1);
+        FileDescriptionModel fdm = currentFiles.getLast();
         UUID fileId = fdm.getId();
 
         ProcessableModel processableModel = new ProcessableModel();
@@ -490,8 +493,11 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
     private void getProcessByFilter(ProcessStatus status, ProcessType type, String title) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("status", status)
+                .queryParam("type", type)
+                .queryParam("title", title)
                 .when().
-                        get("?status=" + status + "&type=" + type + "&title=" + title);
+                        get();
     }
 
     private void initProcess(ProcessableModel payload) {
@@ -535,7 +541,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                         basePath("")
                 .when().
                         log().ifValidationFails().
-                        post("/api/data/export/");
+                        post("/api/data/export");
 
         currentProcessId = response.jsonPath().get("id");
     }

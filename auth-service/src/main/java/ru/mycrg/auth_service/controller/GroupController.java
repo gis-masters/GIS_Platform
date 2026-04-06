@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -14,7 +15,6 @@ import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.GroupUpdateDto;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;

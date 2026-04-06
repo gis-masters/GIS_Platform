@@ -1,21 +1,22 @@
 package ru.mycrg.data_service.queue.handlers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.WsNotificationService;
+import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.import_.ImportMqResponse;
 import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
+import tools.jackson.databind.JsonNode;
 
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Service
 public class ImportHandler implements IEventHandler {
@@ -74,7 +75,11 @@ public class ImportHandler implements IEventHandler {
         try {
             ProcessModel subProcess = new ProcessModel();
             if (!event.getPayload().equals("")) {
-                ImportMqResponse rPayload = mapper.convertValue(event.getPayload(), ImportMqResponse.class);
+                ImportMqResponse rPayload = fromJson(getJsonString(
+                                                             event.getPayload()),
+                                                     ImportMqResponse.class).orElseThrow(
+                        () -> new IllegalArgumentException("Невозможно конвертировать значение из JSON!!!"));
+
                 subProcess = new ProcessModel(rPayload.getTargetLayer(), event.getStatus(), event.getError());
             } else if (event.getDescription() != null) {
                 subProcess = new ProcessModel(event.getStatus(), event.getError());

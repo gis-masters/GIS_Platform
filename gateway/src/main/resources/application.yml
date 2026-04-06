@@ -12,108 +12,200 @@ spring:
     port: ${SPRING_RABBITMQ_PORT}
     username: ${SPRING_RABBITMQ_USERNAME}
     password: ${SPRING_RABBITMQ_PASSWORD}
-
-zuul:
-  host:
-    connect-timeout-millis: 20000
-    socket-timeout-millis: 20000
-    # max-total-connections: 500
-    # max-per-route-connections: 20
-    # time-unit: MILLISECONDS
-    # time-to-live: 10000
-  #  prefix: /api
-  #  include-debug-header: true
-  ignoredServices: '*'
-  sensitive-headers: Cookie,Set-Cookie
-  routes:
-
-    # AUTH SERVICE
-    crg-auth-service-groups:
-      path: /groups/**
-      url: http://auth-service:9000/groups/
-
-    crg-auth-service-users:
-      path: /users/**
-      url: http://auth-service:9000/users/
-
-    crg-auth-service-roles:
-      path: /roles/**
-      url: http://auth-service:9000/roles/
-
-    crg-auth-service-organizations:
-      path: /organizations/**
-      url: http://auth-service:9000/organizations/
-
-    crg-auth-service-specializations:
-      path: /specializations/**
-      url: http://auth-service:9000/specializations
-
-    crg-auth-service-esia:
-      path: /esia/**
-      url: http://auth-service:9000/esia/
-      sensitive-headers:
-
-    crg-auth-service-password-reset-request:
-      path: /request-password-reset/**
-      url: http://auth-service:9000/request-password-reset
-
-    crg-auth-service-password-reset:
-      path: /password-reset/**
-      url: http://auth-service:9000/password-reset
-
-    # GIS SERVICE
-    crg-gis-service-projects:
-      path: /projects/**
-      url: http://crg-gis-service:8082/projects/
-
-    crg-gis-service-specializations:
-      path: /gis/specializations/**
-      url: http://crg-gis-service:8082/specializations/
-
-    crg-gis-service-export:
-      path: /gis/export/**
-      url: http://crg-gis-service:8082/export/
-
-    # INTEGRATION SERVICE
-    crg-gis-integration-resource-analyzers:
-      path: /resource-analyzers/**
-      url: http://crg-integration-service:8338/resource-analyzers/
-
-    # DATA SERVICE
-    crg-data-service-projects:
-      path: /api/data/**
-      url: http://crg-data-service:8084/
-
-    crg-data-service-integration-statement:
-      path: /integration/statement/**
-      url: http://crg-data-service:8084/integration/statement/
-
-    crg-data-service-integration-smev3-request:
-      path: /integration/smev3/request/**
-      url: http://crg-data-service:8084/integration/smev3/request/
-
-    gis-ws:
-      path: /crg-ws-endpoint/**
-      url: http://crg-data-service:8084/crg-ws-endpoint/
-
-    # AUDIT SERVICE
-    crg-audit-service:
-      path: /events/**
-      url: http://crg-audit-service:8086/events/
-
-    # REPORT SERVICE
-    crg-report-service:
-      path: /reports/**
-      url: http://crg-report-service:8090/reports/
-
-    crg-report-templates:
-      path: /templates/**
-      url: http://crg-report-service:8090/templates/
-
-    # Geoserver
-    geoserver:
-      path: /geoserver/**
-      serviceId: http://geoserver:8080/geoserver/
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: crg-auth-service-groups
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/groups/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-users
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/users/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-roles
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/roles/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-organizations
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/organizations/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-specializations
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/specializations,/specializations/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-esia
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/esia/**
+              filters:
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-password-reset-request
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/request-password-reset,/request-password-reset/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-password-reset
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/password-reset,/password-reset/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-gis-service-projects
+              uri: http://crg-gis-service:8082
+              predicates:
+                - Path=/projects/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-gis-service-specializations
+              uri: http://crg-gis-service:8082
+              predicates:
+                - Path=/gis/specializations/**
+              filters:
+                - StripPrefix=1
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-gis-service-export
+              uri: http://crg-gis-service:8082
+              predicates:
+                - Path=/gis/export/**
+              filters:
+                - StripPrefix=1
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-gis-integration-resource-analyzers
+              uri: http://crg-integration-service:8338
+              predicates:
+                - Path=/resource-analyzers/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-data-service-projects
+              uri: http://crg-data-service:8084
+              predicates:
+                - Path=/api/data/**
+              filters:
+                - StripPrefix=2
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-data-service-integration-statement
+              uri: http://crg-data-service:8084
+              predicates:
+                - Path=/integration/statement/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-data-service-integration-smev3-request
+              uri: http://crg-data-service:8084
+              predicates:
+                - Path=/integration/smev3/request/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: gis-ws
+              uri: http://crg-data-service:8084
+              predicates:
+                - Path=/crg-ws-endpoint/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-audit-service
+              uri: http://crg-audit-service:8086
+              predicates:
+                - Path=/events/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-report-service
+              uri: http://crg-report-service:8090
+              predicates:
+                - Path=/reports/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: crg-report-templates
+              uri: http://crg-report-service:8090
+              predicates:
+                - Path=/templates/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+            - id: geoserver
+              uri: http://geoserver:8080
+              predicates:
+                - Path=/geoserver/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
 
 logging:
   level:

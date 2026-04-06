@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.import_;
 
-import net.bytebuddy.utility.RandomString;
 import org.jetbrains.annotations.Nullable;
 import org.postgis.PGgeometry;
 import org.slf4j.Logger;
@@ -185,7 +184,7 @@ public class GmlImporter {
                                           String epsgCode,
                                           SchemaDto schema,
                                           String datasetIdentifier) {
-        String tableName = join(schema.getName(), RandomString.make(6).toLowerCase());
+        String tableName = join(schema.getName(), randomSuffix());
 
         ImportLayerReport importLayerReport = new ImportLayerReport(schema.getName(), epsgCode);
         importLayerReport.setTableIdentifier(tableName);
@@ -245,6 +244,10 @@ public class GmlImporter {
         }
 
         return importLayerReport;
+    }
+
+    private static String randomSuffix() {
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 6);
     }
 
     private Set<SchemaDto> getExistingSchemas(List<SimpleFeatureData> features,

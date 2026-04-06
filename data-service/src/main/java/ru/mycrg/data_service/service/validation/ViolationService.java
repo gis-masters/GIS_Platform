@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationInfo;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.ValidationResponseDto;
@@ -13,17 +12,17 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
+import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Service
 public class ViolationService {
@@ -113,14 +112,15 @@ public class ViolationService {
         return result;
     }
 
-    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) throws IOException {
+    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) {
         List<ObjectValidationResult> results = new ArrayList<>();
 
         int i = 0;
         while (i < violations.size()) {
             String violationsAsString = getViolation(violations.get(i));
 
-            ObjectValidationResult value = mapper.readValue(violationsAsString, ObjectValidationResult.class);
+            ObjectValidationResult value = fromJson(violationsAsString, ObjectValidationResult.class).orElse(
+                    new ObjectValidationResult());
 
             results.add(value);
 

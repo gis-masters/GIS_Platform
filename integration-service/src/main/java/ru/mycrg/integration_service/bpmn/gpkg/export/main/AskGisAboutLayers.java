@@ -1,8 +1,5 @@
 package ru.mycrg.integration_service.bpmn.gpkg.export.main;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.camunda.bpm.engine.delegate.BpmnError;
@@ -19,6 +16,9 @@ import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.URL;
@@ -149,7 +149,7 @@ public class AskGisAboutLayers implements JavaDelegate {
                     // Если contentNode - это массив, парсим его как список LayerProjection
                     if (contentNode.isArray()) {
                         List<LayerProjection> layers = objectMapper.readValue(contentNode.toString(),
-                                                                              new TypeReference<List<LayerProjection>>() {
+                                                                              new TypeReference<>() {
                                                                               });
 
                         return layers != null ? layers : List.of();

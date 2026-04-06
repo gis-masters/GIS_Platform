@@ -7,6 +7,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.path.json.JsonPath;
+import io.restassured.path.json.config.JsonParserType;
+import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.GeoserverStepDefinitions;
@@ -359,7 +361,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
             String key = entry.getKey();
             List<Object> list = entry.getValue();
-            Object valueFromList = list != null && !list.isEmpty() ? list.get(0) : null;
+            Object valueFromList = list != null && !list.isEmpty() ? list.getFirst() : null;
 
             Object matchingValue = matchingRecord.get(key);
             if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {
@@ -379,7 +381,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                 .when().
                         get();
 
-        List<LayerProjection> layers = response.jsonPath().getList("", LayerProjection.class);
+        List<LayerProjection> layers = response.jsonPath(
+                                                       new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3))
+                                               .getList("", LayerProjection.class);
 
         for (LayerProjection layer: layers) {
             layerPool.put(Math.toIntExact(layer.getId()), new LayerCreateDto(layer.getTitle(),
@@ -396,7 +400,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                                                              layer.getComplexName()));
         }
 
-        layerId = Math.toIntExact(layers.get(0).getId());
+        layerId = Math.toIntExact(layers.getFirst().getId());
     }
 
     @Given("среди слоёв текущего проекта, найден слой по имени {string}")
@@ -405,7 +409,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                 .when().
                         get();
 
-        List<LayerProjection> layers = response.jsonPath().getList("", LayerProjection.class);
+        List<LayerProjection> layers = response.jsonPath(
+                                                       new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3))
+                                               .getList("", LayerProjection.class);
 
         Optional<LayerProjection> oFilteredLayer = layers.stream().filter(l -> l.getTitle().equals(name)).findAny();
 
@@ -557,8 +563,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         sleep(1000);
 
         response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.valueOf(layerId));
+                .when().log().all().
+                       get(String.valueOf(layerId));
 
         assertEquals(404, response.getStatusCode());
     }
@@ -570,7 +576,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         checkLayerBasedOnFile(title, expectedType, ext);
 
-        LayerProjection layer = response.jsonPath().getObject("[0]", LayerProjection.class);
+        LayerProjection layer = response.jsonPath(new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3))
+                                        .getObject("[0]", LayerProjection.class);
 
         layerPool.put(Math.toIntExact(layer.getId()), new LayerCreateDto(layer.getTitle(),
                                                                          layer.getDataset(),

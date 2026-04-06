@@ -21,7 +21,7 @@ import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationUpdateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 

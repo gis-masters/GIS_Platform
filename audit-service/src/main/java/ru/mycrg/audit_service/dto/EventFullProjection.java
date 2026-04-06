@@ -1,8 +1,8 @@
 package ru.mycrg.audit_service.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.audit_service.entity.Event;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 

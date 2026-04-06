@@ -1,65 +1,46 @@
 package ru.mycrg.audit_service.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.mycrg.auth_facade.AuthenticationFacade;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.jwt_support.JwtAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
-@EnableResourceServer
-public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
-
-    @Value("${security.jwt.secret}")
-    private String secret;
-
-    private final CustomAccessTokenConverter customAccessTokenConverter;
-
-    public ResourceServerSecurityConfig(CustomAccessTokenConverter customAccessTokenConverter) {
-        this.customAccessTokenConverter = customAccessTokenConverter;
-    }
+public class ResourceServerSecurityConfig {
 
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setAccessTokenConverter(customAccessTokenConverter);
-        converter.setSigningKey(secret);
-
-        return converter;
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
-    }
-
-    @Override
-    public void configure(ResourceServerSecurityConfigurer configurer) {
-        configurer
-                .resourceId("audit-service")
-                .tokenStore(tokenStore());
-    }
-
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-                .cors().and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(GET, "/actuator/health").permitAll()
-                .antMatchers(POST, "/events").permitAll()
-                .anyRequest().authenticated();
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(
+                        (request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(GET, "/actuator/health").permitAll()
+                        .requestMatchers(POST, "/events").permitAll()
+                        .anyRequest().authenticated());
+
+        return http.build();
+    }
+
+    @Bean
+    JwtAuthenticationFilter jwtAuthenticationFilter(@Value("${security.jwt.secret}") String secret) {
+        return new JwtAuthenticationFilter(secret);
     }
 
     @Bean

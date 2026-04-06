@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto.smev3;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class RegisterRequestDto implements ISmevRequestDto {
 

@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity

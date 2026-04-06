@@ -1,6 +1,6 @@
 package ru.mycrg.data_service_contract.dto;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class DatasetResourceQualifierDto {
 

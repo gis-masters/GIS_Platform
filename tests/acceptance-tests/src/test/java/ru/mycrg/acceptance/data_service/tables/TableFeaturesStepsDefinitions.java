@@ -268,7 +268,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         List<List<Object>> objectViolations = jsonPath.get("results.objectViolations");
         assertFalse(objectViolations.isEmpty());
 
-        List<Object> objectViolation = objectViolations.get(0);
+        List<Object> objectViolation = objectViolations.getFirst();
         assertFalse(objectViolation.isEmpty());
 
         Map<String, Object> result = (Map<String, Object>) objectViolation.get(0);
@@ -363,8 +363,9 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         createSomeFeatureInCurrentTable();
         getFeature(currentFeatureId);
 
-        ArrayList<HashMap<String, Object>> propertiesList = response.jsonPath().get("properties");
-        HashMap<String, Object> properties = propertiesList.get(0);
+        Map<String, Object> properties = (Map<String, Object>) response.jsonPath()
+                                                                       .getList("properties")
+                                                                       .getFirst();
 
         Object createdAt = properties.get(CREATED_AT);
         Assert.assertNotNull(createdAt);
@@ -686,9 +687,10 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     private void getFeatureByFilter(String column, String value) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        contentType(JSON)
+                        contentType(JSON).
+                        queryParam("filter", "(" + column + " ILIKE '%" + value + "%')")
                 .when().
-                       get("?filter=(" + column + " ILIKE '%" + value + "%')");
+                        get();
     }
 
     private void getAllFeatures() {

@@ -6,19 +6,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.UUID;
+
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9
@@ -55,7 +56,7 @@ public class ReceiptRnvRequestService extends RequestProcessor {
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 XmlMarshaller.marshall(clientMessage, ClientMessage.class, mnemonicEnum().getPrefixMapper()),
-                JsonConverter.toJsonNode(clientMessage),
+                toJsonNode(clientMessage),
                 requestAndSources.getSourcesAsJson(),
                 requestAndSources.getAttachmentsAsJson());
 

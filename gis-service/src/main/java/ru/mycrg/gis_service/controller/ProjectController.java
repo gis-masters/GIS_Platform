@@ -1,8 +1,9 @@
 package ru.mycrg.gis_service.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,8 +22,6 @@ import ru.mycrg.gis_service.service.projects.ProjectMover;
 import ru.mycrg.gis_service.service.projects.ProjectService;
 import ru.mycrg.gis_service.validators.project.ProjectCreateValidator;
 import ru.mycrg.gis_service.validators.project.ProjectUpdateValidator;
-
-import javax.validation.Valid;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
@@ -73,10 +72,10 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<ProjectProjectionImpl> getItemById(@PathVariable Long id) {
+    public EntityModel<ProjectProjectionImpl> getItemById(@PathVariable Long id) {
         ProjectProjectionImpl project = projectService.getByIdWithRole(id);
 
-        return new Resource<>(project);
+        return EntityModel.of(project);
     }
 
     @PostMapping
@@ -84,7 +83,7 @@ public class ProjectController {
     public ResponseEntity<ProjectProjectionImpl> createItem(@Valid @RequestBody ProjectCreateDto projectDto,
                                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+            throw new BadRequestException(bindingResult.getAllErrors().getFirst().getDefaultMessage());
         }
 
         orgSettingsKeeper.throwIfCreateProjectNotAllowed();
@@ -100,7 +99,7 @@ public class ProjectController {
                                         @Valid @RequestBody ProjectUpdateDto projectDto,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+            throw new BadRequestException(bindingResult.getAllErrors().getFirst().getDefaultMessage());
         }
 
         projectService.update(itemId, projectDto);

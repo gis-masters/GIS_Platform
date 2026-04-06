@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.schema_temaplates.handlers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.entity.SchemaTemplate;
@@ -14,6 +13,7 @@ import ru.mycrg.data_service.service.schemas.SchemaPrintingTemplatesValidator;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
+import tools.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class UpdateSchemaTemplateRequestHandler implements IRequestHandler<Updat
             throw new NotFoundException("Схема: '" + schema.getName() + "' не найдена");
         }
 
-        SchemaTemplate schemaTemplate = schemaTemplates.get(0);
+        SchemaTemplate schemaTemplate = schemaTemplates.getFirst();
 
         validateSystemTagAccess(schemaTemplate);
 

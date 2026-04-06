@@ -1,6 +1,6 @@
 package ru.mycrg.auth_service_contract.dto;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 
 public class PasswordModel {
 

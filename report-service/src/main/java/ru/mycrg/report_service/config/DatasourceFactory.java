@@ -7,11 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import com.zaxxer.hikari.HikariDataSource;
 
-
-import javax.validation.constraints.NotNull;
-
 @Service
-
 public class DatasourceFactory {
 
     private static final Logger log = LoggerFactory.getLogger(DatasourceFactory.class);
@@ -19,7 +15,6 @@ public class DatasourceFactory {
     @Autowired
     Environment environment;
 
-    @NotNull
     public HikariDataSource getDataSourceByUrl() {
         String url = environment.getProperty("spring.datasource.url");
 
@@ -35,4 +30,3 @@ public class DatasourceFactory {
         return dataSource;
     }
 }
-

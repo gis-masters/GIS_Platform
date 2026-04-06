@@ -1,5 +1,7 @@
 package ru.mycrg.data_service_contract.enums;
 
+ 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;

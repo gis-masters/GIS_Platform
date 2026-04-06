@@ -10,7 +10,7 @@ import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.import_.ImportService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 

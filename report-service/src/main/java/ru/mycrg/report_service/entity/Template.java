@@ -1,20 +1,15 @@
 package ru.mycrg.report_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import ru.mycrg.common_contracts.generated.report_service.TemplateCreateDto;
+import tools.jackson.databind.JsonNode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "templates")
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
 public class Template {
 
     @Id
@@ -31,8 +26,8 @@ public class Template {
     @Column(nullable = false)
     private String path;
 
-    @Type(type = "jsonb-node")
-    @Column(columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
     private JsonNode printFormSchemaOverrides;
 
     @Column(length = 50)
@@ -47,7 +42,8 @@ public class Template {
     public Template() {
     }
 
-    public Template(Long id, String title, String name, String path, JsonNode printFormSchemaOverrides, String createdBy,
+    public Template(Long id, String title, String name, String path, JsonNode printFormSchemaOverrides,
+                    String createdBy,
                     LocalDateTime createdAt, Boolean isSystem) {
         this.id = id;
         this.title = title;

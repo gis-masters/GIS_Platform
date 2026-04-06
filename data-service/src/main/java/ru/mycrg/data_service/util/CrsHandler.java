@@ -88,7 +88,7 @@ public class CrsHandler {
             }
             //Pulkovo 1963 zone 6
             else if (coordinateX >= 60 && coordinateX < 70) {
-                return CRS.decode("EPSG: 28406");
+                return epsgCodes.getCrsBySrid(28406);
             } else {
                 String msg = "Координатная система не может быть определена";
                 log.warn(msg);
@@ -105,10 +105,8 @@ public class CrsHandler {
 
     public static CoordinateReferenceSystem defineCrsBySrid(int srid) {
         try {
-            if (srid == 314314) {
-                return epsgCodes.getCrsBySrid(314314);
-            } else if (srid == 314315) {
-                return epsgCodes.getCrsBySrid(314315);
+            if (epsgCodes.isCustomSrid(srid)) {
+                return epsgCodes.getCrsBySrid(srid);
             } else {
                 return CRS.decode(DEFAULT_EPSG_TEXT_PART + srid);
             }

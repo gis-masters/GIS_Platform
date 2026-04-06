@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.smev3.request;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
+ 
+ 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,11 +19,14 @@ import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
-import ru.mycrg.data_service.util.JsonConverter;
+
 import ru.mycrg.data_service.util.xml.XmlMapper;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.http_client.JsonConverter;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
@@ -128,7 +131,7 @@ public abstract class AXmlBuildProcessor {
         return asString(record, PROPERTY_FILE)
                 .flatMap(jsonString -> JsonConverter.<List<FileDescription>>fromJson(
                         jsonString,
-                        new TypeReference<List<FileDescription>>() {
+                        new TypeReference<>() {
                         })
                 )
                 .map(fileDescriptions -> {

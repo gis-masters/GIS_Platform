@@ -31,9 +31,9 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.*;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_FOLDER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Component
 public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibraryRequest, LibraryModel> {

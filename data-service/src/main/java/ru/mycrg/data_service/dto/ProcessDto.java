@@ -3,7 +3,7 @@ package ru.mycrg.data_service.dto;
 import ru.mycrg.data_service.validators.ValidateEnum;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class ProcessDto {
 

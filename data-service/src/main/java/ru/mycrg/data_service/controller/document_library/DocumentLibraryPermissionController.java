@@ -16,7 +16,7 @@ import ru.mycrg.data_service.service.cqrs.library_records.requests.DeletePermiss
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.mediator.Mediator;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;

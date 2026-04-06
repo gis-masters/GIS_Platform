@@ -1,10 +1,9 @@
 package ru.mycrg.gis_service.entity;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.gis_service.dto.PermissionCreateDto;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 

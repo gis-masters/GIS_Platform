@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.files;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,7 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.FileType;
+import tools.jackson.databind.JsonNode;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -33,9 +33,9 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationNa
 import static ru.mycrg.data_service.service.files.FileUtil.*;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.fieldQualifier;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.StringUtil.hashCodeAsString;
 import static ru.mycrg.data_service_contract.enums.FileType.*;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @Transactional

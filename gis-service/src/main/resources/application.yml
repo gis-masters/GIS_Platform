@@ -8,7 +8,9 @@ logging:
 
 ---
 spring:
-  profiles: fiz-dev
+  config:
+    activate:
+      on-profile: fiz-dev
   datasource:
     platform: postgres
     url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service
@@ -18,10 +20,12 @@ spring:
       minimum-pool-size: ${SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE:10}
       maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:20}
   jpa:
-    properties:
-      hibernate.temp.use_jdbc_metadata_defaults: false
-      hibernate.format_sql: false
+    database: POSTGRESQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+    properties:
+      hibernate.boot.allow_jdbc_metadata_access: false
+      hibernate.format_sql: false
   flyway:
     enabled: true
     url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service

@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dao.detached;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +10,7 @@ import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.mappers.ProcessRowMapper;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
+import tools.jackson.databind.JsonNode;
 
 import java.sql.SQLException;
 import java.util.Optional;

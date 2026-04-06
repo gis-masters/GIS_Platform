@@ -1,6 +1,6 @@
 package ru.mycrg.auth_service_contract.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public class PasswordResetDto extends PasswordModel {
 

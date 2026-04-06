@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.entity.SchemaTemplate;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 /**
  * Маппер для сущности схема.

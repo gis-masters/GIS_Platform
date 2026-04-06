@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 public class LibraryUpdateDto {
 

@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,6 @@ import ru.mycrg.data_service.service.cqrs.basemaps.requests.DeleteBaseMapRequest
 import ru.mycrg.data_service.service.cqrs.basemaps.requests.UpdateBaseMapRequest;
 import ru.mycrg.mediator.Mediator;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 

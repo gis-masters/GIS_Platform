@@ -4,13 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.service.processes.ProcessService;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.data_service_contract.queue.response.ShapeImportedFailedEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 public class ImportShapeFailedEventHandler implements IEventHandler {
@@ -40,6 +40,6 @@ public class ImportShapeFailedEventHandler implements IEventHandler {
 
         processService.error(requestEvent.getDbName(),
                              requestEvent.getProcessId(),
-                             JsonConverter.toJsonNode(event));
+                             toJsonNode(event));
     }
 }

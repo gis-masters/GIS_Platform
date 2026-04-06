@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -11,8 +12,6 @@ import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtect
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
-
-import javax.transaction.Transactional;
 
 @Component
 public class DeleteLibraryRequestHandler implements IRequestHandler<DeleteLibraryRequest, Voidy> {

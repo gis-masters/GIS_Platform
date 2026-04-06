@@ -1,5 +1,14 @@
 package ru.mycrg.auth_service.service;
 
+import jakarta.mail.Address;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -8,12 +17,6 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service.entity.OrganizationIntent;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.BadRequestException;
-
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.internet.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

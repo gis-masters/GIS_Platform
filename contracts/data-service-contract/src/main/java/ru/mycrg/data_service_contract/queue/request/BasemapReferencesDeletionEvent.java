@@ -8,18 +8,13 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.COMMON_REQUEST_Q
 
 public class BasemapReferencesDeletionEvent extends DefaultMessageBusRequestEvent {
 
-    private final Long basemapId;
-    private final String complexLayerName;
-    private final String authToken;
-    private final Long orgId;
+    private Long basemapId;
+    private String complexLayerName;
+    private String authToken;
+    private Long orgId;
 
     public BasemapReferencesDeletionEvent() {
         super();
-
-        this.basemapId = null;
-        this.authToken = null;
-        this.complexLayerName = null;
-        this.orgId = null;
     }
 
     public BasemapReferencesDeletionEvent(Long basemapId, String complexLayerName, String authToken, Long orgId) {
@@ -35,15 +30,41 @@ public class BasemapReferencesDeletionEvent extends DefaultMessageBusRequestEven
         return basemapId;
     }
 
-    public String getAuthToken() {
-        return authToken;
+    public void setBasemapId(Long basemapId) {
+        this.basemapId = basemapId;
     }
 
     public String getComplexLayerName() {
         return complexLayerName;
     }
 
+    public void setComplexLayerName(String complexLayerName) {
+        this.complexLayerName = complexLayerName;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
     public Long getOrgId() {
         return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"basemapId\":" + (basemapId == null ? "null" : "\"" + basemapId + "\"") + ", " +
+                "\"complexLayerName\":" + (complexLayerName == null ? "null" : "\"" + complexLayerName + "\"") + ", " +
+                "\"authToken\":" + (authToken == null ? "null" : "\"" + authToken + "\"") + ", " +
+                "\"orgId\":" + (orgId == null ? "null" : "\"" + orgId + "\"") +
+                "}";
     }
 }

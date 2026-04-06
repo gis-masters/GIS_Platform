@@ -20,11 +20,12 @@ import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.List;
 import java.util.UUID;
+
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
@@ -57,14 +58,14 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
-                    JsonConverter.toJsonNode(queryResult),
+                    toJsonNode(queryResult),
                     null,
                     null);
 
             switch (messageType(queryResult)) {
                 case REJECT: {
                     log.debug("Тип сообщения - REJECT");
-                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().getFirst();
 
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
                             .setXmlBuildMeta(meta)

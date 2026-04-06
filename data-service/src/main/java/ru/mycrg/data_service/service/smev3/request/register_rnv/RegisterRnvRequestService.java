@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
@@ -17,17 +16,19 @@ import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.SmevFakeXmlBuilder;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import javax.xml.bind.JAXBException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/register-rnv/1.0.8
@@ -87,7 +88,7 @@ public class RegisterRnvRequestService extends RequestProcessor {
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlPartOfRequest,
-                JsonConverter.toJsonNode(clientMessage),
+                toJsonNode(clientMessage),
                 requestAndSources.getSourcesAsJson(),
                 requestAndSources.getAttachmentsAsJson());
 

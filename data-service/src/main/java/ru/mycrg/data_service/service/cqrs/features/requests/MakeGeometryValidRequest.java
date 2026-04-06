@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.cqrs.features.requests;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequest;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class MakeGeometryValidRequest implements IRequest<Feature> {
 

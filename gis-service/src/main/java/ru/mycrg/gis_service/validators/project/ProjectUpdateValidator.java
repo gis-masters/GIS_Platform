@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.validators.project;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+ 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.List;
 import java.util.regex.Pattern;

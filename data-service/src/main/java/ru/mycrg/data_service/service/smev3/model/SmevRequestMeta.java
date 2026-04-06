@@ -1,7 +1,8 @@
 package ru.mycrg.data_service.service.smev3.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import ru.mycrg.data_service.service.smev3.Mnemonic;
+import tools.jackson.databind.JsonNode;
 
 import java.util.UUID;
 

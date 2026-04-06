@@ -3,8 +3,8 @@ package ru.mycrg.data_service.validators.ecql;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.util.EcqlParser;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import static org.springframework.util.StringUtils.isEmpty;
 

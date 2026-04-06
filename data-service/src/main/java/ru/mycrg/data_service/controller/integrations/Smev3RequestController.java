@@ -16,7 +16,7 @@ import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsReque
 import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
 import ru.mycrg.data_service.service.smev3.request.terminate_rns.TerminateRnsRequestService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 

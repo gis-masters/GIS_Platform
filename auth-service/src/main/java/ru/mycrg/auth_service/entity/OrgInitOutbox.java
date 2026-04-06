@@ -1,6 +1,6 @@
 package ru.mycrg.auth_service.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
@@ -111,4 +111,3 @@ public class OrgInitOutbox {
         this.deadline = deadline;
     }
 }
-

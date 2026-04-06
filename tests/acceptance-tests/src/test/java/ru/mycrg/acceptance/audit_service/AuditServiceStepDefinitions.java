@@ -4,6 +4,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.path.json.config.JsonParserType;
+import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.audit_service.dto.AuditEventDto;
@@ -320,7 +322,9 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
                 getEventsByFilter(actionType, entityType.name(), entityName);
 
-                List<AuditEventDto> lists = response.jsonPath().getList("content", AuditEventDto.class);
+                List<AuditEventDto> lists = response
+                        .jsonPath(new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3))
+                        .getList("content", AuditEventDto.class);
 
                 boolean result = false;
                 for (AuditEventDto list: lists) {
@@ -346,11 +350,12 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     private void getEventsByFilter(String actionType, String entityType, String tableName) {
-        String url = String.format("?actionType=%s&entityType=%s&entityName=%s&size=10000",
-                                   actionType, entityType, tableName);
-
-        response = getBaseRequestWithCurrentCookie()
+        response = getBaseRequestWithCurrentCookie().
+                queryParam("actionType", actionType).
+                queryParam("entityType", entityType).
+                queryParam("entityName", tableName).
+                queryParam("size", 10000)
                 .when().
-                        get(url);
+                         get();
     }
 }

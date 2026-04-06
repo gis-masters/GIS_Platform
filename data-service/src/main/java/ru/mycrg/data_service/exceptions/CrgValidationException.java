@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.exceptions;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ValidationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ValidationException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

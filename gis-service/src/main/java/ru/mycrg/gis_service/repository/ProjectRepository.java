@@ -2,9 +2,9 @@ package ru.mycrg.gis_service.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.gis_service.entity.Project;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "projects", path = "projects")
-public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
+public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p FROM Project p WHERE p.organizationId = :orgId " +
             "AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) " +
@@ -48,7 +48,7 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
     @Query("UPDATE Project SET " +
             "   path = CASE WHEN id = :movedFolderId THEN NULL " +
             "               ELSE REPLACE(path, :movedFolderSelfPath, :newParentForChildren) END, " +
-            "   lastModified = now() " +
+            "   lastModified = CURRENT_TIMESTAMP " +
             " WHERE id = :movedFolderId OR path LIKE CONCAT(:movedFolderSelfPath, '%')")
     void moveFolderToRoot(Long movedFolderId, String movedFolderSelfPath, String newParentForChildren);
 
@@ -56,7 +56,7 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
     @Query("UPDATE Project SET " +
             "   path = CASE WHEN id = :movedFolderId THEN :targetFolderSelfPath " +
             "               ELSE REPLACE(path, :movedFolderSelfPath, :newParentForChildren) END, " +
-            "   lastModified = now()" +
+            "   lastModified = CURRENT_TIMESTAMP" +
             " WHERE id = :movedFolderId OR path LIKE CONCAT(:movedFolderSelfPath, '%')")
     void moveFolder(Long movedFolderId,
                     String movedFolderSelfPath,

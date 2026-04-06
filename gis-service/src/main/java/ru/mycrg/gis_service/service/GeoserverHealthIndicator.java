@@ -2,8 +2,8 @@ package ru.mycrg.gis_service.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.stereotype.Component;
 import ru.mycrg.geoserver_client.services.resources.Version;
 import ru.mycrg.gis_service.security.CrgAuthHandler;
@@ -36,9 +36,17 @@ public class GeoserverHealthIndicator implements HealthIndicator {
                 return Health.down().build();
             }
         } catch (HttpClientException e) {
-            log.warn("Geoserver not accessible");
+            log.warn("Geoserver not accessible: {}", e.getMessage());
 
-            return Health.down().build();
+            return Health.down()
+                         .withDetail("error", e.getMessage())
+                         .build();
+        } catch (RuntimeException e) {
+            log.warn("Geoserver health check failed: {}", e.getMessage());
+
+            return Health.down()
+                         .withDetail("error", e.getMessage())
+                         .build();
         }
     }
 }

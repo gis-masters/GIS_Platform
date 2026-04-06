@@ -1,7 +1,5 @@
 package ru.mycrg.integration_service.bpmn.gpkg.import_.main;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -14,9 +12,11 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
+import tools.jackson.databind.JsonNode;
 
 import java.util.Optional;
 
+import static ru.mycrg.http_client.JsonConverter.toJsonNodeFromString;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.crgHttpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 import static ru.mycrg.integration_service.bpmn.enums.GpkgImportProcessPermittedStatus.CREATE_GROUP_IN_PROJECT_FAIL;
@@ -100,8 +100,8 @@ public class CreateGroupInProject implements JavaDelegate {
             ResponseModel<String> response = crgHttpClient.handleRequestAsString(request);
             if (response.isSuccessful()) {
                 String responseBody = response.getBody();
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+                JsonNode jsonNode = toJsonNodeFromString(responseBody);
 
                 return Optional.of(jsonNode.get("id").asLong());
             } else {

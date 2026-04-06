@@ -1,5 +1,7 @@
 package ru.mycrg.auth_service.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +16,6 @@ import ru.mycrg.auth_service.service.*;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.esia.EsiaUserInfo;
 import ru.mycrg.oauth_client.JwtToken;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
 import java.util.Optional;
 import java.util.UUID;

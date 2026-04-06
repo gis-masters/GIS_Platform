@@ -14,7 +14,7 @@ public class ObjectValidationResult {
     private String classId;
     private String xMin;
     private List<PropertyViolation> propertyViolations = new ArrayList<>();
-    private final List<ErrorDescription> objectViolations = new ArrayList<>();
+    private List<ErrorDescription> objectViolations = new ArrayList<>();
 
     public void addPropertyViolation(PropertyViolation propertyViolation) {
         this.propertyViolations.add(propertyViolation);
@@ -66,5 +66,9 @@ public class ObjectValidationResult {
 
     public List<ErrorDescription> getObjectViolations() {
         return objectViolations;
+    }
+
+    public void setObjectViolations(List<ErrorDescription> objectViolations) {
+        this.objectViolations = objectViolations;
     }
 }

@@ -2,8 +2,8 @@ package ru.mycrg.data_service.entity;
 
 import ru.mycrg.data_service.dto.ExternalStatementDto;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

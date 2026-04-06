@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.bpmn.gpkg.import_.vector.media;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -16,6 +15,7 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.integration_service.service.DataServiceSpeaker;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.HashMap;
 import java.util.List;

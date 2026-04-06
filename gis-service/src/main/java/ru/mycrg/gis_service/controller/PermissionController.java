@@ -1,18 +1,19 @@
 package ru.mycrg.gis_service.controller;
 
+import jakarta.json.JsonMergePatch;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.PermissionCreateDto;
 import ru.mycrg.gis_service.dto.PermissionProjection;
+ 
 import ru.mycrg.gis_service.service.PermissionsService;
 
-import javax.json.JsonMergePatch;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -62,11 +63,11 @@ public class PermissionController {
 
     @GetMapping("/{project_id}/permissions/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<PermissionProjection> getPermissionById(@PathVariable(name = "project_id") long projectId,
-                                                            @PathVariable(name = "id") long permissionId) {
+    public EntityModel<PermissionProjection> getPermissionById(@PathVariable(name = "project_id") long projectId,
+                                                               @PathVariable(name = "id") long permissionId) {
         PermissionProjection permission = permissionsService.getById(projectId, permissionId);
 
-        return new Resource<>(permission);
+        return EntityModel.of(permission);
     }
 
     @PatchMapping(path = "/{project_id}/permissions/{id}", consumes = APPLICATION_JSON_MERGE_PATCH)

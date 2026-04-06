@@ -1,16 +1,16 @@
 package ru.mycrg.auth_service.service.specialization;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service.exceptions.BadRequestException;
 import ru.mycrg.common_contracts.specialization.Specialization;
+import tools.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.util.List;
 
-import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Service
 public class SpecializationService {
@@ -22,9 +22,10 @@ public class SpecializationService {
     public SpecializationService(ResourceLoader resourceLoader) throws IOException {
         Resource specializationsAsResource = resourceLoader.getResource("classpath:" + SPECIALIZATIONS_FILE_NAME);
 
-        this.specializations = mapper.readValue(specializationsAsResource.getInputStream(),
-                                                new TypeReference<List<Specialization>>() {
-                                                });
+        this.specializations = fromJson(specializationsAsResource.getInputStream(),
+                                        new TypeReference<List<Specialization>>() {
+                                        })
+                .orElseThrow(() -> new IllegalArgumentException("Не удалось прочитать specializations.json"));
     }
 
     public List<Specialization> getAllSpecializations() {

@@ -1,20 +1,15 @@
 package ru.mycrg.audit_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import ru.mycrg.audit_service_contract.dto.AuditEventDto;
+import tools.jackson.databind.JsonNode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "audit_events")
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
 public class Event {
 
     @Id
@@ -42,12 +37,12 @@ public class Event {
     @Column(name = "entity_id")
     private Long entityId;
 
-    @Column(name = "entity_state_after")
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "entity_state_after", columnDefinition = "jsonb")
     private JsonNode entityStateAfter;
 
-    @Column(name = "entity_ids")
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "entity_ids", columnDefinition = "jsonb")
     private JsonNode entityIds;
 
     public Event() {

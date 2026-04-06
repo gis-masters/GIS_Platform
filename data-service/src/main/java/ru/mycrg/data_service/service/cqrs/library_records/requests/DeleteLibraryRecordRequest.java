@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.library_records.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
@@ -12,7 +11,7 @@ import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class DeleteLibraryRecordRequest implements IRequest<Voidy>, Auditable, IDeleteFilesRelation {
 
@@ -35,7 +34,7 @@ public class DeleteLibraryRecordRequest implements IRequest<Voidy>, Auditable, I
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(record.getId(), JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(record.getId()),
                                  "DELETE",
                                  "unknown",
                                  LIBRARY_RECORD.name(),

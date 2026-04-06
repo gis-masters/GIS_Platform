@@ -1,29 +1,28 @@
 package ru.mycrg.gis_service.dto;
 
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import ru.mycrg.gis_service.validators.CrgParentGroup;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 
 public class LayerCreateDto {
 
     private String type;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String title;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String resourceId;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String nativeName;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String featureTypeName;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String dataset;
 
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
@@ -47,19 +46,19 @@ public class LayerCreateDto {
     @CrgParentGroup
     private Long parentId;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String styleName;
 
-    @Length(min = 1, max = 100)
+    @Size(min = 1, max = 100)
     private String dataStoreName;
 
-    @Length(min = 8, max = 50, message = "Ожидается строка вида: 'EPSG:28406'")
+    @Size(min = 8, max = 50, message = "Ожидается строка вида: 'EPSG:28406'")
     private String nativeCRS;
 
-    @Length(min = 1, max = 1255)
+    @Size(min = 1, max = 1255)
     private String dataSourceUri;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String sourceId;
 
     @Pattern(regexp = "^(document|feature)$", message = "Источником может быть или документ(document) или фича(feature)")
@@ -71,7 +70,7 @@ public class LayerCreateDto {
              message = "Допустимые значения поля role: full, geoserver, gis-service")
     private String mode = "full";
 
-    @Length(max = 50)
+    @Size(max = 50)
     private String contentType;
 
     private String view;

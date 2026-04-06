@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.service.resource_analyze.analyzers;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import okhttp3.Request;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +23,7 @@ import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerResult;
 import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceAnalyzerResult;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceDefinition;
+import tools.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

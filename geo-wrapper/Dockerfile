@@ -1,16 +1,20 @@
-FROM 10.10.10.116:5000/openjdk:11-jre
+FROM 10.10.10.116:5000/azul/zulu-openjdk-alpine:25-jre
 LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>"
 
 COPY ./target/apm-agent.jar apm-agent.jar
 COPY ./target/geo-wrapper.jar geo-wrapper.jar
 
 RUN set -eux; \
-    echo "deb http://10.10.10.116:8081/repository/debian-apt-proxy bullseye main" > /etc/apt/sources.list; \
-    apt update; \
-    apt install gdal-bin -y; \
-    apt install zip -y; \
-    apt autoremove -y; \
-    apt autoclean -y;
+    printf '%s\n%s\n' \
+        "http://10.10.10.116:8081/repository/alpain_proxy/v3.20/main" \
+        "http://10.10.10.116:8081/repository/alpain_proxy/v3.20/community" \
+        > /etc/apk/repositories; \
+    apk --no-cache add \
+        gdal \
+        gdal-tools \
+        gdal-driver-png \
+        gdal-driver-pg \
+        zip
 
 ENTRYPOINT sleep 1m && exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
                                                  -Delastic.apm.service_name=crg-geo-wrapper \

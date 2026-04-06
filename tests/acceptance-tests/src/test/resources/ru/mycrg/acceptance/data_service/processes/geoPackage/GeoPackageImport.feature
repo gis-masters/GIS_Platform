@@ -114,7 +114,7 @@ Feature: Импорт GeoPackage
       | field_fias__oktmo   | 58                                                                       |
       | field_fias__address | Радуемся                                                                 |
       | field_fias__id      | 85                                                                       |
-      | field_file          | [{id=1c242906-4dad-48f0-83b5-b1f44395e72a, title=empty.xlsx, size=4336}] |
+      | field_file          | [{id=1c242906-4dad-48f0-83b5-b1f44395e72a, size=4336, title=empty.xlsx}] |
       | field_document      | [{"id":1,"title":"dw","libraryTableName":"dl_data_kpt"}]                 |
       | field_uuid          | cfbde192-08a8-4f0b-bd09-a0e417ec11ef                                     |
 #      | field_user_id       | 2     id юзера перенеслось, а юзер то нет. Вранье получается                                |

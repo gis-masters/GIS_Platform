@@ -2,7 +2,7 @@ package ru.mycrg.data_service.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,10 @@ import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.http_client.JsonConverter;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Map;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
@@ -37,19 +37,15 @@ public class ProcessesController {
     }
 
     @PostMapping()
-    public ResponseEntity<Resource<Process>> initProcess(@Valid @RequestBody ProcessDto processableModel) {
+    public ResponseEntity<EntityModel<Process>> initProcess(@Valid @RequestBody ProcessDto processableModel) {
         Process process = processHandler.handle(processableModel);
 
-        Resource<Process> resource = new Resource<>(process);
-        resource.add(linkTo(ProcessesController.class).slash(process.getId()).withSelfRel());
-        resource.add(linkTo(ProcessesController.class).slash(process.getId()).withRel("process"));
-
-        return ResponseEntity.accepted().body(resource);
+        return ResponseEntity.accepted().body(toEntityModel(process));
     }
 
     @PostMapping("/file")
-    public ResponseEntity<Resource<Process>> initProcessWithFile(@Valid @RequestParam String processModelJson,
-                                                                 @RequestParam MultipartFile file) {
+    public ResponseEntity<EntityModel<Process>> initProcessWithFile(@Valid @RequestParam String processModelJson,
+                                                                    @RequestParam MultipartFile file) {
         ProcessDto processableModel = JsonConverter.fromJson(processModelJson, ProcessDto.class)
                                                    .orElseThrow(
                                                            () -> new DataServiceException("Некорректное тело запроса"));
@@ -59,11 +55,7 @@ public class ProcessesController {
 
         Process process = processHandler.handle(processableModel);
 
-        Resource<Process> resource = new Resource<>(process);
-        resource.add(linkTo(ProcessesController.class).slash(process.getId()).withSelfRel());
-        resource.add(linkTo(ProcessesController.class).slash(process.getId()).withRel("process"));
-
-        return ResponseEntity.accepted().body(resource);
+        return ResponseEntity.accepted().body(toEntityModel(process));
     }
 
     @GetMapping()
@@ -85,10 +77,14 @@ public class ProcessesController {
 
     @GetMapping("/{processId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<Process> getProcessesById(@PathVariable Long processId) {
+    public EntityModel<Process> getProcessesById(@PathVariable Long processId) {
         Process process = processService.getById(processId);
 
-        Resource<Process> resource = new Resource<>(process);
+        return toEntityModel(process);
+    }
+
+    private EntityModel<Process> toEntityModel(Process process) {
+        EntityModel<Process> resource = EntityModel.of(process);
         resource.add(linkTo(ProcessesController.class).slash(process.getId()).withSelfRel());
         resource.add(linkTo(ProcessesController.class).slash(process.getId()).withRel("process"));
 

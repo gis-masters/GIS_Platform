@@ -1,18 +1,18 @@
 package ru.mycrg.auth_service.service.organization.settings;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
+import static ru.mycrg.http_client.JsonConverter.convertValue;
 
 public class SettingsMapper {
 
@@ -24,9 +24,8 @@ public class SettingsMapper {
         }
 
         try {
-            return mapper.readValue(jsonNode.toString(),
-                                    new TypeReference<Set<OrgSettingsRequestDto>>() {
-                                    });
+            return convertValue(jsonNode, new TypeReference<>() {
+            });
         } catch (Exception e) {
             String msg = String.format("Не удалось прочесть настройки всех организаций: '%s' из БД. Причина: %s",
                                        jsonNode, e.getMessage());
@@ -42,7 +41,8 @@ public class SettingsMapper {
         }
 
         try {
-            return mapper.readValue(jsonNode.toString(), Map.class);
+            return convertValue(jsonNode, new TypeReference<>() {
+            });
         } catch (Exception e) {
             String msg = String.format("Не удалось прочесть настройки организации: '%s'. Причина: %s",
                                        jsonNode, e.getMessage());

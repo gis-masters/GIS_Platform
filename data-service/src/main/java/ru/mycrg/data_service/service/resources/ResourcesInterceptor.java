@@ -9,8 +9,8 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.resources.protectors.DatasetProtector;
 import ru.mycrg.data_service.service.resources.protectors.TableProtector;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 

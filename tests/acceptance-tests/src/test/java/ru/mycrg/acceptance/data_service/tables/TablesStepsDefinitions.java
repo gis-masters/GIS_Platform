@@ -107,7 +107,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              .map(TableCreateDto::getName)
                                              .collect(Collectors.toList());
 
-        response = getBaseRequestWithCurrentCookie().basePath("/api/data/tablesSchemas/")
+        response = getBaseRequestWithCurrentCookie().basePath("/api/data/tablesSchemas")
                 .given().
                         body(payload).
                         contentType(ContentType.JSON)

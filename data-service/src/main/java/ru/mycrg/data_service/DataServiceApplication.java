@@ -7,9 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.mycrg.data_service.config.props.StorageProperties;
 import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
@@ -19,8 +18,8 @@ import ru.mycrg.data_service.service.SystemTagsPublisher;
 @EnableScheduling
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
+@EnableMethodSecurity(prePostEnabled = true)
+public class DataServiceApplication {
 
     private static final Logger log = LoggerFactory.getLogger(DataServiceApplication.class);
 

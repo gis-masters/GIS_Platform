@@ -32,12 +32,12 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
-        return super.getBaseRequestWithCurrentCookie().basePath("/api/data/basemaps/");
+        return super.getBaseRequestWithCurrentCookie().basePath("/api/data/basemaps");
     }
 
     @Override
     public RequestSpecification getBaseRequest() {
-        return super.getBaseRequest().basePath("/api/data/basemaps/");
+        return super.getBaseRequest().basePath("/api/data/basemaps");
     }
 
     @When("Пользователь делает запрос на создание подложки")

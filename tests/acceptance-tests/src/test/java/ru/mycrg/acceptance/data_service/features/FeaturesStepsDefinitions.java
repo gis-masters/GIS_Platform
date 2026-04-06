@@ -1,6 +1,5 @@
 package ru.mycrg.acceptance.data_service.features;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -19,6 +18,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.LngLatAlt;
 import ru.mycrg.geo_json.MultiPolygon;
 import ru.mycrg.geo_json.Polygon;
+import tools.jackson.databind.JsonNode;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -85,7 +85,7 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @Then("Объект успешно сохранён в текущей таблице")
     public void checkCreatedFeature() {
-        Feature firstFeature = scenarioFeatures.get(0);
+        Feature firstFeature = scenarioFeatures.getFirst();
 
         response.then()
                 .statusCode(201)
@@ -117,7 +117,7 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         List<Map<String, Object>> featuresProps = response.jsonPath()
                                                           .getList("properties");
 
-        Map<String, Object> firstFeature = featuresProps.get(0);
+        Map<String, Object> firstFeature = featuresProps.getFirst();
         // field_1 должно быть числом, а не строкой - это ошибка, но времени на её исправление нет.
         // Фронт берет фичи с геосервера(он отдает правильно), пэтому пока пропускаем.
         assertEquals("935.06275092", firstFeature.get("field_1"));
@@ -289,7 +289,8 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
      * @return JsonNode отформатированный JSON узел с полным Feature объектом
      */
     private JsonNode wrapGeometryIntoFeature(String geometryJson) {
-        String featureJson = String.format("{\"type\":\"Feature\",\"properties\":{}, %s}", geometryJson);
+        String featureJson = String.format("{\"type\":\"Feature\", %s,\"properties\":{}}", geometryJson);
+
         return JsonMapper.asJsonNode(featureJson);
     }
 }

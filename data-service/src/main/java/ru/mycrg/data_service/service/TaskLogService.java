@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -8,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.entity.TaskLog;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -21,7 +20,7 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @Transactional
@@ -71,7 +70,7 @@ public class TaskLogService {
         TaskLog taskLog = new TaskLog();
         taskLog.setTaskId(logDto.getTaskId());
         taskLog.setEventType(logDto.getEventType());
-        taskLog.setMassage(mapper.convertValue(taskBody, JsonNode.class));
+        taskLog.setMassage(toJsonNode(taskBody));
         taskLog.setCreatedAt(now());
         taskLog.setCreatedBy(logDto.getCreatedBy());
 

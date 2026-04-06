@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.library_records.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -8,7 +7,7 @@ import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class RecoverLibraryRecordRequest implements IRequest<Voidy>, Auditable {
 
@@ -27,7 +26,7 @@ public class RecoverLibraryRecordRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(rQualifier.getRecordId(), JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(rQualifier.getRecordId()),
                                  "RECOVER",
                                  rQualifier.getTable() == null ? "unknown" : rQualifier.getTable(),
                                  LIBRARY_RECORD.name(),

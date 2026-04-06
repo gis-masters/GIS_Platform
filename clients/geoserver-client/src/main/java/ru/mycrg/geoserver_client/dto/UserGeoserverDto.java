@@ -1,10 +1,9 @@
 package ru.mycrg.geoserver_client.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import ru.mycrg.auth_service_contract.dto.PasswordModel;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 public class UserGeoserverDto extends PasswordModel {
 

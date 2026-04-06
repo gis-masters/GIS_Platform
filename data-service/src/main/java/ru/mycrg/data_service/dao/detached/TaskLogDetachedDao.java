@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao.detached;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jetbrains.annotations.Nullable;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
@@ -8,15 +7,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
+import ru.mycrg.data_service.dao.config.DatasourceFactory;
 
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
 
 import static java.sql.Types.BIGINT;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Repository
 public class TaskLogDetachedDao {
@@ -36,8 +35,8 @@ public class TaskLogDetachedDao {
         message.setType("jsonb");
 
         try {
-            message.setValue(mapper.writeValueAsString(body));
-        } catch (SQLException | JsonProcessingException ex) {
+            message.setValue(getJsonString(body));
+        } catch (SQLException ex) {
             log.error("Ошибка преобразования сообщения лога в jsonb");
         }
 

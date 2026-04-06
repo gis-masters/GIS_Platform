@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.common_contracts.generated.data_service.GeometryValidationResultDto;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;

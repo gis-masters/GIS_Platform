@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.exceptions;
 
-import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -8,7 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,9 +26,8 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +51,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,
                                                                   final HttpHeaders headers,
-                                                                  final HttpStatus status,
+                                                                  final HttpStatusCode status,
                                                                   final WebRequest request) {
         List<ErrorInfo> errors = mapBindingErrors(ex.getBindingResult());
         ApiErrorModel errorModel =
@@ -66,7 +64,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex,
                                                                   final HttpHeaders headers,
-                                                                  final HttpStatus status,
+                                                                  final HttpStatusCode status,
                                                                   final WebRequest request) {
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST,
                 "Not readable request body. Reason: " + ex.getMessage());
@@ -77,7 +75,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(final TypeMismatchException ex,
                                                         final HttpHeaders headers,
-                                                        final HttpStatus status,
+                                                        final HttpStatusCode status,
                                                         final WebRequest request) {
         String errorMsg = String.format("%s value for %s should be of type %s",
                 ex.getValue(), ex.getPropertyName(), ex.getRequiredType());
@@ -91,7 +89,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestPart(final MissingServletRequestPartException ex,
                                                                      final HttpHeaders headers,
-                                                                     final HttpStatus status,
+                                                                     final HttpStatusCode status,
                                                                      final WebRequest request) {
         String errorMsg = ex.getRequestPartName() + " part is missing";
         ErrorInfo error = new ErrorInfo(ex.getRequestPartName(), errorMsg);
@@ -104,7 +102,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
             final MissingServletRequestParameterException ex,
             final HttpHeaders headers,
-            final HttpStatus status,
+            final HttpStatusCode status,
             final WebRequest request) {
         String errorMsg = ex.getParameterName() + " parameter is missing";
         ErrorInfo error = new ErrorInfo(ex.getParameterName(), errorMsg);
@@ -117,7 +115,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(final NoHandlerFoundException ex,
                                                                    final HttpHeaders headers,
-                                                                   final HttpStatus status,
+                                                                   final HttpStatusCode status,
                                                                    final WebRequest request) {
         String errorMsg = "No handler found for " + ex.getHttpMethod() + " " + ex.getRequestURL();
         ApiErrorModel errorModel = new ApiErrorModel(NOT_FOUND, errorMsg);
@@ -130,7 +128,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
             final HttpRequestMethodNotSupportedException ex,
             final HttpHeaders headers,
-            final HttpStatus status,
+            final HttpStatusCode status,
             final WebRequest request) {
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getMethod());
@@ -146,7 +144,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(final HttpMediaTypeNotSupportedException ex,
                                                                      final HttpHeaders headers,
-                                                                     final HttpStatus status,
+                                                                     final HttpStatusCode status,
                                                                      final WebRequest request) {
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
@@ -186,8 +184,10 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex) {
         List<ErrorInfo> errors = new ArrayList<>();
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-            Path propertyPath = violation.getPropertyPath();
-            String currentProp = ((PathImpl) propertyPath).getLeafNode().toString();
+            String currentProp = null;
+            for (var node : violation.getPropertyPath()) {
+                currentProp = node.getName();
+            }
 
             errors.add(new ErrorInfo(currentProp, violation.getMessage()));
         }
@@ -245,11 +245,16 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 
-    @ExceptionHandler(value = {ForbiddenException.class, AccessDeniedException.class})
+    @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<Object> forbidden(final RuntimeException ex) {
         ApiErrorModel errorModel = new ApiErrorModel(FORBIDDEN, ex.getLocalizedMessage());
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Void> accessDenied() {
+        return new ResponseEntity<>(FORBIDDEN);
     }
 
     @ExceptionHandler(BindingErrorsException.class)
@@ -286,18 +291,21 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<Object> maxSizeExceptionHandler() {
+    @Override
+    protected ResponseEntity<Object> handleMaxUploadSizeExceededException(final MaxUploadSizeExceededException ex,
+                                                                          final HttpHeaders headers,
+                                                                          final HttpStatusCode status,
+                                                                          final WebRequest request) {
         String maxUploadSize = environment.getRequiredProperty("spring.servlet.multipart.max-file-size");
 
         String message = "Maximum upload size exceeded, configured maximum: " + maxUploadSize;
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, message);
 
-        return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
+        return handleExceptionInternal(ex, errorModel, headers, errorModel.getStatus(), request);
     }
 
     @ExceptionHandler(MultipartException.class)
-    public ResponseEntity<Object> multipartExceptionHandler(final MaxUploadSizeExceededException ex) {
+    public ResponseEntity<Object> multipartExceptionHandler(final MultipartException ex) {
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getLocalizedMessage());
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());

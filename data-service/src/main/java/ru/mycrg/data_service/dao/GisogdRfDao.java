@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.GISOGFRF_RESPONSE;
 import static ru.mycrg.data_service.dao.utils.ResourceQualifierUtil.getIdField;
+import static ru.mycrg.http_client.JsonConverter.asJsonString;
 
 @Repository
 public class GisogdRfDao {
@@ -165,7 +165,7 @@ public class GisogdRfDao {
     }
 
     public void writeErrors(ResourceQualifier qualifier, Map<String, String> response) {
-        String asJson = JsonConverter.asJsonString(response);
+        String asJson = asJsonString(response);
 
         String query = String.format("UPDATE %s SET %s = '%s' WHERE %s = %s",
                                      qualifier.getTableQualifier(), GISOGFRF_RESPONSE, asJson, getIdField(qualifier),

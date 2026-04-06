@@ -1,15 +1,15 @@
 package ru.mycrg.auth_service_contract.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class GroupCreateDto {
 
     @NotBlank(message = "Please provide user name")
-    @Size(min=3, max=255, message = "No less 3 and no more than 255 characters")
+    @Size(min = 3, max = 255, message = "No less 3 and no more than 255 characters")
     private String name;
 
-    @Size(min=3, max=255, message = "No less 3 and no more than 255 characters")
+    @Size(min = 3, max = 255, message = "No less 3 and no more than 255 characters")
     private String description;
 
     public GroupCreateDto() {

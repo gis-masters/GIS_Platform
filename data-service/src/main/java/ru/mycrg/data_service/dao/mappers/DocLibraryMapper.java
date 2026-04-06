@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class DocLibraryMapper implements RowMapper<DocumentLibrary> {
 

@@ -18,7 +18,7 @@ import java.util.UUID;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
+import static ru.mycrg.http_client.JsonConverter.asJsonString;
 
 public abstract class BaseSrsRequestHandler {
 

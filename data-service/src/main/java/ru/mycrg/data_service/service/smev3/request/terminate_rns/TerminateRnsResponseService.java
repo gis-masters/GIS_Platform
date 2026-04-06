@@ -15,10 +15,11 @@ import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.terminate_rns_1_0_6.QueryResult;
 import ru.mycrg.data_service.terminate_rns_1_0_6.Reject;
 import ru.mycrg.data_service.terminate_rns_1_0_6.Status;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.UUID;
+
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @ConditionalOnProperty(
@@ -44,7 +45,7 @@ public class TerminateRnsResponseService extends ResponseProcessor {
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
-                    JsonConverter.toJsonNode(queryResult),
+                    toJsonNode(queryResult),
                     null,
                     null);
 

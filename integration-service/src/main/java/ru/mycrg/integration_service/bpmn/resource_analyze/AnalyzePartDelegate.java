@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.bpmn.resource_analyze;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -15,6 +14,7 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.integration_service.dto.ResourceAnalyzeTask;
 import ru.mycrg.integration_service.dto.ResourcesModel;
 import ru.mycrg.resource_analyzer_contract.impl.ResourceAnalyzerResult;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.MalformedURLException;
 import java.net.URL;

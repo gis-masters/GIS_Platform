@@ -1,25 +1,22 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+ 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.TableCreateDto;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import tools.jackson.databind.JsonNode;
+
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 
 @Entity
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
 @Table(name = "schemas_and_tables")
 public class SchemasAndTables {
 
@@ -46,7 +43,7 @@ public class SchemasAndTables {
     @Column(length = 20)
     private String crs;
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private JsonNode schema;
 

@@ -2,7 +2,7 @@ Feature: Создание событий аудита
 
   Background:
     Given Существует любая организация
-    Given Владелец организации авторизован
+    *     Владелец организации авторизован
 
   Scenario Outline: Создание события аудита с валидными данными: (<reason>)
     When Пользователь делает запрос на создание события аудита "<eventDateTime>" "<actionType>" "<entityName>" "<entityType>" "<entityId>" "<entityStateAfter>"

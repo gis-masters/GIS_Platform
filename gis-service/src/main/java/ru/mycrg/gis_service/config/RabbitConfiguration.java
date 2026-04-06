@@ -1,22 +1,29 @@
 package ru.mycrg.gis_service.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class RabbitConfiguration {
 
-    @Autowired
-    public ObjectMapper objectMapper;
-
     @Bean
-    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
-        return new Jackson2JsonMessageConverter(objectMapper);
+    public JacksonJsonMessageConverter producerJackson2MessageConverter() {
+        JsonMapper jsonMapper = JsonMapper.builder()
+                                          .changeDefaultPropertyInclusion(incl ->
+                                                                                  incl.withValueInclusion(
+                                                                                          JsonInclude.Include.NON_NULL))
+                                          .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                                          .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+                                          .build();
+
+        return new JacksonJsonMessageConverter(jsonMapper);
     }
 
     @Bean

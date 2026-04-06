@@ -1,11 +1,11 @@
 package ru.mycrg.audit_service_contract.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import tools.jackson.databind.JsonNode;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class AuditEventDto {

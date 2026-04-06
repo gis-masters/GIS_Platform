@@ -1,10 +1,9 @@
 package ru.mycrg.gis_service.validators;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.mycrg.gis_service.repository.GroupRepository;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 public class CrgParentGroupValidator implements ConstraintValidator<CrgParentGroup, Long> {
 

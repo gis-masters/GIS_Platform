@@ -2,10 +2,8 @@ package ru.mycrg.data_service.dao.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -23,14 +21,11 @@ public class CrgDataSource extends DatasourceFactory implements DataSource {
     private final Logger log = LoggerFactory.getLogger(CrgDataSource.class);
 
     private final DataSource dataSource;
-    private final HttpServletRequest httpServletRequest;
     private final IAuthenticationFacade authenticationFacade;
 
     public CrgDataSource(DataSource dataSource,
-                         HttpServletRequest httpServletRequest,
                          IAuthenticationFacade authenticationFacade) {
         this.dataSource = dataSource;
-        this.httpServletRequest = httpServletRequest;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -42,7 +37,7 @@ public class CrgDataSource extends DatasourceFactory implements DataSource {
         if (threadDbConnections.get(Thread.currentThread()) != null) {
             dbName = threadDbConnections.get(Thread.currentThread());
         } else {
-            Long orgId = authenticationFacade.getOrganizationId((Authentication) httpServletRequest.getUserPrincipal());
+            Long orgId = authenticationFacade.getOrganizationId();
 
             if (orgId < 1) {
                 dbName = INITIAL_DB_NAME;

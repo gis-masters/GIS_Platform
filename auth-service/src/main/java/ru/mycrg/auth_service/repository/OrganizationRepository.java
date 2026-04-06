@@ -3,22 +3,23 @@ package ru.mycrg.auth_service.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import ru.mycrg.auth_service.entity.Organization;
 
+import java.util.List;
 import java.util.Optional;
 
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 
 @RepositoryRestResource(collectionResourceRel = "organizations", exported = false)
-public interface OrganizationRepository extends PagingAndSortingRepository<Organization, Long> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 
     @Override
     @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
-    Iterable<Organization> findAll();
+    List<Organization> findAll();
 
     @Override
     @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
@@ -26,7 +27,7 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
 
     @Override
     @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
-    Iterable<Organization> findAll(Sort sort);
+    List<Organization> findAll(Sort sort);
 
     // NOT Exported
     @Override
@@ -43,7 +44,7 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
 
     @Override
     @RestResource(exported = false)
-    <S extends Organization> Iterable<S> saveAll(Iterable<S> entities);
+    <S extends Organization> List<S> saveAll(Iterable<S> entities);
 
     @Override
     @RestResource(exported = false)
@@ -51,7 +52,7 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
 
     @Override
     @RestResource(exported = false)
-    Iterable<Organization> findAllById(Iterable<Long> longs);
+    List<Organization> findAllById(Iterable<Long> longs);
 
     @Override
     @RestResource(exported = false)

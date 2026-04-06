@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
-import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
+import static ru.mycrg.http_client.JsonConverter.asJsonString;
 
 @Component
 public class GisogdRfAuditResponseHandler implements IEventHandler {

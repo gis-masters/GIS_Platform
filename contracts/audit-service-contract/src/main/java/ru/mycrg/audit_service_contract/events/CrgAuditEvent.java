@@ -1,7 +1,8 @@
 package ru.mycrg.audit_service_contract.events;
 
-import com.fasterxml.jackson.databind.JsonNode;
+
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

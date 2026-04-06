@@ -24,7 +24,6 @@ import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 import ru.mycrg.geo_json.Feature;
-import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -220,8 +219,9 @@ public class BaseStepsDefinitions {
         getAllAndFillEntityCount();
 
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("size", entitiesPerPage)
                 .when().
-                        get("/?size=" + entitiesPerPage);
+                        get();
         jsonPath = response.jsonPath();
 
         double entitiesPerPageDouble = Integer.parseInt(entitiesPerPage);
@@ -234,8 +234,10 @@ public class BaseStepsDefinitions {
     public void checkSomethingOnPages(String entitiesPerPage) {
         for (int i = 0; i < totalPages; i++) {
             response = getBaseRequestWithCurrentCookie()
+                    .queryParam("size", entitiesPerPage)
+                    .queryParam("page", i)
                     .when().
-                            get(String.format("/?size=%s&page=%s", entitiesPerPage, i));
+                            get();
 
             jsonPath = response.jsonPath();
             List<String> entitiesIds = response.jsonPath().getList("content");
@@ -313,34 +315,43 @@ public class BaseStepsDefinitions {
     }
 
     public void get1000Entities() {
-        response = getBaseRequestWithCurrentCookie()
+        response = getBaseRequestWithCurrentCookie().
+                 queryParam("size", 1000)
                 .when().
-                        get("/?size=1000");
+                        get();
     }
 
     public void getCurrentEntityByFilter(String field, String value) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("filter", field + " iLike '%" + value + "%'")
                 .when().
-                        get("?filter=" + field + " iLike '%" + value + "%'");
+                        get();
     }
 
     public void getCurrentEntityByFilter(String filter) {
+        String[] queryParam = filter.split("=", 2);
+
         response = getBaseRequestWithCurrentCookie()
+                .queryParam(queryParam[0], queryParam.length > 1 ? queryParam[1] : "")
                 .when().
-                        get("?" + filter);
+                        get();
     }
 
     // TODO: Временно дублирую метод: getCurrentEntityByFilter пока проекты не работают с полным фильтром
+    // нет более постоянного чем временное!!!
     public void getEntitiesWithFilterByField(String field, String value) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam(field, value)
                 .when().
-                        get(String.format("?%s=%s", field, value));
+                        get();
     }
 
     public void get1000EntitiesSorted(String field, String direction) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("sort", field + "," + direction)
+                .queryParam("size", 1000)
                 .when().
-                        get(String.format("/?sort=%s,%s&%s", field, direction, "size=1000"));
+                        get();
     }
 
     public void getAllAndFillEntityCount() {
@@ -417,7 +428,8 @@ public class BaseStepsDefinitions {
         } catch (Throwable e) {
             response.prettyPrint();
 
-            throw new IllegalStateException("Не удалось выполнить проверку длины checkResponseValueLength => " + e.getMessage());
+            throw new IllegalStateException(
+                    "Не удалось выполнить проверку длины checkResponseValueLength => " + e.getMessage());
         }
     }
 
@@ -426,7 +438,7 @@ public class BaseStepsDefinitions {
             throw new IllegalStateException("Список таблиц пуст");
         }
 
-        return scenarioTables.get(scenarioTables.size() - 1);
+        return scenarioTables.getLast();
     }
 
     public LayerCreateDto getLayerByTitle(String layerTitle) {

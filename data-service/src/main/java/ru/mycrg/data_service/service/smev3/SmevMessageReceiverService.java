@@ -20,10 +20,9 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.reestrs.ReestrIncomingService;
 import ru.mycrg.data_service.service.smev3.model.ResponseFailProcess;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
-import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 import ru.mycrg.data_service.service.smev3.request.accept_gpzu.AcceptGpzuService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
-import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -39,12 +38,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static ru.mycrg.http_client.JsonConverter.asJsonString;
+
 @Service
 @ConditionalOnProperty(
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
 public class SmevMessageReceiverService {
+
     private final Logger log = LoggerFactory.getLogger(SmevMessageReceiverService.class);
     private static final Base64.Encoder base64Encoder = Base64.getEncoder();
     private final SmevMessageService messageService;
@@ -94,7 +96,7 @@ public class SmevMessageReceiverService {
             }
             if (body.contains("urn://rostelekom.ru/PermissionObjectOperation/1.0.6")) {
                 acceptRnvService.acceptRequest(body, QueryResult.class);
-                
+
                 return;
             }
             var messageEntity = replyToClientId(message)
@@ -109,18 +111,18 @@ public class SmevMessageReceiverService {
             }
             String finalBody = body;
             responseProcessors.stream()
-                    .filter(processor -> processor.mnemonicEnum() == messageEntity.mnemonicEnum())
-                    .findFirst()
-                    .ifPresentOrElse(
-                            processor -> process(processor, messageEntity, finalBody),
-                            () -> log.warn("Обработчик сообщения СМЭВ не найден {}", messageEntity.mnemonicEnum())
-                    );
+                              .filter(processor -> processor.mnemonicEnum() == messageEntity.mnemonicEnum())
+                              .findFirst()
+                              .ifPresentOrElse(
+                                      processor -> process(processor, messageEntity, finalBody),
+                                      () -> log.warn("Обработчик сообщения СМЭВ не найден {}",
+                                                     messageEntity.mnemonicEnum())
+                              );
         } catch (Exception e) {
             log.warn("Ошибка при обработке сообщения из СМЭВ: {}", e.getMessage(), e);
             receiveFail(e, body);
         }
     }
-
 
     /**
      * Достаем ИД сообщения, ответом на которое, является это сообщение
@@ -130,29 +132,29 @@ public class SmevMessageReceiverService {
                 .newInstance()
                 .newDocumentBuilder();
         return Optional.of(message.getBody())
-                .map(ByteArrayInputStream::new)
-                .map(byteArrayInputStream -> {
-                    try {
-                        return builder.parse(byteArrayInputStream);
-                    } catch (Exception e) {
-                        throw new SmevRequestException("Ошибка при парсинге XML " + e.getMessage());
-                    }
-                })
-                .map(document -> {
-                    if (document.getElementsByTagName("replyToClientId").getLength() == 0) {
-                        addReplyToClientIdToDocument(document);
-                        return document.getElementsByTagName("replyToClientId");
-                    }
-                    return document.getElementsByTagName("replyToClientId");
-                })
-                .map(nodeList -> nodeList.item(0))
-                .map(Node::getFirstChild)
-                .map(Node::getNodeValue)
-                .map(UUID::fromString);
+                       .map(ByteArrayInputStream::new)
+                       .map(byteArrayInputStream -> {
+                           try {
+                               return builder.parse(byteArrayInputStream);
+                           } catch (Exception e) {
+                               throw new SmevRequestException("Ошибка при парсинге XML " + e.getMessage());
+                           }
+                       })
+                       .map(document -> {
+                           if (document.getElementsByTagName("replyToClientId").getLength() == 0) {
+                               addReplyToClientIdToDocument(document);
+                               return document.getElementsByTagName("replyToClientId");
+                           }
+                           return document.getElementsByTagName("replyToClientId");
+                       })
+                       .map(nodeList -> nodeList.item(0))
+                       .map(Node::getFirstChild)
+                       .map(Node::getNodeValue)
+                       .map(UUID::fromString);
     }
 
-
-    private void process(ResponseProcessor responseProcessor, SmevMessageMetaEntity originalMessageRecord, String body) {
+    private void process(ResponseProcessor responseProcessor, SmevMessageMetaEntity originalMessageRecord,
+                         String body) {
         try {
             log.debug("Попытка обработки сообщения {}", body);
             var processResult = responseProcessor.processMessageFromSmev(body);
@@ -174,14 +176,15 @@ public class SmevMessageReceiverService {
                     ex.toString(),
                     new String(base64Encoder.encode(body.getBytes()))
             );
-            rabbitTemplate.convertAndSend(adapterReceiveFailQueue.getName(), JsonConverter.asJsonString(failResponse));
+            rabbitTemplate.convertAndSend(adapterReceiveFailQueue.getName(), asJsonString(failResponse));
             log.warn("Сообщение успешно отправлено в очередь 'receive fail'");
         } catch (Exception e) {
-            log.error("Ошибка при попытке отправить сообщение в очередь receive fail'. {} {}", e.getMessage(), e.toString());
+            log.error("Ошибка при попытке отправить сообщение в очередь receive fail'. {} {}", e.getMessage(),
+                      e.toString());
         }
     }
 
-    private void addReplyToClientIdToDocument(Document document){
+    private void addReplyToClientIdToDocument(Document document) {
         NodeList originalMessageIDNodes = document.getElementsByTagName("OriginalMessageID");
         Element originalMessageIDElement = (Element) originalMessageIDNodes.item(0);
 

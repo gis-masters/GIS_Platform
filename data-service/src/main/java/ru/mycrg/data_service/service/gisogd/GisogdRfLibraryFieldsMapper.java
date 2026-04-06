@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import tools.jackson.core.type.TypeReference;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 /**
  * Мы храним для организации в файле gisogdrfFields.json маппинг наших библиотек и их полей отправляемых в ГИСОГД РФ
@@ -73,7 +74,10 @@ public class GisogdRfLibraryFieldsMapper {
         }
 
         try {
-            Map<String, List<String>> data = mapper.readValue(Files.readAllBytes(pathToFile), HashMap.class);
+            Map<String, List<String>> data = fromJson(Files.readString(pathToFile),
+                                                      new TypeReference<Map<String, List<String>>>() {
+                                                      }
+            ).orElseThrow(() -> new IllegalArgumentException("Пустой или невалидный JSON"));
 
             cache.put(pathToFile.toString(), data);
         } catch (Exception e) {

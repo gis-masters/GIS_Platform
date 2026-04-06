@@ -23,11 +23,10 @@ import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 /**
  * В общем, это уже не про импорт геометрии. Стоит когда-нить переназвать всё что с этим связано.
@@ -143,7 +142,8 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportShapeRepor
     public IExecutor<ImportShapeReport> initialize(Object data) {
         MultipartFile file;
         try {
-            LinkedHashMap<String, Object> geometryShapeModel = mapper.convertValue(data, LinkedHashMap.class);
+            Map<?, ?> geometryShapeModel = (Map<?, ?>) data;
+
             payload = new GeometryFromShapePlacementPayloadModel();
             payload.setDatasetId(String.valueOf(geometryShapeModel.get("datasetId")));
             payload.setFileType(FileType.valueOf(String.valueOf(geometryShapeModel.get("fileType"))));

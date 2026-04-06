@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.queue.handlers;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,6 +10,7 @@ import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
+import tools.jackson.databind.JsonNode;
 
 @Service
 public class PatchProcessHandler implements IEventHandler {

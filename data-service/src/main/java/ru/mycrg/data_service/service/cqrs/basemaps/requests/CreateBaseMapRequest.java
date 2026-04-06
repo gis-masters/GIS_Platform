@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.basemaps.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.common_contracts.generated.data_service.BaseMapRequestModel;
@@ -8,7 +7,7 @@ import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.mediator.IRequest;
 
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class CreateBaseMapRequest implements IRequest<BaseMap>, Auditable {
 
@@ -26,7 +25,7 @@ public class CreateBaseMapRequest implements IRequest<BaseMap>, Auditable {
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(baseMapCreateDto, JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(baseMapCreateDto),
                                  "CREATE",
                                  String.valueOf(entity.getId()),
                                  TABLE.name(),

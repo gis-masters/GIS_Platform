@@ -18,8 +18,8 @@ import java.util.Map;
 import static java.lang.String.format;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.*;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
@@ -153,7 +153,8 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         String location = response.getHeader("Location");
 
         String datasetName = extractDatasetName(response);
-        assertThat(location, equalTo(makeDatasetUrl(datasetName)));
+
+        assertEquals(location, makeDatasetUrl(datasetName));
     }
 
     @And("Текущий набор существует в БД")
@@ -210,8 +211,9 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     @When("Текущий пользователь отправляет запрос на наборы с размером страницы: {string}")
     public void makePageableRequest(String pageSize) {
         response = getBaseRequestWithCurrentCookie()
+                .queryParam("size", pageSize)
                 .when().
-                        get("/?size=" + pageSize);
+                        get();
     }
 
     @And("Количество наборов данных соответствует ожидаемому: {string}")
@@ -317,8 +319,9 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         return split[1];
     }
 
+    //TODO метод изменён при переходе на  java 25. Если всё ок удалить комментарий 30.09.2026
     private String makeDatasetUrl(String datasetName) {
-        return format("%s:%d/api/data/datasets/%s", testServerHost, testServerPort, datasetName);
+        return format("%s:%d/datasets/%s", "http://crg-data-service", 8084, datasetName);
     }
 
     private void getDatasetByIdentifier(String currentDatasetIdentifier) {

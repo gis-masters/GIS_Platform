@@ -1,12 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.features.handlers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.Set;
-
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -15,9 +10,13 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.GeoJsonObject;
 import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.mediator.IRequestHandler;
+import tools.jackson.databind.JsonNode;
 
-import static ru.mycrg.data_service.util.JsonConverter.getJsonString;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNodeFromString;
+import java.util.Map;
+import java.util.Set;
+
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
+import static ru.mycrg.http_client.JsonConverter.toJsonNodeFromString;
 
 @Component
 public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeometryValidRequest, Feature> {
@@ -102,7 +101,7 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
     }
 
     private void validateCoordinates(JsonNode coordinatesNode, String message) {
-        if (coordinatesNode == null || !coordinatesNode.isArray() || coordinatesNode.size() == 0) {
+        if (coordinatesNode == null || !coordinatesNode.isArray() || coordinatesNode.isEmpty()) {
             throw new IllegalArgumentException(message);
         }
     }

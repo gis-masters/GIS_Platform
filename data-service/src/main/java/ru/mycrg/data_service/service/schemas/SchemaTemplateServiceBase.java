@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.schemas;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
@@ -9,6 +8,7 @@ import ru.mycrg.data_service.mappers.SchemaEntityMapper;
 import ru.mycrg.data_service.repository.SchemaTemplateRepository;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import tools.jackson.databind.JsonNode;
 
 import java.util.List;
 import java.util.Objects;

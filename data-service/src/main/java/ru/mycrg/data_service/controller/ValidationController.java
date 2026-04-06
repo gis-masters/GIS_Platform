@@ -17,7 +17,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service.service.validation.ViolationService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController

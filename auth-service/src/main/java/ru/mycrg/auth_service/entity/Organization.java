@@ -1,24 +1,20 @@
 package ru.mycrg.auth_service.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.springframework.data.annotation.LastModifiedDate;
+import tools.jackson.databind.JsonNode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hibernate.type.SqlTypes.JSON;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONING;
 
 @Entity
 @Table(name = "organizations")
-@TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-)
+
 public class Organization {
 
     @Id
@@ -38,7 +34,7 @@ public class Organization {
     @Column
     private String status = PROVISIONING.toString();
 
-    @Type(type = "jsonb-node")
+    @JdbcTypeCode(JSON)
     @Column(columnDefinition = "json")
     private JsonNode settings;
 
@@ -63,7 +59,7 @@ public class Organization {
     public Organization() {
     }
 
-    public Organization(String name, String phone,  String description) {
+    public Organization(String name, String phone, String description) {
         this.name = name;
         this.phone = phone;
         this.description = description;

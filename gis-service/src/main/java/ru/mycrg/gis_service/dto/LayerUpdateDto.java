@@ -1,18 +1,17 @@
 package ru.mycrg.gis_service.dto;
 
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import ru.mycrg.gis_service.validators.CrgParentGroup;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 
 public class LayerUpdateDto {
 
-    @Length(min = 2, max = 255)
+    @Size(min = 2, max = 255)
     private String title;
 
-    @Length(min = 2, max = 255)
+    @Size(min = 2, max = 255)
     private String dataset;
 
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
@@ -36,17 +35,17 @@ public class LayerUpdateDto {
     @CrgParentGroup
     private Long parentId;
 
-    @Length(min = 6, max = 255)
+    @Size(min = 6, max = 255)
     private String nativeCRS;
 
-    @Length(max = 50)
+    @Size(max = 50)
     private String contentType;
 
     private String view;
 
     private String errorText;
 
-    @Length(min = 1, max = 255)
+    @Size(min = 1, max = 255)
     private String styleName;
 
     private String style;

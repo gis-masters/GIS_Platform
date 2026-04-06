@@ -1,20 +1,20 @@
 package ru.mycrg.integration_service.bpmn.gpkg.import_.raster;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.integration_service.service.DataServiceSpeaker;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +50,9 @@ public class PatchLibraryRecords implements JavaDelegate {
         }
 
         //Все объекты у нас пойдут в одну библиотеку, в одну запись, в одно поле
-        String docLibId = extractedData.get(0).getLibraryIdentifier();
-        Long recId = extractedData.get(0).getDocumentId();
-        String currentField = extractedData.get(0).getField();
+        String docLibId = extractedData.getFirst().getLibraryIdentifier();
+        Long recId = extractedData.getFirst().getDocumentId();
+        String currentField = extractedData.getFirst().getField();
 
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(IMPORT_GPKG_EVENT);
         String token = event.getToken();

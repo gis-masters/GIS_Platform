@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 

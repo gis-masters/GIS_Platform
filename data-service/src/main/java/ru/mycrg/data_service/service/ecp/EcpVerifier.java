@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.ecp;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.MalformedURLException;
 import java.net.URL;

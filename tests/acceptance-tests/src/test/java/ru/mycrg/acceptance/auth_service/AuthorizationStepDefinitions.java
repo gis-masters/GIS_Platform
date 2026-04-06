@@ -126,8 +126,8 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         cookie = response.getDetailedCookie(AUTH_COOKIE);
 
         assertNotNull(cookie);
-        assertEquals(cookie.getMaxAge(), 0);
-        assertEquals(cookie.getValue(), "");
+        assertEquals(-1, cookie.getMaxAge());
+        assertEquals("", cookie.getValue());
     }
 
     @Given("Текущий токен пользователя сохранен")

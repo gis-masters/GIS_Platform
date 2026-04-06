@@ -10,8 +10,8 @@ import ru.mycrg.data_service.service.ExternalStatementService;
 import ru.mycrg.data_service.service.cqrs.external_statements.requests.CreateExternalStatementRequest;
 import ru.mycrg.mediator.Mediator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;

@@ -18,8 +18,8 @@ import ru.mycrg.data_service.service.export.Exporter;
 import ru.mycrg.data_service.service.export.LayerValidationReportService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 

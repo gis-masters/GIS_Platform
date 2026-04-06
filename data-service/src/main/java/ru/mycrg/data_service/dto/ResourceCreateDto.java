@@ -3,8 +3,8 @@ package ru.mycrg.data_service.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;

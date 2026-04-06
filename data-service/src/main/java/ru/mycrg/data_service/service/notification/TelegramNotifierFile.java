@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.notification;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -14,6 +13,7 @@ import ru.mycrg.data_service.service.notification.client.TelegramNotificationMod
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.geo_json.Feature;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.List;

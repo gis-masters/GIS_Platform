@@ -11,7 +11,7 @@ import ru.mycrg.data_service.validators.EntityPropertyValidator;
 import ru.mycrg.schemas.IEntityProperty;
 import ru.mycrg.schemas.properties.EntityPropertyResponseModel;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;

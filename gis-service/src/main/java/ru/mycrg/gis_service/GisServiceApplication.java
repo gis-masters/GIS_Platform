@@ -1,6 +1,5 @@
 package ru.mycrg.gis_service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,15 +7,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import ru.mycrg.geoserver_client.GeoserverClient;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.gis_service.config.CrgProperties;
 import ru.mycrg.http_client.config.RetryConfig;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 @EnableProcessApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class GisServiceApplication {
 
     public static final ObjectMapper objectMapper = new ObjectMapper();

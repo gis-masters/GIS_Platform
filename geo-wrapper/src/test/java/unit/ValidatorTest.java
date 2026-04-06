@@ -1,6 +1,6 @@
 package unit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.data_service_contract.dto.*;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ValidatorTest {
 

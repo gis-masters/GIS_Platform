@@ -1,8 +1,9 @@
 package ru.mycrg.auth_service.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.auth_service.entity.Organization;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 import java.util.Set;

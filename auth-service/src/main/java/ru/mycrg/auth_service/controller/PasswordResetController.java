@@ -8,7 +8,7 @@ import ru.mycrg.auth_service.service.PasswordResetService;
 import ru.mycrg.auth_service_contract.dto.InitPasswordResetDto;
 import ru.mycrg.auth_service_contract.dto.PasswordResetDto;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 

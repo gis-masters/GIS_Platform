@@ -15,10 +15,6 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=6 --start-period=10s \
     CMD curl -f http://localhost:8090/actuator/health || exit 1
 
 ENTRYPOINT exec java -Xmx${XMX_SIZE} \
-                                     --add-opens java.base/java.lang=ALL-UNNAMED \
-                                     --add-opens java.base/java.lang.reflect=ALL-UNNAMED \
-                                     --add-opens java.base/java.io=ALL-UNNAMED \
-                                     --add-opens java.base/java.util=ALL-UNNAMED \
                                      -javaagent:apm-agent.jar \
                                      -Delastic.apm.service_name=report-service \
                                      -Delastic.apm.server_url=${APM_URL} \

@@ -37,11 +37,12 @@ import java.util.UUID;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
 import static ru.mycrg.data_service_contract.enums.FileType.GML;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.getJsonString;
 
 @Component
 public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
@@ -169,7 +170,8 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         this.wsMsgId = UUID.randomUUID();
 
         try {
-            this.payload = mapper.convertValue(data, GmlPlacementModel.class);
+            this.payload = fromJson(getJsonString(data), GmlPlacementModel.class).orElseThrow(
+                    () -> new IllegalArgumentException("Данные невозможно сконвертировать!"));
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель GML импорта: '%s'", data);
             log.error(msg, e.getCause());

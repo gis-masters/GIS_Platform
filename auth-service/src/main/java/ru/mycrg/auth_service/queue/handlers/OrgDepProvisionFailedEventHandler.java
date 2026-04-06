@@ -13,7 +13,7 @@ import ru.mycrg.auth_service_contract.events.response.OrganizationDependencyProv
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional

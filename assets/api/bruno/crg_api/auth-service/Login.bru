@@ -5,13 +5,18 @@ meta {
 }
 
 post {
-  url: {{host}}:{{port}}/oauth/token
+  url: 10.10.10.61/api/oauth/token?password=testPassword1&username=orgOwner@any.ru
   body: multipartForm
   auth: none
 }
 
+params:query {
+  password: testPassword1
+  username: orgOwner@any.ru
+}
+
 body:multipart-form {
   grant_type: password
-  username: {{user}}
-  password: {{password}}
+  username: orgOwner@any.ru
+  password: testPassword1
 }

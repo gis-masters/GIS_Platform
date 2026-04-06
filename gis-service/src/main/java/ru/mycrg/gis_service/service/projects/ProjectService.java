@@ -1,6 +1,6 @@
 package ru.mycrg.gis_service.service.projects;
 
-import com.fasterxml.jackson.databind.JsonNode;
+ 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +32,7 @@ import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.repository.RoleRepository;
 import ru.mycrg.gis_service.service.DataServiceBasemapsClient;
+import tools.jackson.databind.JsonNode;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -24,9 +24,10 @@ import java.util.List;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 public class FileSucceededPublishedEventHandler implements IEventHandler {

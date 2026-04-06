@@ -1,10 +1,9 @@
 package ru.mycrg.acceptance;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 import java.util.Map;
 
@@ -19,26 +18,18 @@ public class JsonMapper {
     }
 
     public static String asJson(Object value) {
-        try {
-            return writer.writeValueAsString(value);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return writer.writeValueAsString(value);
     }
 
     public static JsonNode asJsonNode(String jsonString) {
-        JsonNode jsonNode = null;
+        JsonNode jsonNode;
 
-        try {
-            jsonNode = mapper.readValue(jsonString, JsonNode.class);
-        } catch (JsonProcessingException e) {
-            System.out.println("Не удалось преобразовать к JsonNode => " + e.getMessage());
-        }
+        jsonNode = mapper.readValue(jsonString, JsonNode.class);
 
         return jsonNode;
     }
 
-    public static Map<String, Object> getMapFromJsonString(String jsonString) throws JsonProcessingException {
+    public static Map<String, Object> getMapFromJsonString(String jsonString) {
         return mapper.readValue(normalizeJsonString(jsonString),
                                 new TypeReference<>() {
                                 });
@@ -79,7 +70,7 @@ public class JsonMapper {
                     i++;
                 }
 
-                if (result.length() > 0 && result.charAt(result.length() - 1) != ' ') {
+                if (!result.isEmpty() && result.charAt(result.length() - 1) != ' ') {
                     result.append(' ');
                 }
             } else {

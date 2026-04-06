@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.library_records.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
@@ -19,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class CreateLibraryRecordRequest implements IRequest<ResponseWithReport>, Auditable, ICreateFilesRelation {
 
@@ -43,7 +42,7 @@ public class CreateLibraryRecordRequest implements IRequest<ResponseWithReport>,
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(record, JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(record),
                                  "CREATE",
                                  rQualifier.getTable() == null ? "unknown" : rQualifier.getTable(),
                                  LIBRARY_RECORD.name(),

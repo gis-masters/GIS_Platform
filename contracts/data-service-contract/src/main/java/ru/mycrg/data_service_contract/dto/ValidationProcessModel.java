@@ -7,7 +7,7 @@ public class ValidationProcessModel {
 
     private int page;
     private int size;
-    private final List<ResourceProjection> resourceProjections = new ArrayList<>();
+    private List<ResourceProjection> resourceProjections = new ArrayList<>();
 
     public ValidationProcessModel() {
         this.page = 0;
@@ -32,6 +32,10 @@ public class ValidationProcessModel {
 
     public List<ResourceProjection> getResourceProjections() {
         return resourceProjections;
+    }
+
+    public void setResourceProjections(List<ResourceProjection> resourceProjections) {
+        this.resourceProjections = resourceProjections == null ? new ArrayList<>() : resourceProjections;
     }
 
     public void addResourceProjections(ResourceProjection resourceProjection) {

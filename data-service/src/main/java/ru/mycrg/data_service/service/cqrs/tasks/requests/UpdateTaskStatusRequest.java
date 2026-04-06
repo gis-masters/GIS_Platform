@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.tasks.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
@@ -8,7 +7,7 @@ import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class UpdateTaskStatusRequest implements IRequest<Voidy>, Auditable {
 
@@ -30,7 +29,7 @@ public class UpdateTaskStatusRequest implements IRequest<Voidy>, Auditable {
         return new CrgAuditEvent("UPDATE",
                                  taskId.toString(),
                                  TASK.name(),
-                                 mapper.convertValue(taskId, JsonNode.class));
+                                 toJsonNode(taskId));
     }
 
     public TaskStatus getTaskStatus() {

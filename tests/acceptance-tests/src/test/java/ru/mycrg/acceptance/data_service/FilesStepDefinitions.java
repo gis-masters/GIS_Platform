@@ -79,7 +79,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                   File file = TestFilesManager.getFile(fileName);
                   List<UUID> ids = createFiles(new File[]{file});
 
-                  currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
+                  currentFiles.add(new FileDescriptionModel(ids.getFirst(), file.getTotalSpace(), fileName));
               });
 
         assertEquals(currentFiles.size(), fileNamesInString.split(",").length);

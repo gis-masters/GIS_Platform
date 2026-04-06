@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,9 +11,9 @@ import ru.mycrg.data_service.service.gpkg.importer.mappers.GpkgImportedStylesMap
 import ru.mycrg.data_service.service.gpkg.importer.mappers.GpkgImportedSvgMapper;
 import ru.mycrg.data_service.service.gpkg.importer.mappers.LayerProjectionMapper;
 import ru.mycrg.data_service.service.gpkg.importer.mappers.TableCreateDtoMapper;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,7 @@ import static ru.mycrg.data_service.service.gpkg.export.tables.VectorTableSchema
 import static ru.mycrg.data_service.service.gpkg.importer.mappers.GpkgImportedStylesMapper.GPKG_STYLE_LAYER_STYLE_NAME;
 import static ru.mycrg.data_service.service.gpkg.importer.mappers.GpkgImportedStylesMapper.GPKG_STYLE_LAYER_STYLE_SLD;
 import static ru.mycrg.data_service.service.gpkg.importer.mappers.LayerProjectionMapper.*;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Repository
 public class GpkgRepositoryDetached {
@@ -45,7 +45,7 @@ public class GpkgRepositoryDetached {
         try {
             String jsonString = jdbcTemplate.queryForObject(sql, String.class);
 
-            return JsonConverter.fromJson(jsonString, new TypeReference<SchemaDto>() {
+            return fromJson(jsonString, new TypeReference<>() {
             });
         } catch (Exception e) {
             log.error("Не удалось найти информацию о векторной таблице. Причина: {}", e.getMessage());
@@ -65,7 +65,7 @@ public class GpkgRepositoryDetached {
         try {
             List<TableCreateDto> results = jdbcTemplate.query(sql, new TableCreateDtoMapper());
 
-            return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+            return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
         } catch (Exception e) {
             log.error("Не удалось прочитать информацию о векторной таблице из временного хранилища {}", e.getMessage());
 

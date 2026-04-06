@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.basemaps.requests;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.common_contracts.generated.data_service.BaseMapRequestModel;
@@ -9,7 +8,7 @@ import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.BASEMAP;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 public class UpdateBaseMapRequest implements IRequest<Voidy>, Auditable {
 
@@ -29,7 +28,7 @@ public class UpdateBaseMapRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(baseMapModel, JsonNode.class),
+        return new CrgAuditEvent(toJsonNode(baseMapModel),
                                  "UPDATE",
                                  baseMapModel.getTitle(),
                                  BASEMAP.name(),

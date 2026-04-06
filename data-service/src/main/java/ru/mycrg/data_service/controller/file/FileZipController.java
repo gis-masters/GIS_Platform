@@ -21,8 +21,8 @@ import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.resources.protectors.IFileResourceProtector;
 import ru.mycrg.data_service_contract.enums.FileType;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;

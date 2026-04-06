@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.import_.kpt;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +29,7 @@ import ru.mycrg.data_service_contract.enums.TaskType;
 import ru.mycrg.data_service_contract.queue.request.ImportKptEvent;
 import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -43,10 +43,10 @@ import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 /**
  * Сервис обработки задач на импорт КПТ из XML
