@@ -15,6 +15,7 @@ import ru.mycrg.gis_service.dto.project.ProjectPermission;
 import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,17 +36,19 @@ public class ProjectsDao {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public List<ProjectPermission> getMaxRoleFromDirectlyPermissions(Set<String> pIds) {
+    public List<ProjectPermission> getMaxRoleFromDirectlyPermissions(Set<Long> projectIds) {
+        if (projectIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Long userId = userDetails.getUserId();
-        List<String> groupIds = userDetails.getGroups().stream()
-                                           .map(Object::toString)
-                                           .collect(Collectors.toList());
+        List<Long> groupIds = userDetails.getGroups();
 
         String query = "" +
                 "SELECT per.project_id, max(per.role_id) AS max_role " +
                 "FROM permissions AS per " +
-                "WHERE per.project_id IN (" + buildInSection(pIds) + ")" +
+                "WHERE per.project_id IN (" + buildInSection(projectIds) + ")" +
                 "    AND (" +
                 "      (" +
                 "        per.principal_id = " + userId + " " +
@@ -64,13 +67,11 @@ public class ProjectsDao {
     }
 
     @Nullable
-    public Long getBestRoleFromParents(Set<String> parentIds) {
+    public Long getBestRoleFromParents(Set<Long> parentIds) {
         Long orgId = authenticationFacade.getOrganizationId();
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Long userId = userDetails.getUserId();
-        List<String> groupIds = userDetails.getGroups().stream()
-                                           .map(Object::toString)
-                                           .collect(Collectors.toList());
+        List<Long> groupIds = userDetails.getGroups();
 
         String query = "" +
                 "SELECT max(per.role_id) AS role " +
@@ -101,9 +102,7 @@ public class ProjectsDao {
         Long orgId = authenticationFacade.getOrganizationId();
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Long userId = userDetails.getUserId();
-        List<String> groupIds = userDetails.getGroups().stream()
-                                           .map(Object::toString)
-                                           .collect(Collectors.toList());
+        List<Long> groupIds = userDetails.getGroups();
 
         String pathSectionBase = pathToParent == null
                 ? "IS NULL"
@@ -171,9 +170,7 @@ public class ProjectsDao {
         Long orgId = authenticationFacade.getOrganizationId();
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Long userId = userDetails.getUserId();
-        List<String> groupIds = userDetails.getGroups().stream()
-                                           .map(Object::toString)
-                                           .collect(Collectors.toList());
+        List<Long> groupIds = userDetails.getGroups();
 
         String queryTemplate = "" +
                 "SELECT count(*) FROM ( " +
@@ -223,7 +220,7 @@ public class ProjectsDao {
     }
 
     @NotNull
-    private String buildWhereByUserGroupSection(List<String> groupIds) {
+    private String buildWhereByUserGroupSection(List<Long> groupIds) {
         if (!groupIds.isEmpty()) {
             return "OR (" +
                     "  per.principal_id IN (" + buildInSection(groupIds) + ") " +
@@ -255,7 +252,7 @@ public class ProjectsDao {
         return " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
     }
 
-    private String buildInSection(Collection<String> ids) {
+    private String buildInSection(Collection<Long> ids) {
         List<String> asString = ids.stream()
                                    .map(s -> "'" + s + "'")
                                    .collect(Collectors.toList());

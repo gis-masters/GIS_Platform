@@ -17,7 +17,6 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.auth_service.UserGroupStepsDefinitions.usersGroupId;
-import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -78,6 +77,13 @@ public class ProjectPermissionStepsDefinitions extends BaseStepsDefinitions {
         response.then().statusCode(SC_CREATED);
     }
 
+    /**
+     * Происходит исключительно ADD новой роли, из-за наших defineBestRole становится невозможно понизить
+     * пользовательскую роль. В UI для корректной работы используется ADD+Delete_old связка. Можно спокойно использовать
+     * в Scenario Outline если шаг 'Существует проект' будет создавать новый проект для каждого Example
+     *
+     * @param role вводит только VIEWER CONTRIBUTOR OWNER
+     */
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий проект")
     public void giveCurrentUserPermToCurrentProject(String role) {
         authorizationBase.loginAsOwner();
@@ -163,7 +169,7 @@ public class ProjectPermissionStepsDefinitions extends BaseStepsDefinitions {
 
         checkProjectPerm();
 
-        Map<String, String> result = (Map<String, String>) response.jsonPath().getList("").get(0);
+        Map<String, String> result = (Map<String, String>) response.jsonPath().getList("").getFirst();
 
         assertEquals("OWNER", result.get("role"));
     }
@@ -190,11 +196,6 @@ public class ProjectPermissionStepsDefinitions extends BaseStepsDefinitions {
             projectStepsDefinitions.getCurrentProjectInfoById();
             checkUserRoleForCurrentProject(expectedRole);
         }
-    }
-
-    @Given("Текущий пользователь устанавливает роль {string} для пользователя {string}, для текущего проекта")
-    public void addPermissionToCurrentProjectForCurrentUser(String role, String userName) {
-        addPermissionToCurrentProject(getUserIdByName(userName), "user", role);
     }
 
     private void addPermissionToCurrentProject(Integer principalId, String principalType, String role) {

@@ -1,6 +1,5 @@
 package ru.mycrg.gis_service.service.projects;
 
- 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,7 @@ import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.repository.RoleRepository;
 import ru.mycrg.gis_service.service.DataServiceBasemapsClient;
+import ru.mycrg.gis_service_contract.dto.ProjectBaseProjection;
 import tools.jackson.databind.JsonNode;
 
 import java.util.*;
@@ -112,9 +112,10 @@ public class ProjectService {
             }
 
             String pathToMe = getPathToMe(parentFolder);
-            Set<String> parentIds = Arrays.stream(pathToMe.split("/"))
-                                          .filter(id -> !id.isBlank())
-                                          .collect(Collectors.toSet());
+            Set<Long> parentIds = Arrays.stream(pathToMe.split("/"))
+                                        .filter(id -> !id.isBlank())
+                                        .map(Long::parseLong)
+                                        .collect(Collectors.toSet());
 
             Long bestRoleFromParents = projectsDao.getBestRoleFromParents(parentIds);
             if (Objects.equals(bestRoleFromParents, 30L)) {
@@ -197,9 +198,10 @@ public class ProjectService {
         } else {
             log.debug("У элемента есть родители! Пытаемся взять права от них. {}", path);
 
-            Set<String> parentIds = Arrays.stream(getPathToMe(projectItem).split("/"))
-                                          .filter(item -> !item.isBlank())
-                                          .collect(Collectors.toSet());
+            Set<Long> parentIds = Arrays.stream(getPathToMe(projectItem).split("/"))
+                                        .filter(item -> !item.isBlank())
+                                        .map(Long::parseLong)
+                                        .collect(Collectors.toSet());
 
             Long bestRoleFromParents = projectsDao.getBestRoleFromParents(parentIds);
             if (bestRoleFromParents != null) {
@@ -358,11 +360,11 @@ public class ProjectService {
     }
 
     private void tryReplaceByBestRole(Page<ProjectProjectionImpl> projectItems) {
-        Set<String> pIds = projectItems.stream()
-                                       .map(projectProjection -> projectProjection.getId().toString())
-                                       .collect(Collectors.toSet());
+        Set<Long> projectIds = projectItems.stream()
+                                           .map(ProjectBaseProjection::getId)
+                                           .collect(Collectors.toSet());
 
-        for (ProjectPermission pp: projectsDao.getMaxRoleFromDirectlyPermissions(pIds)) {
+        for (ProjectPermission pp: projectsDao.getMaxRoleFromDirectlyPermissions(projectIds)) {
             projectItems.stream()
                         .filter(projectProjection -> Objects.equals(projectProjection.getId(), pp.getProjectId()))
                         .findFirst()

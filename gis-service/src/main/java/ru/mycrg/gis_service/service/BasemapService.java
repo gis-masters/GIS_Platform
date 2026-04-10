@@ -11,8 +11,8 @@ import ru.mycrg.gis_service.dto.project.IProjectProjection;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
+import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
-
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.BaseMapRepository;
 import ru.mycrg.gis_service.service.projects.ProjectService;
@@ -33,17 +33,20 @@ public class BasemapService {
     private final ProjectService projectService;
     private final BaseMapRepository baseMapRepository;
     private final ProjectionFactory projectionFactory;
+    private final ProjectProtector protector;
     private final IAuthenticationFacade authenticationFacade;
 
     public BasemapService(JsonPatcher jsonPatcher,
                           ProjectService projectService,
                           ProjectionFactory projectionFactory,
                           BaseMapRepository baseMapRepository,
+                          ProjectProtector protector,
                           IAuthenticationFacade authenticationFacade) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.baseMapRepository = baseMapRepository;
         this.projectionFactory = projectionFactory;
+        this.protector = protector;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -55,12 +58,17 @@ public class BasemapService {
     }
 
     public BaseMapProjection create(long projectId, BaseMapCreateDto dto) {
+        if (protector.lessThenContributor(projectId)) {
+            throw new ForbiddenException("Недостаточно прав для добавления подложки в проект!!!");
+        }
+
         Project project = projectService.getById(projectId);
+
         project.getBaseMaps().stream()
                .filter(baseMap -> baseMap.getBaseMapId().equals(dto.getBaseMapId()))
                .findFirst()
                .ifPresent(baseMap -> {
-                   throw new ConflictException("Basemap " + dto.getBaseMapId() + " already joined");
+                   throw new ConflictException("Basemap " + baseMap.getBaseMapId() + " already joined");
                });
 
         BaseMap baseMap = new BaseMap(dto);
@@ -73,6 +81,10 @@ public class BasemapService {
     }
 
     public void delete(long projectId, Long id) {
+        if (protector.lessThenContributor(projectId)) {
+            throw new ForbiddenException("Недостаточно прав для удаления подложки из проекта!!!");
+        }
+
         Project project = projectService.getById(projectId);
 
         BaseMap baseMap = baseMapRepository.findById(id)
@@ -92,6 +104,10 @@ public class BasemapService {
     }
 
     public void update(long projectId, long baseMapId, JsonMergePatch patchDto) {
+        if (protector.lessThenContributor(projectId)) {
+            throw new ForbiddenException("Недостаточно прав для обновления данных о подложке в проекте!!!");
+        }
+
         Set<BaseMap> baseMaps = getBaseMaps(projectId);
         BaseMap baseMapForUpdate = getBaseMapById(baseMaps, baseMapId);
 
