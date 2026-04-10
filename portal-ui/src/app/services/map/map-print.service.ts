@@ -16,11 +16,16 @@ import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { type Orientation, pageFormats, printSettings, scales } from '../../stores/PrintSettings.store';
 import { getOlProjection, getProjectionByCode } from '../data/projections/projections.service';
 import { type StyleRuleExtended } from '../geoserver/styles/styles.models';
-import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
+import {
+  filterLegendForCurrentMapView,
+  getLayerStyleRules,
+  LEGEND_WMS_CONCURRENCY
+} from '../geoserver/styles/styles.service';
 import { GeometryType, type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent } from '../geoserver/wfs/wfs.util';
 import { CrgLayerType, type CrgVectorLayer } from '../gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
+import { concurrentQueue } from '../util/concurrent-queue.util';
 import { transformExtent } from '../util/coordinates-transform.util';
 import { saveAsBlob } from '../util/FileSaver';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
@@ -715,14 +720,18 @@ function setPrintSize(resolution: number, translateX: number, translateY: number
   }
 }
 
-export async function loadAllLayersStyles(): Promise<void> {
-  const extendedRules = await Promise.all(
-    currentProject.visibleVectorLayers.map(async ({ payload }): Promise<StyleRuleExtended[]> => {
-      const rules = await getLayerStyleRules(payload as CrgVectorLayer);
+async function loadExtendedRulesForVisibleLayer(payload: CrgVectorLayer): Promise<StyleRuleExtended[]> {
+  const rules = await getLayerStyleRules(payload);
 
-      return rules.map((rule): StyleRuleExtended => ({ ...rule, layerId: payload.id, layerTitle: payload.title }));
-    })
+  return rules.map((rule): StyleRuleExtended => ({ ...rule, layerId: payload.id, layerTitle: payload.title }));
+}
+
+export async function loadAllLayersStyles(): Promise<void> {
+  const layers = currentProject.visibleVectorLayers;
+  const extendedBatches = await concurrentQueue(
+    LEGEND_WMS_CONCURRENCY,
+    layers.map(({ payload }) => [loadExtendedRulesForVisibleLayer, payload as CrgVectorLayer] as const)
   );
 
-  printSettings.setAllLegend(extendedRules.flat());
+  printSettings.setAllLegend(extendedBatches.flat());
 }

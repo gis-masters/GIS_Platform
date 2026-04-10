@@ -6,6 +6,7 @@ import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { mapService } from '../../map/map.service';
 import { services } from '../../services';
+import { concurrentQueue } from '../../util/concurrent-queue.util';
 import { buildCql } from '../../util/cql/buildCql';
 import { concatCql } from '../../util/cql/concatCql';
 import { Mime } from '../../util/Mime';
@@ -22,6 +23,13 @@ import {
   type StyleRule
 } from './styles.models';
 import { getSupGeometryType } from './styles.utils';
+
+/** Прозрачный 1×1 PNG, если GetLegendGraphic недоступен */
+const LEGEND_LOAD_FAILED_PLACEHOLDER =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
+/** Ограничение параллелизма WMS GetLegendGraphic и обхода слоёв в печати/фильтрации легенды */
+export const LEGEND_WMS_CONCURRENCY = 2;
 
 const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 
@@ -58,17 +66,31 @@ export async function loadLayerStyleRules(styleName?: string, layerComplexName?:
         : parseFilter(ruleNode.querySelector('Filter')?.firstElementChild)
     }));
 
-  return await Promise.all(
-    rulesWithoutLegend.map(async rule => {
-      if (!layerComplexName || !styleName) {
-        throw new Error('Невозможно получить легенду: нет имени слоя или стиля');
-      }
+  if (!layerComplexName || !styleName) {
+    throw new Error('Невозможно получить легенду: нет имени слоя или стиля');
+  }
 
-      const legend = await getLegendGraphic(layerComplexName, rule.name, styleName);
-
-      return { ...rule, legend };
-    })
+  return concurrentQueue(
+    LEGEND_WMS_CONCURRENCY,
+    rulesWithoutLegend.map(rule => [loadLegendGraphicForRule, rule, layerComplexName, styleName] as const)
   );
+}
+
+async function loadLegendGraphicForRule(
+  rule: Omit<StyleRule, 'legend'>,
+  layerComplexName: string,
+  styleName: string
+): Promise<StyleRule> {
+  let legend: string;
+
+  try {
+    legend = await getLegendGraphic(layerComplexName, rule.name, styleName);
+  } catch (error) {
+    services.logger.warn(`GetLegendGraphic: слой ${layerComplexName}, правило "${rule.name}"`, error);
+    legend = LEGEND_LOAD_FAILED_PLACEHOLDER;
+  }
+
+  return { ...rule, legend };
 }
 
 function parseFilter(xmlFilter?: Element | null): StyleFilter | undefined {
@@ -152,47 +174,51 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
 
   const [x1, y1, x2, y2] = mapService.getCurrentExtend();
   const filterDisabled = cloneDeep(attributesTableStore.filterDisabled);
-  const requestData: FilteredStylesLayerRequest[] = await Promise.all(
-    layers.map(async layer => {
-      const schema = await getLayerSchema(layer);
 
-      if (!schema) {
-        throw new Error(`Не удалось получить схему для слоя ${layer.resourceId}`);
-      }
+  const buildRequestForLayer = async (layer: CrgVectorLayer): Promise<FilteredStylesLayerRequest> => {
+    const schema = await getLayerSchema(layer);
 
-      const { definitionQuery } = applyView(schema, layer.view);
+    if (!schema) {
+      throw new Error(`Не удалось получить схему для слоя ${layer.resourceId}`);
+    }
 
-      let ecqlFilter: string | undefined = definitionQuery;
+    const { definitionQuery } = applyView(schema, layer.view);
 
-      if (!filterDisabled[layer.resourceId]) {
-        ecqlFilter = concatCql(ecqlFilter, buildCql(attributesTableStore.getLayerFilter(layer.resourceId)));
-      }
+    let ecqlFilter: string | undefined = definitionQuery;
 
-      return {
-        dataset: layer.dataset,
-        identifier: layer.resourceId,
-        ecqlFilter,
-        filter: {
-          operator: StyleFilterOperator.INTERSECTS,
-          propertyName: 'shape',
-          literal: {
-            type: GeometryType.MULTI_POLYGON,
-            coordinates: [
+    if (!filterDisabled[layer.resourceId]) {
+      ecqlFilter = concatCql(ecqlFilter, buildCql(attributesTableStore.getLayerFilter(layer.resourceId)));
+    }
+
+    return {
+      dataset: layer.dataset,
+      identifier: layer.resourceId,
+      ecqlFilter,
+      filter: {
+        operator: StyleFilterOperator.INTERSECTS,
+        propertyName: 'shape',
+        literal: {
+          type: GeometryType.MULTI_POLYGON,
+          coordinates: [
+            [
               [
-                [
-                  [x1, y1],
-                  [x2, y1],
-                  [x2, y2],
-                  [x1, y2],
-                  [x1, y1]
-                ]
+                [x1, y1],
+                [x2, y1],
+                [x2, y2],
+                [x1, y2],
+                [x1, y1]
               ]
             ]
-          }
-        },
-        rules: await getLayerStyleRules(layer)
-      };
-    })
+          ]
+        }
+      },
+      rules: await getLayerStyleRules(layer)
+    };
+  };
+
+  const requestData = await concurrentQueue(
+    LEGEND_WMS_CONCURRENCY,
+    layers.map(layer => [buildRequestForLayer, layer] as const)
   );
 
   return stylesClient.getLegendForMapView(requestData.filter(({ rules }) => rules.length));
