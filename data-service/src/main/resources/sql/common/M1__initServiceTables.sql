@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS data.base_maps
     CONSTRAINT base_maps_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.base_maps
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.schemas_and_tables
 (
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS data.schemas_and_tables
     CONSTRAINT schemas_and_tables_identifier_type UNIQUE (identifier, is_folder, path)
     ) TABLESPACE pg_default;
 ALTER TABLE data.schemas_and_tables
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.schemas
 (
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS data.schemas
     CONSTRAINT schemas_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.schemas
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.processes
 (
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS data.processes
     CONSTRAINT rus43af9ap4edm43mm3141oddj6 PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.processes
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.doc_libraries
 (
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS data.doc_libraries
     CONSTRAINT doc_libraries_table UNIQUE (table_name)
     ) TABLESPACE pg_default;
 ALTER TABLE data.doc_libraries
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.files
 (
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS data.files
     CONSTRAINT files_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.files
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.acl_roles
 (
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS data.acl_roles
     CONSTRAINT acl_roles_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.acl_roles
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.acl_principals
 (
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS data.acl_principals
     CONSTRAINT acl_principals_unique_id_type UNIQUE (identifier, type)
     ) TABLESPACE pg_default;
 ALTER TABLE data.acl_principals
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.acl_permissions
 (
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS data.acl_permissions
                              ON DELETE CASCADE
     ) TABLESPACE pg_default;
 ALTER TABLE data.acl_permissions
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE INDEX IF NOT EXISTS idx_resource_table ON data.acl_permissions (resource_table);
 CREATE INDEX IF NOT EXISTS idx_principal_id ON data.acl_permissions (principal_id);
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS data.entity_description
     CONSTRAINT entity_description_pkey PRIMARY KEY (table_name)
     ) TABLESPACE pg_default;
 ALTER TABLE data.entity_description
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.entity_properties
 (
@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS data.entity_properties
 
     ) TABLESPACE pg_default;
 ALTER TABLE data.entity_properties
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE IF NOT EXISTS data.entity_content_types
 (
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS data.entity_content_types
     CONSTRAINT entity_content_types_pkey PRIMARY KEY (name)
     ) TABLESPACE pg_default;
 ALTER TABLE data.entity_content_types
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 
 INSERT INTO data.acl_roles (id, name)
@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS data.reestrs
     CONSTRAINT reestrs_id_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.reestrs
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 -- Incoming
 CREATE TABLE IF NOT EXISTS data.reestr_incoming
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS data.reestr_incoming
     CONSTRAINT reestr_incoming_id_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.reestr_incoming
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 -- Outgoing
 CREATE TABLE IF NOT EXISTS data.reestr_outgoing
@@ -326,7 +326,7 @@ CREATE TABLE IF NOT EXISTS data.reestr_outgoing
     CONSTRAINT reestr_outgoing_id_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.reestr_outgoing
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 INSERT INTO data.reestrs (title, table_name, schema_name, created_by)
 SELECT 'Реестр входящих',
@@ -355,4 +355,4 @@ CREATE TABLE IF NOT EXISTS data.tasks_log
     CONSTRAINT tasks_log_id_pkey PRIMARY KEY (id)
     ) TABLESPACE pg_default;
 ALTER TABLE data.tasks_log
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS data.fts_dictionary_types
     CONSTRAINT unique_type UNIQUE (type)
     ) TABLESPACE pg_default;
 ALTER TABLE data.fts_dictionary_types
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 INSERT INTO data.fts_dictionary_types(id, type)
 VALUES (1, 'LAYER')
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS data.fts_dictionary
     ON DELETE NO ACTION
     ) TABLESPACE pg_default;
 ALTER TABLE data.fts_dictionary
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE INDEX IF NOT EXISTS trgm_gist_indx ON data.fts_dictionary USING gist (word public.gist_trgm_ops);
 

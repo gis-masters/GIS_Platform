@@ -17,6 +17,6 @@ CREATE TABLE IF NOT EXISTS public.groups
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.groups
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 ALTER TABLE public.layers ADD COLUMN group_id integer;

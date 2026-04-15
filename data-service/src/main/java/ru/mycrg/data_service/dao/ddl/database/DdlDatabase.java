@@ -15,6 +15,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.util.EpsgCodes;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.prepareQuoteIdentifier;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
 
 @Service
@@ -50,9 +51,10 @@ public class DdlDatabase {
         HikariDataSource newDataSource = null;
         try {
             log.debug("Try create db: {}", dbName);
+            String quotedOwner = prepareQuoteIdentifier(owner);
 
             final String sql = "CREATE DATABASE " + dbName + " WITH " +
-                    " OWNER = " + owner +
+                    " OWNER = " + quotedOwner +
                     " ENCODING = 'UTF8'" +
                     " LC_COLLATE = 'en_US.UTF-8'" +
                     " LC_CTYPE = 'en_US.UTF-8'" +
@@ -61,7 +63,7 @@ public class DdlDatabase {
                     " TEMPLATE template0";
 
             jdbcTemplate.execute(sql);
-            jdbcTemplate.execute("GRANT ALL ON DATABASE " + dbName + " TO " + owner);
+            jdbcTemplate.execute("GRANT ALL ON DATABASE " + dbName + " TO " + quotedOwner);
 
             // Подсоединяемся к только что созданной БД и создаем расширения postgis и pg_stat_statements
             newDataSource = datasourceFactory.getNotPoolableDataSource(dbName, INITIAL_SCHEMA_NAME);

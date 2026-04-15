@@ -10,7 +10,7 @@ CREATE TABLE public.basemaps
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.basemaps
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE TABLE public.projects_basemaps
 (
@@ -28,4 +28,4 @@ CREATE TABLE public.projects_basemaps
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.projects_basemaps
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";

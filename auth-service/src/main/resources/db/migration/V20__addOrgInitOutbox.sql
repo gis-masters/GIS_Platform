@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS public.org_init_outbox
 ) TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.org_init_outbox
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";

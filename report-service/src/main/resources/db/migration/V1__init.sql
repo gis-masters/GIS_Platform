@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.templates
     ) TABLESPACE pg_default;
 
 ALTER TABLE public.templates
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
 
 CREATE UNIQUE INDEX IF NOT EXISTS ux_templates_name
     ON public.templates (name);

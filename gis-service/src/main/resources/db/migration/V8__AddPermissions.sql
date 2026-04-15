@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS public.permissions
     ) TABLESPACE pg_default;
 
 ALTER TABLE public.permissions
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";

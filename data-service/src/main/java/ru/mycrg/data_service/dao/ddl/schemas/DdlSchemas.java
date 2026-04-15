@@ -11,6 +11,8 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.sql.SQLException;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.prepareQuoteIdentifier;
+
 @Service
 public class DdlSchemas {
 
@@ -32,9 +34,10 @@ public class DdlSchemas {
         String dbOwner = environment.getRequiredProperty("spring.datasource.username");
         try {
             log.debug("Создание схемы {}", schemaQualifier);
+            String quotedDbOwner = prepareQuoteIdentifier(dbOwner);
 
             jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + schemaQualifier + "; " +
-                                         "ALTER SCHEMA " + schemaQualifier + " OWNER TO " + dbOwner);
+                                         "ALTER SCHEMA " + schemaQualifier + " OWNER TO " + quotedDbOwner);
         } catch (DataAccessException e) {
             String msg = "Не удалось создать схему: " + schemaQualifier.getQualifier();
 

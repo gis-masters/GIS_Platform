@@ -147,6 +147,10 @@ public class CrgGlobalProperties {
         }
     }
 
+    public static String prepareQuoteIdentifier(String value) {
+        return "\"" + value.replace("\"", "\"\"") + "\"";
+    }
+
     /**
      * Извлекаем название слоя из комплексного имени геосервера
      *

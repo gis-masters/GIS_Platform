@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS public.organization_intents
 ) TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.organization_intents
-    OWNER to ${db_owner};
+    OWNER to "${db_owner}";
