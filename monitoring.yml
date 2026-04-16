@@ -3,7 +3,7 @@ version: '3.7'
 services:
   metricbeat_gis_portal:
     container_name: metricbeat_gis_portal
-    image: elastic/metricbeat:${ELK_IMAGE_TAG}
+    image: ${DOCKER_CRG_HOST}/elastic-metricbeat:${ELK_IMAGE_TAG}
     restart: always
     user: root
     environment:
