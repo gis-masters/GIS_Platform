@@ -2,7 +2,7 @@
 set -euo pipefail
 
 BASE_URL='http://localhost:8080'
-API_URL='http://localhost'
+GATEWAY_URL='http://localhost:8100'
 
 # внешний логин, который выдает crgAuthCookie
 EXT_USER=$1
@@ -34,7 +34,7 @@ curl -sS -L \
   --data-urlencode "username=$EXT_USER" \
   --data-urlencode "password=$EXT_PASS" \
   --data-urlencode 'grant_type=password' \
-  "$API_URL/api/oauth/token" \
+  "$GATEWAY_URL/oauth/token" \
   > /dev/null
 
 if ! grep -q 'crgAuthCookie' "$COOKIE_JAR"; then
