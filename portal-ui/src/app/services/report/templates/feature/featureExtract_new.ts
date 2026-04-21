@@ -13,8 +13,8 @@ import { applyView, getReadablePropertyValue } from '../../../data/schema/schema
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
-import { type CreateReportRequest, isOutputFormat } from '../../print.models';
-import { printWithCarbon } from '../../print.service';
+import { type CreateReportRequest, isOutputFormat } from '../../report.models';
+import { printWithCarbon } from '../../report.service';
 import { buildCoordinatesList, type PrintableCoordinatesChunk } from '../../utils/buildCoordinatesList';
 import { type FeatureSize, getFeatureSize } from '../../utils/getFeatureSize';
 import { isCompactGeometry } from '../../utils/isCompactGeometry';

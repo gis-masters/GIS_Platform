@@ -8,9 +8,9 @@ import { applyView } from '../../services/data/schema/schema.utils';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
-import { featurePrintTemplates } from '../../services/print/print.service';
-import { featureExtract } from '../../services/print/templates/feature/featureExtract';
-import { type PrintTemplate } from '../../services/print/templates/PrintTemplate';
+import { featurePrintTemplates } from '../../services/report/report.service';
+import { featureExtract } from '../../services/report/templates/feature/featureExtract';
+import { type PrintTemplate } from '../../services/report/templates/PrintTemplate';
 import { PrintAction } from '../PrintAction/PrintAction';
 
 const cnPrintFeature = cn('PrintFeature');

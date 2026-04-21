@@ -33,6 +33,8 @@ import { ExplorerAdapterTypeNone } from './_type/Explorer-Adapter_type_none';
 import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_project';
 import { ExplorerAdapterTypeProjectFolder } from './_type/Explorer-Adapter_type_projectFolder';
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
+import { ExplorerAdapterTypeReportTemplate } from './_type/Explorer-Adapter_type_reportTemplate';
+import { ExplorerAdapterTypeReportTemplatesRoot } from './_type/Explorer-Adapter_type_reportTemplatesRoot';
 import { ExplorerAdapterTypeRoot } from './_type/Explorer-Adapter_type_root';
 import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema';
 import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_schemasRoot';
@@ -63,6 +65,8 @@ const adapters: Record<keyof ExplorerItemDataAllTypes, Adapter> = {
   [ExplorerItemType.MESSAGES_REGISTRY]: ExplorerAdapterTypeMessagesRegistry,
   [ExplorerItemType.SCHEMA]: ExplorerAdapterTypeSchema,
   [ExplorerItemType.SCHEMAS_ROOT]: ExplorerAdapterTypeSchemasRoot,
+  [ExplorerItemType.REPORT_TEMPLATE]: ExplorerAdapterTypeReportTemplate,
+  [ExplorerItemType.REPORT_TEMPLATES_ROOT]: ExplorerAdapterTypeReportTemplatesRoot,
   [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: ExplorerAdapterTypeDocumentVersionsRoot,
   [ExplorerItemType.DOCUMENT_VERSION]: ExplorerAdapterTypeDocumentVersion,
   [ExplorerItemType.TASKS_ROOT]: ExplorerAdapterTypeTasksRoot,

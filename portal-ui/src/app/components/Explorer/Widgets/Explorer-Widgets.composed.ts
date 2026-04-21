@@ -8,6 +8,7 @@ import { withTypeFolder } from './_type/Explorer-Widgets_type_folder';
 import { withTypeLibrary } from './_type/Explorer-Widgets_type_library';
 import { withTypeProject } from './_type/Explorer-Widgets_type_project';
 import { withTypeProjectFolder } from './_type/Explorer-Widgets_type_projectFolder';
+import { withTypeReportTemplate } from './_type/Explorer-Widgets_type_reportTemplate';
 import { withTypeSchema } from './_type/Explorer-Widgets_type_schema';
 import { withTypeSearchItem } from './_type/Explorer-Widgets_type_searchItem';
 import { withTypeTable } from './_type/Explorer-Widgets_type_table';
@@ -21,6 +22,7 @@ export const ExplorerWidgets = compose(
   withTypeFolder as HOC<ExplorerWidgetsProps>,
   withTypeLibrary as HOC<ExplorerWidgetsProps>,
   withTypeSchema as HOC<ExplorerWidgetsProps>,
+  withTypeReportTemplate as HOC<ExplorerWidgetsProps>,
   withTypeTable as HOC<ExplorerWidgetsProps>,
   withTypeSearchItem as HOC<ExplorerWidgetsProps>,
   withTypeDocumentVersion as HOC<ExplorerWidgetsProps>,

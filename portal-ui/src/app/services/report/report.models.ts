@@ -1,9 +1,4 @@
-import {
-  type ReportMainDto,
-  type ReportOutputFormat,
-  type TemplateFullInfo,
-  type TemplateShortInfo
-} from '../../../server-types/common-contracts';
+import { type ReportMainDto, type ReportOutputFormat } from '../../../server-types/common-contracts';
 
 const OUTPUT_FORMATS = new Set<ReportOutputFormat>(['PDF', 'DOCX', 'ODT', 'JPEG']);
 
@@ -15,5 +10,3 @@ export function isOutputFormat(value: unknown): value is ReportOutputFormat {
 export interface CreateReportRequest extends ReportMainDto {
   data: Record<string, unknown>;
 }
-
-export type TemplateInfo = TemplateFullInfo | TemplateShortInfo;

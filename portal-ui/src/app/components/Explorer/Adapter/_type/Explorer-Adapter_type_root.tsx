@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { HomeOutlined } from '@mui/icons-material';
 
+import { flags } from '../../../../services/common/feature-flags/feature-flags.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
@@ -49,13 +50,21 @@ function getChildren(): ExplorerItemData[] {
     return baseChildren;
   }
 
-  return [
-    ...baseChildren,
+  const adminChildren: ExplorerItemData[] = [
     {
       type: ExplorerItemType.SCHEMAS_ROOT,
       payload: null
     }
   ];
+
+  if (flags.reportTemplatesInDataManagement) {
+    adminChildren.push({
+      type: ExplorerItemType.REPORT_TEMPLATES_ROOT,
+      payload: null
+    });
+  }
+
+  return [...baseChildren, ...adminChildren];
 }
 
 @staticImplements<Adapter>()
@@ -124,6 +133,16 @@ export class ExplorerAdapterTypeRoot {
     if (id === 'tasksRoot') {
       return {
         type: ExplorerItemType.TASKS_ROOT,
+        payload: null
+      };
+    }
+    if (id === 'reportTemplatesRoot') {
+      if (!flags.reportTemplatesInDataManagement) {
+        return undefined;
+      }
+
+      return {
+        type: ExplorerItemType.REPORT_TEMPLATES_ROOT,
         payload: null
       };
     }

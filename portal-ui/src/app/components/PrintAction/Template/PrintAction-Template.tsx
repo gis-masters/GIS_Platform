@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { type PrintTemplate } from '../../../services/print/templates/PrintTemplate';
+import { type PrintTemplate } from '../../../services/report/templates/PrintTemplate';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
 import './PrintAction-Template.scss';

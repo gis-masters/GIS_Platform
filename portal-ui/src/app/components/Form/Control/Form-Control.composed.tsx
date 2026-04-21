@@ -10,6 +10,7 @@ import { withTypeDocument } from './_type/Form-Control_type_document';
 import { withTypeFias } from './_type/Form-Control_type_fias';
 import { withTypeFile } from './_type/Form-Control_type_file';
 import { withTypeFloat } from './_type/Form-Control_type_float';
+import { withTypeInputFile } from './_type/Form-Control_type_inputFile';
 import { withTypeInt } from './_type/Form-Control_type_int';
 import { withTypeLong } from './_type/Form-Control_type_long';
 import { withTypeSet } from './_type/Form-Control_type_set';
@@ -33,6 +34,7 @@ export const FormControl = compose(
   withTypeSet as HOC<FormControlProps>,
   withTypeFias as HOC<FormControlProps>,
   withTypeFile as HOC<FormControlProps>,
+  withTypeInputFile as HOC<FormControlProps>,
   withTypeDocument as HOC<FormControlProps>,
   withTypeUrl as HOC<FormControlProps>,
   withTypeUser as HOC<FormControlProps>,

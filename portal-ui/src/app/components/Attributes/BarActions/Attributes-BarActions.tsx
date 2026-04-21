@@ -18,7 +18,7 @@ import { MapMode } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
 import { type PageOptions } from '../../../services/models';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
-import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
+import { featuresCollectionPrintTemplates } from '../../../services/report/report.service';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
 import { EditFeaturesButton } from '../../EditFeaturesButton/EditFeaturesButton';
 import { IconButton } from '../../IconButton/IconButton';

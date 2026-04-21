@@ -49,7 +49,8 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.DOCUMENT]: [jsonArrayRequired],
   [PropertyType.SET]: [],
   [PropertyType.CUSTOM]: [simpleRequired],
-  [PropertyType.USER_ID]: [numberRequired]
+  [PropertyType.USER_ID]: [numberRequired],
+  [PropertyType.INPUT_FILE]: [inputFileRequired]
 };
 
 const propertyTypeError = new Error('Ошибка типа свойства');
@@ -86,6 +87,12 @@ export function validateFormValue(formValue: unknown, fields: PropertySchema[]):
 
 function simpleRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
   if (required && !value) {
+    return [messages.required];
+  }
+}
+
+function inputFileRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
+  if (required && !(value instanceof File)) {
     return [messages.required];
   }
 }

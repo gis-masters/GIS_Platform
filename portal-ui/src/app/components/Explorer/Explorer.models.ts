@@ -17,6 +17,7 @@ import { type Task, type TaskHistory } from '../../services/data/task/task.model
 import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { type PageOptions, type SortOrder, type ValueOf } from '../../services/models';
+import { type TemplateInfo } from '../../services/report/reportTemplate/reportTemplate.models';
 import { type FilterQuery } from '../../services/util/filters/filters.models';
 import type { ExplorerService } from './Explorer.service';
 import type { ExplorerStore } from './Explorer.store';
@@ -72,7 +73,10 @@ export enum ExplorerItemType {
   MESSAGES_REGISTRY = 'msg',
 
   SCHEMAS_ROOT = 'sr',
-  SCHEMA = 'schema'
+  SCHEMA = 'schema',
+
+  REPORT_TEMPLATES_ROOT = 'rtr',
+  REPORT_TEMPLATE = 'rt'
 }
 
 export interface ExplorerItemDataAllTypes {
@@ -111,6 +115,9 @@ export interface ExplorerItemDataAllTypes {
 
   [ExplorerItemType.SCHEMAS_ROOT]: { type: ExplorerItemType.SCHEMAS_ROOT; payload: null };
   [ExplorerItemType.SCHEMA]: { type: ExplorerItemType.SCHEMA; payload: Schema };
+
+  [ExplorerItemType.REPORT_TEMPLATES_ROOT]: { type: ExplorerItemType.REPORT_TEMPLATES_ROOT; payload: null };
+  [ExplorerItemType.REPORT_TEMPLATE]: { type: ExplorerItemType.REPORT_TEMPLATE; payload: TemplateInfo };
 }
 
 export type ExplorerItemData = ValueOf<ExplorerItemDataAllTypes>;

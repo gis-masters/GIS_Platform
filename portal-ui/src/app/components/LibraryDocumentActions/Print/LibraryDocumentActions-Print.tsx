@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 
 import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { type Schema } from '../../../services/data/schema/schema.models';
-import { documentPrintTemplates } from '../../../services/print/print.service';
+import { documentPrintTemplates } from '../../../services/report/report.service';
 import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { PrintAction } from '../../PrintAction/PrintAction';
 

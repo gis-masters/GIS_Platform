@@ -2,8 +2,8 @@ import { getFileDownloadUrl } from '../data/files/files.service';
 import { type LibraryRecord } from '../data/library/library.models';
 import { type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { downloadByUrl } from '../util/FileSaver';
-import { printClient } from './print.client';
-import { type CreateReportRequest } from './print.models';
+import { reportClient } from './report.client';
+import { type CreateReportRequest } from './report.models';
 import { rawDocumentData } from './templates/document/rawDocumentData';
 import { featureExtract } from './templates/feature/featureExtract';
 import { rawFeatureData } from './templates/feature/rawFeatureData';
@@ -39,7 +39,7 @@ export async function printWithCarbon(
 ): Promise<string> {
   const { data: preparedData, media } = prepareReportData(data);
 
-  const fileId = await printClient.createReport({
+  const fileId = await reportClient.createReport({
     outputFormat,
     templateName,
     media,

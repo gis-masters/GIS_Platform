@@ -1,0 +1,32 @@
+---
+description: Локальное состояние в React через MobX useLocalObservable вместо useState
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# Локальное состояние компонента
+
+В компонентах не использовать `useState`. Вместо этого:
+
+1. Объявить тип состояния с суффиксом `State`, имя совпадает с компонентом: `ComponentNameState`.
+2. Создать стор: `const state = useLocalObservable<ComponentNameState>(() => ({ ... }))`.
+3. Менять поля через методы стора либо иным способом, совместимым с MobX, чтобы асинхронные обновления не нарушали правила реактивности.
+
+Пример именования:
+
+```typescript
+type ReportFooState = {
+  open: boolean;
+  setOpen(value: boolean): void;
+};
+
+const ReportFoo: FC<Props> = observer(() => {
+  const state = useLocalObservable<ReportFooState>(() => ({
+    open: false,
+    setOpen(value) {
+      this.open = value;
+    }
+  }));
+  // ...
+});
+```

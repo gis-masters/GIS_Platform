@@ -17,6 +17,7 @@ class Flags implements FlagsList {
   featureExtractPrintAutoMap = '';
   selectingFeaturesLimit = '';
   showDocumentRoles = '';
+  reportTemplatesInDataManagement = '';
 
   private constructor() {
     this.init();

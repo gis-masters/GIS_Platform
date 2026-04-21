@@ -11,6 +11,7 @@ import { type Dataset, type VectorTable } from './data/vectorData/vectorData.mod
 import { type WfsFeature } from './geoserver/wfs/wfs.models';
 import { type CrgLayer, type CrgVectorLayer } from './gis/layers/layers.models';
 import { type CrgProject } from './gis/projects/projects.models';
+import { type TemplateInfo } from './report/reportTemplate/reportTemplate.models';
 
 export interface DataChangeEventDetail<T> {
   type: 'create' | 'update' | 'delete';
@@ -58,6 +59,7 @@ class CommunicationService {
   vectorTableUpdated = new Emitter<DataChangeEventDetail<VectorTable>>();
   layerUpdated = new Emitter<DataChangeEventDetail<CrgLayer>>();
   taskUpdated = new Emitter<DataChangeEventDetail<Task>>();
+  reportTemplateUpdated = new Emitter<DataChangeEventDetail<TemplateInfo>>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

@@ -27,7 +27,8 @@ export enum PropertyType {
   DOCUMENT = 'document',
   USER = 'user',
   USER_ID = 'userId',
-  CUSTOM = 'custom' // frontend only
+  CUSTOM = 'custom', // frontend only
+  INPUT_FILE = 'inputFile' // frontend only
 }
 
 export function isPropertyType(value: unknown): value is PropertyType {
@@ -275,6 +276,11 @@ export interface PropertySchemaFile extends BasePropertySchema {
   multiple?: boolean;
 }
 
+export interface PropertySchemaInputFile extends BasePropertySchema {
+  propertyType: PropertyType.INPUT_FILE;
+  accept?: string;
+}
+
 export interface PropertySchemaDocument extends BasePropertySchema {
   propertyType: PropertyType.DOCUMENT;
   multiple?: boolean;
@@ -306,6 +312,7 @@ export type PropertySchema =
   | PropertySchemaBinary
   | PropertySchemaFias
   | PropertySchemaFile
+  | PropertySchemaInputFile
   | PropertySchemaDocument
   | PropertySchemaUser
   | PropertySchemaUserId

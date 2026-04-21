@@ -67,6 +67,22 @@ class UsersService {
     return this.fixAuthorities(await usersClient.getUser(id));
   }
 
+  async getUserByEmail(email: string): Promise<CrgUser> {
+    const normalized = email.trim();
+    const [users] = await this.getUsers({
+      page: 0,
+      pageSize: 1,
+      filter: { email: { $eq: normalized } }
+    });
+    const [found] = users;
+
+    if (!found) {
+      throw new Error(`Не найден пользователь с email ${normalized}`);
+    }
+
+    return found;
+  }
+
   async getUsers(pageOptions: PageOptions): Promise<[CrgUser[], number]> {
     const rawUsers = await usersClient.getUsers(pageOptions);
 

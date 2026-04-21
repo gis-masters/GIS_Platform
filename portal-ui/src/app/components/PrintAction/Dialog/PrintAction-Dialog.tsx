@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { type PrintTemplate } from '../../../services/print/templates/PrintTemplate';
+import { type PrintTemplate } from '../../../services/report/templates/PrintTemplate';
 import { Button } from '../../Button/Button';
 import { PrintActionTemplate } from '../Template/PrintAction-Template';
 
