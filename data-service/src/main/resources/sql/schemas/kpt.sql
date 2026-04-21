@@ -49,7 +49,7 @@ SELECT 'municipality_boundaries_egrn',
        '{}'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'municipality_boundaries_egrn');
 
-
+--Необходимо поддерживать схему dl_data_kpt в соответствии с миграцией M18__kptTableAlwaysLikeInCode.sql
 UPDATE data.schemas
 SET class_rule =
         '{
@@ -87,6 +87,13 @@ SET class_rule =
               "valueType": "STRING"
             },
             {
+              "name": "date_received_request",
+              "title": "Дата",
+              "valueType": "DATETIME",
+              "readOnly": true,
+              "description": "Дата предоставления кадастровых сведений Росреестра (КПТ). Заполняется автоматически при импорте КПТ в слой."
+            },
+            {
               "name": "file",
               "title": "КПТ",
               "readOnly": true,
@@ -121,9 +128,7 @@ SET class_rule =
                   "name": "file"
                 },
                 {
-                  "name": "created_at",
-                  "title": "Дата загрузки",
-                  "hidden": false
+                  "name": "date_received_request"
                 },
                 {
                   "name": "note"
@@ -141,9 +146,6 @@ SET class_rule =
                 },
                 {
                   "name": "location"
-                },
-                {
-                  "name": "created_at"
                 },
                 {
                   "name": "note"

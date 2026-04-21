@@ -28,7 +28,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+import ru.mycrg.data_service_contract.dto.import_.kpt.KptImportValidationSettings;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.data_service_contract.queue.request.ImportKptEvent;
@@ -65,6 +65,7 @@ import static ru.mycrg.data_service.kpt_import.writer.OksPolylineProWriter.OKS_P
 import static ru.mycrg.data_service.kpt_import.writer.OksProWriter.OKS_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.ZouitWriter.ZOUIT_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.ZuWriter.ZU_PRO_SCHEMA;
+import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.CADASTRALNUM;
 import static ru.mycrg.data_service.service.smev3.fields.KptFields.REGNUMBORD;
 import static ru.mycrg.data_service.service.smev3.fields.KptFields.REGNUMBORDER;
@@ -285,12 +286,26 @@ public class ImportKptHandler implements IEventHandler {
                 KvartalElement kvartalElement = new KvartalElement(new HashMap<>()); // кадастровый квартал
 
                 XMLStreamReader streamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+
+                String date_received_request = null;
+
                 while (streamReader.hasNext()) {
                     if (!running.get()) {
                         break;
                     }
 
-                    List<? extends KptElement> kptElements = getKptElements(tags, streamReader, kvartalElement);
+                    int eventType = streamReader.next();
+                    if (eventType == XMLStreamConstants.START_ELEMENT
+                            && "date_received_request".equals(streamReader.getLocalName())) {
+                        date_received_request = streamReader.getElementText();
+
+                        continue;
+                    }
+
+                    List<? extends KptElement> kptElements = getKptElements(tags,
+                                                                            streamReader,
+                                                                            kvartalElement,
+                                                                            eventType);
                     if (kptElements.isEmpty()) {
                         continue;
                     }
@@ -336,6 +351,15 @@ public class ImportKptHandler implements IEventHandler {
                                taskId);
                 }
 
+                Optional.ofNullable(date_received_request)
+                        .ifPresent(date -> kptImportDao
+                                .setDateOfReceivedRequestToKptDoc(dbName,
+                                                                  new ResourceQualifier(SYSTEM_SCHEMA_NAME,
+                                                                                        KPT_LIBRARY_ID),
+                                                                  kpt.getDocument().getId(),
+                                                                  date)
+                        );
+
                 timer.stop();
                 log.info("Файл '{}' обработан за {} сек", pathToKpt, timer.getTotalTimeSeconds());
             }
@@ -349,10 +373,10 @@ public class ImportKptHandler implements IEventHandler {
     @NotNull
     private List<? extends KptElement> getKptElements(Set<String> tags,
                                                       XMLStreamReader streamReader,
-                                                      KvartalElement kvartalElement) throws XMLStreamException {
+                                                      KvartalElement kvartalElement,
+                                                      int eventType) {
         List<KptElement> empty = Collections.emptyList();
 
-        int eventType = streamReader.next();
         if (eventType != XMLStreamConstants.START_ELEMENT) {
             return empty;
         }
@@ -633,7 +657,7 @@ public class ImportKptHandler implements IEventHandler {
     private Optional<String> getKeyForDeduplication(List<SimplePropertyDto> properties) {
         List<String> propertyNames = properties.stream()
                                                .map(SimplePropertyDto::getName)
-                                               .collect(Collectors.toList());
+                                               .toList();
 
         if (propertyNames.contains(REGNUMBORD)) {
             return Optional.of(REGNUMBORD);
@@ -684,24 +708,13 @@ public class ImportKptHandler implements IEventHandler {
     }
 
     private String restrictGeometryType(GeometryType geometryType) {
-        switch (geometryType) {
-            case POINT:
-            case MULTI_POINT:
-                return "POINT";
-            case POLYGON:
-            case MULTI_POLYGON:
-                return "POLYGON";
-            case LINE_STRING:
-            case MULTI_LINE_STRING:
-                return "LINESTRING";
-            case CURVE:
-            case MULTI_CURVE:
-                return "CURVE";
-            case SURFACE:
-            case MULTI_SURFACE:
-                return "SURFACE";
-            default:
-                return "POLYGON";
-        }
+        return switch (geometryType) {
+            case POINT, MULTI_POINT -> "POINT";
+            case POLYGON, MULTI_POLYGON -> "POLYGON";
+            case LINE_STRING, MULTI_LINE_STRING -> "LINESTRING";
+            case CURVE, MULTI_CURVE -> "CURVE";
+            case SURFACE, MULTI_SURFACE -> "SURFACE";
+            default -> "POLYGON";
+        };
     }
 }

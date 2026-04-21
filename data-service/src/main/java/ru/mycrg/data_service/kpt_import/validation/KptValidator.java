@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+import ru.mycrg.data_service_contract.dto.import_.kpt.KptImportValidationSettings;
 
 import java.util.HashMap;
 import java.util.List;

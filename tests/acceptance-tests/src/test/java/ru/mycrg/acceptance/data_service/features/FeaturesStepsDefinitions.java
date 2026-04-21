@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.data_service.features;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -25,11 +26,13 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.FeatureBuilder.prepareFeatures;
 import static ru.mycrg.acceptance.JsonMapper.asJson;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.isDataInMapsEqualsByRows;
 
 public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
 
@@ -141,6 +144,16 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(3, thirdFeature.get(PRIMARY_KEY));
     }
 
+    @Then("данные векторной таблицы совпадают с ожидаемыми")
+    public void checkVectorTableData(Map<String, List<Object>> expectedFields) {
+        List<Map<String, Object>> featuresProps = response.jsonPath()
+                                                          .getList("properties");
+
+        boolean areEqual =  isDataInMapsEqualsByRows(expectedFields, featuresProps.getFirst());
+
+        assertTrue("The expected fields do not match the record fields", areEqual);
+    }
+
     @When("Пользователь спрашивает валидность объекта: {string} с EPSG: {string}")
     public void checkGeometryValid(String geometryJson, String epsg) {
         JsonNode feature = wrapGeometryIntoFeature(geometryJson);
@@ -213,6 +226,11 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         patchFeature(feature);
 
         assertEquals(204, response.getStatusCode());
+    }
+
+    @When("я получаю объект с id = {int} из слоя {string}")
+    public void getFeatureByIdFromTable(int featureId, String tableIdentifier) {
+        getFeatures(tableIdentifier, List.of(String.valueOf(featureId)));
     }
 
     @And("пользователь запоминает номер полученной фичи")

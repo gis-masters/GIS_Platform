@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.controller.BaseController;
-import ru.mycrg.data_service.dto.kpt_import.ImportKptRequest;
+import ru.mycrg.data_service_contract.dto.import_.kpt.ImportKptRequest;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.service.import_.kpt.ImportKptService;
 

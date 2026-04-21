@@ -290,7 +290,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         currentComplexName = response.jsonPath().get("[0].currentComplexName");
     }
 
-    private void createDataset(DatasetCreateDto dto) {
+    public void createDataset(DatasetCreateDto dto) {
         System.out.println("Try create dataset: " + dto.getTitle());
 
         response = getBaseRequestWithCurrentCookie()
@@ -306,7 +306,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         datasetsPool.put(currentDatasetIdentifier, dto);
     }
 
-    private String extractDatasetName(Response response) {
+    public String extractDatasetName(Response response) {
         String location = getLocation(response);
 
         System.out.println("Dataset location: " + location);
@@ -319,15 +319,26 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         return split[1];
     }
 
-    //TODO метод изменён при переходе на  java 25. Если всё ок удалить комментарий 30.09.2026
-    private String makeDatasetUrl(String datasetName) {
-        return format("%s:%d/datasets/%s", "http://crg-data-service", 8084, datasetName);
-    }
-
-    private void getDatasetByIdentifier(String currentDatasetIdentifier) {
+    public void getDatasetByIdentifier(String currentDatasetIdentifier) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + currentDatasetIdentifier);
+    }
+
+    public void getDatasetWithFilter(String currentDatasetIdentifier) {
+        response = getBaseRequestWithCurrentCookie()
+                .given()
+                        .queryParam("page", 0)
+                        .queryParam("size", 10)
+                        .queryParam("sort", "created_at,desc")
+                        .queryParam("filter", "(title ILIKE '%" + currentDatasetIdentifier + "%')")
+                .when().
+                        get();
+    }
+
+    //TODO метод изменён при переходе на  java 25. Если всё ок удалить комментарий 30.09.2026
+    private String makeDatasetUrl(String datasetName) {
+        return format("%s:%d/datasets/%s", "http://crg-data-service", 8084, datasetName);
     }
 
     private void updateCurrentDataset(String body) {

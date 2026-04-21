@@ -58,6 +58,8 @@ public class SchemaTemplates {
                 schema0.setTitle("Тестовая схема dl_default");
 
                 return schema0;
+            case "Тестовая схема dl_data_kpt":
+                return dlKptTestSchema();
             case "rule_id_terr_Rf_subRf без требуемых полей":
                 SchemaDto schema1 = prepareFunctionalZoneWithTerrRfFormulaWithoutRequiredField();
                 schema1.setTitle("rule_id_terr_Rf_subRf без требуемых полей");
@@ -165,6 +167,10 @@ public class SchemaTemplates {
             default:
                 return simpleSchema(schemaTitle);
         }
+    }
+
+    private static SchemaDto dlKptTestSchema() {
+        return loadSchemaFromResource("dl-data-kpt.json");
     }
 
     private static SchemaDto testAllAttributes() {

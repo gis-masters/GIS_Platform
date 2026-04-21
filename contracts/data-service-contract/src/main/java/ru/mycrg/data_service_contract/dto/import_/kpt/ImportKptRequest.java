@@ -1,7 +1,6 @@
-package ru.mycrg.data_service.dto.kpt_import;
+package ru.mycrg.data_service_contract.dto.import_.kpt;
 
 import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

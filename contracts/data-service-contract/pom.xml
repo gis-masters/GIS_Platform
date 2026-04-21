@@ -6,7 +6,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>data-service-contract</artifactId>
-    <version>2.9.10-SNAPSHOT</version>
+    <version>2.9.11-SNAPSHOT</version>
 
     <name>data-service-contract</name>
     <description>Contract of data-service</description>

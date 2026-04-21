@@ -324,7 +324,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     }
 
     @Then("статус текущей задачи равен {string}")
-    public void taskStatusCheck(String expectedStatus) throws InterruptedException {
+    public void taskStatusCheck(String expectedStatus) {
         getTaskByIdentifier(currentTaskId);
         String actualStatus = response.jsonPath().get("status");
         assertEquals("Статус задачи не соответствует ожидаемому", expectedStatus, actualStatus);

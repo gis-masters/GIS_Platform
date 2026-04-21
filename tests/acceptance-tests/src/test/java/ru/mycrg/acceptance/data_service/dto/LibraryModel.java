@@ -8,6 +8,13 @@ public class LibraryModel {
     private String tableName;
     private String details;
 
+    public LibraryModel() {
+    }
+
+    public LibraryModel(String tableName) {
+        this.tableName = tableName;
+    }
+
     public Long getId() {
         return id;
     }

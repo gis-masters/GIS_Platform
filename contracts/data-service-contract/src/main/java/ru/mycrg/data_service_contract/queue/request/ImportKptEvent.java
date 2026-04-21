@@ -2,7 +2,7 @@ package ru.mycrg.data_service_contract.queue.request;
 
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+import ru.mycrg.data_service_contract.dto.import_.kpt.KptImportValidationSettings;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.util.List;

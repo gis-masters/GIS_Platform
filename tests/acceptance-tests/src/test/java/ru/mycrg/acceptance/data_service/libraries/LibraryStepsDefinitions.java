@@ -5,6 +5,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.config.JsonParserType;
 import io.restassured.path.json.config.JsonPathConfig;
@@ -21,6 +22,7 @@ import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -388,9 +390,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void gelCurrentRecordFromDefaultLibraryAsOwner() {
         authorizationBase.loginAsOwner();
 
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentDocumentId));
+        getRecordFromLib(DEFAULT_LIBRARY, currentDocumentId);
     }
 
     @When("Администратор делает запрос на версии текущего документа из текущей библиотеки")
@@ -417,7 +417,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         List<DocumentVersioningDto> versions = jsonPath.getList("", DocumentVersioningDto.class);
         assertFalse(versions.isEmpty());
 
-        DocumentVersioningDto firstVersion = versions.get(0);
+        DocumentVersioningDto firstVersion = versions.getFirst();
         assertTrue(nonNull(firstVersion.getUpdatedBy()));
         assertTrue(nonNull(firstVersion.getUpdatedTime()));
         assertTrue(nonNull(firstVersion.getContent()));
@@ -666,9 +666,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @When("В библиотеке документов {string} существует папка {string} с id {int}")
     public void createFolderInTargetLibraryWithId(String targetLibrary, String folderName, int targetFolderId) {
         // Сначала проверяем, существует ли уже папка с нужным ID
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.format("/%s/records/%d", targetLibrary, targetFolderId));
+        getRecordFromLib(targetLibrary, targetFolderId);
 
         if (response.getStatusCode() == 200) {
             // Папка уже существует, ничего не делаем
@@ -716,9 +714,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Then("Запись присутствует в БД")
     public void checkThatDocumentInDataBase() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentDocumentId));
+        getRecordFromLib(DEFAULT_LIBRARY, currentDocumentId);
 
         assertEquals(200, response.statusCode());
     }
@@ -746,6 +742,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
             long idCount = recordIds.stream().filter(id -> id.equals(deletedDocumentId)).count();
             assertEquals(1L, idCount);
         }
+    }
+
+    @When("я получаю текущий документ из текущей библиотеки")
+    public void getCurrentDocFromCurrentLib() {
+        getRecordFromLib(currentLibrary.getTableName(), currentDocumentId);
     }
 
     @And("Папки находятся в начале списка")
@@ -941,9 +942,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     public void getRecordById(Integer id, String libraryId) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                       get(String.format("/%s/records/%d", libraryId, id));
+        getRecordFromLib(libraryId, id);
     }
 
     public void getRecordsAsRegistry(String ecqlFilter, String libraryId) {
@@ -969,11 +968,30 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType("multipart/form-data").
-                        multiPart("body", body)
+                        multiPart(
+                                new MultiPartSpecBuilder(
+                                        body)
+                                        .controlName("body")
+                                        .mimeType("application/json")
+                                        .charset(StandardCharsets.UTF_8.name())
+                                        .build())
                 .when().
                         post(String.format("/%s/records", libraryId));
 
         currentDocumentId = extractEntityIdFromResponse(response);
+    }
+
+    public void updateDocument(Integer docId, String payload, String currentLibraryId) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(PATCH_CONTENT_TYPE).
+                        body(payload)
+                .when().
+                        patch(String.format("/%s/records/%d", currentLibraryId, docId));
+    }
+
+    public void getCurrentDocumentInCurrentLibrary() {
+        getCurrentDocument(currentLibrary.getTableName());
     }
 
     private LibraryModel extractCurrentLibraryModel() {
@@ -1007,10 +1025,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     private void getCurrentDocument(String libraryId) {
         getRecordById(currentDocumentId, libraryId);
-    }
-
-    private void getCurrentDocumentInCurrentLibrary() {
-        getCurrentDocument(currentLibrary.getTableName());
     }
 
     private void updateCurrentDocument(String payload) {
@@ -1057,15 +1071,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         post(path);
-    }
-
-    private void updateDocument(Integer docId, String payload, String currentLibraryId) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(PATCH_CONTENT_TYPE).
-                        body(payload)
-                .when().
-                        patch(String.format("/%s/records/%d", currentLibraryId, docId));
     }
 
     private void getAllRecords(String libraryId) {

@@ -1,0 +1,102 @@
+{
+  "name": "dl_data_kpt",
+  "tags": [
+    "system",
+    "КПТ",
+    "Библиотека"
+  ],
+  "title": "КПТ",
+  "tableName": "dl_data_kpt",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Номер",
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_received_request",
+      "title": "Дата",
+      "valueType": "DATETIME",
+      "readOnly": true,
+      "description": "Дата предоставления кадастровых сведений Росреестра (КПТ). Заполняется автоматически при импорте КПТ в слой."
+    },
+    {
+      "name": "file",
+      "title": "КПТ",
+      "readOnly": true,
+      "maxSize": 90000000,
+      "maxFiles": 1,
+      "valueType": "FILE"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    }
+  ],
+  "description": "КПТ",
+  "contentTypes": [
+    {
+      "id": "Карточка",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "location",
+          "defaultValueWellKnownFormula": "inherit",
+          "description": "Наследуется от папки"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "date_received_request"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папку",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    }
+  ]
+}

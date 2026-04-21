@@ -352,24 +352,21 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertThat(presentedData.get("style"), is(layerUpdateDto.getStyle()));
     }
 
-    @And("поля слоя совпадают с ожидаемыми")
+    @And("поля объекта совпадают с ожидаемыми")
     public void checkLayerDataAfterGpkgImport(Map<String, List<Object>> expectedFields) {
         JsonPath jsonPath = response.jsonPath();
-        Map<String, Object> matchingRecord = jsonPath.getMap("[0]");
 
-        boolean areEqual = true;
-        for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
-            String key = entry.getKey();
-            List<Object> list = entry.getValue();
-            Object valueFromList = list != null && !list.isEmpty() ? list.getFirst() : null;
-
-            Object matchingValue = matchingRecord.get(key);
-            if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {
-                System.out.printf("Mismatch for key '%s': expected '%s', but found '%s'%n",
-                                  key, valueFromList, matchingValue);
-                areEqual = false;
+        Map<String, Object> matchingRecord;
+        try {
+            matchingRecord = jsonPath.getMap("[0]");
+            if (matchingRecord.isEmpty()) {
+                throw new IllegalArgumentException();
             }
+        } catch (Exception e) {
+            matchingRecord = jsonPath.getMap("");
         }
+
+        boolean areEqual = isDataInMapsEqualsByRows(expectedFields, matchingRecord);
 
         assertTrue("The expected fields do not match the record fields", areEqual);
     }
@@ -702,5 +699,23 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         contentType(PATCH_CONTENT_TYPE)
                 .when().
                         patch("" + layerId);
+    }
+
+    public static boolean isDataInMapsEqualsByRows(Map<String, List<Object>> expectedFields,
+                                              Map<String, Object> matchingRecord) {
+        boolean areEqual = true;
+        for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
+            String key = entry.getKey();
+            List<Object> list = entry.getValue();
+            Object valueFromList = list != null && !list.isEmpty() ? list.getFirst() : null;
+
+            Object matchingValue = matchingRecord.get(key);
+            if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {
+                System.out.printf("Mismatch for key '%s': expected '%s', but found '%s'%n",
+                                  key, valueFromList, matchingValue);
+                areEqual = false;
+            }
+        }
+        return areEqual;
     }
 }

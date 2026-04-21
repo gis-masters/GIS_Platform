@@ -345,7 +345,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         File testFile = TestFilesManager.getFile(fileName);
 
         List<UUID> ids = createFiles(new File[]{testFile});
-        currentFileId = ids.get(0);
+        currentFileId = ids.getFirst();
 
         getFile(currentFileId);
 

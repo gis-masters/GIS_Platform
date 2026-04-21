@@ -1,4 +1,4 @@
-package ru.mycrg.data_service_contract.dto.import_;
+package ru.mycrg.data_service_contract.dto.import_.kpt;
 
 /**
  * Настройки валидации импорта КПТ

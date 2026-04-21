@@ -175,4 +175,31 @@ public class KptImportDao {
 
         jdbcTemplate.execute(query);
     }
+
+    /**
+     * Для предоставления пользователю информацию об актуальности КПТ, в момент чтения КПТ хотим в карточку документа
+     * вносить актуальную дату о дате выдачи КПТ. Считаем что операция не самая важная поэтому неудачи просто логаем и
+     * всё.
+     */
+    public void setDateOfReceivedRequestToKptDoc(String dbName,
+                                                 ResourceQualifier qualifier,
+                                                 Long docId,
+                                                 String date) {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
+
+            String query = """
+                    UPDATE %s
+                    SET date_received_request = '%s'
+                    WHERE id = %d
+                    """.formatted(qualifier.getTableQualifier(),
+                                  date,
+                                  docId);
+
+            log.debug("Запрос обновления даты в документе KPT [{}]", query);
+            jdbcTemplate.update(query);
+        } catch (Exception e) {
+            log.error("При обновлении даты документа КПТ в библиотеки произошла ошибка: {}", e.getMessage());
+        }
+    }
 }

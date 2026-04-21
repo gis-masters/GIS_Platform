@@ -28,9 +28,9 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
                         post("/" + library + "/records");
 
         return response.then()
-                       .log().ifValidationFails()
-                       .statusCode(SC_CREATED)
-                       .extract().jsonPath().get("id");
+                .log().ifValidationFails()
+                .statusCode(SC_CREATED)
+                .extract().jsonPath().get("id");
     }
 
     public void createRecord(String library, RecordDto record) {
@@ -55,5 +55,11 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete(String.format("/%s/records/%s", libraryId, recordId));
+    }
+
+    public void getRecordFromLib(String libraryId, Integer recordId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records/%d", libraryId, recordId));
     }
 }

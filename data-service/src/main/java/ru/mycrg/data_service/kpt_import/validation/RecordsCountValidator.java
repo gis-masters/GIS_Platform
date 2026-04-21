@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+import ru.mycrg.data_service_contract.dto.import_.kpt.KptImportValidationSettings;
 
 import java.util.List;
 import java.util.Map;

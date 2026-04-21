@@ -65,7 +65,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
         scenarioTables.add(currentTableDto);
 
-        super.createEntity(currentTableDto);
+        createTable(currentTableDto);
     }
 
     public void createTablesRequest(String nameKey,
@@ -86,7 +86,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
         scenarioTables.add(currentTableDto);
 
-        super.createEntity(currentTableDto);
+        createTable(currentTableDto);
     }
 
     public void createAnotherTablesRequest(String nameKey, String titleKey, String descriptionKey, String crs,
@@ -98,7 +98,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString(crs),
                                              generateString(schema));
 
-        super.createEntity(anotherTableDto);
+        createTable(anotherTableDto);
     }
 
     @When("я запрашиваю схемы созданных таблиц")
@@ -189,7 +189,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString("EPSG:28406"),
                                              generateString(TEST_TABLE_SCHEMA));
 
-        super.createEntity(anotherTableDto);
+        createTable(anotherTableDto);
     }
 
     @When("Существует таблица доступная только для чтения")
@@ -316,10 +316,11 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         tableName = currentTableName;
         schemaId = TEST_TABLE_SCHEMA;
 
-        super.createEntity(currentTableDto);
+        createTable(currentTableDto);
     }
 
     //TODO удалить и заменить на @When("я опрашиваю текущую таблицу")
+
     @When("Пользователь делает запрос на получение текущей таблицы")
     public void getCurrentTableByCurrentUser() {
         getCurrentTable();
@@ -487,6 +488,24 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     @When("я опрашиваю текущую таблицу")
     public void findCurrentTableData() {
         getCurrentTable();
+    }
+
+    public void createTable(TableCreateDto tableDto) {
+        super.createEntity(tableDto);
+    }
+
+    public void getAllDatasetTables() {
+        response = getBaseRequestWithCurrentCookie()
+                        .queryParam("page", 0)
+                        .queryParam("size", 0)
+                .when().
+                        get();
+    }
+
+    public void deleteTable(String tableIdentifier) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete("/" + tableIdentifier);
     }
 
     private void getCurrentTable() {

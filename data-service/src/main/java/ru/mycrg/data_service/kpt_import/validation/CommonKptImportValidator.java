@@ -3,7 +3,7 @@ package ru.mycrg.data_service.kpt_import.validation;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+import ru.mycrg.data_service_contract.dto.import_.kpt.KptImportValidationSettings;
 
 import java.util.LinkedList;
 import java.util.List;
