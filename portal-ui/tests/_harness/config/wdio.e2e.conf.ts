@@ -2,6 +2,7 @@ import { addValueToPool, getValueFromPool, setResourcePool } from '@wdio/shared-
 import type { Options } from '@wdio/types';
 
 import { getEnvironment } from '../commands/getEnvironment';
+import { addScenarioNameToJunit, junitReporterConfig, mergeJunitReports, prepareJunitReportingDir } from '../reporting/junitReporting';
 import { baseConfig } from './wdio.base.conf';
 
 declare global {
@@ -13,8 +14,13 @@ export const config: WebdriverIO.Config = {
   ...baseConfig,
 
   specs: ['../../e2e/**/*.feature'],
+  reporters: [
+    'spec',
+    ['junit', junitReporterConfig]
+  ],
 
   onPrepare: async function (config: Options.Testrunner) {
+    prepareJunitReportingDir();
     await setResourcePool('creatingOrganizationWorkerFree', [true]);
 
     const availableOrganizations = Array.from({ length: config.maxInstances || 1 }, (_, i) => i + 1);
@@ -39,7 +45,12 @@ export const config: WebdriverIO.Config = {
     }
   },
 
-  async beforeStep() {
+  async beforeStep(_step, scenario) {
+    addScenarioNameToJunit(scenario.name);
     await getEnvironment();
+  },
+
+  onComplete: function () {
+    mergeJunitReports();
   }
 };

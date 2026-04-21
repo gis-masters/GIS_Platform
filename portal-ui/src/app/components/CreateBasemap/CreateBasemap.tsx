@@ -154,7 +154,8 @@ export class CreateBasemap extends Component {
         title: 'Проекция',
         defaultValue: 'EPSG:3857',
         description: 'Убедитесь в своём решении, прежде чем менять это поле.',
-        dynamicPropertyFormula: "return ['EPSG:3857', 'EPSG:3395', 'EPSG:900913', ''].includes(obj?.projection) ? {" +
+        dynamicPropertyFormula:
+          "return ['EPSG:3857', 'EPSG:3395', 'EPSG:900913', ''].includes(obj?.projection) ? {" +
           " propertyType: 'choice', options: [{ value: 'EPSG:3857', title: 'EPSG:3857' }, { value: 'EPSG:3395'," +
           " title: 'EPSG:3395' }, { value: 'EPSG:900913', title: 'EPSG:900913' }, { value: 'EPSG:', title: 'EPSG:' }] } : { propertyType: 'string' }",
         propertyType: PropertyType.STRING

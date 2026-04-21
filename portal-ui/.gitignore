@@ -56,3 +56,4 @@ allure-report
 # Build cache
 .tsbuildinfo
 dist/.tsbuildinfo
+/tests/_reports/
