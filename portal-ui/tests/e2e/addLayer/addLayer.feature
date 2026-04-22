@@ -33,10 +33,10 @@ Feature: Добавление слоя на карте
     Then  в списке слоев панели слоёв отображается пункт "<файл>"
     *     на карте отображаются "файловый слой <файл>"
     Examples:
-      | файл              | файлы                                                                          | тип |
-      | raster.tif        | "raster.tif"                                                                   | tif |
-      | testDXF.dxf       | "testDXF.dxf"                                                                  | dxf |
-      | shapeFileSet.shp  | "shapeFileSet.shp", "shapeFileSet.shx", "shapeFileSet.dbf", "shapeFileSet.prj" | shp |
+      | файл             | файлы                                                                          | тип |
+      | raster.tif       | "raster.tif"                                                                   | tif |
+      | testDXF.dxf      | "testDXF.dxf"                                                                  | dxf |
+      | shapeFileSet.shp | "shapeFileSet.shp", "shapeFileSet.shx", "shapeFileSet.dbf", "shapeFileSet.prj" | shp |
     # | midMifFileSet.mid | "midMifFileSet.mid", "midMifFileSet.mif"                                       | mid |
     # | tabFileSet.tab    | "tabFileSet.tab", "tabFileSet.id", "tabFileSet.map", "tabFileSet.dat"          | tab |
 

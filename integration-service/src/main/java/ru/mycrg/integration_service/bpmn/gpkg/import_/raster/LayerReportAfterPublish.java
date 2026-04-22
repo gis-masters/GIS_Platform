@@ -5,9 +5,9 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
@@ -62,7 +62,10 @@ public class LayerReportAfterPublish implements JavaDelegate {
                                                    "Публикация растра завершена успешно");
         } else {
             String failReason = extractFailReason(delegateExecution);
-            updateReportWithError(rabbitDto, importReport, currentTile, failReason);
+            updateReportWithError(rabbitDto,
+                                  importReport,
+                                  currentTile,
+                                  String.format("%s. Слой не был создан в проекте!!!", failReason));
         }
     }
 

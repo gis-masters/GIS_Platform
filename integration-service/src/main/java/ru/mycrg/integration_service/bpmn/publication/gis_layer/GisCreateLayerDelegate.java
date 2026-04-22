@@ -64,6 +64,7 @@ public class GisCreateLayerDelegate implements JavaDelegate {
                 log.error("{}. С параметрами: [{}]. Status code: {}", failMsg, content, response.code());
 
                 execution.setVariable(IS_CREATED_VAR_NAME, false);
+                execution.setVariable(PREV_STEP_STATUS, response.code());
                 execution.setVariable(FAIL_REASON, failMsg);
             }
 

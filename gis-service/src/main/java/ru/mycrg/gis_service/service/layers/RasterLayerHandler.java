@@ -10,6 +10,7 @@ import ru.mycrg.geoserver_client.services.storage.raster.RasterStorage;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.security.CrgAuthHandler;
 import ru.mycrg.http_client.ResponseModel;
@@ -70,9 +71,12 @@ public class RasterLayerHandler implements ILayerHandler {
                 createRasterStore(workspaceName, storeName, dto.getDataSourceUri());
                 createRasterLayer(workspaceName, storeName, coverage);
             } catch (Exception e) {
-                log.error("Не удалось создать растровые хранилище/слой на геосервере. По причине: {}", e.getMessage());
+                String msg = String.format("Не удалось создать растровые хранилище/слой на геосервере. По причине: %S",
+                                           e.getMessage());
 
-                return Optional.empty();
+                log.error(msg, e);
+
+                throw new GisServiceException(msg, e);
             }
         }
 
