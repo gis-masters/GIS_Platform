@@ -429,7 +429,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section_deliv
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -1103,7 +1104,8 @@ SET class_rule =
 WHERE name = 'dl_data_section2';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
       "tags": [
         "system",
@@ -1301,7 +1303,8 @@ SET class_rule =
 WHERE name = 'dl_data_task_allocation';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
       "tags": [
         "system",
@@ -2222,7 +2225,8 @@ SET class_rule =
 WHERE name = 'dl_data_section4';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -2696,7 +2700,8 @@ SET class_rule =
 WHERE name = 'dl_data_section6';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -4245,7 +4250,8 @@ SET class_rule =
 WHERE name = 'dl_data_section8_schema';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -4411,7 +4417,8 @@ SET class_rule =
 WHERE name = 'documents';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -4701,7 +4708,8 @@ SET class_rule =
 WHERE name = 'easement';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "editing",
     "tags": [
@@ -4803,7 +4811,8 @@ SET class_rule =
 WHERE name = 'editing';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -5024,7 +5033,8 @@ SET class_rule =
 WHERE name = 'element_planning_structure';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "eng_survey",
     "tags": [
@@ -5491,7 +5501,8 @@ SET class_rule =
 WHERE name = 'eng_survey';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "feedback",
     "tags": [
@@ -5569,7 +5580,8 @@ SET class_rule =
 WHERE name = 'feedback';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -5831,7 +5843,8 @@ SET class_rule =
 WHERE name = 'formed_land';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "frames",
     "tags": [
@@ -5956,7 +5969,8 @@ SET class_rule =
 WHERE name = 'frames';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "funzone",
     "tags": [
@@ -6170,7 +6184,8 @@ SET class_rule =
 WHERE name = 'funzone';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "garbage_areas",
     "tags": [
@@ -6237,7 +6252,8 @@ SET class_rule =
 WHERE name = 'garbage_areas';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "gpzu",
     "tags": [
@@ -7708,7 +7724,8 @@ SET class_rule =
 WHERE name = 'gpzu';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "hanging_objects",
     "tags": [
@@ -7772,7 +7789,8 @@ SET class_rule =
 WHERE name = 'hanging_objects';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -7915,7 +7933,8 @@ SET class_rule =
 WHERE name = 'indent_line';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "inspection_result",
     "tags": [
@@ -8036,7 +8055,8 @@ SET class_rule =
 WHERE name = 'inspection_result';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "inspection_territory",
     "tags": [
@@ -8160,7 +8180,8 @@ SET class_rule =
 WHERE name = 'inspection_territory';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "investmentzone_point",
     "tags": [
@@ -8335,7 +8356,8 @@ SET class_rule =
 WHERE name = 'investmentzone_point';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "leasechange",
     "tags": [
@@ -9141,7 +9163,8 @@ SET class_rule =
 WHERE name = 'leasechange';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "limitpamdev",
     "tags": [
@@ -9946,7 +9969,8 @@ SET class_rule =
 WHERE name = 'limitpamdev';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "oks",
     "tags": [
@@ -10114,7 +10138,8 @@ SET class_rule =
 WHERE name = 'oks';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "oks_constructions_polyline",
     "tags": [
@@ -10306,7 +10331,8 @@ SET class_rule =
 WHERE name = 'oks_constructions_polyline';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "parcels_coordination",
     "tags": [
@@ -10666,7 +10692,8 @@ SET class_rule =
 WHERE name = 'parcels_coordination';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "planned_territory_inspection",
     "tags": [
@@ -10774,7 +10801,8 @@ SET class_rule =
 WHERE name = 'planned_territory_inspection';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "projects",
     "tags": [
@@ -10947,7 +10975,8 @@ SET class_rule =
 WHERE name = 'projects';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -11200,7 +11229,8 @@ SET class_rule =
 WHERE name = 'public_territory_borders';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "pzz",
     "tags": [
@@ -11388,7 +11418,8 @@ SET class_rule =
 WHERE name = 'pzz';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -11562,7 +11593,8 @@ SET class_rule =
 WHERE name = 'red_line';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "roads_facilities",
     "tags": [
@@ -11626,7 +11658,8 @@ SET class_rule =
 WHERE name = 'roads_facilities';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "soils",
     "tags": [
@@ -11748,7 +11781,8 @@ SET class_rule =
 WHERE name = 'soils';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "srzu_approv",
     "tags": [
@@ -12554,7 +12588,8 @@ SET class_rule =
 WHERE name = 'srzu_approv';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "swamps_soils",
     "tags": [
@@ -12618,7 +12653,8 @@ SET class_rule =
 WHERE name = 'swamps_soils';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzone",
     "tags": [
@@ -12713,7 +12749,8 @@ SET class_rule =
 WHERE name = 'terzone';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzonealushta",
     "tags": [
@@ -12782,7 +12819,8 @@ SET class_rule =
 WHERE name = 'terzonealushta';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzoneeast",
     "tags": [
@@ -12863,7 +12901,8 @@ SET class_rule =
 WHERE name = 'terzoneeast';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzoneevpator",
     "tags": [
@@ -12932,7 +12971,8 @@ SET class_rule =
 WHERE name = 'terzoneevpator';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzonesaki",
     "tags": [
@@ -12999,7 +13039,8 @@ SET class_rule =
 WHERE name = 'terzonesaki';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzonesimf",
     "tags": [
@@ -13080,7 +13121,8 @@ SET class_rule =
 WHERE name = 'terzonesimf';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzonesimfgor",
     "tags": [
@@ -13161,7 +13203,8 @@ SET class_rule =
 WHERE name = 'terzonesimfgor';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzonesudak",
     "tags": [
@@ -13230,7 +13273,8 @@ SET class_rule =
 WHERE name = 'terzonesudak';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "terzoneyalta",
     "tags": [
@@ -13305,7 +13349,8 @@ SET class_rule =
 WHERE name = 'terzoneyalta';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "trading_point",
     "tags": [
@@ -13564,7 +13609,8 @@ SET class_rule =
 WHERE name = 'trading_point';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "unaut_constr_not",
     "tags": [
@@ -13664,7 +13710,8 @@ SET class_rule =
 WHERE name = 'unaut_constr_not';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "undeveloped_lease",
     "tags": [
@@ -13761,7 +13808,8 @@ SET class_rule =
 WHERE name = 'undeveloped_lease';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "unsched_inspection",
     "tags": [
@@ -13882,7 +13930,8 @@ SET class_rule =
 WHERE name = 'unsched_inspection';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "urbcondissuance",
     "tags": [
@@ -14688,7 +14737,8 @@ SET class_rule =
 WHERE name = 'urbcondissuance';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "urbregextr",
     "tags": [
@@ -15494,7 +15544,8 @@ SET class_rule =
 WHERE name = 'urbregextr';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "zone_a",
     "tags": [
@@ -15521,7 +15572,8 @@ SET class_rule =
 WHERE name = 'zone_a';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "zone_b",
     "tags": [
@@ -15548,7 +15600,8 @@ SET class_rule =
 WHERE name = 'zone_b';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "zone_c",
     "tags": [
@@ -15575,7 +15628,8 @@ SET class_rule =
 WHERE name = 'zone_c';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "zone_d",
     "tags": [
@@ -15602,7 +15656,8 @@ SET class_rule =
 WHERE name = 'zone_d';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "styleName": "zone500",
     "tags": [
@@ -15629,7 +15684,8 @@ SET class_rule =
 WHERE name = 'zone500';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -15756,7 +15812,8 @@ SET class_rule =
 WHERE name = 'data_oks_purpose';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -15931,7 +15988,8 @@ SET class_rule =
 WHERE name = 'dl_data_artland';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -16154,7 +16212,8 @@ SET class_rule =
 WHERE name = 'dl_data_citizen';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -16409,7 +16468,8 @@ SET class_rule =
 WHERE name = 'dl_data_contracts_buyout_schema';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -16626,7 +16686,8 @@ SET class_rule =
 WHERE name = 'dl_data_customer';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -16862,7 +16923,8 @@ SET class_rule =
 WHERE name = 'dl_data_escalators';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -17248,7 +17310,8 @@ SET class_rule =
 WHERE name = 'dl_data_gpzu';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -17544,7 +17607,8 @@ SET class_rule =
 WHERE name = 'dl_data_gpzu_info_p2_3';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -17823,7 +17887,8 @@ SET class_rule =
 WHERE name = 'dl_data_gpzu_info_p2_4';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -18126,7 +18191,8 @@ SET class_rule =
 WHERE name = 'dl_data_gpzu_info_p2_5';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -18443,7 +18509,8 @@ SET class_rule =
 WHERE name = 'dl_data_gpzu_info_p4_1';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -18671,7 +18738,8 @@ SET class_rule =
 WHERE name = 'dl_data_gpzu_info_p6';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
        "name": "dl_data_inbox_data",
        "tags": [
@@ -19889,7 +19957,8 @@ SET class_rule =
 WHERE name = 'dl_data_inbox_data';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -20125,7 +20194,8 @@ SET class_rule =
 WHERE name = 'dl_data_lifts';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -20613,7 +20683,8 @@ SET class_rule =
 WHERE name = 'dl_data_rsoks';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -22711,7 +22782,8 @@ SET class_rule =
 WHERE name = 'dl_data_rsoks_part';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -23117,7 +23189,8 @@ SET class_rule =
 WHERE name = 'dl_data_rveoks';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -24718,7 +24791,8 @@ SET class_rule =
 WHERE name = 'dl_data_rveoks_part';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -25582,7 +25656,8 @@ SET class_rule =
 WHERE name = 'dl_data_section11';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -26408,7 +26483,8 @@ SET class_rule =
 WHERE name = 'dl_data_section12';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -26901,7 +26977,8 @@ SET class_rule =
 WHERE name = 'dl_data_section15';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -27615,7 +27692,8 @@ SET class_rule =
 WHERE name = 'dl_data_section16';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -28836,7 +28914,8 @@ SET class_rule =
 WHERE name = 'dl_data_section3';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -29941,7 +30020,8 @@ SET class_rule =
 WHERE name = 'dl_data_section5';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -31235,7 +31315,8 @@ SET class_rule =
 WHERE name = 'dl_data_section7';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -31939,7 +32020,8 @@ SET class_rule =
 WHERE name = 'dl_data_section9';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -32134,7 +32216,8 @@ SET class_rule =
 WHERE name = 'dl_data_supplier';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -32390,7 +32473,8 @@ SET class_rule =
 WHERE name = 'dl_data_tech_plan';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -32591,7 +32675,8 @@ SET class_rule =
 WHERE name = 'dl_data_terzone';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -32835,7 +32920,8 @@ SET class_rule =
 WHERE name = 'dl_data_town_planning_regulations';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -33135,7 +33221,8 @@ SET class_rule =
 WHERE name = 'dl_data_udrizs';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -33477,7 +33564,8 @@ SET class_rule =
 WHERE name = 'dl_data_uge';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -33777,7 +33865,8 @@ SET class_rule =
 WHERE name = 'dl_data_uszizs';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -34014,7 +34103,8 @@ SET class_rule =
 WHERE name = 'dl_data_wheelchair_lifts';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -34210,7 +34300,8 @@ SET class_rule =
 WHERE name = 'dl_data_work_type';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -34427,7 +34518,8 @@ SET class_rule =
 WHERE name = 'territory';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
         "tags": [
             "system",
@@ -34671,7 +34763,8 @@ SET class_rule =
 WHERE name = 'users_after_trigger';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -35060,7 +35153,8 @@ SET class_rule =
 WHERE name = 'dl_data_organization';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -35929,7 +36023,8 @@ SET class_rule =
 WHERE name = 'dl_data_permitted_land_use_types';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -36158,7 +36253,8 @@ SET class_rule =
 WHERE name = 'dl_data_permitted_use_parameters';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -36403,7 +36499,8 @@ SET class_rule =
 WHERE name = 'dl_data_planning_indicators';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
     '{
     "tags": [
         "system",
@@ -36619,7 +36716,8 @@ SET class_rule =
 WHERE name = 'dl_data_project_developer';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
     "tags": [
         "system",
@@ -37224,7 +37322,8 @@ SET class_rule =
 WHERE name = 'dl_data_section10';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
     "tags": [
         "system",
@@ -38088,7 +38187,8 @@ SET class_rule =
 WHERE name = 'dl_data_section11';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
   "tags": [
     "system",
@@ -43220,7 +43320,8 @@ SET class_rule =
 WHERE name = 'dl_data_section13';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
     "tags": [
         "system",
@@ -44260,7 +44361,8 @@ SET class_rule =
 }'WHERE name = 'dl_data_section14';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
     "tags": [
       "system",
@@ -46806,7 +46908,8 @@ SET class_rule =
   }'WHERE name = 'dl_data_section17';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
     "tags": [
         "system",
@@ -47281,7 +47384,8 @@ SET class_rule =
 }'WHERE name = 'dl_data_section18';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
     "tags": [
         "system",
@@ -48148,7 +48252,8 @@ SET class_rule =
 WHERE name = 'dl_data_section19_schema';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
 '{
     "tags": [
         "system",
@@ -48729,7 +48834,8 @@ SET class_rule =
 WHERE name = 'dl_data_section1';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
     "name": "smev_message_meta_schema",
     "tags": ["system",
@@ -48817,7 +48923,8 @@ SET class_rule =
 WHERE name = 'smev_message_meta_schema';
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "tags": [
     "system",

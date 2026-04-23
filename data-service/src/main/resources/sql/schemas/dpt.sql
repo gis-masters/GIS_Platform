@@ -39,7 +39,8 @@ SELECT 'indent_line_dpt',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'indent_line_dpt');
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "public_territory_borders_dpt",
           "title": "Границы территории общего пользования",
@@ -212,7 +213,8 @@ SET class_rule =
 WHERE name = 'public_territory_borders_dpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "red_line_dpt",
           "title": "Красные линии",
@@ -311,7 +313,8 @@ SET class_rule =
 WHERE name = 'red_line_dpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "red_line_line_dpt",
           "title": "Красные линии",
@@ -416,7 +419,8 @@ SET class_rule =
 WHERE name = 'red_line_line_dpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "site_planning_dpt",
           "title": "Планировка территории",
@@ -520,7 +524,8 @@ SET class_rule =
 WHERE name = 'site_planning_dpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "construction_zones_borders_dpt",
           "title": "Границы зон планируемого размещения объектов капитального строительства, линейных объектов",
@@ -751,7 +756,8 @@ SET class_rule =
 WHERE name = 'construction_zones_borders_dpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "element_planning_structure_dpt",
           "title": "Вид элемента планировочной структуры",
@@ -894,7 +900,8 @@ SET class_rule =
 WHERE name = 'element_planning_structure_dpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "formed_land_dpt",
           "title": "Образуемый (изменяемый) земельный участок",
@@ -1076,7 +1083,8 @@ SET class_rule =
 WHERE name = 'formed_land_dpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "indent_line_dpt",
           "title": "Линии отступа от красных линий",

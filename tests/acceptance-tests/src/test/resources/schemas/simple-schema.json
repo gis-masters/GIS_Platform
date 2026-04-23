@@ -1,5 +1,5 @@
 {
-  "name": "simpleSchema",
+  "name": "simpleSchema_test",
   "title": "someTitle",
   "tableName": "some_table_name",
   "readOnly": true,

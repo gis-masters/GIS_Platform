@@ -93,7 +93,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_rentobject');
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -150,7 +151,8 @@ SET class_rule =
 WHERE name = 'building';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "buildings_construction_electro",
           "tags": [
@@ -303,7 +305,8 @@ SET class_rule =
 WHERE name = 'buildings_construction_electro';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "buildings_mis_desc",
           "tags": [
@@ -344,7 +347,8 @@ SET class_rule =
 WHERE name = 'buildings_mis_desc';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -524,7 +528,8 @@ SET class_rule =
 WHERE name = 'buildings_new';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -860,7 +865,8 @@ SET class_rule =
 WHERE name = 'buildings_valuation';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -1208,7 +1214,8 @@ SET class_rule =
 WHERE name = 'buildings_valuation_new';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "oks_archive",
           "tags": [
@@ -1359,7 +1366,8 @@ SET class_rule =
 WHERE name = 'oks_archive';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "oks_general",
           "tags": [
@@ -1548,7 +1556,8 @@ SET class_rule =
 WHERE name = 'oks_general';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "oks_krymtel",
           "tags": [
@@ -1722,7 +1731,8 @@ SET class_rule =
 WHERE name = 'oks_krymtel';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -2431,7 +2441,8 @@ SET class_rule =
 WHERE name = 'dl_data_2_surveys_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -2857,7 +2868,8 @@ SET class_rule =
 WHERE name = 'dl_data_court_cases';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3340,7 +3352,8 @@ SET class_rule =
 WHERE name = 'dl_data_documents';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3567,7 +3580,8 @@ WHERE name = 'dl_data_law_doc_schema';
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3841,7 +3855,8 @@ SET class_rule =
 WHERE name = 'dl_data_limits_balaklava_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -4169,7 +4184,8 @@ SET class_rule =
 WHERE name = 'dl_data_result';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -4487,7 +4503,8 @@ SET class_rule =
 WHERE name = 'dl_dtp';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -4887,7 +4904,8 @@ SET class_rule =
 WHERE name = 'dl_flats';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -5149,7 +5167,8 @@ SET class_rule =
 WHERE name = 'dl_initial';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -5519,7 +5538,8 @@ WHERE name = 'dl_data_flats';
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -5812,7 +5832,8 @@ SET class_rule =
 WHERE name = 'dl_data_owners_balaklava_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -6012,7 +6033,8 @@ SET class_rule =
 WHERE name = 'dl_data_oks_property_yugip_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -6317,7 +6339,8 @@ SET class_rule =
 WHERE name = 'dl_data_flats_balaklava_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",

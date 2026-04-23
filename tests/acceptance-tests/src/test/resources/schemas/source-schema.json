@@ -1,5 +1,5 @@
 {
-  "name": "schemaForTestCopy_producer",
+  "name": "schemaForTestCopy_producer_test",
   "title": "Схема для тестирования копирования: поставщик",
   "readOnly": false,
   "tableName": "copy_test_producer",

@@ -20,15 +20,17 @@ class ToastBlock extends Block {
   }
 
   async produceError(): Promise<void> {
-    await browser.executeAsync(callback => {
-      setTimeout(() => {
-        callback();
+    await browser.execute(() => {
+      return new Promise<void>(resolve => {
+        setTimeout(() => {
+          resolve();
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        window.notExistFunction();
-      }, 1000);
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          window.notExistFunction();
+        }, 1000);
+      });
     });
 
     await this.waitForVisible();

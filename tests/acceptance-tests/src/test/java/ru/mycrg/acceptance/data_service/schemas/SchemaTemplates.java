@@ -20,6 +20,8 @@ public class SchemaTemplates {
                 return prepareTaskSchema();
             case "Схема recreation_point":
                 return prepareRecreationPointSchema();
+            case "Схема recreation_point_without_tags":
+                return prepareRecreationPointSchemaWithoutTags();
             case "Точечный слой с атрибутами":
                 return testPointAttributes();
             case "Схема для проверки типов STRING":
@@ -231,6 +233,10 @@ public class SchemaTemplates {
 
     private static SchemaDto prepareRecreationPointSchema() {
         return loadSchemaFromResource("recreation_point.json");
+    }
+
+    private static SchemaDto prepareRecreationPointSchemaWithoutTags() {
+        return loadSchemaFromResource("recreation_point_without_tags.json");
     }
 
     private static SchemaDto prepareFunctionalZoneWithTerrRf_SubRfFormulaWithRequiredField() {

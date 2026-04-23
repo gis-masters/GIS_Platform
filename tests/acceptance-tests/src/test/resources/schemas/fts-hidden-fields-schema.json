@@ -1,5 +1,5 @@
 {
-  "name": "schema_for_test_fts_hidden-fields",
+  "name": "schema_for_test_fts_hidden-fields_test",
   "title": "Тест FTS - исключение hidden полей",
   "tableName": "test_fts_hidden_fields",
   "styleName": "generic",

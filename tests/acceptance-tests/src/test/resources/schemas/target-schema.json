@@ -1,5 +1,5 @@
 {
-  "name": "schemaForTestCopy_consumer",
+  "name": "schemaForTestCopy_consumer_test",
   "title": "Схема для тестирования копирования: потребитель",
   "readOnly": false,
   "tableName": "copy_test_consumer",

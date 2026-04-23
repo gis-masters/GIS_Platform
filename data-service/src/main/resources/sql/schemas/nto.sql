@@ -35,7 +35,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zone_requirement_nto'
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -91,7 +92,8 @@ SET class_rule =
 WHERE name = 'trading_responsezone_simf_2022';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -776,7 +778,8 @@ SET class_rule =
 WHERE name = 'nto_all';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -1562,7 +1565,8 @@ SET class_rule =
 WHERE name = 'nto_doc_point';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -2358,7 +2362,8 @@ SET class_rule =
 WHERE name = 'nto_doc';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3034,7 +3039,8 @@ SET class_rule =
 WHERE name = 'nto_all_point';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3184,7 +3190,8 @@ SET class_rule =
 WHERE name = 'nto_zone';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",

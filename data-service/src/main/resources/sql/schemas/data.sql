@@ -44,7 +44,8 @@ SELECT 'dl_data_terplan_doc',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_terplan_doc');
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -712,7 +713,8 @@ SET class_rule =
 WHERE name = 'dl_cad_work';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -1417,7 +1419,8 @@ SET class_rule =
 WHERE name = 'dl_data_1_surveys_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -2107,7 +2110,8 @@ SET class_rule =
 WHERE name = 'dl_data_3_ofp_topo_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -2565,7 +2569,8 @@ SET class_rule =
 WHERE name = 'dl_data_docflow';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3305,7 +3310,8 @@ SET class_rule =
 WHERE name = 'dl_data_projects_geoplan_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3494,7 +3500,8 @@ SET class_rule =
 WHERE name = 'research_type';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -3833,7 +3840,8 @@ SET class_rule =
 WHERE name = 'dl_data_owners';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "dl_data_doc",
           "title": "Документы",
@@ -3948,7 +3956,8 @@ SET class_rule =
 WHERE name = 'dl_data_doc';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "dl_data_terplan_doc",
           "title": "Документы развития территорий",

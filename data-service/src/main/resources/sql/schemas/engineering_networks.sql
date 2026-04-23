@@ -35,7 +35,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'building_topo_500');
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "pipeline_topo_500",
           "tags": [
@@ -152,7 +153,8 @@ SET class_rule =
 WHERE name = 'pipeline_topo_500';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -319,7 +321,8 @@ SET class_rule =
 WHERE name = 'electricline_topo_500';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -491,7 +494,8 @@ SET class_rule =
 WHERE name = 'gaspipeline_topo_500';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -674,7 +678,8 @@ SET class_rule =
 WHERE name = 'sewerpipeline_topo_500';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -828,7 +833,8 @@ SET class_rule =
 WHERE name = 'telecomline_topo_500';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -980,7 +986,8 @@ SET class_rule =
 WHERE name = 'thermalpipeline_topo_500';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "building_topo_500",
           "tags": [

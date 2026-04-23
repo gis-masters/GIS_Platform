@@ -35,7 +35,7 @@ public class SchemaLogicValidator {
                 if (TRUE.equals(property.isHidden()) && isRequired) {
                     mismatches.add(
                             new ErrorInfo(property.getName(),
-                                          "Свойство не может быть задано одновременно и required и hidden"));
+                                          "Поле не может быть одновременно обязательным и скрытым"));
                 }
 
                 // Правило 2. Свойство не может быть задано одновременно и required и readOnly

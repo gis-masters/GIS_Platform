@@ -15,4 +15,6 @@ cp ../contracts/common-contracts/target/typescript-generator/* ../portal-ui/src/
 
 ./clear-generated-files.sh
 
-npx prettier --write --ignore-path=/dev/null ../portal-ui/src/server-types/common-contracts.d.ts
+for entry in ../portal-ui/src/server-types/*.d.ts; do
+  npx prettier --write --ignore-path=/dev/null "$entry"
+done

@@ -1,5 +1,5 @@
 {
-  "name": "testStringTypes",
+  "name": "testStringTypes_test",
   "title": "Схема для проверки типов STRING",
   "description": "Схема для тестирования полей типа STRING с разными вариантами длины",
   "tableName": "test_string_types",

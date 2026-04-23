@@ -1,5 +1,5 @@
 {
-  "name": "functionalzone_wellknownformula",
+  "name": "functionalzone_wellknownformula_test",
   "tableName": "functionalzone_wellknownformula",
   "geometryType": "MultiPolygon",
   "readOnly": false,

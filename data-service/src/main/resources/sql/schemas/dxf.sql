@@ -4,17 +4,14 @@ SELECT 'dxf_schema_v1',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dxf_schema_v1');
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "dxf_schema_v1",
-          "title": "Схема DFX файла",
-          "tags": [
-            "DFX"
-          ],
+          "title": "Схема DXF файла",
           "styleName": "dxf_style",
           "readOnly": true,
           "tableName": "dxf_schema_v1",
-          "originName": "DxfSchema",
           "properties": [
             {
               "name": "Layer",

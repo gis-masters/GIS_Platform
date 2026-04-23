@@ -6,7 +6,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>common-contracts</artifactId>
-    <version>2.11.10-SNAPSHOT</version>
+    <version>2.11.11-SNAPSHOT</version>
 
     <name>common-contracts Maven Webapp</name>
     <description>Common contract</description>
@@ -70,21 +70,51 @@
             <plugin>
                 <groupId>cz.habarta.typescript-generator</groupId>
                 <artifactId>typescript-generator-maven-plugin</artifactId>
-                <version>2.37.1128</version>
+                <version>4.0.0</version>
                 <executions>
+                    <execution>
+                        <id>generate-jackson-types</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <jsonLibrary>jackson2</jsonLibrary>
+                            <classes>
+                                <class>tools.jackson.databind.JsonNode</class>
+                            </classes>
+                            <outputKind>module</outputKind>
+                            <outputFile>${project.build.directory}/typescript-generator/jackson-types.d.ts</outputFile>
+                            <noFileComment>true</noFileComment>
+                            <noEslintDisable>true</noEslintDisable>
+                            <noTslintDisable>true</noTslintDisable>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>generate</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-classes</phase>
+                        <configuration>
+                            <jsonLibrary>jackson2</jsonLibrary>
+                            <classPatterns>
+                                <classPattern>ru.mycrg.common_contracts.generated.**</classPattern>
+                            </classPatterns>
+                            <customTypeMappings>
+                                <customTypeMapping>tools.jackson.databind.JsonNode:JsonNode</customTypeMapping>
+                            </customTypeMappings>
+                            <importDeclarations>
+                                <importDeclaration>import { JsonNode } from './jackson-types';</importDeclaration>
+                            </importDeclarations>
+                            <outputKind>module</outputKind>
+                            <outputFile>${project.build.directory}/typescript-generator/common-contracts.d.ts</outputFile>
+                            <noFileComment>true</noFileComment>
+                            <noEslintDisable>true</noEslintDisable>
+                            <noTslintDisable>true</noTslintDisable>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <jsonLibrary>jackson2</jsonLibrary>
-                    <classPatterns>ru.mycrg.common_contracts.generated.**</classPatterns>
-                    <outputKind>module</outputKind>
-                </configuration>
             </plugin>
 
             <plugin>

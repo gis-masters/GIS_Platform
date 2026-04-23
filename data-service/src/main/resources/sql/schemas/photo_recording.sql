@@ -4,7 +4,8 @@ SELECT 'photo_uploader',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'photo_uploader');
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",

@@ -64,7 +64,8 @@ SELECT 'streets_cleaning',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'streets_cleaning');
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -103,7 +104,8 @@ SET class_rule =
 WHERE name = 'garbage_border';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "garbage_buildings",
           "tags": [
@@ -154,7 +156,8 @@ SET class_rule =
 WHERE name = 'garbage_buildings';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "garbage_respons_poly",
           "tags": [
@@ -343,7 +346,8 @@ SET class_rule =
 WHERE name = 'garbage_respons_poly';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "gratuitous",
           "tags": [
@@ -721,7 +725,8 @@ SET class_rule =
 WHERE name = 'gratuitous';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "lease",
           "tags": [
@@ -1100,7 +1105,8 @@ SET class_rule =
 WHERE name = 'lease';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "lease_buffer",
           "tags": [
@@ -1444,7 +1450,8 @@ SET class_rule =
 WHERE name = 'lease_buffer';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "municipal",
           "tags": [
@@ -1823,7 +1830,8 @@ SET class_rule =
 WHERE name = 'municipal';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "red_lines_2019",
           "tags": [
@@ -1861,7 +1869,8 @@ SET class_rule =
 WHERE name = 'red_lines_2019';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "responsible",
           "tags": [
@@ -1931,7 +1940,8 @@ SET class_rule =
 WHERE name = 'responsible';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "zu_buffer",
           "tags": [
@@ -2275,7 +2285,8 @@ SET class_rule =
 WHERE name = 'zu_buffer';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "garbage_containers",
           "tags": [
@@ -2407,7 +2418,8 @@ SET class_rule =
 WHERE name = 'garbage_containers';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "garbage_responsible",
           "tags": [
@@ -2616,7 +2628,8 @@ SET class_rule =
 WHERE name = 'garbage_responsible';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "streets_cleaning",
           "tags": [

@@ -1,5 +1,5 @@
 import { reportTemplateClient } from './reportTemplate.client';
-import { type TemplateCreateDto, type TemplateInfo, type TemplateShortInfo } from './reportTemplate.models';
+import { type TemplateCreatePayload, type TemplateInfo, type TemplateShortInfo } from './reportTemplate.models';
 
 export async function getTemplates(): Promise<TemplateInfo[]> {
   const list = await reportTemplateClient.getTemplates();
@@ -16,7 +16,7 @@ export async function getTemplate(name: string): Promise<TemplateInfo> {
   return await reportTemplateClient.getTemplate(name);
 }
 
-export async function createTemplate(dto: TemplateCreateDto, file: File): Promise<TemplateShortInfo> {
+export async function createTemplate(dto: TemplateCreatePayload, file: File): Promise<TemplateShortInfo> {
   return await reportTemplateClient.createTemplate(dto, file);
 }
 

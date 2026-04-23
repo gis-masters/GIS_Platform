@@ -3,7 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
-import { type TemplateCreateDto, type TemplateInfo, type TemplateShortInfo } from './reportTemplate.models';
+import { type TemplateCreatePayload, type TemplateInfo, type TemplateShortInfo } from './reportTemplate.models';
 
 @boundClass
 class ReportTemplateClient extends Client {
@@ -28,7 +28,7 @@ class ReportTemplateClient extends Client {
     return http.get<TemplateInfo>(this.getTemplateUrl(name));
   }
 
-  async createTemplate(dto: TemplateCreateDto, file: File): Promise<TemplateShortInfo> {
+  async createTemplate(dto: TemplateCreatePayload, file: File): Promise<TemplateShortInfo> {
     const formData = new FormData();
     formData.append('dto', new Blob([JSON.stringify(dto)], { type: Mime.JSON }));
     formData.append('file', file);

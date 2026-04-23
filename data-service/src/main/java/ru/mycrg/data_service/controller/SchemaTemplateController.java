@@ -1,21 +1,22 @@
 package ru.mycrg.data_service.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.common_contracts.generated.data_service.SchemaTemplateProjection;
 import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.CreateSchemaTemplateRequest;
 import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.UpdateSchemaTemplateRequest;
+import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.DeleteSchemaTemplateRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class SchemaTemplateController {
@@ -29,9 +30,15 @@ public class SchemaTemplateController {
         this.schemaTemplateService = schemaTemplateService;
     }
 
+    @GetMapping("/schemasTemplate")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<List<SchemaTemplateProjection>> getSchemaTemplates(@RequestParam List<String> schemaIds) {
+        return ResponseEntity.ok((schemaTemplateService.getSchemaTemplatesProjection(schemaIds)));
+    }
+
     @GetMapping("/schemas")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<SchemaDto>> getSchemaTemplates(@RequestParam List<String> schemaIds) {
+    public ResponseEntity<List<SchemaDto>> getSchemaDto(@RequestParam List<String> schemaIds) {
 
         return ResponseEntity.ok(schemaTemplateService.getSchemas(schemaIds));
     }
@@ -51,7 +58,7 @@ public class SchemaTemplateController {
     }
 
     @PostMapping("/schemas")
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> createSchemaTemplate(@Valid @RequestBody SchemaDto schemaDto) {
         mediator.execute(new CreateSchemaTemplateRequest(schemaDto));
 
@@ -59,10 +66,18 @@ public class SchemaTemplateController {
     }
 
     @PutMapping("/schemas")
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updateSchemaTemplate(@Valid @RequestBody SchemaDto schemaDto) {
         mediator.execute(new UpdateSchemaTemplateRequest(schemaDto));
 
         return ResponseEntity.status(OK).build();
+    }
+
+    @DeleteMapping("/schemas/{name}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Object> deleteSchemaTemplate(@NotBlank @PathVariable String name) {
+        mediator.execute(new DeleteSchemaTemplateRequest(name));
+
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 }

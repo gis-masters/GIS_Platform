@@ -5,7 +5,7 @@ import { NoteAddOutlined } from '@mui/icons-material';
 
 import { communicationService } from '../../services/communication.service';
 import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
-import { type TemplateCreateDto } from '../../services/report/reportTemplate/reportTemplate.models';
+import { type TemplateCreatePayload } from '../../services/report/reportTemplate/reportTemplate.models';
 import { createTemplate, getTemplate } from '../../services/report/reportTemplate/reportTemplate.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
@@ -66,7 +66,7 @@ export const CreateReportTemplate: FC = observer(() => {
   }, [state]);
 
   const create = useCallback(async ({ name, title, file }: CreateReportTemplateFormValue) => {
-    const dto: TemplateCreateDto = { name, title, printFormSchemaOverrides: null };
+    const dto: TemplateCreatePayload = { name, title, printFormSchemaOverrides: null };
     const created = await createTemplate(dto, file);
     const full = await getTemplate(created.name);
     communicationService.reportTemplateUpdated.emit({ type: 'create', data: full });

@@ -1,5 +1,5 @@
 {
-  "name": "dl_default_schema",
+  "name": "dl_default_schema_test",
   "title": "Тестовая схема dl_default",
   "description": "documents_schema_v1",
   "tableName": "dl_default",

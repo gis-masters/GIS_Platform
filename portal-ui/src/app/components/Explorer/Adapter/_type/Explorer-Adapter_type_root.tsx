@@ -46,16 +46,16 @@ function getChildren(): ExplorerItemData[] {
     });
   }
 
+  baseChildren.push({
+    type: ExplorerItemType.SCHEMAS_ROOT,
+    payload: null
+  });
+
   if (!currentUser.isAdmin) {
     return baseChildren;
   }
 
-  const adminChildren: ExplorerItemData[] = [
-    {
-      type: ExplorerItemType.SCHEMAS_ROOT,
-      payload: null
-    }
-  ];
+  const adminChildren: ExplorerItemData[] = [];
 
   if (flags.reportTemplatesInDataManagement) {
     adminChildren.push({

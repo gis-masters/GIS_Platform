@@ -14,7 +14,8 @@ SELECT 'signs_on_buildings',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'signs_on_buildings');
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
             "name": "advertising_zone_simf_2025",
             "tags": [
@@ -70,7 +71,8 @@ SET class_rule =
 WHERE name = 'advertising_zone_simf_2025';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
             "name": "advertising_point_simf_2025",
             "tags": [
@@ -408,7 +410,8 @@ WHERE name = 'advertising_point_simf_2025';
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
       "name": "signs_on_buildings",
       "tags": [
@@ -545,4 +548,3 @@ SET class_rule =
       "geometryType": "Point"
     }'
 WHERE name = 'signs_on_buildings';
-

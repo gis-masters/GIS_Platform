@@ -6,9 +6,12 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
+import io.restassured.path.json.config.JsonParserType;
+import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.common_contracts.generated.data_service.SchemaTemplateProjection;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -91,6 +94,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         createOrUpdateSchema(schema);
     }
 
+    @Given("Текущим пользователем создана новая схема")
     @When("Пользователь отправляет POST запрос на создание новой схемы")
     public void createNewSchemaPost() {
         createSchemaWithRandomName();
@@ -123,6 +127,12 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         updateSchema(schema);
     }
 
+    @When("Пользователь делает запрос на удаление текущей схемы")
+    public void deleteCurrentSchemaRequest() {
+        SchemaDto schema = CurrentScenarioSchema.getCurrentSchema();
+        deleteSchema(schema.getName());
+    }
+
     @When("Схема создана и доступна для выборки")
     public void checkCreatedSchema() {
         String currentSchemaName = CurrentScenarioSchema.getCurrentSchema().getName();
@@ -132,6 +142,19 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                                     .getList("", SchemaDto.class)
                                     .stream()
                                     .anyMatch(schemaDto -> schemaDto.getName().equals(currentSchemaName));
+
+        assertTrue(isPresent);
+    }
+
+    @When("Шаблон схемы создан и доступен для выборки")
+    public void checkCreatedSchemaTemplate() {
+        String currentSchemaName = CurrentScenarioSchema.getCurrentSchema().getName();
+        getCurrentSchemaTemplate(currentSchemaName);
+
+        boolean isPresent = response.jsonPath(new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3))
+                                    .getList("", SchemaTemplateProjection.class)
+                                    .stream()
+                                    .anyMatch(schemaTemplate -> schemaTemplate.getName().equals(currentSchemaName));
 
         assertTrue(isPresent);
     }
@@ -199,9 +222,25 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(expectedProp);
     }
 
+    @When("пользователь редактирует последнюю схему используя {string}")
+    public void updateSchemaBySchema(String schemaTemplate) {
+        SchemaDto schema = getSchemaTemplateByTitle(schemaTemplate);
+
+        updateSchema(schema);
+    }
+
     public void getCurrentSchema(String schemaName) {
         response = getBaseRequestWithCurrentCookie().
                 queryParam("schemaIds", schemaName)
+                .when().
+                        get();
+    }
+
+    public void getCurrentSchemaTemplate(String schemaName) {
+        response = getBaseRequestWithCurrentCookie().
+                given().
+                        basePath("/api/data/schemasTemplate").
+                        queryParam("schemaIds", schemaName)
                 .when().
                         get();
     }
@@ -240,6 +279,17 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         put()
+                .then().
+                        log().ifError().
+                        extract().response();
+    }
+
+    private void deleteSchema(String schemaName) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        basePath("/api/data/schemas/" + schemaName)
+                .when().
+                        delete()
                 .then().
                         log().ifError().
                         extract().response();

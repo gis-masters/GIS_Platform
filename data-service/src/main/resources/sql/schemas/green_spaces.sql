@@ -41,7 +41,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_universal_for
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "footpath",
           "tags": [
@@ -118,7 +119,8 @@ SET class_rule =
 WHERE name = 'footpath';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "greenery",
           "tags": [
@@ -214,7 +216,8 @@ SET class_rule =
 WHERE name = 'greenery';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "park_building",
           "tags": [
@@ -290,7 +293,8 @@ SET class_rule =
 WHERE name = 'park_building';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "park_structures",
           "tags": [
@@ -366,7 +370,8 @@ SET class_rule =
 WHERE name = 'park_structures';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "trees",
           "tags": [
@@ -521,7 +526,8 @@ SET class_rule =
 WHERE name = 'trees';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "zone_park",
           "tags": [
@@ -615,7 +621,8 @@ SET class_rule =
 WHERE name = 'zone_park';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "trees",
           "tags": [
@@ -708,7 +715,8 @@ SET class_rule =
 WHERE name = 'border_park';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "dl_data_universal_for_document",
           "title": "Документы зеленых насаждений",

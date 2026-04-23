@@ -45,8 +45,7 @@ public class SpecializationController {
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     @PostMapping("/specializations/{id}/schemasInit")
     public ResponseEntity<?> initSpecializationSchema(@PathVariable Integer id) {
-        mediator.execute(
-                new InitSpecializationSchemaRequest(id));
+        mediator.execute(new InitSpecializationSchemaRequest(id));
 
         return ResponseEntity.ok().build();
     }

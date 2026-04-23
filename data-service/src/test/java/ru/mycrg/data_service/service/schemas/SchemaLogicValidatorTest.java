@@ -44,7 +44,7 @@ public class SchemaLogicValidatorTest {
         Set<ErrorInfo> errors = slv.validate(schema);
         assertEquals(1, errors.size());
         ErrorInfo error = errors.iterator().next();
-        assertEquals("Свойство не может быть задано одновременно и required и hidden", error.getMessage());
+        assertEquals("Поле не может быть одновременно обязательным и скрытым", error.getMessage());
     }
 
     @Test

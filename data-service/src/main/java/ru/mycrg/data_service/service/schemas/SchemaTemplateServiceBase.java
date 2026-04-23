@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.schemas;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.SchemaTemplateProjection;
 import ru.mycrg.data_service.entity.SchemaTemplate;
 import ru.mycrg.data_service.mappers.SchemaEntityMapper;
 import ru.mycrg.data_service.repository.SchemaTemplateRepository;
@@ -31,35 +32,23 @@ public class SchemaTemplateServiceBase implements ISchemaTemplateService {
 
     @Override
     public List<SchemaDto> getSchemas(@Nullable List<String> featureNames) {
-        return featureNames == null || featureNames.isEmpty()
-                ? schemaRepository.findAll().stream()
-                                  .map(SchemaEntityMapper::mapToDto)
-                                  .filter(Objects::nonNull)
-                                  .collect(Collectors.toList())
-                : schemaRepository.findByNameIn(featureNames).stream()
-                                  .map(SchemaEntityMapper::mapToDto)
-                                  .filter(Objects::nonNull)
-                                  .collect(Collectors.toList());
+        return getSchemaTemplates(featureNames).stream()
+                                               .map(SchemaEntityMapper::mapToSchemaDto)
+                                               .filter(Objects::nonNull)
+                                               .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
-        Optional<SchemaDto> oSchema = schemaRepository.findByName(name).stream()
-                                                      .findFirst()
-                                                      .map(SchemaEntityMapper::mapToDto);
-        if (oSchema.isPresent()) {
-            List<SimplePropertyDto> properties = oSchema.get().getProperties();
-            enrichPropsBySystemAttributes(properties);
-        }
-
-        return oSchema;
+    public List<SchemaTemplateProjection> getSchemaTemplatesProjection(@Nullable List<String> featureNames) {
+        return getSchemaTemplates(featureNames).stream().map(SchemaEntityMapper::mapToProjection)
+                                               .collect(Collectors.toList());
     }
 
     @Override
     public List<SchemaDto> getSchemasWithReglaments() {
         return schemaRepository.findAll().stream()
                                .filter(this::isReglamentsExist)
-                               .map(SchemaEntityMapper::mapToDto)
+                               .map(SchemaEntityMapper::mapToSchemaDto)
                                .filter(Objects::nonNull)
                                .collect(Collectors.toList());
     }
@@ -67,7 +56,7 @@ public class SchemaTemplateServiceBase implements ISchemaTemplateService {
     @Override
     public List<SchemaDto> getBySpecificProperty(String propertyName) {
         return schemaRepository.findBySpecificPropertyName(propertyName).stream()
-                               .map(SchemaEntityMapper::mapToDto)
+                               .map(SchemaEntityMapper::mapToSchemaDto)
                                .filter(Objects::nonNull)
                                .collect(Collectors.toList());
     }
@@ -98,5 +87,28 @@ public class SchemaTemplateServiceBase implements ISchemaTemplateService {
         });
 
         return isReglamentExist.get();
+    }
+
+    @Override
+    public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
+        Optional<SchemaDto> oSchema = schemaRepository.findByName(name).stream()
+                                                      .findFirst()
+                                                      .map(SchemaEntityMapper::mapToSchemaDto);
+        if (oSchema.isPresent()) {
+            List<SimplePropertyDto> properties = oSchema.get().getProperties();
+            enrichPropsBySystemAttributes(properties);
+        }
+
+        return oSchema;
+    }
+
+    private List<SchemaTemplate> getSchemaTemplates(@Nullable List<String> featureNames) {
+        return featureNames == null || featureNames.isEmpty()
+                ? schemaRepository.findAll().stream()
+                                  .filter(Objects::nonNull)
+                                  .collect(Collectors.toList())
+                : schemaRepository.findByNameIn(featureNames).stream()
+                                  .filter(Objects::nonNull)
+                                  .collect(Collectors.toList());
     }
 }

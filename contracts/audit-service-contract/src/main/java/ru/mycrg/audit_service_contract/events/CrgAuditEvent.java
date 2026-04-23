@@ -1,6 +1,5 @@
 package ru.mycrg.audit_service_contract.events;
 
-
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 import tools.jackson.databind.JsonNode;
 
@@ -29,6 +28,11 @@ public class CrgAuditEvent extends DefaultMessageBusRequestEvent {
     public CrgAuditEvent(String token, String actionType) {
         this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType,
              null, null, null, null, null);
+    }
+
+    public CrgAuditEvent(String token, String actionType, String entityName, String entityType) {
+        this(UUID.randomUUID(), AUDIT_REQUEST_FANOUT, AUDIT_REQUEST_KEY, token, actionType, entityName, entityType,
+             null, null, null);
     }
 
     public CrgAuditEvent(String token, String actionType, String entityName, String entityType, Long entityId) {

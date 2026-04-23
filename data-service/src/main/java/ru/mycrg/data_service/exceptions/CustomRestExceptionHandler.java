@@ -16,8 +16,8 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.*;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(CustomRestExceptionHandler.class);
@@ -219,9 +219,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Object> handleBadRequest(final RuntimeException e) {
-        BadRequestException ex = (BadRequestException) e;
-
+    public ResponseEntity<Object> handleBadRequest(final BadRequestException ex) {
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getMessage(), ex.getErrors());
 
         log.error("BAD REQUEST: {}", errorModel.getMessage());
@@ -246,8 +244,8 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<Object> forbidden(final RuntimeException ex) {
-        ApiErrorModel errorModel = new ApiErrorModel(FORBIDDEN, ex.getLocalizedMessage());
+    public ResponseEntity<Object> forbidden(final ForbiddenException ex) {
+        ApiErrorModel errorModel = new ApiErrorModel(FORBIDDEN,  ex.getMessage(), ex.getErrors());
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }

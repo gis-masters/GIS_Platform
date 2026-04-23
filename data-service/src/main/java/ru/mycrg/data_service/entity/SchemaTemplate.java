@@ -1,13 +1,16 @@
 package ru.mycrg.data_service.entity;
 
- 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import jakarta.persistence.*;
+import org.springframework.data.annotation.LastModifiedDate;
 import tools.jackson.databind.JsonNode;
+
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Entity
@@ -31,6 +34,22 @@ public class SchemaTemplate {
 
     @Column(columnDefinition = "text")
     private String calculatedFields;
+
+    @Column(name = "is_system")
+    private Boolean isSystem;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "last_modified")
+    private @LastModifiedDate
+    LocalDateTime lastModified;
+
+    @Column(name = "modified_by")
+    private String modifiedBy;
 
     public SchemaTemplate() {
         // Required
@@ -74,5 +93,45 @@ public class SchemaTemplate {
 
     public void setCalculatedFields(String calculatedFields) {
         this.calculatedFields = calculatedFields;
+    }
+
+    public Boolean getIsSystem() {
+        return isSystem;
+    }
+
+    public void setIsSystem(Boolean isSystem) {
+        this.isSystem = isSystem;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }

@@ -13,37 +13,38 @@ import ru.mycrg.data_service.service.schemas.SchemaPrintingTemplatesValidator;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
-import tools.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.mappers.SchemaEntityMapper.mapToEntity;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.SYSTEM_TAG_NAME;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.TAG;
+import static ru.mycrg.data_service.service.schemas.SchemaTemplateServiceProtected.throwIfHaveNoAccess;
+import static ru.mycrg.data_service.service.schemas.SchemaTemplateServiceProtected.throwIfSchemaSystem;
 
 @Component
 public class UpdateSchemaTemplateRequestHandler implements IRequestHandler<UpdateSchemaTemplateRequest, Voidy> {
 
     private final SchemaLogicValidator schemaLogicValidator;
     private final SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator;
-    private final SchemaTemplateRepository schemaRepository;
+    private final SchemaTemplateRepository schemaTemplateRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     public UpdateSchemaTemplateRequestHandler(SchemaLogicValidator schemaLogicValidator,
                                               SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator,
-                                              SchemaTemplateRepository schemaRepository,
+                                              SchemaTemplateRepository schemaTemplateRepository,
                                               IAuthenticationFacade authenticationFacade) {
         this.schemaLogicValidator = schemaLogicValidator;
         this.schemaPrintingTemplatesValidator = schemaPrintingTemplatesValidator;
-        this.schemaRepository = schemaRepository;
+        this.schemaTemplateRepository = schemaTemplateRepository;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Voidy handle(UpdateSchemaTemplateRequest request) {
         SchemaDto schema = request.getSchema();
+
         Set<ErrorInfo> validationMismatches = schemaLogicValidator.validate(schema);
         validationMismatches.addAll(
                 schemaPrintingTemplatesValidator.checkTemplateAvailability(schema.getPrintTemplates()));
@@ -52,48 +53,27 @@ public class UpdateSchemaTemplateRequestHandler implements IRequestHandler<Updat
             throw new BadRequestException("В схеме найдены ошибки", new ArrayList<>(validationMismatches));
         }
 
-        List<SchemaTemplate> schemaTemplates = schemaRepository.findByName(schema.getName());
+        List<SchemaTemplate> schemaTemplates = schemaTemplateRepository.findByName(schema.getName());
         if (schemaTemplates.isEmpty()) {
             throw new NotFoundException("Схема: '" + schema.getName() + "' не найдена");
         }
 
         SchemaTemplate schemaTemplate = schemaTemplates.getFirst();
 
-        validateSystemTagAccess(schemaTemplate);
+        throwIfSchemaSystem(schemaTemplate.getName(), schemaTemplate.getIsSystem());
+        String currentUserLogin = authenticationFacade.getLogin();
+        throwIfHaveNoAccess(authenticationFacade.isOrganizationAdmin(),
+                            schemaTemplate.getCreatedBy(),
+                            currentUserLogin);
 
         request.setSchemaEntity(schemaTemplate);
 
         SchemaTemplate updatedSchemaTemplate = mapToEntity(schemaTemplate, schema);
+        updatedSchemaTemplate.setLastModified(now());
+        updatedSchemaTemplate.setModifiedBy(currentUserLogin);
 
-        schemaRepository.save(updatedSchemaTemplate);
+        schemaTemplateRepository.save(updatedSchemaTemplate);
 
         return new Voidy();
-    }
-
-    private void validateSystemTagAccess(SchemaTemplate schemaTemplate) {
-        JsonNode classRule = schemaTemplate.getClassRule();
-        if (!containsSystemTag(classRule) || authenticationFacade.isOrganizationAdmin()) {
-            return;
-        }
-
-        throw new BadRequestException(
-                String.format("Схема «%s» включает тег «%s» — изменять её может только администратор.",
-                              schemaTemplate.getName(), SYSTEM_TAG_NAME));
-    }
-
-    private boolean containsSystemTag(JsonNode classRule) {
-        JsonNode tagsNode = classRule.path(TAG);
-        if (!tagsNode.isArray()) {
-            return false;
-        }
-
-        for (JsonNode tag: tagsNode) {
-            String text = tag.textValue();
-            if (SYSTEM_TAG_NAME.equalsIgnoreCase(text)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

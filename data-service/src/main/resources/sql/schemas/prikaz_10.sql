@@ -731,7 +731,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mp');
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "thermalpipeline_line",
         "title": "Сети теплоснабжения",
@@ -998,7 +999,8 @@ WHERE name = 'thermalpipeline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "oilpipeline_line",
         "title": "Магистральные трубопроводы жидких углеводородов",
@@ -1286,7 +1288,8 @@ WHERE name = 'oilpipeline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "telecomnetworkline_line",
         "title": "Сети электросвязи",
@@ -1630,7 +1633,8 @@ WHERE name = 'telecomnetworkline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "electrictransformer_point",
   "title": "Электрические подстанции",
@@ -2172,7 +2176,8 @@ WHERE name = 'electrictransformer_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "railwayfacility_point",
   "title": "Объекты железнодорожного транспорта",
@@ -2670,7 +2675,8 @@ WHERE name = 'railwayfacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule  =
+SET is_system = true,
+    class_rule =
        '{
         "name": "admesrf",
         "title": "Территория субъекта Российской Федерации",
@@ -2774,7 +2780,8 @@ WHERE name = 'admesrf';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "wastefacility_point",
   "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
@@ -3337,7 +3344,8 @@ WHERE name = 'wastefacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "waterfacility_point",
   "title": "Объекты водоснабжения",
@@ -3665,7 +3673,8 @@ WHERE name = 'waterfacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "publictransportservice_point",
   "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
@@ -3959,7 +3968,8 @@ WHERE name = 'publictransportservice_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "airtransportobj_point",
   "title": "Объекты воздушного транспорта",
@@ -4367,7 +4377,8 @@ WHERE name = 'airtransportobj_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "autoservice_point",
   "title": "Объекты обслуживания и хранения автомобильного транспорта",
@@ -4752,7 +4763,8 @@ WHERE name = 'autoservice_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "heritage_point",
   "title": "Объекты культурного наследия (ОКН)",
@@ -5206,7 +5218,8 @@ WHERE name = 'heritage_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "resort_point",
   "title": "Объекты санаторно-курортного назначения",
@@ -5512,7 +5525,8 @@ WHERE name = 'resort_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "servicefacility_point",
   "title": "Прочие объекты, связанные с производственной деятельностью",
@@ -6024,7 +6038,8 @@ WHERE name = 'servicefacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "sewerfacility_point",
   "title": "Объекты водоотведения",
@@ -6365,7 +6380,8 @@ WHERE name = 'sewerfacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "culture_point",
   "title": "Объекты культуры и искусства",
@@ -6780,7 +6796,8 @@ WHERE name = 'culture_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "mineraldep_point",
         "title": "Месторождения и проявления полезных ископаемых",
@@ -7027,7 +7044,8 @@ WHERE name = 'mineraldep_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "transplogisticobj_point",
   "title": "Комплексные объекты транспортной инфраструктуры",
@@ -7287,7 +7305,8 @@ WHERE name = 'transplogisticobj_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "publictransportobj_point",
         "title": "Объекты автомобильного пассажирского транспорта",
@@ -7501,7 +7520,8 @@ WHERE name = 'publictransportobj_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "envmonitoring_point",
   "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
@@ -7715,7 +7735,8 @@ WHERE name = 'envmonitoring_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "hydro_point",
         "title": "Поверхностные водные объекты",
@@ -7881,7 +7902,8 @@ WHERE name = 'hydro_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "engprotectionobj_point",
   "title": "Объекты инженерной защиты от опасных геологических процессов",
@@ -8105,7 +8127,8 @@ WHERE name = 'engprotectionobj_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "waterpipeline_line",
   "title": "Сети водоснабжения",
@@ -8354,7 +8377,8 @@ WHERE name = 'waterpipeline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "culture",
         "title": "Объекты культуры и искусства",
@@ -8766,7 +8790,8 @@ WHERE name = 'culture';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "manufacturing",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
@@ -9223,7 +9248,8 @@ WHERE name = 'manufacturing';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "authorityservice",
         "title": "Прочие объекты обслуживания",
@@ -9683,7 +9709,8 @@ WHERE name = 'authorityservice';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "sport",
         "title": "Объекты физкультурного и спортивного назначения",
@@ -10010,7 +10037,8 @@ WHERE name = 'sport';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "naturalriskzone",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
@@ -10283,7 +10311,8 @@ WHERE name = 'naturalriskzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "natureprotectarea",
         "title": "Особо охраняемые природные территории",
@@ -10493,7 +10522,8 @@ WHERE name = 'natureprotectarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "gasfacility",
         "title": "Объекты добычи и транспортировки газа",
@@ -10928,7 +10958,8 @@ WHERE name = 'gasfacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "gasfacility_point",
   "title": "Объекты добычи и транспортировки газа",
@@ -11367,7 +11398,8 @@ WHERE name = 'gasfacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "publictransportobj",
   "title": "Объекты автомобильного пассажирского транспорта",
@@ -11583,7 +11615,8 @@ WHERE name = 'publictransportobj';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "thermalfacility",
         "title": "Объекты теплоснабжения",
@@ -11988,7 +12021,8 @@ WHERE name = 'thermalfacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "envmonitoring",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
@@ -12202,7 +12236,8 @@ WHERE name = 'envmonitoring';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "thermalfacility_point",
   "title": "Объекты теплоснабжения",
@@ -12609,7 +12644,8 @@ WHERE name = 'thermalfacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "road_line",
   "title": "Автомобильные дороги",
@@ -13113,7 +13149,8 @@ WHERE name = 'road_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "telecomfacility",
         "title": "Объекты связи",
@@ -13497,7 +13534,8 @@ WHERE name = 'telecomfacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "customcontrol",
         "title": "Пункт пропуска через Государственную границу",
@@ -13780,7 +13818,8 @@ WHERE name = 'customcontrol';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "education",
         "title": "Объекты образования и науки",
@@ -14324,7 +14363,8 @@ WHERE name = 'education';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "publictransportline_line",
   "title": "Линии общественного пассажирского транспорта",
@@ -14619,7 +14659,8 @@ WHERE name = 'publictransportline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "telecomfacility_point",
   "title": "Объекты связи",
@@ -15003,7 +15044,8 @@ WHERE name = 'telecomfacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "resort",
         "title": "Объекты санаторно-курортного назначения",
@@ -15309,7 +15351,8 @@ WHERE name = 'resort';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "servicefacility",
         "title": "Прочие объекты, связанные с производственной деятельностью",
@@ -15822,7 +15865,8 @@ WHERE name = 'servicefacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "admenp",
         "title": "Территория населенного пункта",
@@ -16235,7 +16279,8 @@ WHERE name = 'admenp';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "transportobj",
         "title": "Искусственные дорожные сооружения",
@@ -16557,7 +16602,8 @@ WHERE name = 'transportobj';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "transportobj_line",
         "title": "Искусственные дорожные сооружения",
@@ -16879,7 +16925,8 @@ WHERE name = 'transportobj_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "transportobj_point",
   "title": "Искусственные дорожные сооружения",
@@ -17201,7 +17248,8 @@ WHERE name = 'transportobj_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "wastefacility",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
@@ -17764,7 +17812,8 @@ WHERE name = 'wastefacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "waterfacility",
         "title": "Объекты водоснабжения",
@@ -18086,7 +18135,8 @@ WHERE name = 'waterfacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "otherobject",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
@@ -18381,7 +18431,8 @@ WHERE name = 'otherobject';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "forest",
   "title": "Леса",
@@ -18657,7 +18708,8 @@ WHERE name = 'forest';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "education_point",
         "title": "Объекты образования и науки",
@@ -19205,7 +19257,8 @@ WHERE name = 'education_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "electricpowerstation",
         "title": "Электростанции",
@@ -19767,7 +19820,8 @@ WHERE name = 'electricpowerstation';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "publictransportservice",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
@@ -20059,7 +20113,8 @@ WHERE name = 'publictransportservice';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "airtransportobj",
         "title": "Объекты воздушного транспорта",
@@ -20466,7 +20521,8 @@ WHERE name = 'airtransportobj';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "electricpowerstation_point",
   "title": "Электростанции",
@@ -21030,7 +21086,8 @@ WHERE name = 'electricpowerstation_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "autoservice",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
@@ -21415,7 +21472,8 @@ WHERE name = 'autoservice';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "hydraulicstructures_line",
   "title": "Гидротехнические сооружения",
@@ -21751,7 +21809,8 @@ WHERE name = 'hydraulicstructures_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "gaspipeline_line",
   "title": "Распределительный трубопровода для транспортировки газа",
@@ -22112,7 +22171,8 @@ WHERE name = 'gaspipeline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "street_line",
   "title": "Улично-дорожная сеть городского поселения",
@@ -22470,7 +22530,8 @@ WHERE name = 'street_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "hydraulicstructures_point",
   "title": "Гидротехнические сооружения",
@@ -22809,7 +22870,8 @@ WHERE name = 'hydraulicstructures_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "health",
         "title": "Объекты здравоохранения",
@@ -23422,7 +23484,8 @@ WHERE name = 'health';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "customcontrol_point",
   "title": "Пункт пропуска через Государственную границу",
@@ -23705,7 +23768,8 @@ WHERE name = 'customcontrol_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "health_point",
   "title": "Объекты здравоохранения",
@@ -24318,7 +24382,8 @@ WHERE name = 'health_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "railwayline_line",
   "title": "Железнодорожные пути",
@@ -24744,7 +24809,8 @@ WHERE name = 'railwayline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "pipeline_line",
   "title": "Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов",
@@ -25085,7 +25151,8 @@ WHERE name = 'pipeline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "cemetery_point",
   "title": "Места погребения",
@@ -25421,7 +25488,8 @@ WHERE name = 'cemetery_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "cemetery",
         "title": "Места погребения",
@@ -25757,7 +25825,8 @@ WHERE name = 'cemetery';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "investmentzone",
         "title": "Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности",
@@ -25980,7 +26049,8 @@ WHERE name = 'investmentzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "watertransportobj",
         "title": "Объекты водного транспорта",
@@ -26444,7 +26514,8 @@ WHERE name = 'watertransportobj';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "electricline_line",
         "title": "Линии электропередачи (ЛЭП)",
@@ -26924,7 +26995,8 @@ WHERE name = 'electricline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "watertransportobj_point",
   "title": "Объекты водного транспорта",
@@ -27386,7 +27458,8 @@ WHERE name = 'watertransportobj_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "historicsettlement",
         "title": "Границы территории исторического поселения",
@@ -27470,7 +27543,8 @@ WHERE name = 'historicsettlement';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "public",
         "title": "Общественные пространства, объекты благоустройства и озеленения",
@@ -27885,7 +27959,8 @@ WHERE name = 'public';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "sewerfacility",
         "title": "Объекты водоотведения",
@@ -28225,7 +28300,8 @@ WHERE name = 'sewerfacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "functionalzone",
   "title": "Функциональные зоны",
@@ -28948,7 +29024,8 @@ WHERE name = 'functionalzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "technoriskarea",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
@@ -29150,7 +29227,8 @@ WHERE name = 'technoriskarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "coastalprotectionzone",
   "title": "Прибрежные защитные полосы",
@@ -29251,7 +29329,8 @@ WHERE name = 'coastalprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "publictransportstops",
         "title": "Остановочные пункты общественного пассажирского транспорта",
@@ -29580,7 +29659,8 @@ WHERE name = 'publictransportstops';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "hazardarea",
         "title": "Зона экстренного оповещения",
@@ -29637,7 +29717,8 @@ WHERE name = 'hazardarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "publictransportstops_point",
   "title": "Остановочные пункты общественного пассажирского транспорта",
@@ -29966,7 +30047,8 @@ WHERE name = 'publictransportstops_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "otherobject_point",
   "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
@@ -30262,7 +30344,8 @@ WHERE name = 'otherobject_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "resortarea",
         "title": "Лечебно-оздоровительные местности и курорты",
@@ -30443,7 +30526,8 @@ WHERE name = 'resortarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "social",
         "title": "Объекты социального обслуживания",
@@ -30944,7 +31028,8 @@ WHERE name = 'social';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "agriculture",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
@@ -31602,7 +31687,8 @@ WHERE name = 'agriculture';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "social_point",
   "title": "Объекты социального обслуживания",
@@ -32103,7 +32189,8 @@ WHERE name = 'social_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "agriculture_point",
   "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
@@ -32762,7 +32849,8 @@ WHERE name = 'agriculture_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "wildlifeprotection",
         "title": "Объекты охраны животного мира",
@@ -32990,7 +33078,8 @@ WHERE name = 'wildlifeprotection';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "heritagearea",
   "title": "Границы территорий объектов культурного наследия и историко-культурных заповедников",
@@ -33164,7 +33253,8 @@ WHERE name = 'heritagearea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "mineraldep",
         "title": "Месторождения и проявления полезных ископаемых",
@@ -33411,7 +33501,8 @@ WHERE name = 'mineraldep';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "transplogisticobj",
         "title": "Комплексные объекты транспортной инфраструктуры",
@@ -33671,7 +33762,8 @@ WHERE name = 'transplogisticobj';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "heritageprotectionzone",
   "title": "Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
@@ -33820,7 +33912,8 @@ WHERE name = 'heritageprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "engprotectionzone",
   "title": "Охранная зона инженерных коммуникаций",
@@ -33950,7 +34043,8 @@ WHERE name = 'engprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "foreshore",
   "title": "Береговые полосы",
@@ -34051,7 +34145,8 @@ WHERE name = 'foreshore';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "transpprotectionzone",
   "title": "Охранная зона транспортных коммуникаций",
@@ -34165,7 +34260,8 @@ WHERE name = 'transpprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "recreation",
         "title": "Объекты отдыха и туризма",
@@ -34776,7 +34872,8 @@ WHERE name = 'recreation';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "natureprotectionzone",
   "title": "Охранная зона особо охраняемых природных территорий",
@@ -34944,7 +35041,8 @@ WHERE name = 'natureprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "traditionalarea",
   "title": "Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ",
@@ -35092,7 +35190,8 @@ WHERE name = 'traditionalarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "specialeconomicarea",
   "title": "Особые экономические зоны",
@@ -35301,7 +35400,8 @@ WHERE name = 'specialeconomicarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "emergencyprotectionobj",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
@@ -35714,7 +35814,8 @@ WHERE name = 'emergencyprotectionobj';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "electrictransformer",
         "title": "Электрические подстанции",
@@ -36261,7 +36362,8 @@ WHERE name = 'electrictransformer';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "railwayfacility",
         "title": "Объекты железнодорожного транспорта",
@@ -36758,7 +36860,8 @@ WHERE name = 'railwayfacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "admemo",
         "title": "Территория муниципального образования",
@@ -36889,7 +36992,8 @@ WHERE name = 'admemo';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "oilfacility",
         "title": "Объекты добычи, перекачки, учета и хранения жидких углеводородов",
@@ -37299,7 +37403,8 @@ WHERE name = 'oilfacility';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "emergencyprotectionobj_point",
   "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
@@ -37739,7 +37844,8 @@ WHERE name = 'emergencyprotectionobj_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "manufacturing_point",
   "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
@@ -38198,7 +38304,8 @@ WHERE name = 'manufacturing_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "authorityservice_point",
         "title": "Прочие объекты обслуживания",
@@ -38665,7 +38772,8 @@ WHERE name = 'authorityservice_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "sport_point",
   "title": "Объекты физкультурного и спортивного назначения",
@@ -39072,7 +39180,8 @@ WHERE name = 'sport_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "recreation_point",
   "title": "Объекты отдыха и туризма",
@@ -39683,7 +39792,8 @@ WHERE name = 'recreation_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "public_point",
   "title": "Общественные пространства, объекты благоустройства и озеленения",
@@ -40097,7 +40207,8 @@ WHERE name = 'public_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "waterprotectionzone",
         "title": "Водоохранные зоны",
@@ -40222,7 +40333,8 @@ WHERE name = 'waterprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "envdanger_point",
   "title": "Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
@@ -40338,7 +40450,8 @@ WHERE name = 'envdanger_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "prison",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
@@ -40595,7 +40708,8 @@ WHERE name = 'prison';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "greeneryplanting",
   "title": "Территории зеленого фонда городских и сельских поселений ",
@@ -40766,7 +40880,8 @@ WHERE name = 'greeneryplanting';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "forestpark",
   "title": "Лесопарковый зеленый пояс",
@@ -40875,7 +40990,8 @@ WHERE name = 'forestpark';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "oilfacility_point",
   "title": "Объекты добычи, перекачки, учета и хранения жидких углеводородов",
@@ -41284,7 +41400,8 @@ WHERE name = 'oilfacility_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "transpsanitarygapzone",
   "title": "Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
@@ -41406,7 +41523,8 @@ WHERE name = 'transpsanitarygapzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "sanitaryprotectionzone",
   "title": "Санитарно-защитная зона",
@@ -41590,7 +41708,8 @@ WHERE name = 'sanitaryprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "drinkwaterprotectionzone",
   "title": "Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
@@ -41708,7 +41827,8 @@ WHERE name = 'drinkwaterprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "admerf",
         "title": "Территория Российской Федерации",
@@ -41776,7 +41896,8 @@ WHERE name = 'admerf';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "resortprotectionzone",
   "title": "Зоны округов санитарной (горно-санитарной) охраны",
@@ -41917,7 +42038,8 @@ WHERE name = 'resortprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "landuse",
         "title": "Земли по категориям",
@@ -42009,7 +42131,8 @@ WHERE name = 'landuse';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "mineralarea",
         "title": "Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей",
@@ -42115,7 +42238,8 @@ WHERE name = 'mineralarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "engsanitarygapzone",
   "title": "Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций",
@@ -42256,7 +42380,8 @@ WHERE name = 'engsanitarygapzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "otherzone",
         "title": "Иные зоны с особыми условиями использования",
@@ -42445,7 +42570,8 @@ WHERE name = 'otherzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "envdanger",
         "title": "Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
@@ -42561,7 +42687,8 @@ WHERE name = 'envdanger';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "streetv_line",
   "title": "Улично-дорожная сеть сельского населенного пункта",
@@ -42822,7 +42949,8 @@ WHERE name = 'streetv_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "otherprotectionzone",
   "title": "Охранная зона иного назначения",
@@ -42940,7 +43068,8 @@ WHERE name = 'otherprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "protectionzone",
   "title": "Зоны охраняемых объектов",
@@ -43055,7 +43184,8 @@ WHERE name = 'protectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "hydro",
   "title": "Поверхностные водные объекты",
@@ -43220,7 +43350,8 @@ WHERE name = 'hydro';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "floodarea",
   "title": "Зоны затопления и подтопления",
@@ -43386,7 +43517,8 @@ WHERE name = 'floodarea';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "areabasedevelopment",
   "title": "Комплексное развитие территорий",
@@ -43576,7 +43708,8 @@ WHERE name = 'areabasedevelopment';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "fishprotectionzone",
   "title": "Рыбоохранная и рыбохозяйственная заповедная зоны",
@@ -43686,7 +43819,8 @@ WHERE name = 'fishprotectionzone';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "waterways_line",
   "title": "Водные пути",
@@ -43887,7 +44021,8 @@ WHERE name = 'waterways_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
         "name": "admborder_line",
         "title": "Границы единиц административно-территориального деления Российской Федерации",
@@ -43996,7 +44131,8 @@ WHERE name = 'admborder_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "hydro_line",
   "title": "Поверхностные водные объекты",
@@ -44150,7 +44286,8 @@ WHERE name = 'hydro_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "sewerpipeline_line",
   "title": "Сети водоотведения",
@@ -44420,7 +44557,8 @@ WHERE name = 'sewerpipeline_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "engprotectionobj_line",
   "title": "Объекты инженерной защиты от опасных геологических процессов",
@@ -44644,7 +44782,8 @@ WHERE name = 'engprotectionobj_line';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "naturalriskzone_point",
   "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
@@ -44923,7 +45062,8 @@ WHERE name = 'naturalriskzone_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "natureprotectarea_point",
   "title": "Особо охраняемые природные территории",
@@ -45133,7 +45273,8 @@ WHERE name = 'natureprotectarea_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "technoriskarea_point",
   "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
@@ -45334,7 +45475,8 @@ WHERE name = 'technoriskarea_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "resortarea_point",
   "title": "Лечебно-оздоровительные местности и курорты",
@@ -45515,7 +45657,8 @@ WHERE name = 'resortarea_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "prison_point",
   "title": "Объекты ФСИН России, иные объекты федерального значения",
@@ -45772,7 +45915,8 @@ WHERE name = 'prison_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
   "name": "wildlifeprotection_point",
   "title": "Объекты охраны животного мира",
@@ -46011,7 +46155,8 @@ WHERE name = 'wildlifeprotection_point';
 
 
 UPDATE data.schemas 
-SET class_rule =
+SET is_system = true,
+    class_rule =
        '{
           "name": "mp",
           "title": "Образуемые земельные участки",

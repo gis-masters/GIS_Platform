@@ -1,3 +1,5 @@
+import { JsonNode } from './jackson-types';
+
 export interface SpatialReferenceSystem {
   authName: string;
   authSrid: number;
@@ -47,7 +49,7 @@ export interface FileResponse {
   signed: boolean;
   expired: boolean;
   resourceType: string;
-  resourceQualifier: any;
+  resourceQualifier: JsonNode;
 }
 
 export interface GeometryValidationResultDto {
@@ -65,6 +67,19 @@ export interface LookupPayload {
   payload: any;
 }
 
+export interface SchemaTemplateProjection {
+  id: number;
+  name: string;
+  classRule: JsonNode;
+  customRule: string;
+  calculatedFields: string;
+  system: boolean;
+  createdBy: string;
+  createdAt: string;
+  lastModified: string;
+  modifiedBy: string;
+}
+
 export interface TaskLogDto {
   eventType: string;
   taskId: number;
@@ -77,7 +92,7 @@ export interface DataFromGpkgPlacementModel {
   layersPlacement: GpkgLayersPlacementModel;
 }
 
-export interface GpkgFileMetadata extends FileMetadata<GpkgContentsBaseDto[]> {
+export interface GpkgFileMetadata extends FileMetadata<GpkgContentsBaseDtoUnion[]> {
   payload: GpkgContentsBaseDtoUnion[];
 }
 
@@ -118,7 +133,7 @@ export interface GpkgFile extends GpkgReportBaseDto, Serializable {
   newId: string;
   oldId: string;
   tableName: string;
-  resourceQualifier: any;
+  resourceQualifier: JsonNode;
 }
 
 export interface GpkgImportDestinationProject extends GpkgReportBaseDto, Serializable {
@@ -259,7 +274,7 @@ export interface ReportMainDto {
 }
 
 export interface TemplateCreateDto extends TemplateShortInfo {
-  printFormSchemaOverrides: any;
+  printFormSchemaOverrides: JsonNode;
 }
 
 export interface TemplateFullInfo extends TemplateCreateDto {

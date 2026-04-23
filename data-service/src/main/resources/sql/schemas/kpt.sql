@@ -51,7 +51,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'municipality_boundari
 
 --Необходимо поддерживать схему dl_data_kpt в соответствии с миграцией M18__kptTableAlwaysLikeInCode.sql
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "dl_data_kpt",
           "tags": [
@@ -158,7 +159,8 @@ WHERE name = 'dl_data_kpt';
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -290,7 +292,8 @@ SET class_rule =
 WHERE name = 'borderwaterobj_polilyne_pro';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -517,7 +520,8 @@ SET class_rule =
 WHERE name = 'zu_pro';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -696,7 +700,8 @@ SET class_rule =
 WHERE name = 'oks_pro';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -893,7 +898,8 @@ SET class_rule =
 WHERE name = 'oks_polyline_pro';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -1025,7 +1031,8 @@ SET class_rule =
 WHERE name = 'borderwaterobj';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -1134,7 +1141,8 @@ SET class_rule =
 WHERE name = 'kvartal_kpt';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -1250,7 +1258,8 @@ SET class_rule =
 WHERE name = 'zouit_pro';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -1585,7 +1594,8 @@ SET class_rule =
 WHERE name = 'oks_constructions_points';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",

@@ -13,6 +13,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import static ru.mycrg.data_service.mappers.SchemaEntityMapper.mapToEntity;
@@ -43,7 +44,10 @@ public class InitSpecializationSchemaRequestHandler implements IRequestHandler<I
                 log.error("Схема: '{}' уже существует", dto.getName());
             }
 
-            schemaRepository.save(mapToEntity(new SchemaTemplate(), dto));
+            SchemaTemplate schemaTemplate = mapToEntity(new SchemaTemplate(), dto);
+            fillSchemaTemplate(schemaTemplate);
+
+            schemaRepository.save(schemaTemplate);
 
             log.debug("Сохранена схема: {}", dto.getName());
         }
@@ -51,5 +55,21 @@ public class InitSpecializationSchemaRequestHandler implements IRequestHandler<I
         systemTagsPublisher.publish();
 
         return new Voidy();
+    }
+
+    /**
+     * Считаем что любая схема, попадающая через миграции специализации сразу системная!
+     */
+    private void fillSchemaTemplate(SchemaTemplate schemaTemplate) {
+        String login = "SYSTEM";
+        LocalDateTime now = LocalDateTime.now();
+
+        schemaTemplate.setCreatedAt(now);
+        schemaTemplate.setCreatedBy(login);
+
+        schemaTemplate.setLastModified(now);
+        schemaTemplate.setModifiedBy(login);
+
+        schemaTemplate.setIsSystem(true);
     }
 }

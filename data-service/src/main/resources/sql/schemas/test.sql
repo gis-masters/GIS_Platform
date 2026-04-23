@@ -10,7 +10,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'advertising_point_sim
 
 
 UPDATE data.schemas
-SET class_rule        =
+SET is_system = true,
+    class_rule =
         '{
           "name": "schema_for_test_table",
           "title": "Схема для тестов",
@@ -101,7 +102,8 @@ SET class_rule        =
 WHERE name = 'schema_for_test_table';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "advertising_point_simf_2022",
           "title": "Рекламные конструкции города Симферополь",

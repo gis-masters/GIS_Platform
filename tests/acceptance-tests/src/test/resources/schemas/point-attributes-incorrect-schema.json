@@ -1,5 +1,5 @@
 {
-  "name": "nto_all_point_incorrect",
+  "name": "nto_all_point_incorrect_test",
   "title": "Точечный слой с атрибутами - ошибочная, для теста",
   "styleName": "generic",
   "tableName": "nto_all_point_incorrect",

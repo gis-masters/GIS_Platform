@@ -20,7 +20,8 @@ SELECT 'oks_nspd',
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -144,7 +145,8 @@ SET class_rule =
 WHERE name = 'ter_zone_nspd';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -269,7 +271,8 @@ SET class_rule =
 WHERE name = 'zouit_nspd';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -481,7 +484,8 @@ SET class_rule =
 WHERE name = 'zu_nspd';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",
@@ -646,7 +650,8 @@ SET class_rule =
 WHERE name = 'border_nspd';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "tags": [
             "system",

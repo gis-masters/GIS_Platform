@@ -1,5 +1,5 @@
 {
-  "name": "fz_wellknownformula_with_not_allowed_types",
+  "name": "fz_wellknownformula_with_not_allowed_types_test",
   "tableName": "fz_wellknownformula_with_not_allowed_types",
   "geometryType": "MultiPolygon",
   "readOnly": false,

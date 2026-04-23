@@ -15,7 +15,8 @@ WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_outgoing_schem
 
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "reestr_common_schema",
           "tags": [
@@ -87,7 +88,8 @@ SET class_rule =
 WHERE name = 'reestr_common_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "reestr_incoming_schema",
           "tags": [
@@ -175,7 +177,8 @@ SET class_rule =
 WHERE name = 'reestr_incoming_schema';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "name": "reestr_outgoing_schema",
           "tags": [

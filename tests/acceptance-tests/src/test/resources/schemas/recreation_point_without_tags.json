@@ -1,0 +1,375 @@
+{
+  "name": "recreation_point",
+  "styleName": "recreation_point",
+  "title": "Объекты отдыха и туризма",
+  "tableName": "recreation_point",
+  "originName": "Recreation",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": " «Объекты отдыха и туризма»",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Гостиницы и аналогичные коллективные средства размещения",
+          "value": "602010601"
+        },
+        {
+          "title": "Специализированные коллективные средства размещения",
+          "value": "602010602"
+        },
+        {
+          "title": "Детский оздоровительный лагерь",
+          "value": "602010603"
+        },
+        {
+          "title": "Оздоровительно-спортивный лагерь",
+          "value": "602010604"
+        },
+        {
+          "title": "Объекты физкультурно-досугового назначения и активного отдыха",
+          "value": "602010605"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно Положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "Код ОКТМО",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "required": true,
+      "maxLength": 11,
+      "minLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING",
+      "maxLength": 255
+    },
+    {
+      "name": "zone_desc",
+      "title": "Подтип гостиниц, аналогичных коллективных средств размещения",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Туристская гостиница",
+          "value": "1"
+        },
+        {
+          "title": "Коммунальная гостиница",
+          "value": "2"
+        },
+        {
+          "title": "Мотель",
+          "value": "3"
+        },
+        {
+          "title": "Пансионат",
+          "value": "4"
+        },
+        {
+          "title": "Общежитие для приезжих, хостел",
+          "value": "5"
+        },
+        {
+          "title": "Иная организация гостиничного типа",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "name": "saf_stype",
+      "title": "Подтип специализированного коллективного средства размещения",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Дом отдыха",
+          "value": "1"
+        },
+        {
+          "title": "База отдыха",
+          "value": "2"
+        },
+        {
+          "title": "Кемпинг",
+          "value": "3"
+        },
+        {
+          "title": "Другая организация отдыха (кроме турбаз)",
+          "value": "4"
+        },
+        {
+          "title": "Туристская база",
+          "value": "5"
+        },
+        {
+          "title": "Наземный и водный транспорт, переоборудованный под средства размещения для ночлега, включая дебаркадеры",
+          "value": "6"
+        },
+        {
+          "title": "Пансионат с лечением",
+          "value": "7"
+        },
+        {
+          "title": "Курортный отель",
+          "value": "8"
+        },
+        {
+          "title": "Иной объект",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "name": "chi_stype",
+      "title": "Подтип детского оздоровительного лагеря",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Загородный оздоровительный лагерь",
+          "value": "1"
+        },
+        {
+          "title": "Санаторно-оздоровительный лагерь",
+          "value": "2"
+        },
+        {
+          "title": "Оздоровительный лагерь с дневным пребыванием",
+          "value": "3"
+        },
+        {
+          "title": "Лагерь труда и отдыха",
+          "value": "4"
+        },
+        {
+          "title": "Палаточный лагерь",
+          "value": "5"
+        },
+        {
+          "title": "Иной объект",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "name": "al_stype",
+      "title": "Подтип объекта физкультурно-досугового назначения и активного отдыха",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Центр (комплекс) конного туризма",
+          "value": "1"
+        },
+        {
+          "title": "Лодочная станция",
+          "value": "2"
+        },
+        {
+          "title": "Аквапарк",
+          "value": "3"
+        },
+        {
+          "title": "Дом рыбака и охотника (база, комплекс и другое)",
+          "value": "4"
+        },
+        {
+          "title": "Визит-центр особо охраняемой природной территории",
+          "value": "5"
+        },
+        {
+          "title": "Танцевальные залы",
+          "value": "6"
+        },
+        {
+          "title": "Аттракционы и иные подобные объекты",
+          "value": "7"
+        },
+        {
+          "title": "Иной объект",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "capacity",
+      "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
+      "pattern": "[\\-+]?[0-9]+",
+      "valueType": "INT",
+      "minInclusive": 1
+    },
+    {
+      "name": "person_pd",
+      "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц в сутки",
+      "pattern": "[\\-+]?[0-9]+",
+      "valueType": "INT",
+      "minInclusive": 1
+    },
+    {
+      "name": "one_time",
+      "title": "Единовременная пропускная способность, чел.",
+      "pattern": "[\\-+]?[0-9]+",
+      "valueType": "INT",
+      "minInclusive": 1
+    },
+    {
+      "name": "boat_count",
+      "title": "Количество стояночных мест лодочных станций и яхт-клубов, мест",
+      "pattern": "[\\-+]?[0-9]+",
+      "valueType": "INT",
+      "minInclusive": 1
+    },
+    {
+      "name": "seat_count",
+      "title": "Вместимость объектов зрелищного назначения, зрительских мест",
+      "pattern": "[\\-+]?[0-9]+",
+      "valueType": "INT",
+      "minInclusive": 1
+    },
+    {
+      "name": "season",
+      "title": "Продолжительность работы",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Круглогодичный",
+          "value": "1"
+        },
+        {
+          "title": "более 6 месяцев",
+          "value": "2"
+        },
+        {
+          "title": "4-6 месяцев",
+          "value": "3"
+        },
+        {
+          "title": "до 3 месяцев",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "wrk_count",
+      "title": "Количество рабочих мест, единиц",
+      "pattern": "[\\-+]?[0-9]+",
+      "valueType": "INT",
+      "minInclusive": 1
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "pattern": "[\\-+]?[0-9]+",
+      "valueType": "INT",
+      "minInclusive": 1
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "hidden": true,
+      "title": "геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": [
+        "Point"
+      ]
+    }
+  ],
+  "description": "Класс объектов «Объекты отдыха и туризма»",
+  "geometryType": "Point"
+}

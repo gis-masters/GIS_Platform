@@ -124,7 +124,8 @@ SELECT 'elevation_marks_point_topo_2000',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'elevation_marks_point_topo_2000');
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "vegetation",
           "tags": [
@@ -188,7 +189,8 @@ SET class_rule =
 WHERE name = 'vegetation_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "vegetation_line",
           "tags": [
@@ -245,7 +247,8 @@ SET class_rule =
 WHERE name = 'vegetation_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "vegetation_point",
           "tags": [
@@ -295,7 +298,8 @@ SET class_rule =
 WHERE name = 'vegetation_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "swamps_soils_point",
           "tags": [
@@ -345,7 +349,8 @@ SET class_rule =
 WHERE name = 'swamps_soils_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "terrain_microforms",
           "tags": [
@@ -409,7 +414,8 @@ SET class_rule =
 WHERE name = 'terrain_microforms_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "terrain_microforms_line",
           "tags": [
@@ -473,7 +479,8 @@ SET class_rule =
 WHERE name = 'terrain_microforms_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "terrain_microforms_point",
           "tags": [
@@ -530,7 +537,8 @@ SET class_rule =
 WHERE name = 'terrain_microforms_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "supports",
           "tags": [
@@ -594,7 +602,8 @@ SET class_rule =
 WHERE name = 'supports_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "supports_line",
           "tags": [
@@ -651,7 +660,8 @@ SET class_rule =
 WHERE name = 'supports_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "supports_point",
           "tags": [
@@ -701,7 +711,8 @@ SET class_rule =
 WHERE name = 'supports_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "roads_facilities_line",
           "tags": [
@@ -758,7 +769,8 @@ SET class_rule =
 WHERE name = 'roads_facilities_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "roads_facilities_point",
           "tags": [
@@ -808,7 +820,8 @@ SET class_rule =
 WHERE name = 'roads_facilities_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "social_culture",
           "tags": [
@@ -872,7 +885,8 @@ SET class_rule =
 WHERE name = 'social_culture_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "social_culture_point",
           "tags": [
@@ -922,7 +936,8 @@ SET class_rule =
 WHERE name = 'social_culture_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "road_covers",
           "tags": [
@@ -1008,7 +1023,8 @@ SET class_rule =
 WHERE name = 'road_covers_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "markers_point",
           "tags": [
@@ -1105,7 +1121,8 @@ SET class_rule =
 WHERE name = 'markers_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "labels_line",
           "tags": [
@@ -1186,7 +1203,8 @@ SET class_rule =
 WHERE name = 'labels_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "landmarks_point",
           "tags": [
@@ -1236,7 +1254,8 @@ SET class_rule =
 WHERE name = 'landmarks_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "horizontals_line",
           "tags": [
@@ -1300,7 +1319,8 @@ SET class_rule =
 WHERE name = 'horizontals_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "hydrography",
           "tags": [
@@ -1428,7 +1448,8 @@ SET class_rule =
 WHERE name = 'hydrography_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "hydrography_line",
           "tags": [
@@ -1564,7 +1585,8 @@ SET class_rule =
 WHERE name = 'hydrography_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "hydrography_point",
           "tags": [
@@ -1614,7 +1636,8 @@ SET class_rule =
 WHERE name = 'hydrography_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "geodetic_network_point",
           "tags": [
@@ -1678,7 +1701,8 @@ SET class_rule =
 WHERE name = 'geodetic_network_point_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "fences_line",
           "tags": [
@@ -1736,7 +1760,8 @@ SET class_rule =
 WHERE name = 'fences_line_topo_2000';
 
 UPDATE data.schemas
-SET class_rule =
+SET is_system = true,
+    class_rule =
         '{
           "styleName": "elevation_marks_point",
           "tags": [
