@@ -21,7 +21,7 @@ const cnSelectFolderDialog = cn('SelectFolderDialog');
 interface SelectFolderDialogProps {
   open: boolean;
   title: string;
-  startPath?: ExplorerItemData[] | undefined;
+  startPath?: ExplorerItemData[];
   subtitle?: string;
   loading?: boolean;
   document?: LibraryRecord;
@@ -33,7 +33,7 @@ interface SelectFolderDialogProps {
 @observer
 export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
   @observable private disabled = true;
-  @observable private selectedFolder?: LibraryRecord | undefined;
+  @observable private selectedFolder?: LibraryRecord;
 
   constructor(props: SelectFolderDialogProps) {
     super(props);

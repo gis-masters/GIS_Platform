@@ -57,8 +57,8 @@ export const useFeatureSave = ({
   layer: CrgVectorableLayer | CrgVectorLayer | undefined;
   isNew: boolean;
   mode: EditFeatureMode;
-  setIsSaveInProgress: (val: boolean) => void;
-}): { saveFeature: () => Promise<void> } => {
+  setIsSaveInProgress(val: boolean): void;
+}): { saveFeature(): Promise<void> } => {
   const getDirtyProperties = (): EditedField[] => {
     const result: EditedField[] = [];
     if (!editFeatureStore?.dirty) {

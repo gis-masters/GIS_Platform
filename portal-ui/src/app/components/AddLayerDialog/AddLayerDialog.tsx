@@ -343,10 +343,10 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         nativeCRS: crs,
         minZoom,
         styleName: styleName || this.schema?.styleName || this.schema?.name,
-        view
+        view,
+        mode: FilePlacementMode.GEOSERVER
       };
 
-      newCrgLayer.mode = FilePlacementMode.GEOSERVER;
       await createLayer(newCrgLayer, currentProject.id);
 
       newCrgLayer.mode = FilePlacementMode.FULL;

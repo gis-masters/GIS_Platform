@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {} from 'mobx';
 import { observer } from 'mobx-react';
 import { ShareOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';

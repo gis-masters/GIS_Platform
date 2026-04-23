@@ -1,9 +1,0 @@
-{
-  "plugins": ["wdio"],
-  "extends": ["plugin:wdio/recommended"],
-  "rules": {
-    "wdio/no-pause": "off",
-    // regexp
-    "regexp/no-super-linear-backtracking": "off" // в тестах нам атаки не страшны
-  }
-}

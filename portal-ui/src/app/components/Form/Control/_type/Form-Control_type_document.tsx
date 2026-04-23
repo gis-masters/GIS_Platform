@@ -4,6 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { type PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { type DocumentInfo, Documents } from '../../../Documents/Documents';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
@@ -17,7 +18,7 @@ class FormControlTypeDocument extends Component<FormControlProps> {
 
     try {
       value = JSON.parse(String(fieldValue)) as DocumentInfo[];
-      if (!Array.isArray(value)) {
+      if (!isArray(value)) {
         value = [];
       }
     } catch {

@@ -7,5 +7,6 @@
  * @returns Значение является массивом.
  */
 export function isArray(value: unknown): value is unknown[] {
+  /* eslint-disable-next-line no-restricted-syntax -- единственное место вызова нативного API */
   return Array.isArray(value);
 }

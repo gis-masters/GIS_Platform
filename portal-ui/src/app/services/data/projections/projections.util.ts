@@ -65,7 +65,7 @@ export function getProjectionTitle(proj: string): string {
   const unknownRegex = /\["([^"]+)",/;
 
   const extractTitle = (regex: RegExp): string | null => {
-    const match = proj.match(regex);
+    const match = regex.exec(proj);
 
     return match ? match[1].replaceAll('_', ' ') : null;
   };

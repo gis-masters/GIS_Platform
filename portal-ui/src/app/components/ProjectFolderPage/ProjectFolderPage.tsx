@@ -78,7 +78,7 @@ export const ProjectFolderPage: FC = observer(() => {
           <h1 className={cnProjectFolderPageContainer('Title')}>
             <TypeIcon color='primary' className={cnProjectFolderPageContainer('TypeIcon')} />
             {project.name}
-            {project.id && <TextBadge id={project.id} className={cnProjectFolderPageContainer('Id')} />}
+            {!!project.id && <TextBadge id={project.id} className={cnProjectFolderPageContainer('Id')} />}
           </h1>
           <ProjectFolderContent project={project} />
           <ProjectActions className={cnProjectFolderPageContainer('Actions')} project={project} as='button' />

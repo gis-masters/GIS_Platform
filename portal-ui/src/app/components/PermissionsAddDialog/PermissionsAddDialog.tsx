@@ -40,6 +40,9 @@ import './Paper/PermissionsAddDialog-Paper.scss';
 
 const cnPermissionsAddDialog = cn('PermissionsAddDialog');
 
+type PermissionsAddSelectableItem = CrgProject | VectorTable | Dataset;
+type PermissionsAddSelectedItems = CrgProject[] | VectorTable[] | Dataset[];
+
 interface PermissionsAddDialogProps {
   usedProjects: CrgProject[];
   usedTables: VectorTable[];
@@ -54,7 +57,7 @@ interface PermissionsAddDialogProps {
 
 @observer
 export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
-  @observable selectedItems: CrgProject[] | VectorTable[] | Dataset[] = [];
+  @observable selectedItems: PermissionsAddSelectedItems = [];
   @observable role: Role = Role.VIEWER;
 
   constructor(props: PermissionsAddDialogProps) {
@@ -187,10 +190,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   private handleSelectAll() {
     this.selectedItems = this.allSelected
       ? []
-      : ([...this.availableItems].filter(item => !this.isAlreadyUsed(item)) as
-          | CrgProject[]
-          | VectorTable[]
-          | Dataset[]);
+      : ([...this.availableItems].filter(item => !this.isAlreadyUsed(item)) as PermissionsAddSelectedItems);
   }
 
   @action.bound
@@ -199,7 +199,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @boundMethod
-  private renderCheckbox({ rowData }: { rowData: CrgProject | VectorTable | Dataset }): ReactElement {
+  private renderCheckbox({ rowData }: { rowData: PermissionsAddSelectableItem }): ReactElement {
     const { type } = this.props;
     let selected: boolean = false;
     const alreadyUsed = this.isAlreadyUsed(rowData);
@@ -222,12 +222,13 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
         item={rowData}
         checked={selected}
         disabled={alreadyUsed}
-        onChange={this.handleCheck}
+        onSelectItem={this.handleSelectPermissionItem}
+        onDeselectItem={this.handleDeselectPermissionItem}
       />
     );
   }
 
-  private isAlreadyUsed(item: CrgProject | VectorTable | Dataset): boolean {
+  private isAlreadyUsed(item: PermissionsAddSelectableItem): boolean {
     const { type, usedProjects, usedTables, usedDatasets } = this.props;
     if (type === PermissionsListItemType.PROJECT) {
       const { id } = item as CrgProject;
@@ -247,11 +248,16 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @action.bound
-  private handleCheck(item: CrgProject | VectorTable | Dataset, checked: boolean) {
-    if (checked) {
-      (this.selectedItems as (typeof item)[]).push(item);
-    } else {
-      this.selectedItems.splice((this.selectedItems as (typeof item)[]).indexOf(item), 1);
+  private handleSelectPermissionItem(item: PermissionsAddSelectableItem) {
+    (this.selectedItems as PermissionsAddSelectableItem[]).push(item);
+  }
+
+  @action.bound
+  private handleDeselectPermissionItem(item: PermissionsAddSelectableItem) {
+    const list = this.selectedItems as PermissionsAddSelectableItem[];
+    const index = list.indexOf(item);
+    if (index !== -1) {
+      list.splice(index, 1);
     }
   }
 }

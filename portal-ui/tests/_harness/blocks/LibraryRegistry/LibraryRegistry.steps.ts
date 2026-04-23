@@ -29,8 +29,8 @@ When(
 
 Then(
   'в корзине удалённых документов находится документ с значением {string} в поле {string}',
-  async function (field: string, value: string) {
-    const document = await libraryRegistryBlock.isDocumentExist(field, value);
+  async function (value: string, field: string) {
+    const document = await libraryRegistryBlock.isDocumentExist(value, field);
 
     expect(document).toBeTruthy();
   }

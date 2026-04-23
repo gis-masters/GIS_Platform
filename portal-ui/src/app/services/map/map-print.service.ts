@@ -15,12 +15,8 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { type Orientation, pageFormats, printSettings, scales } from '../../stores/PrintSettings.store';
 import { getOlProjection, getProjectionByCode } from '../data/projections/projections.service';
-import { type StyleRuleExtended } from '../geoserver/styles/styles.models';
-import {
-  filterLegendForCurrentMapView,
-  getLayerStyleRules,
-  LEGEND_WMS_CONCURRENCY
-} from '../geoserver/styles/styles.service';
+import { LEGEND_WMS_CONCURRENCY, type StyleRuleExtended } from '../geoserver/styles/styles.models';
+import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
 import { GeometryType, type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent } from '../geoserver/wfs/wfs.util';
 import { CrgLayerType, type CrgVectorLayer } from '../gis/layers/layers.models';
@@ -31,6 +27,18 @@ import { saveAsBlob } from '../util/FileSaver';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { sleep } from '../util/sleep';
 import { mapService } from './map.service';
+
+function rejectWithErrorInstance(reject: (reason?: unknown) => void, caught: unknown): void {
+  if (caught instanceof Error) {
+    reject(caught);
+  } else {
+    reject(
+      new Error(typeof caught === 'string' ? caught : 'Неизвестная ошибка', {
+        cause: caught
+      })
+    );
+  }
+}
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -269,14 +277,14 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
           printSettings.setPrintingStatus(false);
           resolve(result);
         } catch (error) {
-          reject(error);
+          rejectWithErrorInstance(reject, error);
         }
       });
 
       //  Запуск перерисовки
       map.render();
     } catch (error) {
-      reject(error);
+      rejectWithErrorInstance(reject, error);
     }
   });
 }
@@ -288,9 +296,7 @@ async function drawDesignations(
   hideScaleDigits: boolean
 ): Promise<void> {
   const { windRose, width, height, date, legend, border } = printSettings;
-  const imagesPromises: Promise<void>[] = [];
-
-  imagesPromises.push(drawScaleLine(mapContext, designationsResize, hideScaleDigits));
+  const imagesPromises: Promise<void>[] = [drawScaleLine(mapContext, designationsResize, hideScaleDigits)];
 
   if (windRose) {
     imagesPromises.push(drawWindRose(mapContext, designationsResize));
@@ -340,7 +346,7 @@ async function drawScaleLine(
         );
         resolve();
       } catch (error) {
-        reject(error);
+        rejectWithErrorInstance(reject, error);
       }
     });
 
@@ -440,6 +446,7 @@ async function drawMeasurementsTooltips(mapContext: CanvasRenderingContext2D): P
     if (!container) {
       continue;
     }
+    // eslint-disable-next-line sonarjs/slow-regex -- короткая строка style.transform с DOM, не пользовательский ввод
     const translateFound = /(-?\d+(?:\.\d+)?)px, (-?\d+(?:\.\d+)?)px/.exec(container.style.transform);
 
     if (!translateFound) {
@@ -508,7 +515,7 @@ async function getLegendImageSrc(resolution?: number): Promise<string> {
     cleanDuplicates: true
   });
   root.render(reactElement);
-  //других способов дождаться кончания render не нашлось
+  //других способов дождаться окончания render не нашлось
   await sleep(200);
   const src = await domToImage.toPng(el.childNodes[0]);
   root.unmount();
@@ -632,7 +639,7 @@ function pickPrintScaleForBboxFit(fitExtent: Extent, center: Coordinate, project
   const tempView = new View({ projection });
   const rFit = tempView.getResolutionForExtent(fitExtent, [innerW, innerH]);
 
-  const sortedScales = [...scales].sort((a, b) => a - b);
+  const sortedScales = scales.toSorted((a, b) => a - b);
   let chosen: number = sortedScales.at(-1)!;
   for (const S of sortedScales) {
     if (resolutionForPrintScale(S, PREVIEW_DPI, center, projection) >= rFit) {

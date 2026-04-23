@@ -139,11 +139,10 @@ class EditFeatureHistoryStore {
       }
     });
 
-    // eslint-disable-next-line no-console
     services.logger.trace('═'.repeat(50));
-    // eslint-disable-next-line no-console
+
     services.logger.trace(`📊 Всего записей: ${this.history.length} | Текущая позиция: ${this.currentIndex}`);
-    // eslint-disable-next-line no-console
+
     services.logger.trace(
       `🔄 Можно отменить: ${this.canUndo ? '✅' : '❌'} | Можно повторить: ${this.canRedo ? '✅' : '❌'}`
     );

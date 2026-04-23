@@ -3,7 +3,7 @@ import type { Feature, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 
 import { type Projection } from '../../../data/projections/projections.models';
-import { GeometryType, type WfsFeature, type WfsGeometry } from '../../../geoserver/wfs/wfs.models'; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { GeometryType, type WfsFeature, type WfsGeometry } from '../../../geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../../../geoserver/wfs/wfs.util';
 import { type CrgVectorableLayer } from '../../../gis/layers/layers.models';
 import { services } from '../../../services';

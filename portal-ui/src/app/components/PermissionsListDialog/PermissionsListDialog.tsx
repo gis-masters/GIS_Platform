@@ -141,7 +141,6 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         cols: [
           ...baseXTablePropsSet[PermissionsListItemType.PROJECT].cols,
           {
-            // eslint-disable-next-line sonarjs/no-duplicate-string -- линтер тут не прав
             title: 'Разрешения',
             cellProps: { padding: 'checkbox' },
             align: 'right',

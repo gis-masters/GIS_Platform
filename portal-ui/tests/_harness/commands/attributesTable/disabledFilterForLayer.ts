@@ -10,7 +10,7 @@ declare const window: {
 
 export async function disabledFilterForLayer(layer: CrgVectorLayer): Promise<void> {
   await browser.executeAsync((layer: CrgVectorLayer, callback) => {
-    window.attributesTableStore.setFilterEnablednessForLayer(layer, false);
+    window.attributesTableStore.disableFilterForLayer(layer);
 
     callback();
   }, layer);

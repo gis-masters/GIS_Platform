@@ -21,7 +21,9 @@ export function generateObjectBySchema(schema: Schema, objectCount?: number): Re
           break;
         }
 
-        result[name] = faker.lorem.sentence(10).slice(0, property.maxLength);
+        const text = faker.lorem.sentence(10);
+        const { maxLength } = property;
+        result[name] = maxLength === undefined ? text : text.slice(0, maxLength);
 
         break;
       }

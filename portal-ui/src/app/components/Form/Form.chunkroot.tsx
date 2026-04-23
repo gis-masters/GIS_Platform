@@ -8,15 +8,18 @@ import { cloneDeep } from 'lodash';
 
 import { type Schema, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { services } from '../../services/services';
+import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
 import {
   calculateValues,
   cleanCalculatedValues,
   type FieldErrors,
+  isFieldErrors,
   normalizeServerErrors,
   validateFieldValue,
   validateFormValue
 } from '../../services/util/form/formValidation.utils';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
+import { isArrayOf } from '../../services/util/typeGuards/isArrayOf';
 import { FormActions } from './Actions/Form-Actions';
 import { FormContent } from './Content/Form-Content';
 import { FormErrors } from './Errors/Form-Errors';
@@ -259,10 +262,14 @@ export default class Form<T> extends Component<FormProps<T>> {
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ errors: Record<string, unknown>[]; message: string }>;
-      const formErrors: FieldErrors[] =
-        (Array.isArray(error)
-          ? (error as FieldErrors[])
-          : (error as AxiosError<{ errors?: FieldErrors[] }>)?.response?.data?.errors) || [];
+      let formErrors: FieldErrors[];
+      if (error instanceof FormFieldErrorsError) {
+        formErrors = error.fieldErrors;
+      } else if (isArrayOf(error, isFieldErrors)) {
+        formErrors = error;
+      } else {
+        formErrors = (error as AxiosError<{ errors?: FieldErrors[] }>)?.response?.data?.errors || [];
+      }
       const fieldsErrors: FieldErrors[] = [];
       const generalErrors: string[] = [];
 

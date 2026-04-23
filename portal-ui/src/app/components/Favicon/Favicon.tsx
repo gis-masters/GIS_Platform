@@ -1,6 +1,6 @@
 import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
-import { default as ReactFavicon } from 'react-favicon';
+import ReactFavicon from 'react-favicon';
 
 import { environment } from '../../services/environment';
 

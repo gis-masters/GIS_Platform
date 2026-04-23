@@ -61,7 +61,7 @@ export class LibraryViewSwitch extends Component<LibraryViewSwitchProps> {
     const { path, library } = this.props;
     const lastPathItem = path.at(-1);
     if (!lastPathItem) {
-      this.setCurrentFolderTitle(undefined);
+      this.setCurrentFolderTitle();
 
       return;
     }

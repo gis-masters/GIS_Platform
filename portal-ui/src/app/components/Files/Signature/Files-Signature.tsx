@@ -129,7 +129,7 @@ const FilesSignatureFC: FC<FilesSignatureProps> = observer(
             onClose={closeSignerInfo}
           >
             <Card sx={{ width: 300, minHeight: 80 }}>
-              {ecps.length &&
+              {!!ecps.length &&
                 ecps.map((ecp, i) => (
                   <CardHeader
                     key={i}

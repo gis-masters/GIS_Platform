@@ -61,7 +61,7 @@ export class SelectBboxControl extends Component<FormControlProps> {
 
   render() {
     const { fieldValue, errors, property } = this.props;
-    const bboxString = fieldValue ? String(fieldValue) : '';
+    const bboxString = typeof fieldValue === 'string' ? fieldValue : '';
 
     return (
       <div className={cnSelectBboxControl()}>
@@ -121,7 +121,7 @@ export class SelectBboxControl extends Component<FormControlProps> {
 
   private updateMapPositionFromProps() {
     const { fieldValue } = this.props;
-    const bboxString = fieldValue ? String(fieldValue) : '';
+    const bboxString = typeof fieldValue === 'string' ? fieldValue : '';
 
     if (!bboxString || !this.mapInstanceRef) {
       return;
@@ -181,7 +181,7 @@ export class SelectBboxControl extends Component<FormControlProps> {
 
   private getBbox(): Extent {
     const { fieldValue } = this.props;
-    const bboxString = fieldValue ? String(fieldValue) : '';
+    const bboxString = typeof fieldValue === 'string' ? fieldValue : '';
 
     let initialBbox: Extent | undefined;
 
@@ -337,7 +337,7 @@ export class SelectBboxControl extends Component<FormControlProps> {
         this.mapInstanceRef.un('moveend', this.moveEndHandlerRef);
         this.moveEndHandlerRef = null;
       }
-      this.mapInstanceRef.setTarget(undefined);
+      this.mapInstanceRef.setTarget();
       this.mapInstanceRef = null;
     }
 

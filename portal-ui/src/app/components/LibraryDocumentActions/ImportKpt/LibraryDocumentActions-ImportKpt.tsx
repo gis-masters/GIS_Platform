@@ -11,6 +11,7 @@ import { type PropertySchema, PropertyType } from '../../../services/data/schema
 import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
+import { isArray } from '../../../services/util/typeGuards/isArray';
 import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { type ExplorerItemData, ExplorerItemType, isExplorerItemData } from '../../Explorer/Explorer.models';
@@ -96,7 +97,7 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
       value &&
       typeof value === 'object' &&
       'path' in value &&
-      Array.isArray(value.path) &&
+      isArray(value.path) &&
       value.path.every(item => isExplorerItemData(item))
     ) {
       this.lastPath = value.path;

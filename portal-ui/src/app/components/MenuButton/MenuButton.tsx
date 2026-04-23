@@ -13,6 +13,7 @@ import { Menu } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { Button, type ButtonProps } from '../Button/Button';
 
 import './MenuButton.scss';
@@ -51,7 +52,7 @@ class MenuButtonComponent extends Component<MenuButtonProps> {
           <span className={cnMenuButton('Anchor')} ref={this.anchorRef} />
         </Button>
         <Menu open={this.menuOpen} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close}>
-          {Array.isArray(menu) ? menu : [menu]}
+          {isArray(menu) ? menu : [menu]}
         </Menu>
       </>
     );

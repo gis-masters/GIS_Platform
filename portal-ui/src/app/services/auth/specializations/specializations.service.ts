@@ -15,7 +15,7 @@ export async function getSpecializations(): Promise<SpecializationView[]> {
     return specializations;
   } catch (error) {
     if (isAxiosError(error)) {
-      throw new Error(error.message || message);
+      throw new Error(error.message || message, { cause: error });
     }
 
     throw error;

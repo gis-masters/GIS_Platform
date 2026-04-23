@@ -130,7 +130,10 @@ export const EditProjectionDialog: FC<EditProjectionDialogProps> = observer(({ o
           });
         } catch (error) {
           const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
-          throw new Error(err.response?.data.message);
+          const msg = err.response?.data?.message;
+          throw new Error(typeof msg === 'string' && msg.length > 0 ? msg : 'Не удалось добавить систему координат', {
+            cause: error
+          });
         } finally {
           setBusy(false);
         }

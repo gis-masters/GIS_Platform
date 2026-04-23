@@ -49,7 +49,6 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private logger: NGXLogger) {
     this.layers = currentProject.vectorLayers;
-    void this.updateBrieflyInfo(this.layers);
     this.layersWithErrors = this.layers.filter(layer => this.commonInfo.get(layer.resourceId)?.totalViolations);
 
     communicationService.validationInitiated.on((e: CustomEvent<boolean>) => {
@@ -58,6 +57,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
+    void this.updateBrieflyInfo(this.layers);
     communicationService.editBugObject.on((e: CustomEvent<ObjectDto[]>) => {
       this.isEditMode = true;
       this.objectsToEdit = e.detail;

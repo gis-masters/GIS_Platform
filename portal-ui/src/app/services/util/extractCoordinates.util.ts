@@ -1,6 +1,7 @@
 import { type Coordinate } from 'ol/coordinate';
 import { parse } from 'papaparse';
 
+import { isArray } from './typeGuards/isArray';
 import { isCoordinate } from './typeGuards/isCoordinate';
 
 export const systemFormat = 'YYYY-MM-DD';
@@ -14,7 +15,7 @@ export function extractCoordinates(csv: string): Coordinate[] {
 
   return result.data
     .map(point => {
-      if (!Array.isArray(point)) {
+      if (!isArray(point)) {
         throw new TypeError('Некорректная геометрия');
       }
 

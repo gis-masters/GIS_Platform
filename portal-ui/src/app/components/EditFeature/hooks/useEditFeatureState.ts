@@ -13,6 +13,8 @@ export interface ShouldRender {
   noLayerSchema: boolean;
 }
 
+export type EditFeatureLayer = CrgVectorableLayer | CrgVectorLayer | undefined;
+
 export interface EditFeatureFormControl {
   key: string;
   value: unknown;
@@ -25,75 +27,75 @@ export interface EditFeatureFormControl {
 
 export interface EditFeatureState {
   mode: EditFeatureMode;
-  setMode: (mode: EditFeatureMode) => void;
-  layer: CrgVectorableLayer | CrgVectorLayer | undefined;
-  setLayer: (layer: CrgVectorableLayer | CrgVectorLayer | undefined) => void;
+  setMode(mode: EditFeatureMode): void;
+  layer: EditFeatureLayer;
+  setLayer(layer: EditFeatureLayer): void;
   isNew: boolean;
-  setIsNew: (isNew: boolean) => void;
+  setIsNew(isNew: boolean): void;
   features: WfsFeature[];
-  setFeatures: (features: WfsFeature[]) => void;
+  setFeatures(features: WfsFeature[]): void;
   selectedTab: number;
-  setSelectedTab: (selectedTab: number) => void;
+  setSelectedTab(selectedTab: number): void;
   isGeometryChanged: boolean;
-  setIsGeometryChanged: (isGeometryChanged: boolean) => void;
+  setIsGeometryChanged(isGeometryChanged: boolean): void;
   updatingAllowed: boolean;
-  setUpdatingAllowed: (updatingAllowed: boolean) => void;
+  setUpdatingAllowed(updatingAllowed: boolean): void;
   isGeometryAutoFixed: boolean;
-  setIsGeometryAutoFixed: (isGeometryAutoFixed: boolean) => void;
+  setIsGeometryAutoFixed(isGeometryAutoFixed: boolean): void;
   isSaveInProgress: boolean;
-  setIsSaveInProgress: (isSaveInProgress: boolean) => void;
+  setIsSaveInProgress(isSaveInProgress: boolean): void;
   editFeatureData: EditedField[];
-  setEditFeatureData: (editFeatureData: EditedField[]) => void;
+  setEditFeatureData(editFeatureData: EditedField[]): void;
   shouldRender: ShouldRender;
-  setShouldRender: (shouldRender: ShouldRender) => void;
+  setShouldRender(shouldRender: ShouldRender): void;
   layerSchema: Schema | undefined;
-  setLayerSchema: (layerSchema: Schema | undefined) => void;
+  setLayerSchema(layerSchema: Schema | undefined): void;
   featureDescription: OldSchema | undefined;
-  setFeatureDescription: (featureDescription: OldSchema | undefined) => void;
+  setFeatureDescription(featureDescription: OldSchema | undefined): void;
   formControls: EditFeatureFormControl[];
-  setFormControls: (formControls: EditFeatureFormControl[]) => void;
+  setFormControls(formControls: EditFeatureFormControl[]): void;
 }
 
 export const useEditFeatureState = (): EditFeatureState => {
-  return useLocalObservable(() => ({
+  return useLocalObservable<EditFeatureState>(() => ({
     mode: EditFeatureMode.single,
-    setMode(this: EditFeatureState, mode: EditFeatureMode): void {
+    setMode(mode) {
       this.mode = mode;
     },
     layer: undefined,
-    setLayer(this: EditFeatureState, layer: CrgVectorableLayer | CrgVectorLayer | undefined): void {
+    setLayer(layer) {
       this.layer = layer;
     },
     isNew: false,
-    setIsNew(this: EditFeatureState, isNew: boolean): void {
+    setIsNew(isNew) {
       this.isNew = isNew;
     },
     features: [],
-    setFeatures(this: EditFeatureState, features: WfsFeature[]): void {
+    setFeatures(features) {
       this.features = features;
     },
     selectedTab: 0,
-    setSelectedTab(this: EditFeatureState, selectedTab: number): void {
+    setSelectedTab(selectedTab) {
       this.selectedTab = selectedTab;
     },
     isGeometryChanged: false,
-    setIsGeometryChanged(this: EditFeatureState, isGeometryChanged: boolean): void {
+    setIsGeometryChanged(isGeometryChanged) {
       this.isGeometryChanged = isGeometryChanged;
     },
     isGeometryAutoFixed: false,
-    setIsGeometryAutoFixed(this: EditFeatureState, isGeometryAutoFixed: boolean): void {
+    setIsGeometryAutoFixed(isGeometryAutoFixed) {
       this.isGeometryAutoFixed = isGeometryAutoFixed;
     },
     updatingAllowed: false,
-    setUpdatingAllowed(this: EditFeatureState, updatingAllowed: boolean): void {
+    setUpdatingAllowed(updatingAllowed) {
       this.updatingAllowed = updatingAllowed;
     },
     isSaveInProgress: false,
-    setIsSaveInProgress(this: EditFeatureState, isSaveInProgress: boolean): void {
+    setIsSaveInProgress(isSaveInProgress) {
       this.isSaveInProgress = isSaveInProgress;
     },
     editFeatureData: [],
-    setEditFeatureData(this: EditFeatureState, editFeatureData: EditedField[]): void {
+    setEditFeatureData(editFeatureData) {
       this.editFeatureData = editFeatureData;
     },
     shouldRender: {
@@ -101,19 +103,19 @@ export const useEditFeatureState = (): EditFeatureState => {
       noFeature: false,
       noLayerSchema: false
     },
-    setShouldRender(this: EditFeatureState, shouldRender: ShouldRender): void {
+    setShouldRender(shouldRender) {
       this.shouldRender = shouldRender;
     },
     layerSchema: undefined,
-    setLayerSchema(this: EditFeatureState, layerSchema: Schema | undefined): void {
+    setLayerSchema(layerSchema) {
       this.layerSchema = layerSchema;
     },
     featureDescription: undefined,
-    setFeatureDescription(this: EditFeatureState, featureDescription: OldSchema | undefined): void {
+    setFeatureDescription(featureDescription) {
       this.featureDescription = featureDescription;
     },
     formControls: [],
-    setFormControls(this: EditFeatureState, formControls: EditFeatureFormControl[]): void {
+    setFormControls(formControls) {
       this.formControls = formControls;
     }
   }));

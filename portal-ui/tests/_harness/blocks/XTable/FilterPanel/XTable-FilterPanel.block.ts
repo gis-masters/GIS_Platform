@@ -38,7 +38,7 @@ class XTableFilterPanelBlock extends Block {
     return await $clearAll.isExisting();
   }
 
-  async hasItem(title: string, value?: string): Promise<boolean> {
+  async hasItem(title: string, value?: string | null): Promise<boolean> {
     let $item: WebdriverIO.Element;
 
     try {
@@ -120,16 +120,11 @@ class XTableFilterPanelBlock extends Block {
     await browser.pause(400); // input focus animation
   }
 
-  async setBoolFieldValue(bool: boolean): Promise<void> {
-    if (bool) {
-      const $firstInput = await this.findBySelector('firstBoolBtn');
-      await $firstInput.click();
-      await browser.pause(400); // input focus animation
-    } else {
-      const $secondInput = await this.findBySelector('secondBoolBtn');
-      await $secondInput.click();
-      await browser.pause(400); // input focus animation
-    }
+  async setBoolFieldValue(value: boolean): Promise<void> {
+    const selectorKey = value ? 'firstBoolBtn' : 'secondBoolBtn';
+    const $input = await this.findBySelector(selectorKey);
+    await $input.click();
+    await browser.pause(400); // input focus animation
   }
 
   async toggleStrictness(): Promise<void> {

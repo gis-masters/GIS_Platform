@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-import * as path from 'node:path';
+import path from 'node:path';
 
 import { type EnvironmentData } from '../../../src/app/services/environment';
 
@@ -100,7 +100,6 @@ export const baseConfig: WebdriverIO.Config = {
         // eslint-disable-next-line no-console
         console.log(`\n📸 Скриншот ошибки сохранен: ${filepath}`);
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error(`\n❌ Не удалось сохранить скриншот: ${String(error)}`);
       }
     }

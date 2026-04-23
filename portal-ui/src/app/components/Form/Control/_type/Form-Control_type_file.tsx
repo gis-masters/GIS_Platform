@@ -104,13 +104,12 @@ class FormControlTypeFile extends Component<FormControlProps> {
     const { fieldValue } = this.props;
 
     let files: FileInfo[] = [];
-    let ecpFiles: FileInfo[] = [];
 
     if (isFileInfoArray(fieldValue)) {
       files = fieldValue;
     }
 
-    ecpFiles = newEcpFiles?.length ? newEcpFiles : files.filter(file => file.title.includes('.sig'));
+    const ecpFiles = newEcpFiles?.length ? newEcpFiles : files.filter(file => file.title.includes('.sig'));
 
     if (!ecpFiles.length) {
       return;

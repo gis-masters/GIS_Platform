@@ -42,6 +42,8 @@ export class DialogBlock extends Block {
       throw new Error(`Ожидалась одна primary кнопка, найдено: ${$$buttons.length}`);
     }
 
-    await $$buttons[0].click();
+    const $primary = $$buttons[0];
+    await $primary.waitForClickable();
+    await $primary.click();
   }
 }

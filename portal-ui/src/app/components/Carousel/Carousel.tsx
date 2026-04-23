@@ -28,7 +28,6 @@ interface CarouselProps {
   onClose(): void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 pdfjs.GlobalWorkerOptions.workerSrc = '../../../assets/pdf-worker/pdf.worker.min.js';
 
 const ratio = 5;

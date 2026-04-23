@@ -1,6 +1,7 @@
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
+import { isArray } from '../../util/typeGuards/isArray';
 import { type LibraryRecord } from '../library/library.models';
 import {
   allCompoundFilesTypes,
@@ -150,7 +151,7 @@ export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] 
 
       return value;
     })
-    .filter(value => Array.isArray(value) && value.every(isFileInfo))
+    .filter(value => isArray(value) && value.every(isFileInfo))
     .flat();
 }
 
@@ -187,7 +188,7 @@ export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
           } catch {
             // do nothing
           }
-        } else if (Array.isArray(property)) {
+        } else if (isArray(property)) {
           return property as FileInfo[];
         }
       })
@@ -202,7 +203,7 @@ export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
       } catch {
         // do nothing
       }
-    } else if (Array.isArray(property)) {
+    } else if (isArray(property)) {
       return property as FileInfo[];
     }
   }

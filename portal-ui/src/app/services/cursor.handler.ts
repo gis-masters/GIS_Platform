@@ -28,24 +28,20 @@ class CursorHandler {
   }
 
   private mapModeChanged(newMode: MapMode) {
-    if (newMode === MapMode.DRAW_FEATURE || newMode === MapMode.VERTICES_MODIFICATION) {
-      document.body.classList.add(crosshairCursor);
-    } else {
-      document.body.classList.remove(crosshairCursor);
-    }
+    document.body.classList.toggle(
+      crosshairCursor,
+      newMode === MapMode.DRAW_FEATURE || newMode === MapMode.VERTICES_MODIFICATION
+    );
   }
 
   private toolModeChanged(toolMode: ToolMode) {
-    if (
+    document.body.classList.toggle(
+      crosshairCursor,
       toolMode === ToolMode.SELECTION ||
-      toolMode === ToolMode.ADDING_LABEL ||
-      toolMode === ToolMode.MEASURE_LENGTH ||
-      toolMode === ToolMode.MEASURE_AREA
-    ) {
-      document.body.classList.add(crosshairCursor);
-    } else {
-      document.body.classList.remove(crosshairCursor);
-    }
+        toolMode === ToolMode.ADDING_LABEL ||
+        toolMode === ToolMode.MEASURE_LENGTH ||
+        toolMode === ToolMode.MEASURE_AREA
+    );
   }
 }
 

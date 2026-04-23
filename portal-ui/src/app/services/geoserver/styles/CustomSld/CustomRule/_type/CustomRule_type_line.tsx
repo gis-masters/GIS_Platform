@@ -3,7 +3,7 @@ import React, { type FC, Fragment } from 'react';
 import { LABEL_PROPERTY_DEFAULT } from '../../../styles.models';
 import { CustomLabel } from '../../CustomLabel/CustomLabel';
 import { Filter } from '../../Filter/Filter';
-import { Function } from '../../Function/Function';
+import { SldFunction } from '../../Function/Function';
 import { LineSymbolizer } from '../../LineSymbolizer/LineSymbolizer';
 import { Literal } from '../../Literal/Literal';
 import { PropertyIsEqualTo } from '../../PropertyIsEqualTo/PropertyIsEqualTo';
@@ -23,9 +23,9 @@ export const CustomRuleTypeLine: FC<CustomRuleProps> = ({ rule, type, bare }) =>
     <Wrapper>
       <Filter>
         <PropertyIsEqualTo>
-          <Function name='dimension'>
-            <Function name='geometry' />
-          </Function>
+          <SldFunction name='dimension'>
+            <SldFunction name='geometry' />
+          </SldFunction>
           <Literal>1</Literal>
         </PropertyIsEqualTo>
       </Filter>

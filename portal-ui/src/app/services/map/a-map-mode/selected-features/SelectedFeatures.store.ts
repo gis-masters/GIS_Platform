@@ -74,7 +74,7 @@ class SelectedFeaturesStore {
   get filtersByLayersFeatures(): WfsFeature[] {
     const filtersByLayers: {
       [resourceId: string]: {
-        tester?: (properties: WfsFeature['properties']) => boolean;
+        tester?(properties: WfsFeature['properties']): boolean;
         ids: string[];
         negativeIds: boolean;
       };

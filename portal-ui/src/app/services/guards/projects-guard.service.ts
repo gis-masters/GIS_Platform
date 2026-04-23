@@ -13,18 +13,11 @@ export class ProjectsGuardService {
       await projectsService.initAllProjectsStore();
 
       const defaultProject = allProjects.withoutFolders.find(project => project.default);
-      if (defaultProject) {
-        void services.router.navigateByUrl(`/projects/${defaultProject.id}/map`);
-
-        return false;
-      }
-      void services.router.navigateByUrl('/projects');
-
-      return false;
+      void services.router.navigateByUrl(defaultProject ? `/projects/${defaultProject.id}/map` : '/projects');
     } catch {
       void services.router.navigateByUrl('/projects');
-
-      return false;
     }
+
+    return false;
   }
 }

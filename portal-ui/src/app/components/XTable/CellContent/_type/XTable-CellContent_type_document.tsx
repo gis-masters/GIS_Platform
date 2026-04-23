@@ -39,7 +39,14 @@ class XTableCellContentTypeDocument extends Component<XTableCellContentProps<unk
 
     const documents = (
       <Documents
-        property={{ name: col.field, propertyType: PropertyType.DOCUMENT, title: String(col.title) }}
+        property={{
+          name: col.field,
+          propertyType: PropertyType.DOCUMENT,
+          title:
+            typeof col.title === 'string' || typeof col.title === 'number' || typeof col.title === 'boolean'
+              ? String(col.title)
+              : ''
+        }}
         value={value}
       />
     );

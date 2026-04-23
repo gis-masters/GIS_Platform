@@ -35,7 +35,12 @@ export class AttributesFiltersEnabler extends Component<AttributesFiltersEnabler
   }
 
   @boundMethod
-  private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
-    attributesTableStore.setFilterEnablednessForLayer(this.props.layer, checked);
+  private handleChange(_e: ChangeEvent<HTMLInputElement>, checked: boolean) {
+    // eslint-disable-next-line sonarjs/no-selector-parameter -- MUI Switch: один onChange(_, checked)
+    if (checked) {
+      attributesTableStore.enableFilterForLayer(this.props.layer);
+    } else {
+      attributesTableStore.disableFilterForLayer(this.props.layer);
+    }
   }
 }

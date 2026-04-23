@@ -1,10 +1,12 @@
+type PrintPageOrientation = 'p' | 'portrait' | 'l' | 'landscape';
+
 interface PrintTemplateOptions<T> {
   name: string;
   title: string;
   format?: string | number[]; // Формат бумаги (A4, A3 или [ширина, высота])
   margin?: [number, number, number, number]; // Отступы: [верх, право, низ, лево]
-  orientation?: 'p' | 'portrait' | 'l' | 'landscape'; // Ориентация страницы
-  render: (entity: T) => Promise<string | void>;
+  orientation?: PrintPageOrientation; // Ориентация страницы
+  render(entity: T): Promise<string | void>;
   getFileName(entity: T): string | Promise<string>;
 }
 
@@ -13,7 +15,7 @@ export class PrintTemplate<T> {
   title: string;
   private format?: string | number[];
   private margin?: [number, number, number, number];
-  private orientation?: 'p' | 'portrait' | 'l' | 'landscape';
+  private orientation?: PrintPageOrientation;
   private render: (entity: T) => Promise<string | void>;
   getFileName: (entity: T) => string | Promise<string>;
 
@@ -95,7 +97,7 @@ export class PrintTemplate<T> {
   private async printHtml(
     html: string,
     fileName: string,
-    orientation: 'p' | 'portrait' | 'l' | 'landscape',
+    orientation: PrintPageOrientation,
     format: string | number[],
     margin: number[] = [0, 0, 0, 0]
   ): Promise<void> {

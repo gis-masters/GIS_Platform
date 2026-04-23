@@ -1,5 +1,6 @@
+import { isArray } from './isArray';
 export function isNumberArray(values: unknown): values is number[] {
-  if (!Array.isArray(values)) {
+  if (!isArray(values)) {
     return false;
   }
 

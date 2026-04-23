@@ -19,7 +19,7 @@ interface EditFeatureGeometryValidationErrorProps {
 
 interface ValidationErrorButton {
   showButton: boolean;
-  setShowButton: (showButton: boolean) => void;
+  setShowButton(showButton: boolean): void;
 }
 
 export const EditFeatureGeometryValidationError: FC<EditFeatureGeometryValidationErrorProps> = observer(() => {

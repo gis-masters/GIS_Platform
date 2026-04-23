@@ -1,12 +1,13 @@
 import { type UrlInfo } from '../../../components/Form/Control/_type/Form-Control_type_url';
 import { type PropertySchema, type PropertySchemaUrl, PropertyType } from '../../data/schema/schema.models';
+import { isArray } from '../typeGuards/isArray';
 
 export function parseUrlValue(value: string, multiple?: boolean, editable?: boolean): UrlInfo[] {
   if (value) {
     try {
       const parsedValue = JSON.parse(value) as UrlInfo | UrlInfo[];
 
-      if (Array.isArray(parsedValue)) {
+      if (isArray(parsedValue)) {
         return parsedValue;
       }
 
@@ -14,7 +15,7 @@ export function parseUrlValue(value: string, multiple?: boolean, editable?: bool
         return multiple ? [] : [{ url: '', text: '' }];
       }
 
-      if (!Array.isArray(parsedValue)) {
+      if (!isArray(parsedValue)) {
         return [parsedValue];
       }
     } catch {

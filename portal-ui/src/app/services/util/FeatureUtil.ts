@@ -79,11 +79,11 @@ export class FeatureUtil {
     let result = {};
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      const cFunction = new Function('obj', calcFunction);
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval, sonarjs/code-eval -- формула из данных
+      const cFunction = new Function('obj', calcFunction) as (obj: unknown) => unknown;
       result = (cFunction(cloneDeep(featureObject)) || result) as Partial<T>;
     } catch (error) {
-      throw new Error(`Ошибка при попытке просчитать атрибуты: ${String(error)}`);
+      throw new Error(`Ошибка при попытке просчитать атрибуты: ${String(error)}`, { cause: error });
     }
 
     return result;

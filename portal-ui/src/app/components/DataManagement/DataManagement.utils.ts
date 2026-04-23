@@ -49,18 +49,16 @@ export function getIdsFromPath(path?: string): number[] {
 }
 
 export function getIdsFromFullPath(item: ExplorerItemData, path: ExplorerItemData[]): number[] {
-  let pathIds: number[] = [];
   if (item.type === ExplorerItemType.LIBRARY) {
-    pathIds = [];
-  } else if (item.type === ExplorerItemType.FOLDER) {
-    pathIds = path
+    return [];
+  }
+  if (item.type === ExplorerItemType.FOLDER) {
+    return path
       .filter(({ type }) => type === ExplorerItemType.FOLDER)
       .map(({ payload }) => (payload as LibraryRecord).id);
-  } else {
-    pathIds = [];
   }
 
-  return pathIds;
+  return [];
 }
 
 export function getPathFilter(pathIds: number[]): FilterQuery {

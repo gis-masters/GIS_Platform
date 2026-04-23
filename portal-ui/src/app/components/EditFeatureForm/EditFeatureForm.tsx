@@ -30,7 +30,7 @@ interface EditFeatureFormProps {
   updatingAllowed: boolean;
   layer?: CrgVectorLayer;
   mode?: 'single' | 'multipleEdit';
-  setFormControls: (formControl: EditFeatureFormControl[]) => void;
+  setFormControls(formControl: EditFeatureFormControl[]): void;
 }
 
 const checkType = (valueType: ValueType | undefined): boolean => {

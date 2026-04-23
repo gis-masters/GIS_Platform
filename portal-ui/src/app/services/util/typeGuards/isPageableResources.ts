@@ -1,12 +1,13 @@
 import { isObject } from 'lodash';
 
 import { type Page, type PageableResources } from '../../../../server-types/common-contracts';
+import { isArray } from './isArray';
 
 export function isPageableResources(obj: unknown): obj is PageableResources<unknown> {
   return (
     isObject(obj) &&
     'content' in obj &&
-    Array.isArray(obj.content) &&
+    isArray(obj.content) &&
     'page' in obj &&
     typeof obj.page === 'object' &&
     isPageableResourcesPage(obj.page)

@@ -34,7 +34,7 @@ export class ExplorerAdapterTypeFile {
     return item.payload.title;
   }
 
-  static getMeta = ExplorerAdapterTypeFile.getId;
+  static readonly getMeta = ExplorerAdapterTypeFile.getId;
 
   static getIcon(item: ExplorerItemData): ReactNode {
     assertExplorerItemDataTypeFile(item);

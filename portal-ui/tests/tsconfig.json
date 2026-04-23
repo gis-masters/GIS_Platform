@@ -5,11 +5,11 @@
     "types": ["node", "expect-webdriverio", "@wdio/globals/types", "@wdio/cucumber-framework", "@wdio/visual-service"],
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "target": "es2022",
+    "target": "es2023",
     "esModuleInterop": true,
     "module": "commonjs",
     "skipLibCheck": true,
-    "lib": ["es2022", "esnext.array", "dom", "dom.iterable", "ES2015.Iterable"],
+    "lib": ["es2023", "esnext.array", "dom", "dom.iterable", "ES2015.Iterable"],
     "jsx": "react"
   }
 }

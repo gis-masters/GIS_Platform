@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable sonarjs/no-duplicate-string */
-
 import { type Attribute } from '../../geoserver/featureType/featureType.model';
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { type PropertySchema, PropertyType, type Relation, type Schema } from './schema.models';

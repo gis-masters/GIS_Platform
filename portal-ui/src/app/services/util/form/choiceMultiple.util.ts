@@ -1,5 +1,6 @@
 import { isString } from 'lodash';
 
+import { isArray } from '../typeGuards/isArray';
 import { isStringArray } from '../typeGuards/isStringArray';
 
 export function getMultipleChoiceValue(value: unknown): string[] {
@@ -10,7 +11,7 @@ export function getMultipleChoiceValue(value: unknown): string[] {
     return value;
   }
 
-  if (Array.isArray(value)) {
+  if (isArray(value)) {
     return value.map(String);
   }
 
@@ -28,7 +29,7 @@ export function getMultipleChoiceValue(value: unknown): string[] {
       return values;
     }
 
-    if (Array.isArray(values)) {
+    if (isArray(values)) {
       return values.map(String);
     }
 

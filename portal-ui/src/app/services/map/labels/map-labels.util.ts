@@ -13,6 +13,7 @@ import { Circle, Fill, Stroke, Style, Text } from 'ol/style';
 import { getProjectionCode, getProjectionUnit } from '../../data/projections/projections.util';
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../../util/open-layers.util';
+import { isArray } from '../../util/typeGuards/isArray';
 import { isArrayOf } from '../../util/typeGuards/isArrayOf';
 import { isCircleProperties } from '../../util/typeGuards/isCircleProperties';
 import { isCoordinateArray, isCoordinateArrayArray } from '../../util/typeGuards/isCoordinate';
@@ -453,7 +454,7 @@ export function getFeatureFontString(feature: Feature): FeatureFontStringData {
     }
   }
 
-  if (Array.isArray(style) && style[0] instanceof Style) {
+  if (isArray(style) && style[0] instanceof Style) {
     const color = style[0].getText()?.getFill()?.getColor();
     const align = style[0].getText()?.getTextAlign();
     const justify = style[0].getText()?.getJustify();

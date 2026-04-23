@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { Badge, Tab, Tabs, Tooltip } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import _, { isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 
 import { doConfirm } from '../../services/answer-modals.service';
 import { communicationService, type DataChangeEventDetail } from '../../services/communication.service';
@@ -16,7 +16,7 @@ import {
 } from '../../services/data/schema/schema.utils';
 import { deleteFeaturesAndEmitEvent } from '../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
+import { GEOMETRY_COORDINATES_FLAT_DEPTH, getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
 import { type CrgLayer, type CrgVectorLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
@@ -54,7 +54,7 @@ const featureHasNotEmptyGeometry = (feature: WfsFeature): boolean => {
     return false;
   }
 
-  const coordinates = feature.geometry.coordinates.flat(5);
+  const coordinates = feature.geometry.coordinates.flat(GEOMETRY_COORDINATES_FLAT_DEPTH);
 
   return coordinates.some(coord => coord !== 0);
 };
@@ -64,10 +64,23 @@ const featureHasEmptyGeometry = (feature: WfsFeature): boolean => {
     return false;
   }
 
-  const coordinates = feature.geometry.coordinates.flat(5);
+  const coordinates = feature.geometry.coordinates.flat(GEOMETRY_COORDINATES_FLAT_DEPTH);
 
   return coordinates.every(coord => coord === 0);
 };
+
+function mergeFeaturePropertiesCaseInsensitive(
+  originalProperties: Record<string, unknown>,
+  updatedProperties: Record<string, unknown>
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(originalProperties).map(([key, value]) => {
+      const matchedKey = Object.keys(updatedProperties).find(k => k.toLowerCase() === key.toLowerCase());
+
+      return [key, matchedKey ? updatedProperties[matchedKey] : value];
+    })
+  );
+}
 
 const cantBeSaved = (): boolean => {
   return mapStore.mode === MapMode.EDIT_FEATURE ? editFeatureStore.pristine : false;
@@ -226,15 +239,7 @@ export const EditFeature: FC = observer(() => {
       }
 
       const updatedProperties = calculateValues(feature.properties, propertiesWithAppliedView);
-      const originalProperties = feature.properties;
-
-      const mergedProperties = Object.fromEntries(
-        Object.entries(originalProperties).map(([key, value]) => {
-          const matchedKey = Object.keys(updatedProperties).find(k => k.toLowerCase() === key.toLowerCase());
-
-          return [key, matchedKey ? updatedProperties[matchedKey] : value];
-        })
-      );
+      const mergedProperties = mergeFeaturePropertiesCaseInsensitive(feature.properties, updatedProperties);
 
       return {
         ...feature,
@@ -312,9 +317,9 @@ export const EditFeature: FC = observer(() => {
   useEffect(() => {
     const disposers: IReactionDisposer[] = [];
 
-    // Реакция на изменение координат (flat(5) аналогично можно отслеживать просто изменение структуры)
+    // Реакция на изменение координат (flat(...) аналогично можно отслеживать просто изменение структуры)
     const coordinatesDisposer = reaction(
-      () => editFeatureStore.geometry?.coordinates?.flat(5),
+      () => editFeatureStore.geometry?.coordinates?.flat(GEOMETRY_COORDINATES_FLAT_DEPTH),
       () => {
         editFeatureStore.setPristine(false);
 

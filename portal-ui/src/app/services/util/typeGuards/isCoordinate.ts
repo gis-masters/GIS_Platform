@@ -1,5 +1,6 @@
 import { type Coordinate } from 'ol/coordinate';
 
+import { isArray } from './isArray';
 import { isNumberArray } from './isNumberArray';
 
 export function isCoordinate(value: unknown): value is Coordinate {
@@ -7,13 +8,13 @@ export function isCoordinate(value: unknown): value is Coordinate {
 }
 
 export function isCoordinateArray(value: unknown): value is Coordinate[] {
-  return Array.isArray(value) && value.every(item => isNumberArray(item));
+  return isArray(value) && value.every(item => isNumberArray(item));
 }
 
 export function isCoordinateArrayArray(value: unknown): value is Coordinate[][] {
-  return Array.isArray(value) && value.every(part => isCoordinateArray(part));
+  return isArray(value) && value.every(part => isCoordinateArray(part));
 }
 
 export function isMultiPolygonCoordinate(value: unknown): value is Coordinate[][][] {
-  return Array.isArray(value) && value.every(part => isCoordinateArrayArray(part));
+  return isArray(value) && value.every(part => isCoordinateArrayArray(part));
 }

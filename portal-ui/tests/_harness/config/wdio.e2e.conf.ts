@@ -6,7 +6,6 @@ import { addScenarioNameToJunit, junitReporterConfig, mergeJunitReports, prepare
 import { baseConfig } from './wdio.base.conf';
 
 declare global {
-  // eslint-disable-next-line no-var
   var testOrganizationIndex: number | undefined;
 }
 

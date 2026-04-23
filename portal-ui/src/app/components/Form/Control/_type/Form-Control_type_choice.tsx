@@ -22,6 +22,7 @@ import {
   PropertyType
 } from '../../../../services/data/schema/schema.models';
 import { getMultipleChoiceValue } from '../../../../services/util/form/choiceMultiple.util';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { isStringArray } from '../../../../services/util/typeGuards/isStringArray';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
@@ -115,7 +116,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               {/* Все опции */}
               {options.map((item, i) => (
                 <MenuItem className={cnFormChoiceMenuItem()} key={i} value={item.value}>
-                  {multiple && <Checkbox checked={Array.isArray(value) && value.includes(item.value as string)} />}
+                  {multiple && <Checkbox checked={isArray(value) && value.includes(item.value as string)} />}
                   {item.startIcon}
                   <ListItemText>{item.title}</ListItemText>
                   {item.endIcon}
@@ -134,7 +135,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
 
               {/* Добавляем некорректные значения для multiple режима */}
               {multiple &&
-                Array.isArray(value) &&
+                isArray(value) &&
                 value
                   .filter(val => !options.some(opt => String(opt.value) === String(val)))
                   .map(invalidVal => (
@@ -187,7 +188,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
 
     let values: (string | number)[] | undefined = undefined;
 
-    if (Array.isArray(jsonValues)) {
+    if (isArray(jsonValues)) {
       values = jsonValues;
     } else if (typeof jsonValues === 'string') {
       try {
@@ -197,7 +198,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
       }
     }
 
-    if (!values || !Array.isArray(values)) {
+    if (!values || !isArray(values)) {
       return null;
     }
 
@@ -233,14 +234,10 @@ class FormControlTypeChoice extends Component<FormControlProps> {
 
     if (!multiple) {
       finalValue = nextValue === EMPTY ? null : String(nextValue);
-    } else if (multiple && isStringArray(nextValue)) {
-      if (nextValue.length === 0) {
-        finalValue = null;
-      } else {
-        // Сохраняем тип исходного значения: если был массив — возвращаем массив, иначе строку
-        const wasArray = Array.isArray(fieldValue);
-        finalValue = wasArray ? nextValue : JSON.stringify(nextValue);
-      }
+    } else if (multiple && isStringArray(nextValue) && nextValue.length > 0) {
+      // Сохраняем тип исходного значения: если был массив — возвращаем массив, иначе строку
+      const wasArray = isArray(fieldValue);
+      finalValue = wasArray ? nextValue : JSON.stringify(nextValue);
     }
 
     // Нормализуем текущее значение
@@ -264,7 +261,10 @@ class FormControlTypeChoice extends Component<FormControlProps> {
     const finalValue = !multiple && value === EMPTY ? null : value;
 
     // Нормализуем текущее значение
-    const normalizedCurrentValue = fieldValue == null || fieldValue === EMPTY ? null : String(fieldValue);
+    let normalizedCurrentValue: string | null = null;
+    if (fieldValue != null && fieldValue !== EMPTY) {
+      normalizedCurrentValue = typeof fieldValue === 'string' ? fieldValue : JSON.stringify(fieldValue);
+    }
 
     // 🔁 Не вызываем, если не изменилось
     if (normalizedCurrentValue === finalValue) {

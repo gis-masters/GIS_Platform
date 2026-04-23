@@ -96,7 +96,7 @@ export const TaskDialog = observer(({ task: initialTask, open, onClose }: TaskDi
           <InsertDriveFileOutlined color='primary' />
         </div>
         Просмотр задачи
-        {currentTask.id && <TextBadge id={currentTask.id} />}
+        {!!currentTask.id && <TextBadge id={currentTask.id} />}
       </DialogTitle>
 
       <DialogContent className='scroll'>

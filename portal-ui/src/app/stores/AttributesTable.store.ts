@@ -76,12 +76,13 @@ class AttributesTableStore {
   }
 
   @action
-  setFilterEnablednessForLayer(layer: CrgVectorLayer, enabled: boolean) {
-    if (enabled) {
-      delete this.filterDisabled[layer.resourceId];
-    } else {
-      this.filterDisabled[layer.resourceId] = true;
-    }
+  enableFilterForLayer(layer: CrgVectorLayer) {
+    delete this.filterDisabled[layer.resourceId];
+  }
+
+  @action
+  disableFilterForLayer(layer: CrgVectorLayer) {
+    this.filterDisabled[layer.resourceId] = true;
   }
 
   @action

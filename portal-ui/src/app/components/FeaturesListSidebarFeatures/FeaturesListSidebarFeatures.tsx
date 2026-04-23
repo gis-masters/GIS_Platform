@@ -108,8 +108,9 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
   private async close() {
     let success: boolean;
     if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
-      success = await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 1');
-      success = await mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 1.2');
+      success =
+        (await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 1')) &&
+        (await mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 1.2'));
     } else if (mapStore.mode === MapMode.SELECTED_FEATURES) {
       success = await mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 2');
     } else {

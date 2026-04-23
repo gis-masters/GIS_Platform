@@ -62,7 +62,7 @@ export default class Users extends Component<UsersProps> {
     const { onChange, value } = this.props;
 
     if (onChange) {
-      onChange(value.filter(({ id }) => !(id === deletingItem.id)));
+      onChange(value.filter(({ id }) => id !== deletingItem.id));
     } else {
       Toast.error('Ошибка удаления пользователя');
     }

@@ -80,7 +80,7 @@ export class FeatureConnections extends Component<FeatureConnectionsProps> {
         >
           <DialogTitle>Переход к объекту в проекте:</DialogTitle>
           <DialogContent className='scroll'>
-            {this.connections?.length && <FeatureInProjects featureId={featureId} connections={this.connections} />}
+            {!!this.connections.length && <FeatureInProjects featureId={featureId} connections={this.connections} />}
           </DialogContent>
           <DialogActions>
             <Button onClick={this.closeDialog}>Закрыть</Button>

@@ -8,7 +8,7 @@ When('я нажимаю кнопку удалить в панели свойст
 });
 
 Then('в панели свойств набора данных есть кнопка удаления, но она неактивна', async () => {
-  void expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBeFalsy();
+  expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBeFalsy();
 });
 
 Then('в панели свойств набора данных есть кнопка удаления, и она активна', async () => {

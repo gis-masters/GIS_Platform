@@ -1,12 +1,13 @@
 import { cloneDeep } from 'lodash';
 import moment from 'moment';
 
-import { type FileInfo } from '../../data/files/files.models';
+import { type FileInfo, isFileInfo } from '../../data/files/files.models';
 import { type PropertySchema, PropertyType, type ValueFormula } from '../../data/schema/schema.models';
 import { validationWellKnownFormulas } from '../../data/schema/validationWellKnownFormulas';
 import { valueWellKnownFormulas } from '../../data/schema/valueWellKnownFormulas';
 import { knownRegex } from '../../regexp.service';
 import { notFalsyFilter } from '../NotFalsyFilter';
+import { isArray } from '../typeGuards/isArray';
 import { isRecordStringUnknown } from '../typeGuards/isRecordStringUnknown';
 import { getMultipleChoiceValue } from './choiceMultiple.util';
 import { getUrlSubFormSchema, parseUrlValue } from './fieldUrl';
@@ -24,6 +25,14 @@ export interface FieldErrors {
   title?: string;
   messages?: string[];
   message?: string;
+}
+
+export function isFieldErrors(value: unknown): value is FieldErrors {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  return typeof Reflect.get(value, 'field') === 'string';
 }
 
 export interface ServerFieldError {
@@ -105,7 +114,7 @@ function jsonArrayRequired(value: unknown, { required }: PropertySchema): string
 
     try {
       const parsed = JSON.parse(value) as unknown[];
-      if (!Array.isArray(parsed) || !parsed.length) {
+      if (!isArray(parsed) || !parsed.length) {
         return [messages.required];
       }
     } catch {
@@ -154,7 +163,8 @@ function choiceValueInOptions(value: unknown, property: PropertySchema): string[
 
   const { options, multiple } = property;
 
-  if (!multiple && !options.some(option => String(option.value) === String(value))) {
+  const valueKey = typeof value === 'string' || typeof value === 'number' ? String(value) : null;
+  if (!multiple && (valueKey === null || !options.some(option => String(option.value) === valueKey))) {
     return [messages.notInOptions];
   }
 
@@ -165,7 +175,7 @@ function choiceValueInOptions(value: unknown, property: PropertySchema): string[
     if (value === '[]') {
       return;
     }
-    if (Array.isArray(value) && !value.length) {
+    if (isArray(value) && !value.length) {
       return;
     }
     const multipleValues = getMultipleChoiceValue(value);
@@ -269,10 +279,14 @@ function stringPassword(value: unknown, property: PropertySchema): string[] {
 
   const { display, regex, wellKnownRegex } = property;
 
-  if (display === 'password' && !(regex || wellKnownRegex) && !new RegExp(knownRegex.password).test(String(value))) {
-    return [
-      'Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита и содержать не менее 8 символов'
-    ];
+  if (display === 'password' && !(regex || wellKnownRegex)) {
+    const passwordStr = typeof value === 'string' ? String(value) : '';
+    if (passwordStr && !new RegExp(knownRegex.password).test(passwordStr)) {
+      return [
+        'Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита ' +
+          'и содержать не менее 8 символов'
+      ];
+    }
   }
 
   return [];
@@ -406,7 +420,7 @@ function filesRequired(value: unknown, { required }: PropertySchema): string[] |
     value = [];
   }
 
-  if (required && (!Array.isArray(value) || !value.length)) {
+  if (required && (!isArray(value) || !value.length)) {
     return [messages.required];
   }
 }
@@ -420,7 +434,7 @@ function filesLoaded(value: unknown): string[] | undefined {
     value = [];
   }
 
-  if ((Array.isArray(value) ? value : [])?.some(({ notLoaded }) => notLoaded)) {
+  if ((isArray(value) ? value : []).some(item => isFileInfo(item) && item.notLoaded)) {
     return ['Загрузка файлов ещё не завершена'];
   }
 }
@@ -475,13 +489,13 @@ export function getCalculatedValue<T>(obj: T | Partial<T>, property: PropertySch
     try {
       const formula =
         typeof property.calculatedValueFormula === 'string'
-          ? // eslint-disable-next-line @typescript-eslint/no-implied-eval
+          ? // eslint-disable-next-line @typescript-eslint/no-implied-eval, sonarjs/code-eval
             (new Function('obj', 'property', property.calculatedValueFormula) as ValueFormula)
           : property.calculatedValueFormula;
 
       return formula(obj, property) as T[keyof T];
     } catch (error) {
-      throw new Error(`Ошибка при попытке вычислить значение: ${String(error)}`);
+      throw new Error(`Ошибка при попытке вычислить значение: ${String(error)}`, { cause: error });
     }
   }
 
@@ -494,7 +508,8 @@ export function getCalculatedValue<T>(obj: T | Partial<T>, property: PropertySch
       throw new Error(
         `Ошибка при попытке вычислить значение по-умолчанию [${property.defaultValueWellKnownFormula}]: ${String(
           error
-        )}`
+        )}`,
+        { cause: error }
       );
     }
   }

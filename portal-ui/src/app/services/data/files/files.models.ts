@@ -1,6 +1,7 @@
 import { type FileResponse } from '../../../../server-types/common-contracts';
 import { type CrgLayer } from '../../gis/layers/layers.models';
 import { type CrgProject } from '../../gis/projects/projects.models';
+import { isArray } from '../../util/typeGuards/isArray';
 import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
 
 type RequiredFileInfoFields = 'id' | 'title' | 'size';
@@ -142,7 +143,7 @@ export function isFileInfo(obj: unknown): obj is FileInfo {
 }
 
 export function isFileInfoArray(values: unknown): values is FileInfo[] {
-  if (!Array.isArray(values)) {
+  if (!isArray(values)) {
     return false;
   }
 

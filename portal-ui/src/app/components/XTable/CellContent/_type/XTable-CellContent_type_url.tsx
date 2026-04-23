@@ -6,6 +6,7 @@ import { withBemMod } from '@bem-react/core';
 import { pluralize } from 'numeralize-ru';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { type UrlInfo } from '../../../Form/Control/_type/Form-Control_type_url';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { UrlsList } from '../../../UrlsList/UrlsList';
@@ -27,7 +28,7 @@ class XTableCellContentTypeUrl extends Component<XTableCellContentProps<unknown>
     try {
       if (typeof cellData === 'string') {
         const parsed = JSON.parse(String(cellData)) as UrlInfo | UrlInfo[];
-        value = Array.isArray(parsed) ? parsed : [parsed];
+        value = isArray(parsed) ? parsed : [parsed];
       }
     } catch {
       // do nothing
@@ -44,11 +45,11 @@ class XTableCellContentTypeUrl extends Component<XTableCellContentProps<unknown>
         property={{
           name: col.field,
           propertyType: PropertyType.URL,
-          title: String(col.title),
+          title: typeof col.title === 'string' ? col.title : '',
           multiple: true,
           openIn: col.settings?.openIn
         }}
-        value={String(cellData)}
+        value={typeof cellData === 'string' ? cellData : ''}
       />
     );
 

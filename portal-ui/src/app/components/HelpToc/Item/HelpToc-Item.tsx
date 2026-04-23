@@ -9,6 +9,8 @@ import { type TocItem } from '../../../stores/Help.store';
 
 const cnHelpTocItem = cn('HelpToc', 'Item');
 
+import { isArray } from '../../../services/util/typeGuards/isArray';
+
 import './HelpToc-Item.scss';
 
 interface HelpTocProps extends IClassNameProps {
@@ -34,7 +36,7 @@ export class HelpTocItem extends Component<HelpTocProps> {
         label={item.title}
         onClick={this.handleClick}
       >
-        {Array.isArray(item.children)
+        {isArray(item.children)
           ? item.children.map((node, index) => <HelpTocItem key={index} item={node} onSelect={onSelect} />)
           : null}
       </TreeItem>

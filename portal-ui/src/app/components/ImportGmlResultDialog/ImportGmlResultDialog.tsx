@@ -44,8 +44,8 @@ export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps>
       <Dialog open={open} onClose={onClose} slotProps={{ paper: { className: cnImportGmlResultDialog() } }}>
         <DialogTitle>Импорт завершён</DialogTitle>
         <DialogContent>
-          <DialogContentText>Данные загружены в {projectIsNew && 'новый'} проект:</DialogContentText>
-          {projectId && (
+          <DialogContentText>{`Данные загружены в ${projectIsNew ? 'новый ' : ''}проект:`}</DialogContentText>
+          {!!projectId && (
             <DialogContentText>
               <Link href={`/projects/${projectId}/map`}>{projectName}</Link>
             </DialogContentText>

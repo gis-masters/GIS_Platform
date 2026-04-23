@@ -313,8 +313,7 @@ class MapSelectionService {
         selectedFeaturesStore.limit -
           (selectionType === MapSelectionTypes.ADD ? selectedFeaturesStore.features.length : 0),
         0
-      ),
-      features.length
+      )
     ).length;
 
     if (features.length || limitOverflow) {

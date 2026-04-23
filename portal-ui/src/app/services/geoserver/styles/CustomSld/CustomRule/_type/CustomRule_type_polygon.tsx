@@ -4,7 +4,7 @@ import { LABEL_PROPERTY_DEFAULT } from '../../../styles.models';
 import { CustomLabel } from '../../CustomLabel/CustomLabel';
 import { Fill } from '../../Fill/Fill';
 import { Filter } from '../../Filter/Filter';
-import { Function } from '../../Function/Function';
+import { SldFunction } from '../../Function/Function';
 import { Graphic } from '../../Graphic/Graphic';
 import { GraphicFill } from '../../GraphicFill/GraphicFill';
 import { Literal } from '../../Literal/Literal';
@@ -30,9 +30,9 @@ export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare })
       <Wrapper>
         <Filter>
           <PropertyIsEqualTo>
-            <Function name='dimension'>
-              <Function name='geometry' />
-            </Function>
+            <SldFunction name='dimension'>
+              <SldFunction name='geometry' />
+            </SldFunction>
             <Literal>2</Literal>
           </PropertyIsEqualTo>
         </Filter>
@@ -47,9 +47,9 @@ export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare })
                     <WellKnownName>{`shape://${rule.fillGraphic.type}`}</WellKnownName>
                     <Stroke>
                       {rule.fillColor && <SvgParameter name='stroke'>{rule.fillColor}</SvgParameter>}
-                      {rule.fillGraphic.strokeWidth && (
+                      {Number.isFinite(rule.fillGraphic.strokeWidth) ? (
                         <SvgParameter name='stroke-width'>{rule.fillGraphic.strokeWidth}</SvgParameter>
-                      )}
+                      ) : null}
                     </Stroke>
                   </Mark>
                   <Size>{rule.fillGraphic.size}</Size>
@@ -59,7 +59,9 @@ export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare })
           </Fill>
           <Stroke>
             {rule.strokeColor && <SvgParameter name='stroke'>{rule.strokeColor}</SvgParameter>}
-            {rule.strokeWidth && <SvgParameter name='stroke-width'>{rule.strokeWidth}</SvgParameter>}
+            {Number.isFinite(rule.strokeWidth) ? (
+              <SvgParameter name='stroke-width'>{rule.strokeWidth}</SvgParameter>
+            ) : null}
             {rule.strokeDashArray && (
               <SvgParameter name='stroke-dasharray'>{rule.strokeDashArray.join(' ')}</SvgParameter>
             )}

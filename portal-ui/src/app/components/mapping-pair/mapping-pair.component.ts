@@ -1,3 +1,4 @@
+// eslint-disable-next-line import-x/named -- lifecycle-хуки из @angular/core; import-x не резолвит пакет
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, type UntypedFormGroup } from '@angular/forms';
 

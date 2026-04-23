@@ -25,7 +25,6 @@ const PickupDatasetsWithRegistry = withRegistry(registry)(PickupDatasets);
   standalone: false
 })
 export class PickupDatasetsComponent implements OnInit, OnChanges, OnDestroy {
-  // eslint-disable-next-line unicorn/prefer-event-target
   @Output() datasetSelect = new EventEmitter<Dataset>();
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
   private root?: Root;

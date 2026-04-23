@@ -47,7 +47,7 @@ export async function recalculateBboxAndGetCoverage(layer: CrgLayer): Promise<Ge
 
     return rasterCoverage.coverage;
   } catch (error) {
-    throw new Error(`Не удалось пересчитать bbox для слоя "${layer.title}": ${String(error)}`);
+    throw new Error(`Не удалось пересчитать bbox для слоя "${layer.title}": ${String(error)}`, { cause: error });
   }
 }
 

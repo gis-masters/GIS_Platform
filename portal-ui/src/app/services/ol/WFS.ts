@@ -13,7 +13,7 @@ export class WFS extends OL_WFS {
   writeGetFeature(extendedOptions: WriteGetFeatureOptionsExtended): Node {
     const { sort, featureIds, featureIdsNegative, ...options } = extendedOptions;
     const dom = super.writeGetFeature(options) as Element;
-    const ogcNsUri = 'http://www.opengis.net/ogc';
+    const ogcNsUri = 'https://www.opengis.net/ogc';
 
     const xmlDoc = new DOMParser().parseFromString('<root></root>', 'text/xml');
 

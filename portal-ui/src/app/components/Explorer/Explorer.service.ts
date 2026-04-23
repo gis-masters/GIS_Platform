@@ -122,9 +122,10 @@ export class ExplorerService {
   mergeCustomFilter(filter: FilterQuery | undefined, item: ExplorerItemData, store: ExplorerStore): FilterQuery {
     let filterCopy: FilterQuery = cloneDeep(filter || {});
 
-    if (filterCopy?.title) {
-      filterCopy.title = { $ilike: `%${String(filterCopy.title)}%` };
-    } else if (!filterCopy?.title) {
+    const titleFilter = filterCopy?.title;
+    if (typeof titleFilter === 'string' && titleFilter.length > 0) {
+      filterCopy.title = { $ilike: `%${titleFilter}%` };
+    } else {
       delete filterCopy.title;
     }
 

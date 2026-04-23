@@ -16,8 +16,10 @@ export function getFeaturesListItemTitle(feature: WfsFeature, schema: Schema | u
     title = value || 'не заполнено';
     isEmpty = !value;
   } else {
-    const featureTitle = feature.properties.name || feature.properties.title || '';
-    title = featureTitle ? String(featureTitle) : 'объект';
+    const nameStr = typeof feature.properties.name === 'string' ? feature.properties.name : '';
+    const titleStr = typeof feature.properties.title === 'string' ? feature.properties.title : '';
+    const featureTitle = nameStr === '' ? titleStr : nameStr;
+    title = featureTitle || 'объект';
     isEmpty = !featureTitle;
   }
 

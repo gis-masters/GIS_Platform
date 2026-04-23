@@ -21,7 +21,7 @@ const cnBboxPreview = cn('BboxPreview');
 export default class BboxPreview extends Component<FormControlProps> {
   render() {
     const { fieldValue } = this.props;
-    const bboxString = fieldValue ? String(fieldValue) : '';
+    const bboxString = typeof fieldValue === 'string' ? fieldValue : '';
 
     return (
       <div className={cnBboxPreview()}>
@@ -44,7 +44,7 @@ export default class BboxPreview extends Component<FormControlProps> {
   @boundMethod
   private handleCopy() {
     const { fieldValue } = this.props;
-    const bboxString = fieldValue ? String(fieldValue) : '';
+    const bboxString = typeof fieldValue === 'string' ? fieldValue : '';
 
     if (!bboxString) {
       return;

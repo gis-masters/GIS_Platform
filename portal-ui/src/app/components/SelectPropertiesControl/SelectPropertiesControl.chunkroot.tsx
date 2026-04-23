@@ -11,6 +11,7 @@ import {
   type PropertySchema,
   PropertyType
 } from '../../services/data/schema/schema.models';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { type FormControlProps } from '../Form/Control/Form-Control';
@@ -44,7 +45,7 @@ export default class SelectPropertiesControl extends Component<FormControlProps>
       console.warn(`Свойство c идентификатором ${propertyTitle} невалидно и не может быть напечатано`);
     });
 
-    const selectedItems = Array.isArray(fieldValue) ? fieldValue : validProperties;
+    const selectedItems = isPropertySchemaArray(fieldValue) ? fieldValue : validProperties;
 
     return (
       <>
@@ -80,7 +81,7 @@ export default class SelectPropertiesControl extends Component<FormControlProps>
 
     const { properties } = property;
 
-    if (!Array.isArray(properties)) {
+    if (!isArray(properties)) {
       throw new TypeError('Ошибка: отсутствует обязательный параметр properties');
     }
 

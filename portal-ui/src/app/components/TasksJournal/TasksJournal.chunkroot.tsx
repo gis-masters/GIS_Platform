@@ -17,6 +17,7 @@ import { getFieldFilterValue, modifyFieldFilterValue } from '../../services/util
 import { type FilterQuery } from '../../services/util/filters/filters.models';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { type SortParams } from '../../services/util/sortObjects';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
@@ -281,8 +282,11 @@ export default class TasksJournal extends Component {
       return;
     }
 
-    if (Array.isArray(contentTypeId.$in) && contentTypeId.$in.length === 1) {
-      this.setSchema(applyContentType(this.primalSchema, String(contentTypeId.$in[0])));
+    if (isArray(contentTypeId.$in) && contentTypeId.$in.length === 1) {
+      const onlyId = contentTypeId.$in[0];
+      if (typeof onlyId === 'string' || typeof onlyId === 'number') {
+        this.setSchema(applyContentType(this.primalSchema, String(onlyId)));
+      }
     } else {
       const newContentType = mergeContentTypes(this.primalSchema, contentTypeId.$in as string[]);
       const newSchema = cloneDeep(this.primalSchema);

@@ -67,7 +67,7 @@ class MapVerticesModificationService {
   }
 
   verticesModificationOff() {
-    void mapVerticesModificationStore.updateModifiedCollection([]);
+    mapVerticesModificationStore.updateModifiedCollection([]);
     void mapDrawService.reDrawFeatures(selectedFeaturesStore.features);
 
     this.verticesModification.setActive(false);
@@ -83,8 +83,8 @@ class MapVerticesModificationService {
       return;
     }
 
-    void mapVerticesModificationStore.updateModifiedCollection([]);
-    void mapDrawService.reDrawFeatures(selectedFeaturesStore.features);
+    mapVerticesModificationStore.updateModifiedCollection([]);
+    await mapDrawService.reDrawFeatures(selectedFeaturesStore.features);
     const features = await mapDrawService.getFeatures();
     features.forEach(feature => {
       feature.setStyle(getStyle(KnownStyleKey.SelectedFeaturesWithVertices));
@@ -167,7 +167,7 @@ class MapVerticesModificationService {
     try {
       const wfsFeature = featureToWfsFeature(feature);
 
-      void transformGeometryToLayerProjectionInWfsFeature(
+      transformGeometryToLayerProjectionInWfsFeature(
         wfsFeature,
         olProjection,
         projectionCodeToProjection(layer.nativeCRS)

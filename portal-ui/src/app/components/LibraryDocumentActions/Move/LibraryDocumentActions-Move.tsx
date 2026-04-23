@@ -156,7 +156,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
 
       let pathWithCurrent = '';
 
-      parentsInfo?.map((parent, index) => {
+      parentsInfo?.forEach((_parent, index) => {
         const folders: (string | number)[] = [];
         for (let i = 0; i < index + 1; i++) {
           folders.push('folder', parentsInfo[i].id);

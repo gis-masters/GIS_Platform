@@ -86,6 +86,7 @@ Then('в хлебных крошках отображается {string} и {str
   expect(['', firstFolder, secondFolder]).toEqual(currentFolderBreadcrumbsPath);
 });
 
+// eslint-disable-next-line sonarjs/slow-regex -- в тестах нам это не страшно
 Then(/^сортировка проектов соответствует ожидаемому (".+"[ ,]*)+$/, async (names: string) => {
   const currentProjectsNames = await projectsBlock.multipleVisibleProject();
   const newNames = names.replaceAll(/^.|.$/g, '');

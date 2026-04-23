@@ -76,7 +76,7 @@ export class ExplorerAdapterTypeFolder {
     );
   }
 
-  static getMeta = ExplorerAdapterTypeFolder.getId;
+  static readonly getMeta = ExplorerAdapterTypeFolder.getId;
 
   static getIcon(): ReactNode {
     return <FolderOutlined color='primary' />;

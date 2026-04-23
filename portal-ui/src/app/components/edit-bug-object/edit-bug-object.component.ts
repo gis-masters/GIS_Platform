@@ -41,7 +41,7 @@ export interface ObjectDto {
 })
 export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit, OnDestroy {
   @Input() data: ObjectDto[] = [];
-  // eslint-disable-next-line unicorn/prefer-event-target
+
   @Output() closeMe = new EventEmitter<boolean>();
 
   wfsFeature?: WfsFeature;

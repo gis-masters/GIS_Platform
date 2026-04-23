@@ -4,6 +4,7 @@ import { isObject } from 'lodash';
 import { type FormControlProps } from '../../../components/Form/Control/Form-Control';
 import { type SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import type { FieldValidator } from '../../util/form/formValidation.utils';
+import { isArray } from '../../util/typeGuards/isArray';
 
 export enum PropertyType {
   STRING = 'string',
@@ -339,5 +340,5 @@ export function isPropertySchema(obj: unknown): obj is PropertySchema {
 }
 
 export function isPropertySchemaArray(arr: unknown): arr is PropertySchema[] {
-  return Array.isArray(arr) && arr.every(isPropertySchema);
+  return isArray(arr) && arr.every(isPropertySchema);
 }

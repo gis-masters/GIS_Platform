@@ -93,7 +93,7 @@ export class BasemapsSelect extends Component {
   private get basemaps(): Basemap[] {
     const { basemaps, currentBasemap } = basemapsStore;
 
-    return [...basemaps].sort((a, b) => Number(a.id === currentBasemap?.id) - Number(b.id === currentBasemap?.id));
+    return basemaps.toSorted((a, b) => Number(a.id === currentBasemap?.id) - Number(b.id === currentBasemap?.id));
   }
 
   @action.bound

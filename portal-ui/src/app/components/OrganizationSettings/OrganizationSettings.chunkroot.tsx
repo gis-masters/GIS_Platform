@@ -16,6 +16,7 @@ import {
 import { type PropertySchemaChoice, PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import {
   type CompositeSettings,
@@ -178,7 +179,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     const id = systemManagement ? orgSettings?.id : organizationSettings.orgSettings?.id;
     const tags = value.tags;
 
-    if (tags && !Array.isArray(tags)) {
+    if (tags && !isArray(tags)) {
       try {
         const parsedValue = JSON.parse(tags) as unknown;
         if (!isStringArray(parsedValue)) {

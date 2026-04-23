@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../classes/Block';
 import { FormBlock } from '../Form/Form.block';

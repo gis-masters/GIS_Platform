@@ -8,7 +8,7 @@ import { IconButton } from '../../IconButton/IconButton';
 const cnPrintMapImageControlClear = cn('PrintMapImageControl', 'Clear');
 
 export interface PrintMapImageControlClearProps {
-  onClear: () => void;
+  onClear(): void;
 }
 
 export const PrintMapImageControlClear: FC<PrintMapImageControlClearProps> = ({ onClear }) => (

@@ -4,6 +4,7 @@ import { withBemMod } from '@bem-react/core';
 
 import { type CrgUser } from '../../../../services/auth/users/users.models';
 import { type PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { Users } from '../../../Users/Users';
 import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
@@ -19,7 +20,7 @@ class FormViewTypeUser extends Component<FormControlProps> {
 
     try {
       value = JSON.parse(String(fieldValue)) as CrgUser[];
-      if (!Array.isArray(value)) {
+      if (!isArray(value)) {
         value = [];
       }
     } catch {

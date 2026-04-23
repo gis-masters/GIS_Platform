@@ -91,9 +91,11 @@ export class Layer extends Component<LayerProps> {
     const out = currentProject.viewZoom > ((data as CrgLayer).minZoom || 0);
     const type = (data as CrgLayer).type;
     const isVectorLayer = type === CrgLayerType.VECTOR || type === CrgLayerType.SHP;
-    const hiddenByZoomTooltipText = hiddenByZoom
-      ? `${out ? 'Уменьшите' : 'Увеличьте'} карту, чтобы увидеть объекты`
-      : '';
+    let hiddenByZoomTooltipText = '';
+    if (hiddenByZoom) {
+      const zoomVerb = out ? 'Уменьшите' : 'Увеличьте';
+      hiddenByZoomTooltipText = `${zoomVerb} карту, чтобы увидеть объекты`;
+    }
 
     return (
       <div className={cnLayer({ open: this.open, group: isGroup, visible, editMode }, [className])}>

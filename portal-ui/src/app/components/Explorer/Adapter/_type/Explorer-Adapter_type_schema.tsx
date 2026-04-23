@@ -39,7 +39,7 @@ export class ExplorerAdapterTypeSchema {
     return item.payload.description;
   }
 
-  static getMeta = ExplorerAdapterTypeSchema.getId;
+  static readonly getMeta = ExplorerAdapterTypeSchema.getId;
 
   static getIcon(): ReactNode {
     return <SchemaOutlined />;

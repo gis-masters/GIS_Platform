@@ -6,6 +6,7 @@ import { type StoryFn } from '@storybook/react';
 import { cloneDeep } from 'lodash';
 
 import { type PropertySchema, PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
+import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
 import { type FieldErrors, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { Mime } from '../../services/util/Mime';
 import { sleep } from '../../services/util/sleep';
@@ -281,7 +282,7 @@ const actionFunction = async (formValue: TestData) => {
   const errors = validateFormValue(formValue, testFields);
 
   if (errors.length) {
-    throw { errors };
+    throw new FormFieldErrorsError(errors);
   }
 };
 

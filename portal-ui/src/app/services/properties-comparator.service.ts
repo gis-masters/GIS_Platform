@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { type OldPropertySchema } from './data/schema/schemaOld.models';
 import { type LayerAttribute } from './geoserver/import/import.models';
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import {
   CrgComparison,
   DirectComparison,

@@ -10,6 +10,7 @@ import { isEqual } from 'lodash';
 import { type PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
 import { type FilterQuery } from '../../../../services/util/filters/filters.models';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { cnXTableFilter, type XTableFilterProps } from '../XTable-Filter.base';
 
 import './XTable-Filter_type_choice.scss';
@@ -79,8 +80,7 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
 
     onBeforeFilterChange();
 
-    const value: string[] | undefined =
-      Array.isArray(e.target.value) && e.target.value.length ? e.target.value : undefined;
+    const value: string[] | undefined = isArray(e.target.value) && e.target.value.length ? e.target.value : undefined;
 
     if (value === undefined) {
       modifyFieldFilterValue(filterQuery, field);

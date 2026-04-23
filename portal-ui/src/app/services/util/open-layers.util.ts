@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import { Feature } from 'ol';
 import {
   type Geometry,
@@ -28,7 +29,7 @@ export enum UnitsOfLengthMeasurement {
  * Из OpenLayer фичи {@link Feature} формируем {@link WfsFeature}
  */
 export function featureToWfsFeature(olFeature: Feature): WfsFeature {
-  const { geometry: trash, ...properties } = olFeature.getProperties();
+  const properties = omit(olFeature.getProperties(), 'geometry');
   const geometry = olFeature.getGeometry();
 
   if (!(geometry instanceof SimpleGeometry)) {

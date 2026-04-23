@@ -41,6 +41,7 @@ type ExportGeoPackageDialogState = {
   setIsExporting(exporting: boolean): void;
   setExportCompleted(completed: boolean): void;
   setLastMessage(message: string): void;
+  clearPreviousMessageAfterAnimation(): void;
   setHistoryOpen(open: boolean): void;
   setFilePath(path: string): void;
   reset(): void;
@@ -70,6 +71,12 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
       this.exportCompleted = completed;
     },
 
+    clearPreviousMessageAfterAnimation() {
+      runInAction(() => {
+        this.previousMessage = '';
+      });
+    },
+
     setLastMessage(message) {
       if (this.lastMessage !== message) {
         this.previousMessage = this.lastMessage;
@@ -82,11 +89,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
         }
 
         // Очищаем предыдущее сообщение через время анимации
-        setTimeout(() => {
-          runInAction(() => {
-            this.previousMessage = '';
-          });
-        }, 500);
+        setTimeout(() => this.clearPreviousMessageAfterAnimation(), 500);
       }
     },
 
@@ -126,7 +129,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
       return;
     }
 
-    const fileName = state.filePath.split(/[#?]/)[0].split(/[/\\]/).filter(Boolean).pop() || 'export.gpkg';
+    const fileName = state.filePath.split(/[#?]/)[0].split(/[/\\]/).findLast(Boolean) || 'export.gpkg';
     await downloadByUrl(getExportDownloadUrl(fileName), fileName);
   }, [state.filePath]);
 
@@ -227,7 +230,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
 
       const process = await exportLayersAsGeoPackage(layerIds);
 
-      void pollProcess(process.id);
+      pollProcess(process.id);
     },
     [pollProcess, state]
   );

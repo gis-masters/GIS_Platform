@@ -61,7 +61,7 @@ export class ExplorerAdapterTypeDocument {
     );
   }
 
-  static getMeta = ExplorerAdapterTypeDocument.getId;
+  static readonly getMeta = ExplorerAdapterTypeDocument.getId;
 
   static getIcon(item: ExplorerItemData): ReactNode {
     assertExplorerItemDataTypeDocument(item);

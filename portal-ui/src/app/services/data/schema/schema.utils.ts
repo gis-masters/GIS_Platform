@@ -5,6 +5,7 @@ import { type Attribute } from '../../geoserver/featureType/featureType.model';
 import { GeometryType, type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
 import { formatDate } from '../../util/date.util';
+import { isArray } from '../../util/typeGuards/isArray';
 import { type FileInfo } from '../files/files.models';
 import {
   type ContentType,
@@ -502,8 +503,8 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, p
 
   [PropertyType.DOCUMENT](value: unknown) {
     try {
-      if (typeof value === 'string' || Array.isArray(value)) {
-        const documents = Array.isArray(value) ? (value as DocumentInfo[]) : (JSON.parse(value) as DocumentInfo[]);
+      if (typeof value === 'string' || isArray(value)) {
+        const documents = isArray(value) ? (value as DocumentInfo[]) : (JSON.parse(value) as DocumentInfo[]);
 
         return documents.map(({ title }) => title).join(', ');
       }
@@ -514,8 +515,8 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, p
 
   [PropertyType.FILE](value: unknown) {
     try {
-      if (typeof value === 'string' || Array.isArray(value)) {
-        const files = Array.isArray(value) ? (value as FileInfo[]) : (JSON.parse(value) as FileInfo[]);
+      if (typeof value === 'string' || isArray(value)) {
+        const files = isArray(value) ? (value as FileInfo[]) : (JSON.parse(value) as FileInfo[]);
 
         return files.map(({ title }) => title).join(', ');
       }
@@ -548,7 +549,11 @@ export function getReadablePropertyValue(value: unknown, property?: PropertySche
     return transformer(value, property);
   }
 
-  return String(value ?? '');
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+
+  return '';
 }
 
 export function getGeometryFieldName(schema: Schema): string {

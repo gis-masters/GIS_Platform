@@ -99,7 +99,7 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: unknow
       try {
         const formula: ValueFormula =
           typeof property.defaultValueFormula === 'string'
-            ? // eslint-disable-next-line @typescript-eslint/no-implied-eval
+            ? // eslint-disable-next-line @typescript-eslint/no-implied-eval, sonarjs/code-eval -- формула из схемы
               (new Function('obj', 'property', 'parent', property.defaultValueFormula) as ValueFormula)
             : property.defaultValueFormula;
 
@@ -110,7 +110,7 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: unknow
             : { [property.name]: formula(values, property, parent) }
         );
       } catch (error) {
-        throw new Error(`Ошибка при попытке вычислить значение по-умолчанию: ${String(error)}`);
+        throw new Error(`Ошибка при попытке вычислить значение по-умолчанию: ${String(error)}`, { cause: error });
       }
     }
 
@@ -128,7 +128,8 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: unknow
         throw new Error(
           `Ошибка при попытке вычислить значение по-умолчанию [${property.defaultValueWellKnownFormula}]: ${String(
             error
-          )}`
+          )}`,
+          { cause: error }
         );
       }
     }
@@ -149,7 +150,7 @@ export function computeDynamicProperties<T extends SimpleSchema>(formValue: unkn
 
       try {
         if (typeof formula === 'string') {
-          // eslint-disable-next-line @typescript-eslint/no-implied-eval
+          // eslint-disable-next-line @typescript-eslint/no-implied-eval, sonarjs/code-eval -- формула из схемы
           formula = new Function('obj', 'property', formula) as PropertyFormula;
         }
 

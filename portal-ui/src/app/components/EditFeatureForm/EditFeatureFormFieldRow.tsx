@@ -18,12 +18,12 @@ interface EditFeatureFormFieldRowProps {
   editFeatureItem: EditedField;
   property: OldPropertySchema;
   formControls: EditFeatureFormControl[];
-  handleWrapperChange: (value: unknown, name: string) => void;
+  handleWrapperChange(value: unknown, name: string): void;
   updatingAllowed: boolean;
   mode: 'single' | 'multipleEdit' | undefined;
-  isShowTemplate: (property: OldPropertySchema) => boolean;
-  handleSwitchControl: (property: OldPropertySchema) => () => void;
-  isReadOnly: (property: OldPropertySchema) => boolean;
+  isShowTemplate(property: OldPropertySchema): boolean;
+  handleSwitchControl(property: OldPropertySchema): () => void;
+  isReadOnly(property: OldPropertySchema): boolean;
 }
 
 // Вспомогательные функции

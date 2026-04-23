@@ -28,7 +28,7 @@ function compare<T>(a: T, b: T, { field, asc }: SortParams<T>, fallBackSortField
 }
 
 export function sortObjects<T>(arr: T[], field: keyof T, asc: boolean, fallBackSortField?: keyof T): T[] {
-  return [...arr].sort((a, b) => {
+  return [...arr].toSorted((a, b) => {
     return compare(a, b, { field, asc }, fallBackSortField);
   });
 }

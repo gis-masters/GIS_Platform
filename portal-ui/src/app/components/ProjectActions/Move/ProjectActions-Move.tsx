@@ -26,7 +26,7 @@ interface ProjectActionsFilesPlacementProps {
   schema?: SimpleSchema;
   disabled?: boolean;
   tooltipText?: string;
-  onChange?: (Project: CrgProject) => void;
+  onChange?(Project: CrgProject): void;
 }
 
 export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementProps) => {

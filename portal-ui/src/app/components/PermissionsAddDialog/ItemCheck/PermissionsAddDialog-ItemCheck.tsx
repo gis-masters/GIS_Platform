@@ -9,11 +9,14 @@ import { type CrgProject } from '../../../services/gis/projects/projects.models'
 
 const cnPermissionsAddDialogItemCheck = cn('PermissionsAddDialog', 'ItemCheck');
 
+type PermissionsAddDialogCheckItem = CrgProject | VectorTable | Dataset;
+
 interface PermissionsAddDialogItemCheckProps {
-  item: CrgProject | VectorTable | Dataset;
+  item: PermissionsAddDialogCheckItem;
   checked: boolean;
   disabled: boolean;
-  onChange(item: CrgProject | VectorTable | Dataset, checked: boolean): void;
+  onSelectItem(item: PermissionsAddDialogCheckItem): void;
+  onDeselectItem(item: PermissionsAddDialogCheckItem): void;
 }
 
 @observer
@@ -32,8 +35,12 @@ export class PermissionsAddDialogItemCheck extends Component<PermissionsAddDialo
   }
 
   @boundMethod
-  private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
-    const { item, onChange } = this.props;
-    onChange(item, checked);
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const { item, onSelectItem, onDeselectItem } = this.props;
+    if (e.target.checked) {
+      onSelectItem(item);
+    } else {
+      onDeselectItem(item);
+    }
   }
 }

@@ -31,13 +31,11 @@ export function extractFeatureIdsFromAttributesFilter(
       ? cutId.$in.map(id => `${extractFeatureTypeNameFromComplexName(layer.complexName)}.${id}`)
       : [];
 
-  let featureIds: string[] = [];
-
   if (!layer.resourceId) {
     throw new Error(`Слой ${layer.title} не имеет tableName`);
   }
 
-  featureIds =
+  let featureIds =
     filterBySelection === FilterBySelectionMode.DISABLED
       ? []
       : selectedFeaturesStore.featuresByResourceId[layer.resourceId]?.map(({ id }) => id) || [];

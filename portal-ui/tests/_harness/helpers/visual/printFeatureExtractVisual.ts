@@ -87,7 +87,8 @@ export async function assertPrintResultOpenedInBrowserTab(): Promise<void> {
       const url = await browser.getUrl();
       throw new Error(
         'Ожидалась вкладка с результатом печати (blob:, data:… или …/files/<id>/download). ' +
-          `Фактический URL: ${formatUrlForDiagnostics(url)}`
+          `Фактический URL: ${formatUrlForDiagnostics(url)}`,
+        { cause: error }
       );
     }
     throw error;
@@ -145,7 +146,7 @@ async function waitForChromeBuiltinPdfPainted(): Promise<void> {
             }
 
             if (el instanceof HTMLIFrameElement) {
-              let doc: Document | null = null;
+              let doc: Document | null;
               try {
                 doc = el.contentDocument;
               } catch {

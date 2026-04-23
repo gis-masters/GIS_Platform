@@ -20,6 +20,7 @@ import { type FeatureType } from '../../geoserver/featureType/featureType.model'
 import { getFeatureType } from '../../geoserver/featureType/featureType.service';
 import { type SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
+import { isArray } from '../../util/typeGuards/isArray';
 import { type CrgProject } from '../projects/projects.models';
 import { layersClient } from './layers.client';
 import {
@@ -147,7 +148,7 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
     const featureType: FeatureType = await getFeatureType(layer);
 
     let attributes = featureType.attributes.attribute;
-    if (!Array.isArray(attributes)) {
+    if (!isArray(attributes)) {
       attributes = [attributes];
     }
 

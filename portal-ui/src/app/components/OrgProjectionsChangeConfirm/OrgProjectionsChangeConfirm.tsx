@@ -31,8 +31,8 @@ interface OrgProjectionsChangeConfirmProps {
   projection: Projection;
   open: boolean;
   editValue?: EditProjectionModel;
-  closeDialog: () => void;
-  closeParentDialog?: () => void;
+  closeDialog(): void;
+  closeParentDialog?(): void;
 }
 
 interface OrgProjectionsChangeConfirmState {

@@ -88,7 +88,7 @@ Given('таблица наполнена данными {string}', async functio
 Given('таблица наполнена данными, c один файлом, для фотослоя', async function (this: ScenarioScope) {
   this.latestFeatures = await getTestFeatures('для фотослоя с несколькими объектами', this.latestSchema);
   if (this.latestFeatures?.every(feature => feature.properties.photo)) {
-    this.latestFeatures.map(
+    this.latestFeatures.forEach(
       feature =>
         (feature.properties.photo = [
           {
@@ -107,7 +107,7 @@ Given('таблица наполнена данными, c один файлом
 Given('таблица наполнена данными для фотослоя c несколькими объектами', async function (this: ScenarioScope) {
   this.latestFeatures = await getTestFeatures('для фотослоя с несколькими объектами', this.latestSchema);
   if (this.latestFeatures?.every(feature => feature.properties.photo)) {
-    this.latestFeatures.map(feature => (feature.properties.photo = this.latestUploadedFiles));
+    this.latestFeatures.forEach(feature => (feature.properties.photo = this.latestUploadedFiles));
   }
 
   for (const feature of this.latestFeatures) {

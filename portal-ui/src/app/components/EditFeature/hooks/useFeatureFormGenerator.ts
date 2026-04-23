@@ -27,9 +27,20 @@ import {
 } from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { formatDate, systemFormat } from '../../../services/util/date.util';
-import { validateCustomRules, type ValidationError } from '../../../services/util/FeaturePropertyValidatorsReact';
+import { validateCustomRules } from '../../../services/util/FeaturePropertyValidatorsReact';
 import { convertToComplexField } from '../../Form/Form.utils';
 import { type EditFeatureFormControl } from './useEditFeatureState';
+
+function editFeaturePropertyToString(value: unknown): string {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+
+  return '';
+}
 
 export const useFeatureFormGenerator = (
   currentFeature: WfsFeature,
@@ -80,7 +91,7 @@ export const useFeatureFormGenerator = (
 
         return inNew || (!inNew && !inOld);
       })
-      .sort((a, b) => {
+      .toSorted((a, b) => {
         let indexA = propertiesWithAppliedView.findIndex(({ name }) => name.toLowerCase() === a.toLowerCase());
         if (indexA === -1) {
           indexA = propertiesWithAppliedView.length;
@@ -122,8 +133,12 @@ export const useFeatureFormGenerator = (
               : '';
         }
 
-        if ((property?.valueType === ValueType.STRING || property?.valueType === ValueType.TEXT) && currentProperty) {
-          currentProperty = String(currentProperty).trim();
+        if (
+          (property?.valueType === ValueType.STRING || property?.valueType === ValueType.TEXT) &&
+          currentProperty &&
+          typeof currentProperty === 'string'
+        ) {
+          currentProperty = currentProperty.trim();
         }
 
         const formControlValue = formControls.find(control => control.key === key);
@@ -137,7 +152,7 @@ export const useFeatureFormGenerator = (
             newEditFeatureData.push({
               name: key,
               property,
-              value: currentProperty === null ? null : String(currentProperty),
+              value: currentProperty === null ? null : editFeaturePropertyToString(currentProperty),
               isFgistpProperty: true,
               relations: getFieldRelations(key, convertOldToNewSchema(featureDescription))
             });
@@ -165,7 +180,7 @@ export const useFeatureFormGenerator = (
                 hidden: key === 'emptyFeature',
                 valueType: ValueType.STRING
               },
-              value: currentProperty === null ? null : String(currentProperty),
+              value: currentProperty === null ? null : editFeaturePropertyToString(currentProperty),
               isFgistpProperty: false,
               relations: getFieldRelations(key, convertOldToNewSchema(featureDescription))
             });
@@ -189,17 +204,17 @@ export const useFeatureFormGenerator = (
 
       const controlsWithErrors: EditFeatureFormControl[] = [];
 
-      validateCustomRules(
+      for (const validationError of validateCustomRules(
         featureProperties,
         featureDescription.customRuleFunction,
         featureDescription.tableName
-      ).forEach((validationError: ValidationError) => {
+      )) {
         const control = formControls.find(({ key }) => key === validationError.attribute);
 
         if (control) {
           controlsWithErrors.push({ ...control, error: validationError.error });
         }
-      });
+      }
 
       return controlsWithErrors;
     };

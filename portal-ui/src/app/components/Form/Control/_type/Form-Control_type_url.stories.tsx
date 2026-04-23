@@ -4,6 +4,7 @@ import { Biotech } from '@mui/icons-material';
 import { type StoryFn } from '@storybook/react';
 
 import { type PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
+import { FormFieldErrorsError } from '../../../../services/util/form/FormFieldErrorsError';
 import { type FieldErrors, validateFormValue } from '../../../../services/util/form/formValidation.utils';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';
@@ -165,7 +166,7 @@ const actionFunction = async (formValue: unknown) => {
   const errors = validateFormValue(formValue, testFields);
 
   if (errors.length) {
-    throw { errors };
+    throw new FormFieldErrorsError(errors);
   }
 };
 

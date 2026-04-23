@@ -12,6 +12,7 @@ import { type PropertyOption, PropertyType } from '../../../../services/data/sch
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
 import { type FilterQuery } from '../../../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { allUsers } from '../../../../stores/AllUsers.store';
 import { cnXTableFilter, type XTableFilterProps } from '../XTable-Filter.base';
 
@@ -95,7 +96,7 @@ class XTableFilterTypeUser extends Component<XTableFilterProps> {
     onBeforeFilterChange();
 
     const value: (string | number)[] | undefined =
-      Array.isArray(e.target.value) && e.target.value.length ? e.target.value : undefined;
+      isArray(e.target.value) && e.target.value.length ? e.target.value : undefined;
 
     if (value === undefined) {
       modifyFieldFilterValue(filterQuery, field);

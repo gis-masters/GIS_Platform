@@ -52,7 +52,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     }));
 
     // Сортируем так, чтобы папки (PROJECT_FOLDER) шли первыми
-    const sortedItems = [...mappedItems].sort((a, b) => {
+    const sortedItems = mappedItems.toSorted((a, b) => {
       if (a.type === ExplorerItemType.PROJECT_FOLDER && b.type !== ExplorerItemType.PROJECT_FOLDER) {
         return -1;
       }
@@ -90,7 +90,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     }));
 
     // Сортируем так, чтобы папки (PROJECT_FOLDER) шли первыми
-    const sortedItems = [...mappedItems].sort((a, b) => {
+    const sortedItems = mappedItems.toSorted((a, b) => {
       if (a.type === ExplorerItemType.PROJECT_FOLDER && b.type !== ExplorerItemType.PROJECT_FOLDER) {
         return -1;
       }

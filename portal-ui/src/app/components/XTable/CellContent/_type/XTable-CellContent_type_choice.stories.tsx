@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { type ReactElement } from 'react';
 import { type StoryFn } from '@storybook/react';
 

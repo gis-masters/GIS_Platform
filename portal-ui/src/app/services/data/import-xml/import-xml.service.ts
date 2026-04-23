@@ -1,5 +1,4 @@
-import { type AxiosError } from 'axios';
-
+import { isAxiosError } from '../../util/typeGuards/isAxiosError';
 import { importXmlClient } from './import-xml.client';
 
 export async function importXml(file: File, datasetIdentifier: string, tableIdentifier: string): Promise<number> {
@@ -13,6 +12,8 @@ export async function importXml(file: File, datasetIdentifier: string, tableIden
   try {
     return await importXmlClient.import(file, datasetIdentifier, tableIdentifier);
   } catch (error) {
-    throw new Error((error as AxiosError<{ message: string }>).response?.data?.message);
+    const msg = isAxiosError<{ message?: string }>(error) ? error.response?.data?.message : undefined;
+
+    throw new Error(msg ?? 'Ошибка импорта XML', { cause: error });
   }
 }

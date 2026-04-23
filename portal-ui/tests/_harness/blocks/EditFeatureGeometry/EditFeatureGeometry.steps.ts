@@ -44,11 +44,11 @@ When(
 );
 
 When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить линию`', async function () {
-  await editFeatureGeometryBlock.clickDeleteGroupButton();
+  await editFeatureGeometryBlock.clickDeleteGeometryGroupButton();
 });
 
-When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить полигон`', async function () {
-  await editFeatureGeometryBlock.clickDeletePolygonButton();
+When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить контур`', async function () {
+  await editFeatureGeometryBlock.clickDeleteGeometryGroupButton();
 });
 
 When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить вершину`', async function () {

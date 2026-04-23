@@ -2,6 +2,7 @@ import sift from 'sift';
 
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { escapeStringRegexp } from '../escapeStringRegexp';
+import { isArray } from '../typeGuards/isArray';
 import { type FilterQuery } from './filters.models';
 
 export function filterFeatures(features: WfsFeature[], query: FilterQuery): WfsFeature[] {
@@ -20,9 +21,9 @@ export function prepareLike(query: FilterQuery): FilterQuery {
       newQuery.$regex = new RegExp(`^${escapeStringRegexp(value).replaceAll('%', '.*').replaceAll(/\\./g, '.')}$`);
     } else if (key === '$ilike' && typeof value === 'string') {
       newQuery.$regex = new RegExp(`^${escapeStringRegexp(value).replaceAll('%', '.*').replaceAll(/\\./g, '.')}$`, 'i');
-    } else if (typeof value === 'object' && key !== '$regex' && !Array.isArray(value) && value !== null) {
+    } else if (typeof value === 'object' && key !== '$regex' && !isArray(value) && value !== null) {
       newQuery[key] = prepareLike(value as FilterQuery);
-    } else if (Array.isArray(value) && ['$and', '$or'].includes(key)) {
+    } else if (isArray(value) && ['$and', '$or'].includes(key)) {
       newQuery[key] = value.map(filterPart => prepareLike(filterPart as FilterQuery));
     } else {
       newQuery[key] = value;

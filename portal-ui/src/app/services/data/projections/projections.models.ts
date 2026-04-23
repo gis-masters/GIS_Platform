@@ -2,6 +2,7 @@ import { isObject } from 'lodash';
 
 import { type SpatialReferenceSystem } from '../../../../server-types/common-contracts';
 import { type XTableColumn, XTableExtraColumnType } from '../../../components/XTable/XTable.models';
+import { isArray } from '../../util/typeGuards/isArray';
 import { PropertyType } from '../schema/schema.models';
 
 export const DEFAULT_OL_PROJECTION = {
@@ -25,7 +26,7 @@ export interface EditProjectionModel {
 }
 
 export function isArrayOfProjections(values: unknown): values is Projection[] {
-  if (!Array.isArray(values)) {
+  if (!isArray(values)) {
     return false;
   }
 

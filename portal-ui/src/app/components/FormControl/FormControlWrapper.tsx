@@ -13,7 +13,7 @@ interface FormControlWrapperProps {
   updatingAllowed: boolean;
   itemValue: unknown;
   error?: string;
-  onChange?: (value: unknown, name: string) => void;
+  onChange?(value: unknown, name: string): void;
 }
 
 const checkType = (valueType: ValueType | undefined): boolean => {

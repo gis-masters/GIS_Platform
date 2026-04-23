@@ -12,6 +12,7 @@ import { doConfirm } from '../../services/answer-modals.service';
 import { type Schema, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { type CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button, type ButtonProps } from '../Button/Button';
@@ -260,7 +261,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       if (defaultFormValue[key] === value && this.isEmptyValue(initialFieldValue)) {
         return true;
       }
-      if (Array.isArray(value) && Array.isArray(initialFieldValue)) {
+      if (isArray(value) && isArray(initialFieldValue)) {
         return isEqual(initialFieldValue, value);
       }
       if (property?.calculatedValueFormula || property?.calculatedValueWellKnownFormula) {
@@ -275,6 +276,6 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
   }
 
   private isEmptyValue(value: unknown): boolean {
-    return value === undefined || value === null || (Array.isArray(value) && !value.length);
+    return value === undefined || value === null || (isArray(value) && !value.length);
   }
 }

@@ -129,7 +129,7 @@ export const TaskPageContainer = observer(() => {
           <h1 className={cnTaskPageContainer('Title')}>
             <ArticleOutlined color='primary' className={cnTaskPageContainer('TypeIcon')} />
             Задача №{state.task.id}
-            {state.task.id && <TextBadge id={state.task.id} className={cnTaskPageContainer('Id')} />}
+            {!!state.task.id && <TextBadge id={state.task.id} className={cnTaskPageContainer('Id')} />}
           </h1>
 
           <TaskCard task={state.task} />

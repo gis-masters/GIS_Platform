@@ -63,7 +63,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
         className={cnAttributesCheckMaster()}
         indeterminate={this.selectedFeatures.length > 0 && !this.allSelected}
         checked={this.allSelected}
-        onChange={this.selectAll}
+        onChange={this.onSelectAllChange}
       />
     );
   }
@@ -74,36 +74,44 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
   }
 
   @boundMethod
-  private async selectAll(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
-    if (checked) {
-      const operationId = Symbol();
-      this.selectingAllOperationId = operationId;
-      const features = await this.getAllFeatures();
-
-      if (this.selectingAllOperationId === operationId) {
-        await mapModeManager.changeMode(
-          MapMode.SELECTED_FEATURES,
-          {
-            payload: {
-              features: features,
-              type: MapSelectionTypes.REPLACE
-            }
-          },
-          'selectAll-1'
-        );
-      }
+  private onSelectAllChange(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      void this.applySelectAllFeatures();
     } else {
+      void this.applyDeselectAllFeatures();
+    }
+  }
+
+  private async applySelectAllFeatures() {
+    const operationId = Symbol();
+    this.selectingAllOperationId = operationId;
+    const features = await this.getAllFeatures();
+
+    if (this.selectingAllOperationId === operationId) {
       await mapModeManager.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {
-            features: this.selectedFeatures,
-            type: MapSelectionTypes.REMOVE
+            features: features,
+            type: MapSelectionTypes.REPLACE
           }
         },
-        'selectAll-2'
+        'selectAll-1'
       );
     }
+  }
+
+  private async applyDeselectAllFeatures() {
+    await mapModeManager.changeMode(
+      MapMode.SELECTED_FEATURES,
+      {
+        payload: {
+          features: this.selectedFeatures,
+          type: MapSelectionTypes.REMOVE
+        }
+      },
+      'selectAll-2'
+    );
   }
 
   private async testSelectionAllness() {

@@ -233,9 +233,7 @@ class SchemaService {
         delete this.schemasResolvers[name];
         delete this.schemasRejecters[name];
       } else if (!this.schemas[name]) {
-        this.schemas[name] = new Promise(resolve => {
-          resolve(schema);
-        });
+        this.schemas[name] = Promise.resolve(schema);
       }
     });
 

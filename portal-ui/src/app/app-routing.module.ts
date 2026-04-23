@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+// eslint-disable-next-line import-x/named -- Data и Route экспортируются из @angular/router; import-x не резолвит пакет
 import { Data, Route, RouterModule } from '@angular/router';
 
 import { AboutComponent } from './pages/about/about.component';

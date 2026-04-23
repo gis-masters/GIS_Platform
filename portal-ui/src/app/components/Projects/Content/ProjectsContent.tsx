@@ -15,7 +15,7 @@ export interface ProjectsContentProps {
 }
 
 export const ProjectsContent: FC<ProjectsContentProps> = memo(({ projects, store }) => {
-  const sortedProjects = [...projects].sort((a, b) => {
+  const sortedProjects = projects.toSorted((a, b) => {
     if (a.folder === true && b.folder !== true) {
       return -1;
     }

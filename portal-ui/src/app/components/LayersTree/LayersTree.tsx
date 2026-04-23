@@ -68,7 +68,7 @@ export class LayersTree extends Component<LayersTreeProps> {
   @boundMethod
   private onDragUpdate({ source, destination, combine }: DragUpdate) {
     if ((!combine && !destination) || source.index === destination?.index) {
-      this.setCombine(false, undefined);
+      this.setCombine(false);
     } else if (destination) {
       const sourceItem = currentProject.visibleTreeWithEmptyGroups[source.index];
       const destinationItem = combine
@@ -84,7 +84,7 @@ export class LayersTree extends Component<LayersTreeProps> {
 
   @action.bound
   private onDragEnd({ source, destination, combine }: DropResult) {
-    this.setCombine(false, undefined);
+    this.setCombine(false);
     const sourceItem = currentProject.visibleTreeWithEmptyGroups[source.index];
 
     if (combine) {

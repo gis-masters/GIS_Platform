@@ -147,7 +147,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
                     )
                   );
                 })
-                .reverse()
+                .toReversed()
             )}
           </div>
         </div>
@@ -193,7 +193,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   private getListForRole<T extends CrgUser | CrgGroup>(listRole: Role, arr: T[], type: PrincipalType): T[] {
-    const greaterRoles = new Set(roles.slice(roles.indexOf(listRole) + 1, roles.length));
+    const greaterRoles = new Set(roles.slice(roles.indexOf(listRole) + 1));
 
     return arr
       .filter(
@@ -206,7 +206,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
               principalId === id && principalType === type && greaterRoles.has(role)
           )
       )
-      .sort((a, b) => ((a as CrgUser).surname + a.name > (b as CrgUser).surname + b.name ? 1 : -1));
+      .toSorted((a, b) => ((a as CrgUser).surname + a.name > (b as CrgUser).surname + b.name ? 1 : -1));
   }
 
   @boundMethod
@@ -221,8 +221,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
         itemEntityType === ExplorerItemEntityTypeTitle.PROJECT_FOLDER
           ? await getProjectPermissions(url)
           : await getAllPermissions(url);
-      // тут так надо
-      // eslint-disable-next-line unicorn/consistent-destructuring
+
       if (url === this.props.url) {
         this.setPermissions(permissions, false);
       }

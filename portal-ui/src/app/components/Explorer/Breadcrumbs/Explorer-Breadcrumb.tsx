@@ -37,7 +37,7 @@ function isExplorerBreadcrumbItemData(item: unknown): item is ExplorerBreadcrumb
     return false;
   }
 
-  return !(typeof item.onOpen !== 'function');
+  return typeof item.onOpen === 'function';
 }
 
 const handleClick = (itemData: unknown) => {

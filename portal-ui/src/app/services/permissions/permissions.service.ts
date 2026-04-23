@@ -159,6 +159,10 @@ export async function isLayerReadAllowed(layer: CrgLayer): Promise<boolean> {
 }
 
 export async function isRecordUpdateAllowed(record: LibraryRecord): Promise<boolean> {
+  if (currentUser.isAdmin) {
+    return true;
+  }
+
   const libraryRecord = record.role ? record : await getLibraryRecord(record.libraryTableName, record.id);
 
   if (!libraryRecord.role) {

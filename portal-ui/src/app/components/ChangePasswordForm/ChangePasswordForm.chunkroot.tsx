@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
 import { authService } from '../../services/auth/auth/auth.service';
+import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
 import { route } from '../../stores/Route.store';
 import { type ChangePasswordData, ChangePasswordFormForm } from './Form/ChangePasswordForm-Form';
 import { ChangePasswordFormSuccess } from './Success/ChangePasswordForm-Success';
@@ -63,13 +64,18 @@ export default class ChangePasswordForm extends Component {
       const errors = err?.response?.data?.errors || [];
 
       if (errors.length > 0) {
-        throw [{ field: 'password', messages: errors }];
+        throw new FormFieldErrorsError([
+          {
+            field: 'password',
+            messages: errors.flatMap(e => (typeof e === 'string' ? [e] : Object.values(e)))
+          }
+        ]);
       } else if (err.response?.data?.error_description) {
-        throw [{ field: 'password', messages: [err.response?.data?.error_description] }];
+        throw new FormFieldErrorsError([{ field: 'password', messages: [err.response.data.error_description] }]);
       } else if (err.response?.data?.message) {
-        throw [{ field: 'password', messages: [err.response?.data?.message] }];
+        throw new FormFieldErrorsError([{ field: 'password', messages: [err.response.data.message] }]);
       } else {
-        throw [{ field: 'password', messages: ['Произошла ошибка'] }];
+        throw new FormFieldErrorsError([{ field: 'password', messages: ['Произошла ошибка'] }]);
       }
     } finally {
       this.setLoading(false);

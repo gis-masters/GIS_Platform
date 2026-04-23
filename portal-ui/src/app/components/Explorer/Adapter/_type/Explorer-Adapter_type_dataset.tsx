@@ -76,7 +76,7 @@ export class ExplorerAdapterTypeDataset {
     );
   }
 
-  static getMeta = ExplorerAdapterTypeDataset.getId;
+  static readonly getMeta = ExplorerAdapterTypeDataset.getId;
 
   static getIcon(): ReactNode {
     return <Storage color='primary' />;

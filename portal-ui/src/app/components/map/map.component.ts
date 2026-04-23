@@ -41,11 +41,10 @@ export class MapComponent implements OnInit, OnDestroy {
   private activeFeatureReactionDisposer?: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private cdRef: ChangeDetectorRef) {
-    void getOlProjection();
-  }
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   async ngOnInit() {
+    void getOlProjection();
     await fetchCurrentProjectBasemaps();
 
     const queryParams = route.queryParams as { [key: string]: string };

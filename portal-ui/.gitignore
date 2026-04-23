@@ -46,6 +46,9 @@ Thumbs.db
 .hermione.my-conf.js
 /my
 
+# Playwright MCP (Cursor)
+.playwright-mcp/
+
 # tests
 tests/_screens/.tmp
 

@@ -188,35 +188,7 @@ export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
         map.updateSize();
         view.fit(bbox, { padding: [10, 10, 10, 10] });
 
-        const captureImage = async () => {
-          if (this.imageCaptured || this.previewFailed || mapFailed) {
-            return;
-          }
-
-          try {
-            await new Promise<void>(resolve => {
-              map.once('rendercomplete', () => {
-                resolve();
-              });
-              map.render();
-            });
-
-            await waitForTilesLoad(map);
-
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            if (!this.imageCaptured && !this.previewFailed && !mapFailed) {
-              this.captureMapImage(map);
-            }
-          } catch (error) {
-            services.logger.error('BboxPreview: Ошибка при ожидании загрузки тайлов', error);
-            if (!this.imageCaptured && !this.previewFailed && !mapFailed) {
-              this.captureMapImage(map);
-            }
-          }
-        };
-
-        void captureImage();
+        void this.runBboxPreviewCapturePipeline(map, () => mapFailed);
 
         this.loadingTimeoutRef = window.setTimeout(() => {
           if (!this.imageCaptured && !mapFailed) {
@@ -238,6 +210,34 @@ export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
         this.previewFailed = true;
         this.loading = false;
       });
+    }
+  }
+
+  private async runBboxPreviewCapturePipeline(map: Map, isMapFailed: () => boolean): Promise<void> {
+    if (this.imageCaptured || this.previewFailed || isMapFailed()) {
+      return;
+    }
+
+    try {
+      await new Promise<void>(resolve => {
+        map.once('rendercomplete', () => {
+          resolve();
+        });
+        map.render();
+      });
+
+      await waitForTilesLoad(map);
+
+      await new Promise<void>(resolve => setTimeout(resolve, 100));
+
+      if (!this.imageCaptured && !this.previewFailed && !isMapFailed()) {
+        this.captureMapImage(map);
+      }
+    } catch (error) {
+      services.logger.error('BboxPreview: Ошибка при ожидании загрузки тайлов', error);
+      if (!this.imageCaptured && !this.previewFailed && !isMapFailed()) {
+        this.captureMapImage(map);
+      }
     }
   }
 
@@ -351,7 +351,7 @@ export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
   @action.bound
   private cleanup() {
     if (this.mapInstanceRef) {
-      this.mapInstanceRef.setTarget(undefined);
+      this.mapInstanceRef.setTarget();
       this.mapInstanceRef = null;
     }
 

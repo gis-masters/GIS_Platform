@@ -36,10 +36,12 @@ export class SchemaActionsPreview extends Component<SchemaActionsPreviewProps> {
 
   render() {
     const { schema, as } = this.props;
-    const clonedSchema = { ...schema };
-    clonedSchema.properties = schema.properties.filter(
-      ({ propertyType }) => ![PropertyType.GEOMETRY, PropertyType.LOOKUP].includes(propertyType)
-    );
+    const clonedSchema: Schema = {
+      ...schema,
+      properties: schema.properties.filter(
+        ({ propertyType }) => ![PropertyType.GEOMETRY, PropertyType.LOOKUP].includes(propertyType)
+      )
+    };
 
     return (
       <>

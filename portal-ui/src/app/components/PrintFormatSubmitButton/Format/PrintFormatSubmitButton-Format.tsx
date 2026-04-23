@@ -9,7 +9,7 @@ const cnPrintFormatSubmitButtonFormat = cn('PrintFormatSubmitButton', 'Format');
 export interface PrintFormatSubmitButtonFormatProps {
   format: CreateReportRequest['outputFormat'];
   label: string;
-  onSelect: (format: CreateReportRequest['outputFormat']) => void;
+  onSelect(format: CreateReportRequest['outputFormat']): void;
 }
 
 export const PrintFormatSubmitButtonFormat: FC<PrintFormatSubmitButtonFormatProps> = ({ format, label, onSelect }) => {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Paper, Tooltip } from '@mui/material';
 import { FileOpenOutlined, FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
@@ -36,6 +36,14 @@ export class LibraryDocumentDialog extends Component<LibraryDocumentDialogProps>
     const { is_deleted: isDeleted } = document;
     const path: ExplorerItemData[] = [{ type: ExplorerItemType.FOLDER, payload: document }];
 
+    let dialogTitleText: ReactNode;
+    if (isDeleted) {
+      dialogTitleText = <span className={cnLibraryDocumentDialog('TitleDeleted')}>Документ удален</span>;
+    } else {
+      const kind = document.is_folder ? 'папки' : 'документа';
+      dialogTitleText = `Просмотр ${kind}`;
+    }
+
     return (
       <Dialog
         open={open}
@@ -48,12 +56,8 @@ export class LibraryDocumentDialog extends Component<LibraryDocumentDialogProps>
           <div className={cnLibraryDocumentDialog('TypeIcon')}>
             {document.is_folder ? <FolderOutlined color='primary' /> : <InsertDriveFileOutlined color='primary' />}
           </div>
-          {isDeleted ? (
-            <span className={cnLibraryDocumentDialog('TitleDeleted')}>Документ удален</span>
-          ) : (
-            `Просмотр ${document.is_folder ? 'папки' : 'документа'}`
-          )}
-          {document.id && <TextBadge id={document.id} />}
+          {dialogTitleText}
+          {!!document.id && <TextBadge id={document.id} />}
         </DialogTitle>
 
         <DialogContent className='scroll'>
@@ -150,7 +154,7 @@ export class LibraryDocumentDialog extends Component<LibraryDocumentDialogProps>
 
         let pathWithCurrent = '';
 
-        parentsInfo?.map((parent, index) => {
+        parentsInfo?.forEach((_parent, index) => {
           const folders: (string | number)[] = [];
           for (let i = 0; i < index + 1; i++) {
             folders.push('folder', parentsInfo[i].id);

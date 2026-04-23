@@ -4,6 +4,7 @@ import { InputAdornment, Slider, TextField } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { type PropertySchemaNumber } from '../../../../services/data/schema/schema.models';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
 
@@ -78,7 +79,7 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
 
   @boundMethod
   private handleSliderChange(event: Event, value: number | number[]) {
-    if (Array.isArray(value)) {
+    if (isArray(value)) {
       throw new TypeError('Множественный режим слайдера не поддерживается');
     }
     this.change(value);

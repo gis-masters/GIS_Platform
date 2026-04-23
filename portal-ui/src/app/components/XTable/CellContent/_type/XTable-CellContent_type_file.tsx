@@ -37,7 +37,17 @@ class XTableCellContentTypeFile extends Component<XTableCellContentProps<unknown
     }
 
     const files = (
-      <Files property={{ name: col.field, propertyType: PropertyType.FILE, title: String(col.title) }} value={value} />
+      <Files
+        property={{
+          name: col.field,
+          propertyType: PropertyType.FILE,
+          title:
+            typeof col.title === 'string' || typeof col.title === 'number' || typeof col.title === 'boolean'
+              ? String(col.title)
+              : ''
+        }}
+        value={value}
+      />
     );
 
     return (

@@ -3,6 +3,7 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 
+import { filterCriterionToStrictTestString } from '../../../services/util/filters/filters';
 import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { type XTableColumn } from '../XTable.models';
 
@@ -29,7 +30,7 @@ export const XTableFilterPanelItemContentBase = (({
     <>
       <span className={cnXTableFilterPanelItemContentPart()}>{col.title}:</span>
       <span className={cnXTableFilterPanelItemContentPart({ value: true })}>
-        {value || String(filter[String(col.field)])}
+        {value || filterCriterionToStrictTestString(filter[String(col.field)])}
       </span>
     </>
   );

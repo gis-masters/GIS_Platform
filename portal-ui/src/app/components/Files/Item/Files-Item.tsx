@@ -1,4 +1,4 @@
-import React, { type FC, memo, useCallback, useEffect, useMemo } from 'react';
+import React, { type FC, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { WorkspacePremiumOutlined } from '@mui/icons-material';
@@ -171,6 +171,27 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       }
     }, [item, setFileInfo, status]);
 
+    const communicationScopeRef = useRef({});
+
+    const onLibraryRecordUpdated = useCallback(
+      async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
+        if (e.detail.data.id === document?.id) {
+          await updateFileInfo();
+        }
+      },
+      [document?.id, updateFileInfo]
+    );
+
+    const onFileConnectionsUpdated = useCallback(
+      async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
+        if (e.detail.data.some(file => file.id === id)) {
+          dropConnections();
+          await fetchConnections();
+        }
+      },
+      [id, dropConnections, fetchConnections]
+    );
+
     const { ext, baseName, disabled, isFileConnected, isFileCanBePlaced, signed } = useMemo(() => {
       const ext = getFileExtension(item.title);
       const baseName = getFileBaseName(item.title);
@@ -193,39 +214,32 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       (showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable);
 
     useEffect(() => {
+      const scope = communicationScopeRef.current;
+      communicationService.libraryRecordUpdated.on(onLibraryRecordUpdated, scope);
+      communicationService.fileConnectionsUpdated.on(onFileConnectionsUpdated, scope);
+
       void (async () => {
-        communicationService.libraryRecordUpdated.on(async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
-          if (e.detail.data.id === document?.id) {
-            await updateFileInfo();
-          }
-        }, this);
-
-        communicationService.fileConnectionsUpdated.on(async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
-          if (e.detail.data.some(file => file.id === id)) {
-            dropConnections();
-            await fetchConnections();
-          }
-        }, this);
-
         await fetchConnections();
 
         if (!item.signed) {
           await updateFileInfo();
         }
 
-        // проверяем есть ли плагин криптопро
         try {
-          if (cryptoProStore.isPluginActive) {
-            return;
+          if (!cryptoProStore.isPluginActive) {
+            await isValidSystemSetup();
+            cryptoProStore.setPluginActive();
           }
-
-          await isValidSystemSetup();
-          cryptoProStore.setPluginActive();
         } catch {
           // do nothing
         }
       })();
-    }, []);
+
+      return () => {
+        communicationService.libraryRecordUpdated.off(onLibraryRecordUpdated, scope);
+        communicationService.fileConnectionsUpdated.off(onFileConnectionsUpdated, scope);
+      };
+    }, [fetchConnections, item.signed, onFileConnectionsUpdated, onLibraryRecordUpdated, updateFileInfo]);
 
     useEffect(() => {
       void (async () => {

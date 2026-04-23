@@ -21,6 +21,7 @@ import { projectionsStore } from '../../../stores/Projections.store';
 import { communicationService } from '../../communication.service';
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement } from '../../util/open-layers.util';
+import { isArray } from '../../util/typeGuards/isArray';
 import { mapDrawService } from '../draw/map-draw.service';
 import { ToolMode } from '../map.models';
 import { mapService } from '../map.service';
@@ -136,6 +137,13 @@ class MapMeasureService {
       ?.on('change', this.handleFeatureGeometryChange);
   }
 
+  private subscribeModifyingFeatureGeometryChange(feature: Feature): EventsKey | undefined {
+    return feature.getGeometry()?.on('change', (ev: BaseEvent) => {
+      const modifyingItem = mapMeasureStore.measureItems.find(item => item.feature === feature);
+      this.handleFeatureGeometryChange(ev, modifyingItem);
+    });
+  }
+
   private init() {
     mapService.map.addLayer(this.layer);
     const modify = new Modify({ source: this.source });
@@ -143,19 +151,14 @@ class MapMeasureService {
 
     modify.on('modifystart', (e: ModifyEvent) => {
       this.featureGeometryChangeListenersKeys = this.featureGeometryChangeListenersKeys || [];
-      if (!Array.isArray(this.featureGeometryChangeListenersKeys)) {
+      if (!isArray(this.featureGeometryChangeListenersKeys)) {
         this.featureGeometryChangeListenersKeys = [this.featureGeometryChangeListenersKeys];
       }
-      // eslint-disable-next-line no-unused-expressions -- @FIXME хз, что тут происходит
-      [
-        ...this.featureGeometryChangeListenersKeys,
-        ...(e.features.getArray() as Feature<SimpleGeometry>[]).map(feature => {
-          return feature.getGeometry()?.on('change', (e: BaseEvent) => {
-            const modifyingItem = mapMeasureStore.measureItems.find(item => item.feature === feature);
-            this.handleFeatureGeometryChange(e, modifyingItem);
-          });
-        })
-      ];
+      const newKeys = e.features
+        .getArray()
+        .map(feature => this.subscribeModifyingFeatureGeometryChange(feature))
+        .filter((key): key is EventsKey => key !== undefined);
+      this.featureGeometryChangeListenersKeys = [...this.featureGeometryChangeListenersKeys, ...newKeys];
     });
   }
 

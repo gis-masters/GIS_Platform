@@ -21,6 +21,7 @@ import { cql2ol } from '../../util/cql/cql2ol';
 import { parseCql } from '../../util/cql/parseCql';
 import { filterFeatures } from '../../util/filters/filterObjects';
 import { Mime } from '../../util/Mime';
+import { isArray } from '../../util/typeGuards/isArray';
 import {
   buildComplexName,
   extractFeatureId,
@@ -123,7 +124,7 @@ export async function getFeatures(
       }
     }
 
-    if (!Array.isArray(pagedResult)) {
+    if (!isArray(pagedResult)) {
       throw new TypeError('Ошибка пагинации');
     }
 
@@ -258,6 +259,12 @@ export async function makeXmlPolygonIntersect(
     : intersects(geometryFieldName, polygon, getProjectionCode(olProjection));
   const filter = olFilter || undefined;
 
+  const subtractForLimit = selectionType === MapSelectionTypes.ADD ? selectedFeaturesStore.features.length : 0;
+  const maxFeatures =
+    selectionType === MapSelectionTypes.REMOVE
+      ? undefined
+      : Math.max(selectedFeaturesStore.limit - subtractForLimit, 1);
+
   const featureRequest = new WFS().writeGetFeature({
     srsName,
     featureTypes: [complexName],
@@ -265,14 +272,7 @@ export async function makeXmlPolygonIntersect(
     filter,
     featureNS: '',
     featurePrefix: '',
-    maxFeatures:
-      selectionType === MapSelectionTypes.REMOVE
-        ? undefined
-        : Math.max(
-            selectedFeaturesStore.limit -
-              (selectionType === MapSelectionTypes.ADD ? selectedFeaturesStore.features.length : 0),
-            1
-          )
+    maxFeatures
   });
 
   return new XMLSerializer().serializeToString(featureRequest);
@@ -285,9 +285,7 @@ export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature
   }
 
   // Создаем entries с явной типизацией
-  const propertyEntries: Array<[string, null]> = schema.properties.map(
-    ({ name }) => [name.toLowerCase(), null] as [string, null]
-  );
+  const propertyEntries: Array<[string, null]> = schema.properties.map(({ name }) => [name.toLowerCase(), null]);
 
   // Добавляем флаг пустой сущности с явной типизацией
   const isEmptyFeatureEntry: [string, boolean] = [FeatureState.EMPTY, true];

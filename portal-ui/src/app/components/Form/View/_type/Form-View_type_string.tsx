@@ -16,12 +16,17 @@ import './Form-View_type_string.scss';
 @observer
 class FormViewTypeString extends Component<FormControlProps> {
   render() {
-    const { className, property, fullWidthForOldForm, labelInField, errors, inSet } = this.props;
-    let { fieldValue = '—' } = this.props;
+    const {
+      className,
+      property,
+      fullWidthForOldForm,
+      labelInField,
+      errors,
+      inSet,
+      fieldValue: rawFieldValue
+    } = this.props;
 
-    if (fieldValue === null) {
-      fieldValue = '—';
-    }
+    const fieldValue = typeof rawFieldValue === 'string' ? rawFieldValue : '—';
 
     const { propertyType, display } = property as PropertySchemaString;
     const code = display === 'code';
@@ -35,7 +40,7 @@ class FormViewTypeString extends Component<FormControlProps> {
       >
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
         <FormViewValue code={code}>
-          <TextOverflow>{code ? String(fieldValue) : nl2br(String(fieldValue))}</TextOverflow>
+          <TextOverflow>{code ? fieldValue : nl2br(fieldValue)}</TextOverflow>
         </FormViewValue>
         <FormViewErrors errors={errors} />
       </div>

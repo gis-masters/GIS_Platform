@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-import * as path from 'node:path';
+import path from 'node:path';
 import { addProperty } from '@wdio/junit-reporter';
 import type { JUnitReporterOptions } from '@wdio/junit-reporter/build/types.js';
 
@@ -25,7 +25,9 @@ const junitOutputDir = path.resolve(process.cwd(), 'tests/_reports/junit');
 const mergedSuiteName = 'portal-ui.e2e.RunCucumberTest';
 const mergedXmlFileName = `TEST-${mergedSuiteName}.xml`;
 const mergedTxtFileName = `${mergedSuiteName}.txt`;
+// eslint-disable-next-line sonarjs/slow-regex -- в автотестах это не критично
 const xmlAttributePattern = /([:_a-z][\w.:-]*)="([^"]*)"/gi;
+// eslint-disable-next-line sonarjs/slow-regex -- в автотестах это не критично
 const propertyTagPattern = /<property\s+([^>]*)\/>/g;
 
 function getBrowserName(capabilities: unknown): string {
@@ -86,12 +88,12 @@ function getPropertyValue(xml: string, name: string): string | undefined {
 }
 
 function escapeRegExp(text: string): string {
-  return text.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
+  return text.replaceAll(/[$()*+.?[\\\]^{|}]/g, String.raw`\$&`);
 }
 
 function stripPropertyByName(xml: string, propertyName: string): string {
   return xml.replaceAll(
-    new RegExp(`<property\\s+[^>]*name="${escapeRegExp(propertyName)}"[^>]*/>\\s*`, 'g'),
+    new RegExp(String.raw`<property\s+[^>]*name="${escapeRegExp(propertyName)}"[^>]*/>\s*`, 'g'),
     ''
   );
 }
@@ -122,7 +124,7 @@ function serializeAttributes(attributes: XmlAttributes): string {
 
 function getTagContents(xml: string, tagName: string): TagContent[] {
   const tagContents: TagContent[] = [];
-  const openTagPattern = new RegExp(`<${escapeRegExp(tagName)}(?=[\\s>/])`, 'g');
+  const openTagPattern = new RegExp(String.raw`<${escapeRegExp(tagName)}(?=[\s>/])`, 'g');
   const closeTag = `</${tagName}>`;
   let match = openTagPattern.exec(xml);
 
@@ -185,9 +187,10 @@ function rewriteTestCase(testCase: ParsedTestCase, featureName: string): string 
   const currentName = decodeXml(testCase.attributes.name ?? '');
   const currentClassname = decodeXml(testCase.attributes.classname ?? '');
   const name = currentName || scenarioName || featureName || 'Scenario';
-  const classname = currentClassname && !currentClassname.endsWith('.')
-    ? currentClassname
-    : `portal-ui.e2e.${normalizeClassname(featureName || name)}`;
+  const classname =
+    currentClassname && !currentClassname.endsWith('.')
+      ? currentClassname
+      : `portal-ui.e2e.${normalizeClassname(featureName || name)}`;
   const cleanedInnerXml = stripPropertyByName(testCase.innerXml, 'scenarioName');
 
   return `  <testcase${serializeAttributes({ ...testCase.attributes, classname, name })}>${cleanedInnerXml}</testcase>`;
@@ -226,7 +229,7 @@ export function mergeJunitReports(): void {
   const rawXmlFiles = fs
     .readdirSync(junitOutputDir)
     .filter(fileName => fileName.endsWith('.xml') && !fileName.startsWith('TEST-'))
-    .sort();
+    .toSorted((a, b) => a.localeCompare(b));
 
   let tests = 0;
   let failures = 0;

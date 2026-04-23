@@ -14,6 +14,7 @@ import { type DataChangeEventDetail } from '../../services/communication.service
 import { type SortOrder } from '../../services/models';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Loading } from '../Loading/Loading';
 import {
@@ -290,11 +291,11 @@ export default class Explorer extends Component<ExplorerProps> {
 
     if (preset && preset in presets) {
       const pathFromPreset = presets[preset];
-      if (Array.isArray(pathFromPreset)) {
+      if (isArray(pathFromPreset)) {
         this.store.setPath(pathFromPreset);
       }
     } else {
-      this.store.setPath(Array.isArray(path) && path.length ? path : [emptyItem]);
+      this.store.setPath(isArray(path) && path.length ? path : [emptyItem]);
     }
 
     // Инициализируем сортировку сразу при открытии
@@ -336,7 +337,7 @@ export default class Explorer extends Component<ExplorerProps> {
     if (action === KeyAction.BACK && path.length >= 3) {
       const item = path.at(-3);
       if (item) {
-        void this.openItem(item, path.length - 3);
+        this.openItem(item, path.length - 3);
       }
     }
 
@@ -359,9 +360,9 @@ export default class Explorer extends Component<ExplorerProps> {
 
     if (action === KeyAction.OPEN) {
       if (customOpenActionIcon(selectedItem, this.store)) {
-        void customOpenAction(selectedItem, this.store);
+        customOpenAction(selectedItem, this.store);
       } else {
-        void this.openItem(selectedItem);
+        this.openItem(selectedItem);
       }
     }
   }

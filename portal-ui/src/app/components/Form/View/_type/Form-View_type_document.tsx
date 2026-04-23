@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { type PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { type DocumentInfo, Documents } from '../../../Documents/Documents';
 import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
@@ -18,7 +19,7 @@ class FormViewTypeDocument extends Component<FormControlProps> {
 
     try {
       value = JSON.parse(String(fieldValue)) as DocumentInfo[];
-      if (!Array.isArray(value)) {
+      if (!isArray(value)) {
         value = [];
       }
     } catch {

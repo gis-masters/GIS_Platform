@@ -16,6 +16,8 @@ import { ChevronRight } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { isArray } from '../../services/util/typeGuards/isArray';
+
 import './MenuNestedItem.scss';
 
 const cnMenuNestedItem = cn('MenuNestedItem');
@@ -75,7 +77,7 @@ class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
           onClose={this.closeSubmenu}
         >
           <div ref={this.menuContainerRef} className={cnMenuNestedItem('MenuContainer')}>
-            {Array.isArray(submenu) ? submenu : [submenu]}
+            {isArray(submenu) ? submenu : [submenu]}
           </div>
         </Menu>
       </div>

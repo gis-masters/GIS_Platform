@@ -62,8 +62,7 @@ export async function createSignature(
   await oSigner.propset_Certificate(oCertificate);
   await oSigner.propset_CheckCertificate(true);
 
-  let sSignedMessage = '';
-  sSignedMessage = await (existingSign
+  const sSignedMessage = await (existingSign
     ? oSignedData.CoSignHash(oHashedData, oSigner, cadesplugin.CADESCOM_CADES_BES)
     : oSignedData.SignHash(oHashedData, oSigner, cadesplugin.CADESCOM_CADES_BES));
 

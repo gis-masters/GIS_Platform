@@ -9,7 +9,7 @@ import './PermissionsListDialog-ProjectIcon.scss';
 
 const cnPermissionsListProjectIcon = cn('PermissionsListDialog', 'ProjectIcon');
 
-export function PermissionsListProjectIcon({ rowData }: XTableCustomCellProps<CrgProject>): ReactNode {
+export function PermissionsListProjectIcon({ rowData }: Readonly<XTableCustomCellProps<CrgProject>>): ReactNode {
   const Icon = rowData.folder ? FolderOutlined : MapOutlined;
 
   return <Icon className={cnPermissionsListProjectIcon()} color='primary' fontSize='small' />;

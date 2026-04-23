@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { describe, expect, test } from '@jest/globals';
 
 import { PropertyType, type Schema } from '../../services/data/schema/schema.models';

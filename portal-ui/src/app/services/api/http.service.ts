@@ -88,7 +88,7 @@ class Http {
 
   async getPaged<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
     let result: T[] = [];
-    let totalPages = 0;
+    let totalPages: number;
     let page = 0;
 
     config.params = config.params || {};

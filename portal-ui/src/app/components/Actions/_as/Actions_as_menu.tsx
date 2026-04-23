@@ -6,6 +6,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import { type IClassNameProps, withBemMod } from '@bem-react/core';
 
 import { type ChildrenProps } from '../../../services/models';
+import { isArray } from '../../../services/util/typeGuards/isArray';
 import { IconButton } from '../../IconButton/IconButton';
 import { type ActionsProps, cnActions } from '../Actions.base';
 import { ActionsMenuOpenContext } from '../Item/_as/Actions-Item_as_menu';
@@ -30,7 +31,7 @@ class Container extends Component<IClassNameProps & ChildrenProps> {
         </IconButton>
 
         <Menu open={open} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close} keepMounted>
-          {Array.isArray(children) ? children : [children]}
+          {isArray(children) ? children : [children]}
         </Menu>
       </ActionsMenuOpenContext.Provider>
     );

@@ -69,7 +69,10 @@ function buildMultiPolygonChunks(coordinates: Coordinate[][][]): PrintableCoordi
     for (let ringIndex = 0; ringIndex < polygon.length; ringIndex++) {
       const ring = polygon[ringIndex];
       const polygonTitle = coordinates.length > 1 ? `Полигон ${polygonIndex + 1}` : '';
-      const ringTitle = polygon.length > 1 ? `${polygonTitle ? ', к' : 'К'}онтур ${ringIndex + 1}` : '';
+      let ringTitle = '';
+      if (polygon.length > 1) {
+        ringTitle = polygonTitle ? `, контур ${ringIndex + 1}` : `Контур ${ringIndex + 1}`;
+      }
 
       chunks.push({
         title: polygonTitle + ringTitle || undefined,

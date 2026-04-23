@@ -43,9 +43,10 @@ export class ExplorerAdapterTypeReportTemplatesRoot {
     { page, pageSize, sort, sortOrder, filter }: PageOptions
   ): Promise<[ExplorerItemData[], number]> {
     const all = await getTemplates();
-    const filtered = filter?.text
+    const searchText = typeof filter?.text === 'string' ? filter?.text : '';
+    const filtered = searchText
       ? filterObjects(all, {
-          $or: [{ name: { $ilike: `%${String(filter.text)}%` } }, { title: { $ilike: `%${String(filter.text)}%` } }]
+          $or: [{ name: { $ilike: `%${searchText}%` } }, { title: { $ilike: `%${searchText}%` } }]
         })
       : all;
     const sorted = sortObjects<TemplateInfo>(filtered, sort as keyof TemplateInfo, sortOrder === SortOrder.ASC, 'name');

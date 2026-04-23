@@ -121,10 +121,14 @@ export default class XmlDownload extends Component<XmlDownloadProps> {
     };
 
     const xml = xmlbuilder.create(mp).end({ pretty: true });
-    const fileName = properties.shape_area || properties.area_doc || properties.cad_num || guid;
+    const rawName = properties.shape_area || properties.area_doc || properties.cad_num || guid;
+    const fileNameBase =
+      typeof rawName === 'string' || typeof rawName === 'number' || typeof rawName === 'boolean'
+        ? String(rawName)
+        : String(guid);
     const blob = new Blob([xml], { type: 'xml' });
 
-    FileSaver.saveAs(blob, `${String(fileName)}.xml`);
+    FileSaver.saveAs(blob, `${fileNameBase}.xml`);
   }
 
   private getContours(geometry: WfsGeometry) {

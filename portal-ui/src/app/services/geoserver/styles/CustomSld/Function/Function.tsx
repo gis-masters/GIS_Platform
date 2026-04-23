@@ -1,8 +1,8 @@
 import { createElement, type FC, type ReactNode } from 'react';
 
-interface FunctionProps {
+interface SldFunctionProps {
   name: string;
   children?: ReactNode;
 }
 
-export const Function: FC<FunctionProps> = ({ name, children }) => createElement('Function', { name }, children);
+export const SldFunction: FC<SldFunctionProps> = ({ name, children }) => createElement('Function', { name }, children);

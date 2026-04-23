@@ -43,12 +43,13 @@ export class ExplorerAdapterTypeSchemasRoot {
     { page, pageSize, sort, sortOrder, filter }: PageOptions
   ): Promise<[ExplorerItemData[], number]> {
     const all = await schemaService.getAllSchemas();
-    const filtered = filter?.text
+    const filterText = typeof filter?.text === 'string' ? filter.text : '';
+    const filtered = filterText
       ? filterObjects(all, {
           $or: [
-            { name: { $ilike: `%${String(filter.text)}%` } },
-            { title: { $ilike: `%${String(filter.text)}%` } },
-            { tags: { $elemMatch: { $ilike: `%${String(filter.text)}%` } } }
+            { name: { $ilike: `%${filterText}%` } },
+            { title: { $ilike: `%${filterText}%` } },
+            { tags: { $elemMatch: { $ilike: `%${filterText}%` } } }
           ]
         })
       : all;

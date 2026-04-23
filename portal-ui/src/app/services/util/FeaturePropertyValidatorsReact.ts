@@ -52,9 +52,9 @@ export const validateCustomRules = (
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
-    const evaluateObjectRules = new Function('obj', customRuleFunction);
-    errors = evaluateObjectRules(featureProperties) as ValidationError[];
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval, sonarjs/code-eval -- правило из схемы
+    const evaluateObjectRules = new Function('obj', customRuleFunction) as (obj: unknown) => ValidationError[];
+    errors = evaluateObjectRules(featureProperties);
   } catch (error) {
     Toast.error({ message: 'Ошибка при анализе доп. правил', details: `Таблица: ${tableName}\n${String(error)}` });
     services.logger.error('Ошибка при анализе доп. правил', tableName, error);
@@ -201,10 +201,12 @@ const validatePattern = (value: string, propertySchema: OldPropertySchemaString,
   }
 };
 
+type OldPropertySchemaWithTotalDigits = OldPropertySchemaInt | OldPropertySchemaLong | OldPropertySchemaDouble;
+
 // Определяет точное количество допустимых цифр. Должно быть больше нуля
 const validateTotalDigits = (
   value: string,
-  propertySchema: OldPropertySchemaInt | OldPropertySchemaLong | OldPropertySchemaDouble,
+  propertySchema: OldPropertySchemaWithTotalDigits,
   errors: ErrorMessages
 ): void => {
   if (!propertySchema.totalDigits || propertySchema.totalDigits === -1) {
@@ -273,8 +275,12 @@ export const isEnumIncludeValue = (enumerations: PropertyEnumeration[], currentV
     return false;
   }
 
+  const currentPrimitive =
+    typeof currentValue === 'string' || typeof currentValue === 'number' || typeof currentValue === 'boolean'
+      ? String(currentValue)
+      : null;
   const result = enumerations.find(item => {
-    return String(item.value) === String(currentValue);
+    return currentPrimitive !== null && String(item.value) === currentPrimitive;
   });
 
   return result !== undefined;

@@ -17,7 +17,8 @@ export async function awaitProcessForTest(id: number, i = 0): Promise<void | Pro
   }
 
   if (res.status === ProcessStatus.ERROR) {
-    throw res;
+    const msg = res.message ?? JSON.stringify(res.details ?? res);
+    throw new Error(`Process ${res.id} failed: ${msg}`);
   }
 
   return await awaitProcessForTest(id, i + 1);

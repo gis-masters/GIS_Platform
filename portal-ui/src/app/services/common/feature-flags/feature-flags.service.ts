@@ -1,5 +1,5 @@
 import { environment } from '../../environment';
-import { type FlagsList, keys } from './feature-flags.models';
+import { type FlagsList, keys, type ParsedFeatureFlagValue } from './feature-flags.models';
 
 function lsKey(key: string) {
   return `crg-flag-${key}`;
@@ -11,13 +11,13 @@ class Flags implements FlagsList {
     return this._instance || (this._instance = new this());
   }
 
-  allowProjectionsForAllLayers = '';
-  oldPrintMechanism = '';
-  openFileDownloadInSameTab = '';
-  featureExtractPrintAutoMap = '';
-  selectingFeaturesLimit = '';
-  showDocumentRoles = '';
-  reportTemplatesInDataManagement = '';
+  allowProjectionsForAllLayers: ParsedFeatureFlagValue = '';
+  oldPrintMechanism: ParsedFeatureFlagValue = '';
+  openFileDownloadInSameTab: ParsedFeatureFlagValue = '';
+  featureExtractPrintAutoMap: ParsedFeatureFlagValue = '';
+  selectingFeaturesLimit: ParsedFeatureFlagValue = '';
+  showDocumentRoles: ParsedFeatureFlagValue = '';
+  reportTemplatesInDataManagement: ParsedFeatureFlagValue = '';
 
   private constructor() {
     this.init();
@@ -31,12 +31,12 @@ class Flags implements FlagsList {
     keys.forEach(key => {
       const stored = localStorage.getItem(lsKey(key));
       if (stored) {
-        this[key] = JSON.parse(stored) as FlagsList[keyof FlagsList];
+        this[key] = JSON.parse(stored) as ParsedFeatureFlagValue;
       }
     });
   }
 
-  set<T extends keyof FlagsList>(flag: T, value: FlagsList[T]): string {
+  set(flag: keyof FlagsList, value: ParsedFeatureFlagValue): string {
     if (!keys.includes(flag)) {
       throw new Error(`Нет такого флага "${flag}"`);
     }

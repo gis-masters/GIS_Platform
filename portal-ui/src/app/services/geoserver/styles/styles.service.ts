@@ -18,6 +18,7 @@ import {
   CUSTOM_STYLE_NAME,
   type FilteredStylesLayerRequest,
   type FilteredStylesResponse,
+  LEGEND_WMS_CONCURRENCY,
   type StyleFilter,
   StyleFilterOperator,
   type StyleRule
@@ -27,9 +28,6 @@ import { getSupGeometryType } from './styles.utils';
 /** Прозрачный 1×1 PNG, если GetLegendGraphic недоступен */
 const LEGEND_LOAD_FAILED_PLACEHOLDER =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-
-/** Ограничение параллелизма WMS GetLegendGraphic и обхода слоёв в печати/фильтрации легенды */
-export const LEGEND_WMS_CONCURRENCY = 2;
 
 const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 

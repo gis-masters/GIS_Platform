@@ -485,7 +485,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
         isUpdateAllowed(this.props.entity),
         isShapeImportAllowed(dataset, resourceId),
         isTableExportAllowed(dataset, resourceId),
-        isLayersManagementAllowed()
+        Promise.resolve(isLayersManagementAllowed())
       ]);
 
       this.setPermissions(...allowed);

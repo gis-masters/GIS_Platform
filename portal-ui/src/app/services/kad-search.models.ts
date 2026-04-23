@@ -1,6 +1,6 @@
 interface Attrs {
   address: string;
-  category_type: string; // eslint-disable-line camelcase
+  category_type: string;
   cn: string;
   id: string;
 }

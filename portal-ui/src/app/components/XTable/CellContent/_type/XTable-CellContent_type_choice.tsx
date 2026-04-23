@@ -5,11 +5,22 @@ import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
 import { cnXTableCellContent, XTableCellContentBase, type XTableCellContentProps } from '../XTable-CellContent.base';
 
+function choiceCellDataFallback(cellData: unknown): string {
+  if (cellData === undefined || cellData === null) {
+    return '';
+  }
+  if (typeof cellData === 'string' || typeof cellData === 'number' || typeof cellData === 'boolean') {
+    return String(cellData);
+  }
+
+  return '';
+}
+
 const XTableCellContentTypeChoice: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => (
   <XTableCellContentBase col={col} {...props}>
     <TextOverflow maxLines={2}>
       {col.settings?.options?.find(({ value }) => String(value) === String(cellData))?.title ||
-        (cellData === undefined || cellData === null ? '' : String(cellData))}
+        choiceCellDataFallback(cellData)}
     </TextOverflow>
   </XTableCellContentBase>
 );

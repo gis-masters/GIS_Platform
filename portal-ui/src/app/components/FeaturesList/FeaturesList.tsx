@@ -11,6 +11,7 @@ import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
 import { type FeatureError } from '../../services/map/map-link-following.service';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { sidebars } from '../../stores/Sidebars.store';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
@@ -89,7 +90,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
   private handleResize(entries: ResizeObserverEntry[]) {
     for (const entry of entries) {
       const contentBoxSize = (
-        Array.isArray(entry.contentBoxSize) ? entry.contentBoxSize[0] : entry.contentBoxSize
+        isArray(entry.contentBoxSize) ? entry.contentBoxSize[0] : entry.contentBoxSize
       ) as ResizeObserverSize;
 
       if (this.ref.current) {

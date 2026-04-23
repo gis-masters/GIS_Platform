@@ -2,6 +2,7 @@ import { type AxiosError } from 'axios';
 
 import { http } from '../../api/http.service';
 import { environment } from '../../environment';
+import { isArray } from '../../util/typeGuards/isArray';
 import { authClient } from './auth.client';
 import { type AuthCredentials, type AuthenticationResult, type RegData } from './auth.models';
 
@@ -16,7 +17,11 @@ http.axios.interceptors.request.use(config => {
 http.axios.interceptors.response.use(
   value => value,
   (e: AxiosError) => {
-    throw e.toJSON ? { ...e.toJSON(), response: e.response } : e;
+    if (e.toJSON) {
+      throw Object.assign(new Error(e.message), e.toJSON(), { response: e.response });
+    }
+
+    throw e;
   }
 );
 
@@ -38,7 +43,7 @@ class AuthService {
     try {
       const result = await authClient.authenticate(credentials);
 
-      if (Array.isArray(result)) {
+      if (isArray(result)) {
         return { ok: false, organizations: result };
       }
 

@@ -1,3 +1,4 @@
+import { isArray } from '../typeGuards/isArray';
 export type FilterQueryValue = string | number | boolean | RegExp | FilterQueryValue[] | null;
 
 export interface FilterQuery {
@@ -15,7 +16,7 @@ export function isFilterQueryValue(value: unknown): value is FilterQueryValue {
     return true;
   }
 
-  if (Array.isArray(value)) {
+  if (isArray(value)) {
     return value.every(isFilterQueryValue);
   }
 
@@ -28,6 +29,6 @@ export function isFilterQuery(value: unknown): value is FilterQuery {
   }
 
   return Object.entries(value).every(
-    ([_, val]) => isFilterQueryValue(val) || isFilterQuery(val) || (Array.isArray(val) && val.every(isFilterQuery))
+    ([_, val]) => isFilterQueryValue(val) || isFilterQuery(val) || (isArray(val) && val.every(isFilterQuery))
   );
 }

@@ -59,7 +59,9 @@ export class LibraryDocumentPageContainer extends Component {
               ) : (
                 this.document.title
               )}
-              {this.document.id && <TextBadge id={this.document.id} className={cnLibraryDocumentPageContainer('Id')} />}
+              {!!this.document.id && (
+                <TextBadge id={this.document.id} className={cnLibraryDocumentPageContainer('Id')} />
+              )}
             </h1>
             <LibraryDocument document={this.document} />
             {this.document.is_deleted ? (

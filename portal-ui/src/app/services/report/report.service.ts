@@ -19,7 +19,7 @@ export async function printDocument(document: LibraryRecord, templateName: strin
   const template = documentPrintTemplates.find(({ name }) => name === templateName);
 
   if (!template) {
-    throw `Не найден шаблон печати "${templateName}"`;
+    throw new Error(`Не найден шаблон печати "${templateName}"`);
   }
 
   await template.print(document);

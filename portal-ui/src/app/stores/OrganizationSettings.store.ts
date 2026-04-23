@@ -4,6 +4,7 @@ import { type Settings } from '../../server-types/common-contracts';
 import { type OccupiedStorage } from '../services/auth/organizations/organizations.models';
 import { type Projection } from '../services/data/projections/projections.models';
 import { type Schema } from '../services/data/schema/schema.models';
+import { isArray } from '../services/util/typeGuards/isArray';
 
 export interface OrgSettings extends Settings {
   favorites_epsg: Projection[] | string[];
@@ -36,7 +37,7 @@ export class OrganizationSettings {
 
   @action
   setSettings(settings?: CompositeSettings | CompositeSettings[]): void {
-    if (Array.isArray(settings)) {
+    if (isArray(settings)) {
       this.systemSettings = settings;
     } else {
       this.orgSettings = settings;

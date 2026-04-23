@@ -205,7 +205,7 @@ async function restoreRecentOpenedFeatures() {
   const deletedFeatures: FeatureError[] = [];
   const features: WfsFeature[] = [];
 
-  let featuresIdsInDatasetsAndTables: { [dataset: string]: { [table: string]: number[] } } = {};
+  let featuresIdsInDatasetsAndTables: { [dataset: string]: { [table: string]: number[] } };
 
   try {
     featuresIdsInDatasetsAndTables = JSON.parse(route.queryParams.features) as {

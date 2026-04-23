@@ -11,6 +11,7 @@ import { isTifFile } from '../../../services/data/files/files.util';
 import { PropertyType, type SimpleSchema } from '../../../services/data/schema/schema.models';
 import { type CoverageTransparentColorEntry } from '../../../services/geoserver/coverages/coverages.model';
 import { getTransparentColor, updateTransparentColor } from '../../../services/geoserver/coverages/coverages.service';
+import { isArray } from '../../../services/util/typeGuards/isArray';
 import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { FormDialog } from '../../FormDialog/FormDialog';
@@ -149,11 +150,11 @@ export class FilesConnections extends Component<ConnectionsProps> {
     const response = await getTransparentColor(layer.dataset, layer.resourceId + '__' + layer.nativeCRS.split(':')[1]);
     const entry = response?.coverage?.parameters?.entry;
 
-    if (Array.isArray(entry)) {
+    if (isArray(entry)) {
       this.setTransparentColor((entry.at(-1) as unknown as CoverageTransparentColorEntry).string[1]);
     }
 
-    if (entry && !Array.isArray(entry)) {
+    if (entry && !isArray(entry)) {
       this.setTransparentColor(entry.string[1]);
     }
   }

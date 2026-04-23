@@ -11,8 +11,8 @@ export default {
 
 const Template: StoryFn<typeof Button> = args => <Button {...args} className='ToastStoryButton' />;
 
-export const Error = Template.bind({});
-Error.args = {
+export const ToastError = Template.bind({});
+ToastError.args = {
   children: 'Error',
   color: 'error',
   onClick() {

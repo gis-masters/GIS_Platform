@@ -58,7 +58,7 @@ export class ExplorerAdapterTypeTable {
     );
   }
 
-  static getMeta = ExplorerAdapterTypeTable.getId;
+  static readonly getMeta = ExplorerAdapterTypeTable.getId;
 
   static getIcon(item: ExplorerItemData): ReactNode {
     assertExplorerItemDataTypeTable(item);

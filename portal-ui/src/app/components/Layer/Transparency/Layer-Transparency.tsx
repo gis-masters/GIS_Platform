@@ -5,6 +5,7 @@ import { Slider } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { type TreeItemPayload } from '../../../services/gis/projects/projects.models';
+import { isArray } from '../../../services/util/typeGuards/isArray';
 import { LayerTransparencyLabel } from '../TransparencyLabel/Layer-TransparencyLabel';
 
 import './Layer-Transparency.scss';
@@ -35,7 +36,7 @@ export class LayerTransparency extends Component<LayerTransparencyProps> {
 
   @action.bound
   private handleChange(e: Event, value: number | number[]) {
-    if (Array.isArray(value)) {
+    if (isArray(value)) {
       throw new TypeError('Слайдер не должен быть multiple');
     }
     this.props.entity.transparency = value;

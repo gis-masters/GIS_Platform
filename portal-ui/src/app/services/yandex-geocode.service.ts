@@ -24,7 +24,6 @@ export interface YaGeoObject {
       text: string;
       kind: string;
       Address: {
-        // eslint-disable-next-line camelcase
         country_code: string;
         formatted: string;
         Components: { kind: string; name: string }[];

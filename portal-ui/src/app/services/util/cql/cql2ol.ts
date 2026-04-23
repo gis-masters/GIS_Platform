@@ -284,7 +284,6 @@ function buildAst(tokens: TokenInfo[]) {
     let max: number;
     let property: string;
     let value: string | number | Geometry;
-    let match: string[];
     let maxy: number;
     let maxx: number;
     let miny: number;
@@ -336,12 +335,11 @@ function buildAst(tokens: TokenInfo[]) {
         return isNull(property);
       }
       case Token.VALUE: {
-        match = tok.text.match(/^'(.*)'$/) as string[];
+        const quoted = /^'(.*)'$/.exec(tok.text);
 
-        return match ? match[1].replaceAll("''", "'") : Number(tok.text);
+        return quoted ? quoted[1].replaceAll("''", "'") : Number(tok.text);
       }
       case Token.SPATIAL: {
-        // eslint-disable-next-line sonarjs/no-nested-switch
         switch (tok.text.toUpperCase()) {
           case 'BBOX': {
             maxy = buildTree() as number;
@@ -407,6 +405,7 @@ export function cql2ol(text: string): Filter {
 }
 
 // TODO: реализовать обратное преобразование на основе этого:
+/* eslint-disable sonarjs/no-commented-code */
 // function inverseObject(o: object): object {
 //   // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- в нашей версии TS этот тип описать невозможно
 //   return Object.fromEntries(Object.entries(o).map(([key, value]) => [value, key]));

@@ -117,7 +117,7 @@ class CurrentProject implements CrgProjectData {
 
         return item;
       })
-      .sort(this.sorter);
+      .toSorted(this.sorter);
   }
 
   @computed
@@ -287,7 +287,7 @@ class CurrentProject implements CrgProjectData {
 
       groupsToDelete: this.primalGroups
         .filter(primalGroup => this.isGroupDeleted(primalGroup))
-        .sort(
+        .toSorted(
           (a, b) =>
             this.tree.findIndex(({ isGroup, id }) => isGroup && id === b.id) -
             this.tree.findIndex(({ isGroup, id }) => isGroup && id === a.id)
@@ -375,7 +375,7 @@ class CurrentProject implements CrgProjectData {
   @action
   deleteLayer(layer: CrgLayer) {
     const index = this.layers.indexOf(layer);
-    if (index > -1) {
+    if (index !== -1) {
       this.layers.splice(index, 1);
     }
   }
@@ -383,7 +383,7 @@ class CurrentProject implements CrgProjectData {
   @action
   deleteGroup(deletingGroup: CrgLayersGroup) {
     const index = this.groups.indexOf(deletingGroup);
-    if (index > -1) {
+    if (index !== -1) {
       this.groups.splice(index, 1);
     }
 

@@ -6,6 +6,7 @@ import { type SimpleGeometry } from 'ol/geom';
 
 import { type PageOptions, SortOrder } from '../../models';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
+import { isArray } from '../../util/typeGuards/isArray';
 import { GeometryType, type WfsFeature, type WfsGeometry, type WfsPointGeometry } from './wfs.models';
 
 export function getEmptyGeometry(type: GeometryType): WfsGeometry {
@@ -98,12 +99,17 @@ export function generateWfsSortParam(pageOptions: PageOptions): string {
 
 type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
 
+export const GEOMETRY_COORDINATES_FLAT_DEPTH = 5;
+
 export function normalizeCoordinates(coord: Coords | string | number): Coords | number {
-  return Array.isArray(coord) ? ((coord as Coords[]).map(normalizeCoordinates) as Coords) : asNumber(coord);
+  return isArray(coord) ? ((coord as Coords[]).map(normalizeCoordinates) as Coords) : asNumber(coord);
 }
 
 export function isGeometryValid(geometry: WfsGeometry): boolean {
-  return isCoordinateValid(geometry.coordinates.flat(5) as Coordinate) && !hasUnclosedPolygons(geometry);
+  return (
+    isCoordinateValid(geometry.coordinates.flat(GEOMETRY_COORDINATES_FLAT_DEPTH) as Coordinate) &&
+    !hasUnclosedPolygons(geometry)
+  );
 }
 
 function hasUnclosedPolygons(geometry: WfsGeometry): boolean {

@@ -5,6 +5,7 @@ import { CheckCircle, Error, Info, Warning } from '@mui/icons-material';
 import { type SvgIconProps } from '@mui/material/SvgIcon/';
 import nl2br from 'react-nl2br';
 import { type Id, toast, type ToastOptions, type TypeOptions } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { environment } from '../../services/environment';
 import { sendTelegramError } from '../../services/telegram.service';
@@ -12,8 +13,21 @@ import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordSt
 import { ToastCloseButton } from './CloseButton/Toast-CloseButton';
 import { cnToast } from './Toast.classname';
 
-import '../../../../node_modules/react-toastify/dist/ReactToastify.css';
 import './Toast.scss';
+
+function reactNodeToTelegramText(node: unknown): string {
+  if (node === null || node === undefined) {
+    return '';
+  }
+  if (typeof node === 'string' || typeof node === 'number' || typeof node === 'boolean') {
+    return String(node);
+  }
+  try {
+    return JSON.stringify(node, null, 2) ?? '';
+  } catch {
+    return '';
+  }
+}
 
 interface ToastOpts extends ToastOptions {
   message?: ReactNode;
@@ -39,7 +53,7 @@ interface ToastProps extends ToastOpts {
 
 @observer
 export class Toast extends Component<ToastProps> {
-  static defaultDuration = 5000;
+  static readonly defaultDuration = 5000;
 
   private static icons: Record<TypeOptions, FC<SvgIconProps>> = {
     error: Error,
@@ -139,18 +153,12 @@ export class Toast extends Component<ToastProps> {
     const sourceFile = source ? new URL(source).pathname : '';
     const protocol = window.location.protocol.slice(0, -1);
 
-    let tgMsg = '';
-    if (typeof message === 'string') {
-      tgMsg = message;
-    } else {
-      try {
-        tgMsg = JSON.stringify(message, null, 2) || String(message);
-      } catch {}
-    }
-    if (details) {
-      tgMsg += `
-${String(details)}`;
-    }
+    let tgMsg =
+      (typeof message === 'string' ? message : reactNodeToTelegramText(message)) +
+      (details
+        ? `
+${reactNodeToTelegramText(details)}`
+        : '');
     if (error) {
       tgMsg += `
 ${error.message || error.toString()}`;

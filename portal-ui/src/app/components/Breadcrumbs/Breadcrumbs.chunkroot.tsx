@@ -10,6 +10,7 @@ import { isEqual, throttle } from 'lodash';
 
 import { type ChildrenProps } from '../../services/models';
 import { sleep } from '../../services/util/sleep';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { IconButton } from '../IconButton/IconButton';
 import { BreadcrumbsDivider } from './Divider/Breadcrumbs-Divider';
 import { type BreadcrumbsItemsType } from './Item/Breadcrumbs-Item.base';
@@ -130,7 +131,7 @@ export default class Breadcrumbs extends Component<BreadcrumbsProps> {
         >
           {items?.map((item, i) => (
             <MenuItem key={i} onClick={this.closeMenu}>
-              <BreadcrumbsItem {...item} nestingLevel={i && i + 1} type={itemsType || 'button'} />
+              <BreadcrumbsItem {...item} nestingLevel={i > 0 ? i + 1 : 0} type={itemsType || 'button'} />
             </MenuItem>
           ))}
         </Menu>
@@ -178,6 +179,15 @@ export default class Breadcrumbs extends Component<BreadcrumbsProps> {
 
   @boundMethod
   private async checkItemsFit() {
+    // Двойной rAF: снять размеры после flex-раскладки, иначе hiddenItemsCount уходит глубже.
+    await new Promise<void>(resolve => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          resolve();
+        });
+      });
+    });
+
     let wasHiddenItemsCount: number;
     let diff = 0;
 
@@ -210,16 +220,18 @@ export default class Breadcrumbs extends Component<BreadcrumbsProps> {
   private async handleResize(entries: ResizeObserverEntry[]) {
     for (const entry of entries) {
       const contentBoxSize = (
-        Array.isArray(entry.contentBoxSize) ? entry.contentBoxSize[0] : entry.contentBoxSize
+        isArray(entry.contentBoxSize) ? entry.contentBoxSize[0] : entry.contentBoxSize
       ) as ResizeObserverSize;
 
-      if (!this.contentBoxSize) {
-        this.setContentBoxSize(contentBoxSize.inlineSize);
-      }
+      const nextInline = contentBoxSize.inlineSize;
+      const prevInline = this.contentBoxSize;
 
-      if (this.contentBoxSize && Math.abs(this.contentBoxSize - contentBoxSize.inlineSize) > 5) {
+      if (!prevInline) {
+        this.setContentBoxSize(nextInline);
         await this.checkItemsFit();
-        this.setContentBoxSize(contentBoxSize.inlineSize);
+      } else if (Math.abs(prevInline - nextInline) > 5) {
+        await this.checkItemsFit();
+        this.setContentBoxSize(nextInline);
       }
     }
   }
@@ -238,7 +250,7 @@ export default class Breadcrumbs extends Component<BreadcrumbsProps> {
 
   @computed
   private get rootHidden(): boolean {
-    return !(this.hiddenItemsCount < this.props.items.length - 1) && this.props.items.length > 1;
+    return this.hiddenItemsCount >= this.props.items.length - 1 && this.props.items.length > 1;
   }
 
   @computed

@@ -1,3 +1,4 @@
+import { isArray } from '../typeGuards/isArray';
 import { type FilterQuery, type FilterQueryValue } from './filters.models';
 
 export function getFieldFilterValue(
@@ -7,7 +8,7 @@ export function getFieldFilterValue(
   if (!field) {
     return;
   }
-  if (Array.isArray(filter.$and)) {
+  if (isArray(filter.$and)) {
     const entry: FilterQuery | undefined = (filter.$and as FilterQuery[]).find(
       filterEntry => filterEntry[field] !== undefined
     );
@@ -84,7 +85,7 @@ export function removeFieldFilter(filter: FilterQuery, field: string): void {
     delete filter[field];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore // todo починить (https://dev.azure.com/programgeoplan/GIS%20Platform/_workitems/edit/6054)
-    if (Array.isArray(filter.$or) && filter.$or[field]) {
+    if (isArray(filter.$or) && filter.$or[field]) {
       delete filter.$or;
     }
   }
@@ -121,4 +122,19 @@ export function addFilterPart(filter: FilterQuery, part: FilterQuery): void {
     }
     filter.$and = newAndValue;
   }
+}
+
+/** Строка для проверки строгого ILIKE/$in в UI (без небезопасного String(object)) */
+export function filterCriterionToStrictTestString(value: unknown): string {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  if (isArray(value)) {
+    return value.map(filterCriterionToStrictTestString).join(',');
+  }
+
+  return '';
 }

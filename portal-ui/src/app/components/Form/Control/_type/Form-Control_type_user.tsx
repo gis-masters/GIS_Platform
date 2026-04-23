@@ -5,6 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { type MinimizedCrgUser } from '../../../../services/auth/users/users.models';
 import { type PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
+import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { Users } from '../../../Users/Users';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
@@ -18,7 +19,7 @@ class FormControlTypeUser extends Component<FormControlProps> {
 
     try {
       value = JSON.parse(String(fieldValue)) as MinimizedCrgUser[];
-      if (!Array.isArray(value)) {
+      if (!isArray(value)) {
         value = [];
       }
     } catch {

@@ -86,14 +86,14 @@ export class HelpToc extends Component<HelpTocProps> {
 
   @action
   private search(word: string) {
-    const regEx = new RegExp('(' + word + ')(?!([^<]+)?>)', 'gi');
+    const inner = '(' + word + ')(?!([^<]+)?>)';
     const toc: Toc = this.flatArray
       .map(item => {
-        if (item.content && (regEx.test(item.title) || regEx.test(item.content))) {
+        if (item.content && (new RegExp(inner, 'i').test(item.title) || new RegExp(inner, 'i').test(item.content))) {
           return {
             ...item,
-            title: this.searchRegExp(item.title, regEx),
-            content: this.searchRegExp(item.content, regEx)
+            title: this.searchRegExp(item.title, inner),
+            content: this.searchRegExp(item.content, inner)
           };
         }
       })
@@ -102,8 +102,8 @@ export class HelpToc extends Component<HelpTocProps> {
     this.setSearchResults(toc);
   }
 
-  private searchRegExp(text: string, regEx: RegExp): string {
-    return text.replace(regEx, `<span class=${cnHelpToc('Mark')}>$1</span>`);
+  private searchRegExp(text: string, inner: string): string {
+    return text.replaceAll(new RegExp(inner, 'gi'), `<span class=${cnHelpToc('Mark')}>$1</span>`);
   }
 
   @action.bound
@@ -144,8 +144,12 @@ export class HelpToc extends Component<HelpTocProps> {
     return this.alignArray(this.props.items);
   }
 
+  private static readonly TOC_TREE_FLAT_DEPTH = 2;
+
   @action
   private alignArray(arr: Toc): Toc {
-    return arr.map(article => (article.children ? this.alignArray(article.children) : article)).flat(2) as Toc;
+    return arr
+      .map(article => (article.children ? this.alignArray(article.children) : article))
+      .flat(HelpToc.TOC_TREE_FLAT_DEPTH) as Toc;
   }
 }

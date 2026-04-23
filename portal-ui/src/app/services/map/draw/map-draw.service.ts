@@ -183,10 +183,10 @@ class MapDrawService {
 
       const existingIndex = selectedFeatures.findIndex(f => f.getId() === highlightedFeatureId);
 
-      if (existingIndex >= 0) {
-        combinedFeatures[existingIndex] = highlightedFeature;
-      } else {
+      if (existingIndex === -1) {
         combinedFeatures.push(highlightedFeature);
+      } else {
+        combinedFeatures[existingIndex] = highlightedFeature;
       }
 
       this.addFeatures(combinedFeatures);

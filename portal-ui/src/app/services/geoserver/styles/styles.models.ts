@@ -3,6 +3,9 @@ import { isObject } from 'lodash';
 import { type PropertySchema, PropertyType } from '../../data/schema/schema.models';
 import { type WfsGeometry } from '../wfs/wfs.models';
 
+/** Ограничение параллелизма WMS GetLegendGraphic и обхода слоёв в печати/фильтрации легенды */
+export const LEGEND_WMS_CONCURRENCY = 2;
+
 export interface StyleRuleExtended extends StyleRule {
   layerId: number;
   layerTitle: string;

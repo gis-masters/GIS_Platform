@@ -21,7 +21,7 @@ class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> 
     return (
       <InputMask
         mask='9 (999) 999 99 99'
-        value={fieldValue ? String(fieldValue) : ''}
+        value={typeof fieldValue === 'string' ? fieldValue : ''}
         onChange={this.handleChange}
         onBlur={this.handleBlur}
         alwaysShowMask
@@ -29,7 +29,7 @@ class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> 
         {
           // @ts-expect-error беда в типах react-input-mask
           (
-            inputProps: JSX.IntrinsicAttributes & { variant?: TextFieldVariants | undefined } & Omit<
+            inputProps: JSX.IntrinsicAttributes & { variant?: TextFieldVariants } & Omit<
                 StandardTextFieldProps | OutlinedTextFieldProps | FilledTextFieldProps,
                 'variant'
               >

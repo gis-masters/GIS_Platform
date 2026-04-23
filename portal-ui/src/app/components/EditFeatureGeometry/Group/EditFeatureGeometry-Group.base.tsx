@@ -9,7 +9,7 @@ import { debounce } from 'lodash';
 import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { GEOMETRY_COORDINATES_FLAT_DEPTH, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
@@ -165,7 +165,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
 
   @computed
   private get empty() {
-    return !this.props.coordinates.flat(5).some(Boolean);
+    return !this.props.coordinates.flat(GEOMETRY_COORDINATES_FLAT_DEPTH).some(Boolean);
   }
 
   @action.bound

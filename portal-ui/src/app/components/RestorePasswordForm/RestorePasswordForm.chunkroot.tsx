@@ -11,6 +11,7 @@ import { authService } from '../../services/auth/auth/auth.service';
 import { PropertyType, type Schema } from '../../services/data/schema/schema.models';
 import { environment } from '../../services/environment';
 import { services } from '../../services/services';
+import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
 import { generateRandomId } from '../../services/util/randomId';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
@@ -141,7 +142,12 @@ export default class RestorePasswordForm extends Component {
       const err = error as AxiosError<{ errors: Record<string, string>[] }>;
       const errors = err.response?.data?.errors || [];
 
-      throw [{ field: 'password', messages: errors }];
+      throw new FormFieldErrorsError([
+        {
+          field: 'email',
+          messages: errors.flatMap(e => (typeof e === 'string' ? [e] : Object.values(e)))
+        }
+      ]);
     }
 
     this.handleLoading(false);

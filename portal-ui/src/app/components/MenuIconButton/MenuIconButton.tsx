@@ -12,7 +12,9 @@ import { observer } from 'mobx-react';
 import { Menu, type PropTypes } from '@mui/material';
 import { ArrowDropDown } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { omit } from 'lodash';
 
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { IconButton, type IconButtonProps } from '../IconButton/IconButton';
 
 import './MenuIconButton.scss';
@@ -24,6 +26,7 @@ interface MenuIconButtonProps extends Omit<IconButtonProps, 'ref'> {
   color?: PropTypes.Color;
   keepMounted?: boolean;
   innerRef?: ForwardedRef<HTMLButtonElement>;
+  onMenuOpenChange?(open: boolean): void;
 }
 
 @observer
@@ -47,7 +50,7 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
       size,
       keepMounted,
       ...iconButtonProps
-    } = this.props;
+    } = omit(this.props, 'onMenuOpenChange');
 
     return (
       <>
@@ -73,7 +76,7 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
             root: { className: cnMenuIconButton('MenuModalRoot') }
           }}
         >
-          {Array.isArray(children) ? children : [children]}
+          {isArray(children) ? children : [children]}
         </Menu>
       </>
     );
@@ -83,11 +86,13 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
   private toggle() {
     this.anchorEl = this.anchorRef.current;
     this.menuOpen = !this.menuOpen;
+    this.props.onMenuOpenChange?.(this.menuOpen);
   }
 
   @action.bound
   private close() {
     this.menuOpen = false;
+    this.props.onMenuOpenChange?.(false);
   }
 }
 

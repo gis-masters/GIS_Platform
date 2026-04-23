@@ -3,6 +3,7 @@ import { cn } from '@bem-react/classname';
 import Highlighter from 'react-highlight-words';
 
 import { type FilterQuery, type FilterQueryValue } from '../../services/util/filters/filters.models';
+import { isArray } from '../../services/util/typeGuards/isArray';
 
 import './Highlight.scss';
 
@@ -20,14 +21,24 @@ const HighlightFC: FC<HighlightProps> = ({ enabled, word, searchWords, children 
     if (
       word &&
       typeof word === 'object' &&
-      !Array.isArray(word) &&
+      !isArray(word) &&
       !(word instanceof RegExp) &&
       typeof word.$ilike === 'string'
     ) {
       return word.$ilike.replaceAll(/^%|%$/g, '');
     }
 
-    return word instanceof RegExp ? word : String(word);
+    if (word instanceof RegExp) {
+      return word;
+    }
+    if (typeof word === 'string') {
+      return word;
+    }
+    if (typeof word === 'number' || typeof word === 'boolean') {
+      return String(word);
+    }
+
+    return '';
   }, [word]);
 
   return enabled && (actualWord || searchWords) ? (

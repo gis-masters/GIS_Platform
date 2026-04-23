@@ -37,6 +37,8 @@ export interface ErrorMessages {
   minInclusive?: string;
 }
 
+type OldPropertySchemaNumeric = OldPropertySchemaInt | OldPropertySchemaDouble | OldPropertySchemaLong;
+
 /**
  * @deprecated legacy
  */
@@ -53,9 +55,9 @@ export class FeaturePropertyValidators {
     }
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      const evaluateObjectRules = new Function('obj', customRuleFunction);
-      errors = evaluateObjectRules(featureProperties) as ValidationError[];
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval, sonarjs/code-eval -- правило из схемы
+      const evaluateObjectRules = new Function('obj', customRuleFunction) as (obj: unknown) => ValidationError[];
+      errors = evaluateObjectRules(featureProperties);
     } catch (error) {
       Toast.error({ message: 'Ошибка при анализе доп. правил', details: `Таблица: ${tableName}\n${String(error)}` });
       services.logger.error('Ошибка при анализе доп. правил', tableName, error);
@@ -224,11 +226,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет точное количество допустимых цифр. Должно быть больше нуля
-  private static totalDigits(
-    value: string,
-    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble | OldPropertySchemaLong,
-    errors: ErrorMessages
-  ): void {
+  private static totalDigits(value: string, propertySchema: OldPropertySchemaNumeric, errors: ErrorMessages): void {
     if (!propertySchema.totalDigits || propertySchema.totalDigits === -1) {
       return;
     }
@@ -251,11 +249,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет нижнюю границу для числовых значений (значение должно быть больше указанного здесь)
-  private static minInclusive(
-    value: string,
-    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble | OldPropertySchemaLong,
-    errors: ErrorMessages
-  ): void {
+  private static minInclusive(value: string, propertySchema: OldPropertySchemaNumeric, errors: ErrorMessages): void {
     if (!propertySchema.minInclusive || propertySchema.minInclusive === -1) {
       return;
     }
@@ -266,11 +260,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет верхнюю границу для числовых значений (значение должно быть меньше или равно указанному здесь)
-  private static maxInclusive(
-    value: string,
-    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble | OldPropertySchemaLong,
-    errors: ErrorMessages
-  ): void {
+  private static maxInclusive(value: string, propertySchema: OldPropertySchemaNumeric, errors: ErrorMessages): void {
     if (!propertySchema.maxInclusive || propertySchema.maxInclusive === -1) {
       return;
     }
@@ -291,8 +281,12 @@ export class FeaturePropertyValidators {
       return false;
     }
 
+    const currentPrimitive =
+      typeof currentValue === 'string' || typeof currentValue === 'number' || typeof currentValue === 'boolean'
+        ? String(currentValue)
+        : null;
     const result = enumerations.find(item => {
-      return String(item.value) === String(currentValue);
+      return currentPrimitive !== null && String(item.value) === currentPrimitive;
     });
 
     return result !== undefined;

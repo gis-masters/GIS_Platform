@@ -9,7 +9,7 @@ const cnHelpTocItemTitleLink = cn('HelpToc', 'ItemTitleLink');
 
 interface HelpTocItemTitleLinkProps {
   item: TocItem;
-  onClick: (item: TocItem) => void;
+  onClick(item: TocItem): void;
 }
 
 export const HelpTocItemTitleLink: FC<HelpTocItemTitleLinkProps> = ({ item, onClick }) => {

@@ -4,13 +4,18 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { type AxiosError } from 'axios';
 
 import { type OrganizationsListItemInfo } from '../../services/auth/auth/auth.models';
 import { authService } from '../../services/auth/auth/auth.service';
 import { usersService } from '../../services/auth/users/users.service';
 import { communicationService } from '../../services/communication.service';
 import { services } from '../../services/services';
+import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
+import { isFieldErrors } from '../../services/util/form/formValidation.utils';
+import { isArray } from '../../services/util/typeGuards/isArray';
+import { isArrayOf } from '../../services/util/typeGuards/isArrayOf';
+import { isAxiosError } from '../../services/util/typeGuards/isAxiosError';
+import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Pages, route } from '../../stores/Route.store';
 import { Loading } from '../Loading/Loading';
@@ -27,6 +32,26 @@ const defaultData: AuthUserData = {
   username: '',
   password: ''
 };
+
+function appendLoginErrorMessagesFromItem(messages: string[], item: unknown): void {
+  if (typeof item === 'string') {
+    messages.push(item);
+
+    return;
+  }
+  if (isArray(item)) {
+    for (const el of item) {
+      if (typeof el === 'string') {
+        messages.push(el);
+      }
+    }
+
+    return;
+  }
+  if (isRecordStringUnknown(item)) {
+    messages.push(...Object.values(item).filter((v): v is string => typeof v === 'string'));
+  }
+}
 
 export interface LoginFormProps extends IClassNameProps {
   inDialog?: boolean;
@@ -133,8 +158,16 @@ export default class LoginForm extends Component<LoginFormProps> {
         this.setLoading(true);
         await usersService.fetchCurrentUser();
       } catch (error) {
-        const err = error as AxiosError<{ errors?: Record<string, string>[] }>;
-        throw err.response?.data?.errors || [];
+        const rawErrorsRaw = isAxiosError<{ errors?: unknown }>(error) ? error.response?.data?.errors : undefined;
+        if (isArrayOf(rawErrorsRaw, isFieldErrors)) {
+          throw new FormFieldErrorsError(rawErrorsRaw);
+        }
+        const rawErrors: unknown[] = isArray(rawErrorsRaw) ? rawErrorsRaw : [];
+        const messages: string[] = [];
+        for (const item of rawErrors) {
+          appendLoginErrorMessagesFromItem(messages, item);
+        }
+        throw new FormFieldErrorsError([{ field: 'username', messages }]);
       } finally {
         this.setLoading(false);
       }
@@ -159,9 +192,11 @@ export default class LoginForm extends Component<LoginFormProps> {
         });
       }
     } else if (result.userDisabled) {
-      throw [{ field: 'password', messages: 'Запрос на создание принят и обрабатывается. Попробуйте позже' }];
+      throw new FormFieldErrorsError([
+        { field: 'password', messages: ['Запрос на создание принят и обрабатывается. Попробуйте позже'] }
+      ]);
     } else if (result.wrongPassword) {
-      throw [{ field: 'password', messages: 'Неверное имя пользователя или пароль' }];
+      throw new FormFieldErrorsError([{ field: 'password', messages: ['Неверное имя пользователя или пароль'] }]);
     } else if (result.organizations) {
       this.setOrganizations(result.organizations);
     }

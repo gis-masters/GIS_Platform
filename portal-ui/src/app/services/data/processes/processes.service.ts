@@ -39,7 +39,7 @@ export async function awaitProcess(id: number, i = 0): Promise<void | Process> {
   }
 
   if (res.status === ProcessStatus.ERROR) {
-    throw res;
+    throw new Error(res.message ?? `Процесс ${res.id} завершился с ошибкой`, { cause: res });
   }
 
   return await awaitProcess(id, i + 1);

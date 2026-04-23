@@ -16,6 +16,7 @@ import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles
 import { services } from '../../../services/services';
 import { calculateBbox } from '../../../services/util/Bbox';
 import { wfsFeaturesToOlFeatures } from '../../../services/util/open-layers.util';
+import { isArray } from '../../../services/util/typeGuards/isArray';
 import { isCoordinate, isCoordinateArrayArray } from '../../../services/util/typeGuards/isCoordinate';
 import { isNspdProperties, type NspdProperties } from '../../../services/util/typeGuards/isNspdProperties';
 import { IconButton } from '../../IconButton/IconButton';
@@ -93,7 +94,7 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
         this.drawMarker(point);
       }
 
-      if (geometry.bbox && Array.isArray(geometry.bbox) && geometry.bbox.length >= 4) {
+      if (geometry.bbox && isArray(geometry.bbox) && geometry.bbox.length >= 4) {
         this.fitToBbox(geometry.bbox, [0, 0, 0, 0], 0.85);
       } else {
         const calculatedBbox = calculateBbox(coordinates);

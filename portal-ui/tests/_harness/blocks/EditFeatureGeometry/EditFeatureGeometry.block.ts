@@ -121,17 +121,10 @@ class EditFeatureGeometryBlock extends Block {
     await $copyCoordsBtn.moveTo();
   }
 
-  // FIXME: разобраться, почему с clickDeleteGroupButton один и тот же селектор
-  async clickDeletePolygonButton(): Promise<void> {
-    const $deletePolygonBtn = await this.findBySelector('deleteBtn');
-    await $deletePolygonBtn.waitForDisplayed();
-    await $deletePolygonBtn.click();
-  }
-
-  async clickDeleteGroupButton(): Promise<void> {
-    const $deleteGroupBtn = await this.findBySelector('deleteBtn');
-    await $deleteGroupBtn.waitForDisplayed();
-    await $deleteGroupBtn.click();
+  async clickDeleteGeometryGroupButton(): Promise<void> {
+    const $btn = await this.findBySelector('deleteBtn');
+    await $btn.waitForDisplayed();
+    await $btn.click();
   }
 
   async clickDeleteCoordButton(): Promise<void> {

@@ -52,7 +52,9 @@ class Route {
 
   private constructor() {
     makeObservable(this);
-    void this.subscribe();
+    queueMicrotask(() => {
+      void this.subscribe();
+    });
   }
 
   @action

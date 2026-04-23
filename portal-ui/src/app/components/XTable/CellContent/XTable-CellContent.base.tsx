@@ -23,17 +23,21 @@ export const cnXTableCellContent = cn('XTable', 'CellContent');
 
 const INDENT = 29;
 
-export interface XTableCellContentProps<T> extends ChildrenProps, IClassNameProps, HTMLAttributes<HTMLSpanElement> {
-  singleLineContent: boolean;
-  col: XTableColumn<T>;
-  type?: XTableColumnType;
-  filterParams?: FilterQuery;
-  cellData?: unknown;
-  inHead?: boolean;
-  maxDefaultWidth?: number;
-  enableMaxDefaultWidth?: boolean;
-  width?: number;
-}
+export type XTableCellContentProps<T> = Readonly<
+  {
+    singleLineContent: boolean;
+    col: XTableColumn<T>;
+    type?: XTableColumnType;
+    filterParams?: FilterQuery;
+    cellData?: unknown;
+    inHead?: boolean;
+    maxDefaultWidth?: number;
+    enableMaxDefaultWidth?: boolean;
+    width?: number;
+  } & ChildrenProps &
+    IClassNameProps &
+    HTMLAttributes<HTMLSpanElement>
+>;
 
 const isColTypeAllowed = (type?: XTableColumnType): boolean => {
   if (type && isPropertyType(type)) {

@@ -69,8 +69,8 @@ export async function getBasemapConnections(basemap: Basemap): Promise<CrgProjec
 // К подложкам применяются кастомизации указанные для них в проекте: сортируем по position, меняем title
 function handleBasemaps(projectBaseMaps: ProjectBasemap[], basemaps: Basemap[]): Basemap[] {
   const result: Basemap[] = [];
-  [...projectBaseMaps]
-    .sort((a, b) => a.position - b.position || a.id - b.id)
+  projectBaseMaps
+    .toSorted((a, b) => a.position - b.position || a.id - b.id)
     .forEach(projectBasemap => {
       const basemap = basemaps.find(({ id }) => id === projectBasemap.baseMapId);
       if (projectBasemap.title && basemap) {
