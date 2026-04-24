@@ -49,6 +49,11 @@ SELECT 'municipality_boundaries_egrn',
        '{}'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'municipality_boundaries_egrn');
 
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'ter_zone_pro',
+       '{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'ter_zone_pro');
+
 --Необходимо поддерживать схему dl_data_kpt в соответствии с миграцией M18__kptTableAlwaysLikeInCode.sql
 UPDATE data.schemas
 SET is_system = true,
@@ -88,6 +93,13 @@ SET is_system = true,
               "valueType": "STRING"
             },
             {
+              "name": "cad_block_num",
+              "title": "Кадастровый квартал",
+              "readOnly": true,
+              "description": "Заполняется автоматически при импорте КПТ в слой.",
+              "valueType": "STRING"
+            },
+            {
               "name": "date_received_request",
               "title": "Дата",
               "valueType": "DATETIME",
@@ -124,6 +136,9 @@ SET is_system = true,
                   "name": "location",
                   "defaultValueWellKnownFormula": "inherit",
                   "description": "Наследуется от папки"
+                },
+                {
+                  "name": "cad_block_num"
                 },
                 {
                   "name": "file"
@@ -1186,7 +1201,41 @@ SET is_system = true,
               "title": "Вид объекта реестра границ",
               "required": true,
               "maxLength": 100,
-              "valueType": "STRING"
+              "valueType": "CHOICE",
+              "enumerations": [
+                {
+                  "title": "Зона с особыми условиями использования территории",
+                  "value": "Зона с особыми условиями использования территории"
+                },
+                {
+                  "title": "Территория объекта культурного наследия",
+                  "value": "Территория объекта культурного наследия"
+                },
+                {
+                  "title": "Граница зоны с особыми условиями использования территории",
+                  "value": "Граница зоны с особыми условиями использования территории"
+                },
+                {
+                  "title": "Особо охраняемая природная территория",
+                  "value": "Особо охраняемая природная территория"
+                },
+                {
+                  "title": "Граница территории объекта культурного наследия",
+                  "value": "Граница территории объекта культурного наследия"
+                },
+                {
+                  "title": "Лесничество",
+                  "value": "Лесничество"
+                },
+                {
+                  "title": "Граница особо охраняемой природной территории",
+                  "value": "Граница особо охраняемой природной территории"
+                },
+                {
+                  "title": "Лесопарковый зеленый пояс",
+                  "value": "Лесопарковый зеленый пояс"
+                }
+              ]
             },
             {
               "name": "created_at",
@@ -1695,3 +1744,150 @@ SET is_system = true,
           "geometryType": "MultiPolygon"
         }'
 WHERE name = 'municipality_boundaries_egrn';
+
+UPDATE data.schemas
+SET is_system = true,
+    class_rule =
+        '{
+          "tags": [
+            "system",
+            "КПТ"
+          ],
+          "name": "ter_zone_pro",
+          "title": "Территориальные зоны",
+          "styleName": "terzone_kpt",
+          "tableName": "ter_zone_pro",
+          "properties": [
+            {
+              "name": "number",
+              "title": "Номер",
+              "valueType": "STRING"
+            },
+            {
+              "name": "zonetype",
+              "title": "Вид зоны",
+              "maxLength": 100,
+              "valueType": "CHOICE",
+              "enumerations": [
+                {
+                  "title": "Жилая зона",
+                  "value": "Жилая зона"
+                },
+                {
+                  "title": "Производственная зона, зона инженерной и транспортной инфраструктур",
+                  "value": "Производственная зона, зона инженерной и транспортной инфраструктур"
+                },
+                {
+                  "title": "Общественно-деловая зона",
+                  "value": "Общественно-деловая зона"
+                },
+                {
+                  "title": "Зона сельскохозяйственного использования",
+                  "value": "Зона сельскохозяйственного использования"
+                },
+                {
+                  "title": "Зона рекреационного назначения",
+                  "value": "Зона рекреационного назначения"
+                },
+                {
+                  "title": "Зона специального назначения",
+                  "value": "Зона специального назначения"
+                },
+                {
+                  "title": "Иная зона",
+                  "value": "Иная зона"
+                }
+              ]
+            },
+            {
+              "name": "name_by_doc",
+              "title": "Название зоны",
+              "valueType": "TEXT"
+            },
+            {
+              "name": "regnumbord",
+              "title": "Реестровый номер границы",
+              "asTitle": true,
+              "valueType": "STRING"
+            },
+            {
+              "name": "registrati",
+              "title": "Дата постановки на учет",
+              "valueType": "STRING"
+            },
+            {
+              "name": "boundary_1",
+              "title": "Вид объекта реестра границ",
+              "required": true,
+              "hidden": true,
+              "maxLength": 100,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "description": "Дата импорта XML в слой",
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "shape",
+              "hidden": true,
+              "title": "Геометрия",
+              "valueType": "GEOMETRY",
+              "allowedValues": [
+                "Polygon"
+              ]
+            },
+            {
+              "name": "ruleid",
+              "title": "Идентификатор стиля",
+              "hidden": true,
+              "valueType": "INT"
+            },
+            {
+              "name": "acsept_at",
+              "title": "Дата",
+              "hidden": true,
+              "valueType": "DATETIME",
+              "description": "Дата приёма данных из  АИС УМС"
+            },
+            {
+              "name": "source_doc",
+              "title": "Документ источник",
+              "multiple": true,
+              "libraries": [
+                "dl_data_kpt"
+              ],
+              "valueType": "DOCUMENT",
+              "description": "Отсылка к документу из которого получен объект",
+              "maxDocuments": 5
+            }
+          ],
+          "description": "Территориальные зоны",
+          "geometryType": "MultiPolygon"
+        }'
+WHERE name = 'ter_zone_pro';

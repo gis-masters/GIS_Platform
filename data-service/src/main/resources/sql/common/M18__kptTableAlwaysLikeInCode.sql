@@ -38,6 +38,13 @@ SET schema = '{
       "valueType": "STRING"
     },
     {
+      "name": "cad_block_num",
+      "title": "Кадастровый квартал",
+      "readOnly": true,
+      "valueType": "STRING",
+      "description": "Заполняется автоматически при импорте КПТ в слой."
+    },
+    {
       "name": "date_received_request",
       "title": "Дата",
       "readOnly": true,
@@ -121,6 +128,9 @@ SET schema = '{
           "defaultValueWellKnownFormula": "inherit"
         },
         {
+          "name": "cad_block_num"
+        },
+        {
           "name": "file"
         },
         {
@@ -153,4 +163,5 @@ SET schema = '{
 WHERE table_name LIKE 'dl_data_kpt';
 
 ALTER TABLE IF EXISTS data.dl_data_kpt
-    ADD COLUMN IF NOT EXISTS date_received_request timestamp without time zone;
+    ADD COLUMN IF NOT EXISTS date_received_request timestamp without time zone,
+    ADD COLUMN IF NOT EXISTS cad_block_num character varying;

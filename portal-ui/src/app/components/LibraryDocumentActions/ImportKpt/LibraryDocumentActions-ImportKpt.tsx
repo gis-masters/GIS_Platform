@@ -224,6 +224,21 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
       },
       {
         propertyType: PropertyType.CUSTOM,
+        name: 'ter_zone_pro',
+        title: 'Территориальные зоны',
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%ter_zone_pro%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
+      },
+      {
+        propertyType: PropertyType.CUSTOM,
         name: 'borderwaterobj',
         title: 'Береговая линия (полигональные)',
         startPath: this.lastPath,

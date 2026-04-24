@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
+import ru.mycrg.data_service.kpt_import.model.KptSourceDocumentMetadata;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.geo_json.Feature;
@@ -20,6 +21,8 @@ import java.util.List;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyQuery;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
+import static ru.mycrg.data_service.kpt_import.model.KptSourceDocumentMetadata.CAD_BLOCK_NUM;
+import static ru.mycrg.data_service.kpt_import.model.KptSourceDocumentMetadata.DATE_RECEIVED_REQUEST;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 
 @Repository
@@ -178,28 +181,32 @@ public class KptImportDao {
 
     /**
      * Для предоставления пользователю информацию об актуальности КПТ, в момент чтения КПТ хотим в карточку документа
-     * вносить актуальную дату о дате выдачи КПТ. Считаем что операция не самая важная поэтому неудачи просто логаем и
-     * всё.
+     * вносить актуальную дату выдачи КПТ и номер кад блока. Считаем что операция не самая важная поэтому неудачи просто
+     * логаем в консоль и всё. Лог задачи не пишем.
      */
-    public void setDateOfReceivedRequestToKptDoc(String dbName,
-                                                 ResourceQualifier qualifier,
-                                                 Long docId,
-                                                 String date) {
+    public void updateKptSourceDocumentMetadata(String dbName,
+                                                ResourceQualifier qualifier,
+                                                Long docId,
+                                                KptSourceDocumentMetadata metadata) {
+        if (metadata.isEmpty()) {
+            return;
+        }
+
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
-
             String query = """
                     UPDATE %s
-                    SET date_received_request = '%s'
-                    WHERE id = %d
+                    SET %s = '%s',
+                        %s = '%s'
+                    WHERE id = ?
                     """.formatted(qualifier.getTableQualifier(),
-                                  date,
-                                  docId);
+                                  DATE_RECEIVED_REQUEST, metadata.getDateReceivedRequest(),
+                                  CAD_BLOCK_NUM, metadata.getCadBlockNum());
 
-            log.debug("Запрос обновления даты в документе KPT [{}]", query);
-            jdbcTemplate.update(query);
+            log.debug("Запрос обновления метаданных документа KPT [{}]", query);
+            jdbcTemplate.update(query, docId);
         } catch (Exception e) {
-            log.error("При обновлении даты документа КПТ в библиотеки произошла ошибка: {}", e.getMessage());
+            log.error("При обновлении метаданных документа КПТ в библиотеки произошла ошибка: {}", e.getMessage());
         }
     }
 }

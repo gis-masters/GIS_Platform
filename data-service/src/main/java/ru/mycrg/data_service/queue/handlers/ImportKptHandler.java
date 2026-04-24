@@ -12,6 +12,8 @@ import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.kpt_import.model.KptSourceDocumentMetadata;
+import ru.mycrg.data_service.kpt_import.reader.KptSourceDocumentMetadataReader;
 import ru.mycrg.data_service.kpt_import.TmpTablesService;
 import ru.mycrg.data_service.kpt_import.model.*;
 import ru.mycrg.data_service.kpt_import.model.oks.OksBuildingElement;
@@ -63,6 +65,7 @@ import static ru.mycrg.data_service.kpt_import.writer.MunicipalityBoundaryWriter
 import static ru.mycrg.data_service.kpt_import.writer.OksConstructionPointWriter.OKS_CONSTRUCTIONS_POINTS_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.OksPolylineProWriter.OKS_POLYLINE_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.OksProWriter.OKS_PRO_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.TerZoneWriter.TER_ZONE_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.ZouitWriter.ZOUIT_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.ZuWriter.ZU_PRO_SCHEMA;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
@@ -91,6 +94,7 @@ public class ImportKptHandler implements IEventHandler {
     private final TmpTablesService tmpTablesService;
     private final TaskLogDetachedDao taskLogDetachedDao;
     private final KptImportDao kptImportDao;
+    private final KptSourceDocumentMetadataReader kptSourceDocumentMetadataExtractor;
     private final TasksDetachedDao tasksDetachedDao;
     private final DatasourceFactory datasourceFactory;
     private final Map<String, KptXmlElementReader<? extends KptElement>> tagReaders;
@@ -102,6 +106,7 @@ public class ImportKptHandler implements IEventHandler {
     private final Map<String, Set<String>> schemaNameTags = Map.of(
             ZU_PRO_SCHEMA, Set.of(ZuElement.XML_TAG),
             ZOUIT_PRO_SCHEMA, Set.of(ZouitElement.XML_TAG),
+            TER_ZONE_PRO_SCHEMA, Set.of(TerZoneElement.XML_TAG),
             BORDERWATEROBJ_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG),
             BORDERWATEROBJ_POLILYNE_PRO_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG),
             KVARTAL_KPT_SCHEMA, Set.of("cadastral_number", "area_quarter", "spatial_data"),
@@ -124,12 +129,14 @@ public class ImportKptHandler implements IEventHandler {
                             KptValidator kptValidator,
                             TaskLogDetachedDao taskLogDetachedDao,
                             KptImportDao kptImportDao,
+                            KptSourceDocumentMetadataReader kptSourceDocumentMetadataExtractor,
                             TmpTablesService tmpTablesService,
                             TasksDetachedDao tasksDetachedDao,
                             DatasourceFactory datasourceFactory) {
         this.kptValidator = kptValidator;
         this.taskLogDetachedDao = taskLogDetachedDao;
         this.kptImportDao = kptImportDao;
+        this.kptSourceDocumentMetadataExtractor = kptSourceDocumentMetadataExtractor;
         this.tmpTablesService = tmpTablesService;
         this.tasksDetachedDao = tasksDetachedDao;
         this.datasourceFactory = datasourceFactory;
@@ -275,11 +282,26 @@ public class ImportKptHandler implements IEventHandler {
             }
 
             ZipEntry xmlFile = xmlZipEntry.get();
+            var sourceDocumentData = extractSourceDocumentMetadata(zipKpt,
+                                                                   xmlFile,
+                                                                   kptDocument.getId());
+
+            String dbName = importEvent.getDbName();
+
+            sourceDocumentData.
+                    ifPresent(sourceDocumentMetadata ->
+                                      kptImportDao.updateKptSourceDocumentMetadata(dbName,
+                                                                                   new ResourceQualifier(
+                                                                                           SYSTEM_SCHEMA_NAME,
+                                                                                           KPT_LIBRARY_ID),
+                                                                                   kpt.getDocument().getId(),
+                                                                                   sourceDocumentMetadata)
+                    );
+
             try (InputStream inputStream = zipKpt.getInputStream(xmlFile)) {
                 log.info("Импорт КПТ: '{}' из {}/{}", kptDocument.getTitle(), pathToKpt, xmlFile.getName());
 
                 long taskId = importEvent.getTaskId();
-                String dbName = importEvent.getDbName();
                 String initiator = importEvent.getInitiatorLogin();
                 String acceptAt = importEvent.getValidationSettings().getDateOrderCompletion();
                 Map<KptElementWriter, List<KptElement>> toWrite = new HashMap<>();
@@ -287,38 +309,33 @@ public class ImportKptHandler implements IEventHandler {
 
                 XMLStreamReader streamReader = xmlInputFactory.createXMLStreamReader(inputStream);
 
-                String date_received_request = null;
+                try {
+                    while (streamReader.hasNext()) {
+                        if (!running.get()) {
+                            break;
+                        }
 
-                while (streamReader.hasNext()) {
-                    if (!running.get()) {
-                        break;
+                        int eventType = streamReader.next();
+                        List<? extends KptElement> kptElements = getKptElements(tags,
+                                                                                streamReader,
+                                                                                kvartalElement,
+                                                                                eventType);
+                        if (kptElements.isEmpty()) {
+                            continue;
+                        }
+
+                        kptElements.forEach(kptElement -> {
+                            Map<String, Object> filledContent = fillContentWithCommonData(kptElement.getContent(),
+                                                                                          initiator,
+                                                                                          kptDocument,
+                                                                                          acceptAt);
+                            kptElement.setContent(filledContent);
+                        });
+
+                        persistKptElements(dbName, kptElements, writers, toWrite, schemas, taskId);
                     }
-
-                    int eventType = streamReader.next();
-                    if (eventType == XMLStreamConstants.START_ELEMENT
-                            && "date_received_request".equals(streamReader.getLocalName())) {
-                        date_received_request = streamReader.getElementText();
-
-                        continue;
-                    }
-
-                    List<? extends KptElement> kptElements = getKptElements(tags,
-                                                                            streamReader,
-                                                                            kvartalElement,
-                                                                            eventType);
-                    if (kptElements.isEmpty()) {
-                        continue;
-                    }
-
-                    kptElements.forEach(kptElement -> {
-                        Map<String, Object> filledContent = fillContentWithCommonData(kptElement.getContent(),
-                                                                                      initiator,
-                                                                                      kptDocument,
-                                                                                      acceptAt);
-                        kptElement.setContent(filledContent);
-                    });
-
-                    persistKptElements(dbName, kptElements, writers, toWrite, schemas, taskId);
+                } finally {
+                    streamReader.close();
                 }
 
                 for (KptElementWriter writer: toWrite.keySet()) {
@@ -351,15 +368,6 @@ public class ImportKptHandler implements IEventHandler {
                                taskId);
                 }
 
-                Optional.ofNullable(date_received_request)
-                        .ifPresent(date -> kptImportDao
-                                .setDateOfReceivedRequestToKptDoc(dbName,
-                                                                  new ResourceQualifier(SYSTEM_SCHEMA_NAME,
-                                                                                        KPT_LIBRARY_ID),
-                                                                  kpt.getDocument().getId(),
-                                                                  date)
-                        );
-
                 timer.stop();
                 log.info("Файл '{}' обработан за {} сек", pathToKpt, timer.getTotalTimeSeconds());
             }
@@ -367,6 +375,18 @@ public class ImportKptHandler implements IEventHandler {
             log.error("Ошибка чтения архива. КПТ: {}, архив: {}", kptDocument.getId(), pathToKpt, ex);
 
             throw ex;
+        }
+    }
+
+    private Optional<KptSourceDocumentMetadata> extractSourceDocumentMetadata(ZipFile zipKpt,
+                                                                              ZipEntry xmlFile,
+                                                                              Long kptDocumentId) {
+        try (InputStream inputStream = zipKpt.getInputStream(xmlFile)) {
+            return Optional.of(kptSourceDocumentMetadataExtractor.extract(inputStream));
+        } catch (Exception e) {
+            log.error("Ошибка чтения метаданных документа КПТ. kptId: {}", kptDocumentId, e);
+
+            return Optional.empty();
         }
     }
 
