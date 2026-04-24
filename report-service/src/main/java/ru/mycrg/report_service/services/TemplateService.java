@@ -8,11 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.report_service.TemplateCreateDto;
+import ru.mycrg.common_contracts.generated.report_service.TemplateFullInfo;
 import ru.mycrg.common_contracts.generated.report_service.TemplateShortInfo;
 import ru.mycrg.common_contracts.generated.report_service.TemplateShortProjection;
 import ru.mycrg.report_service.entity.Template;
 import ru.mycrg.report_service.exceptions.BadRequestException;
 import ru.mycrg.report_service.exceptions.NotFoundException;
+import ru.mycrg.report_service.mappers.TemplateMapper;
 import ru.mycrg.report_service.repository.TemplateRepository;
 
 import java.io.File;
@@ -45,7 +47,13 @@ public class TemplateService {
         this.fileService = fileService;
     }
 
-    public List<TemplateShortProjection> getAll() {
+    public List<TemplateFullInfo> getAll() {
+        return StreamSupport.stream(templateRepository.findAll().spliterator(), false)
+                            .map(TemplateMapper::mapToTemplateFullInfo)
+                            .toList();
+    }
+
+    public List<TemplateShortProjection> getAllShort() {
         return StreamSupport.stream(templateRepository.findAll().spliterator(), false)
                             .map(this::mapToShortProjection)
                             .toList();

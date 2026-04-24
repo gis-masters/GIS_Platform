@@ -4,10 +4,12 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.path.json.config.JsonParserType;
+import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.common_contracts.generated.report_service.TemplateCreateDto;
-import ru.mycrg.common_contracts.generated.report_service.TemplateShortInfo;
+import ru.mycrg.common_contracts.generated.report_service.TemplateFullInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,13 +110,19 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
 
     @And("среди шаблонов печати есть шаблон с именем {string}")
     public void templateResponseContainsArg(String arg) {
-        List<TemplateShortInfo> answer = response.jsonPath().getList("", TemplateShortInfo.class);
+        List<TemplateFullInfo> answer = response
+                .jsonPath(new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3))
+                .getList("", TemplateFullInfo.class);
+
         assertTrue(answer.stream().anyMatch(t -> t.getTitle().equals(arg)));
     }
 
     @And("среди шаблонов печати нет шаблона с именем {string}")
     public void templateResponseNotContainsArg(String arg) {
-        List<TemplateShortInfo> answer = response.jsonPath().getList("", TemplateShortInfo.class);
+        List<TemplateFullInfo> answer = response
+                .jsonPath(new JsonPathConfig().defaultParserType(JsonParserType.JACKSON_3))
+                .getList("", TemplateFullInfo.class);
+
         assertFalse(answer.stream().anyMatch(t -> t.getTitle().equals(arg)));
     }
 }

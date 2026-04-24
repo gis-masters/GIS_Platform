@@ -190,7 +190,7 @@ public class FileService {
                 ResourceQualifier fQualifier = fieldQualifier(qualifier, qualifier.getRecordIdAsLong(), fieldName);
                 allFiles.stream()
                         .filter(file -> fileIdsForTransfer.contains(file.getId()))
-                        .collect(Collectors.toList())
+                        .toList()
                         .forEach(file -> {
                             String resultPath = transferFileFromTempDirectory(
                                     fQualifier,

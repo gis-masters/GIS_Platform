@@ -1,3 +1,4 @@
+@Shard
 Feature: Скачивание архивом групп файлов
 
   Background:

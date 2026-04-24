@@ -1,5 +1,8 @@
 package ru.mycrg.data_service.controller.file;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +29,6 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -39,6 +39,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.FilenameDownloadUtil.defineDownloadFilename;
 import static ru.mycrg.data_service.util.ZipUtil.addStreamToZip;
 
 @RestController
@@ -46,6 +47,8 @@ import static ru.mycrg.data_service.util.ZipUtil.addStreamToZip;
 public class FileDownloadController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(FileDownloadController.class);
+
+    private static final String FILENAME_HEADER = "filename";
 
     private final FileRepository fileRepository;
     private final OrgSettingsKeeper orgSettingsKeeper;
@@ -69,8 +72,10 @@ public class FileDownloadController extends BaseController {
         File file = getFileOrThrow(id);
 
         try {
+            String downloadFilename = defineDownloadFilename(request.getHeader(FILENAME_HEADER),
+                                                             file);
             ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
-                                                                      .filename(file.getTitle(), UTF_8)
+                                                                      .filename(downloadFilename, UTF_8)
                                                                       .build();
 
             Resource resource = fileStorageService.loadFromMainStorage(file.getPath());

@@ -47,11 +47,19 @@ public class TemplateCrudController {
 
     @GetMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<TemplateShortProjection>> getAllTemplatesShortData() {
+    public ResponseEntity<List<TemplateFullInfo>> getAllTemplatesFullInfo() {
         log.debug("Попросили вернуть все шаблоны печати");
-        List<TemplateShortProjection> subAnswer = templateService.getAll();
+        List<TemplateFullInfo> subAnswer = templateService.getAll();
 
         log.debug("Шаблонов нашли: {}", subAnswer.size());
+
+        return ResponseEntity.ok(subAnswer);
+    }
+
+    @GetMapping("/short")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<List<TemplateShortProjection>> getAllTemplatesShortData() {
+        List<TemplateShortProjection> subAnswer = templateService.getAllShort();
 
         return ResponseEntity.ok(subAnswer);
     }

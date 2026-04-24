@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.exceptions;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -26,8 +28,6 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,7 +67,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpStatusCode status,
                                                                   final WebRequest request) {
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST,
-                "Not readable request body. Reason: " + ex.getMessage());
+                                                     "Not readable request body. Reason: " + ex.getMessage());
 
         return handleExceptionInternal(ex, errorModel, headers, errorModel.getStatus(), request);
     }
@@ -78,7 +78,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                                                         final HttpStatusCode status,
                                                         final WebRequest request) {
         String errorMsg = String.format("%s value for %s should be of type %s",
-                ex.getValue(), ex.getPropertyName(), ex.getRequiredType());
+                                        ex.getValue(), ex.getPropertyName(), ex.getRequiredType());
 
         ErrorInfo error = new ErrorInfo(ex.getPropertyName(), errorMsg);
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getLocalizedMessage(), error);
@@ -183,9 +183,9 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex) {
         List<ErrorInfo> errors = new ArrayList<>();
-        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+        for (ConstraintViolation<?> violation: ex.getConstraintViolations()) {
             String currentProp = null;
-            for (var node : violation.getPropertyPath()) {
+            for (var node: violation.getPropertyPath()) {
                 currentProp = node.getName();
             }
 
@@ -260,7 +260,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         BindingErrorsException bindEx = (BindingErrorsException) ex;
 
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, bindEx.getMessage(),
-                mapBindingErrors(bindEx.getBindingResult()));
+                                                     mapBindingErrors(bindEx.getBindingResult()));
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
