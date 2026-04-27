@@ -70,10 +70,12 @@ const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
 };
 
 interface SchemaPropertiesItemProps {
+  propertyId: number;
   propertySchema: PropertySchema;
   readonly: boolean;
+  editing?: boolean;
   propertySchemaWithoutContentType?: PropertySchema;
-  onPropertyChange?(newPropertySchema: PropertySchema): void;
+  onPropertyChange?(newPropertySchema: PropertySchema, oldName?: string): void;
 }
 
 const cnSchemaPropertiesItem = cn('SchemaProperties', 'Item');
@@ -84,7 +86,7 @@ const cnSchemaPropertiesOpenEditButton = cn('SchemaProperties', 'OpenEditButton'
 
 @observer
 export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
-  @observable selectedId: string | null | undefined = '';
+  @observable selectedId: number | null = null;
 
   private ref = createRef<HTMLButtonElement>();
 
@@ -94,7 +96,8 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
   }
 
   render() {
-    const { readonly, propertySchema, propertySchemaWithoutContentType, onPropertyChange } = this.props;
+    const { readonly, propertyId, propertySchema, editing, propertySchemaWithoutContentType, onPropertyChange } =
+      this.props;
     const { name, title, propertyType, description, hidden, readOnly, required } = propertySchema;
     const [TypeIcon, typeText] = getTypeIcon(propertyType);
 
@@ -106,7 +109,9 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
               <TypeIcon />
             </Tooltip>
           </ListItemIcon>
+
           <ListItemText classes={{ primary: cnSchemaPropertiesPrimaryText() }} primary={title} secondary={name} />
+
           <SchemaPropertiesItemIcons>
             <>
               {description && (
@@ -114,6 +119,7 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
                   <HelpOutline fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
                 </Tooltip>
               )}
+
               {hidden && (
                 <Tooltip title='Скрытое'>
                   <VisibilityOffOutlined
@@ -123,6 +129,7 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
                   />
                 </Tooltip>
               )}
+
               {readOnly && (
                 <Tooltip title='Только для чтения'>
                   <EditOffOutlined
@@ -132,6 +139,7 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
                   />
                 </Tooltip>
               )}
+
               {required && (
                 <Tooltip title='Обязательное'>
                   <Icon className={cnSchemaPropertiesItemIcon({ type: 'required' })} color='action'>
@@ -151,7 +159,7 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
                   ref={this.ref}
                   color='primary'
                 >
-                  {this.selectedId === name ? (
+                  {this.selectedId === propertyId ? (
                     <Edit fontSize='small' color='primary' />
                   ) : (
                     <EditOutlined fontSize='small' color='primary' />
@@ -165,17 +173,17 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
         <Accordion
           component='li'
           className={cnSchemaPropertiesItemAccordion()}
-          key={name}
-          expanded={this.selectedId === name}
+          expanded={this.selectedId === propertyId}
           onChange={this.onPropertyChange}
         >
           <AccordionSummary />
           <AccordionDetails>
             {onPropertyChange && (
               <EditPropertySchemaForm
+                editing={editing}
                 propertySchema={propertySchema}
                 propertySchemaWithoutContentType={propertySchemaWithoutContentType}
-                onPropertyChange={onPropertyChange}
+                onPropertyChange={this.handlePropertySchemaChange}
               />
             )}
           </AccordionDetails>
@@ -186,7 +194,15 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
 
   @action.bound
   private onPropertyChange() {
-    const id = this.ref.current?.getAttribute('name');
-    this.selectedId = this.selectedId === id ? '' : id;
+    const { propertyId } = this.props;
+    this.selectedId = this.selectedId === propertyId ? null : propertyId;
+  }
+
+  @action.bound
+  private handlePropertySchemaChange(newPropertySchema: PropertySchema) {
+    const { propertySchema, onPropertyChange } = this.props;
+    const oldName = propertySchema.name;
+
+    onPropertyChange?.(newPropertySchema, oldName);
   }
 }

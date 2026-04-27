@@ -41,7 +41,7 @@ interface SchemaActionsEditProps {
   item?: Library | VectorTable;
   withPreview?: boolean;
   readonly?: boolean;
-  isTemplateEditing?: boolean;
+  editing?: boolean;
   disabled?: boolean;
   tooltipText?: string;
 }
@@ -71,7 +71,7 @@ export const SchemaActionsEdit = observer((props: SchemaActionsEditProps) => {
     item: explorerItem,
     withPreview,
     readonly = false,
-    isTemplateEditing: editIcon,
+    editing: editIcon,
     disabled,
     tooltipText
   } = props;
@@ -328,6 +328,7 @@ export const SchemaActionsEdit = observer((props: SchemaActionsEditProps) => {
             ) : (
               <SchemaCard
                 readonly={readonly}
+                editing={editIcon}
                 onSchemaChange={handleSetCurrentSchema}
                 onError={handleSetError}
                 schema={currentSchema}

@@ -5,6 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import {
   type BasePropertySchema,
+  type PropertyOption,
   type PropertySchema,
   PropertyType,
   type SimpleSchema
@@ -13,39 +14,105 @@ import { Form } from '../Form/Form';
 
 const cnEditPropertySchemaForm = cn('EditPropertySchemaForm');
 
-const propertyFieldsSchema: SimpleSchema = {
-  properties: [
-    {
-      name: 'title',
-      title: 'Название',
-      required: true,
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'description',
-      title: 'Описание',
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'readOnly',
-      title: 'Только для чтения',
-      propertyType: PropertyType.BOOL
-    },
-    {
-      name: 'required',
-      title: 'Обязательное',
-      propertyType: PropertyType.BOOL
-    },
-    {
-      name: 'hidden',
-      title: 'Скрытое',
-      propertyType: PropertyType.BOOL
-    }
-  ]
+const AVAILABLE_PROPERTY_TYPES = [
+  PropertyType.STRING,
+  PropertyType.TEXT,
+  PropertyType.INT,
+  PropertyType.FLOAT,
+  PropertyType.DATETIME,
+  PropertyType.URL,
+  PropertyType.USER,
+  PropertyType.BOOL
+] as const;
+
+type AvailablePropertyType = (typeof AVAILABLE_PROPERTY_TYPES)[number];
+
+const PROPERTY_TYPE_TITLES: Record<AvailablePropertyType, string> = {
+  [PropertyType.STRING]: 'Строка',
+  [PropertyType.TEXT]: 'Многострочный текст',
+  [PropertyType.INT]: 'Целое число',
+  [PropertyType.FLOAT]: 'Дробное  число',
+  [PropertyType.DATETIME]: 'Дата',
+  [PropertyType.URL]: 'Ссылка',
+  [PropertyType.USER]: 'Пользователь',
+  [PropertyType.BOOL]: 'Логическое значение (Да / Нет)'
 };
+
+const propertyTypeOptions: PropertyOption[] = AVAILABLE_PROPERTY_TYPES.map(type => ({
+  value: type,
+  title: PROPERTY_TYPE_TITLES[type]
+}));
+
+function isAvailablePropertyType(value?: PropertyType): value is AvailablePropertyType {
+  return AVAILABLE_PROPERTY_TYPES.includes(value as AvailablePropertyType);
+}
+
+function getDefaultValuePropertyType(selectedPropertyType?: PropertyType): AvailablePropertyType {
+  if (!isAvailablePropertyType(selectedPropertyType)) {
+    return PropertyType.STRING;
+  }
+
+  return selectedPropertyType;
+}
+
+function createDefaultValueFieldSchema(selectedPropertyType?: PropertyType): PropertySchema {
+  return {
+    name: 'defaultValue',
+    title: 'Значение по умолчанию',
+    propertyType: getDefaultValuePropertyType(selectedPropertyType)
+  };
+}
+
+function getPropertyFieldsSchema(propertyType?: PropertyType, editing = false): SimpleSchema {
+  return {
+    properties: [
+      {
+        name: 'name',
+        title: 'Наименование',
+        readOnly: !editing,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'propertyType',
+        title: 'Тип поля',
+        options: propertyTypeOptions,
+        readOnly: !editing,
+        propertyType: PropertyType.CHOICE
+      },
+      {
+        name: 'title',
+        title: 'Название',
+        required: true,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'description',
+        title: 'Описание',
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'required',
+        title: 'Обязательное',
+        propertyType: PropertyType.BOOL
+      },
+      {
+        name: 'hidden',
+        title: 'Скрытое',
+        propertyType: PropertyType.BOOL
+      },
+      {
+        name: 'readOnly',
+        title: 'Только для чтения',
+        propertyType: PropertyType.BOOL
+      },
+      createDefaultValueFieldSchema(propertyType)
+    ]
+  };
+}
 
 interface EditPropertySchemaFormProps {
   propertySchema: PropertySchema;
+  editing?: boolean;
   propertySchemaWithoutContentType?: PropertySchema;
   onPropertyChange(newPropertySchema: Partial<BasePropertySchema>): void;
 }
@@ -53,26 +120,38 @@ interface EditPropertySchemaFormProps {
 @observer
 export class EditPropertySchemaForm extends Component<EditPropertySchemaFormProps> {
   render() {
-    const { propertySchema } = this.props;
+    const { propertySchema, editing } = this.props;
 
     return (
       <Form<Partial<BasePropertySchema>>
         className={cnEditPropertySchemaForm()}
         value={propertySchema}
         onFormChange={this.handleFormChange}
-        schema={propertyFieldsSchema}
+        schema={getPropertyFieldsSchema(propertySchema.propertyType, editing)}
       />
     );
   }
 
   @boundMethod
   private handleFormChange(value: Partial<BasePropertySchema>) {
-    const { onPropertyChange, propertySchemaWithoutContentType } = this.props;
+    const { onPropertyChange, propertySchema, propertySchemaWithoutContentType } = this.props;
+
+    const nextValue: Partial<BasePropertySchema> = { ...value };
+
+    if (value.propertyType && value.propertyType !== propertySchema.propertyType && 'defaultValue' in nextValue) {
+      delete nextValue.defaultValue;
+    }
 
     // чтобы не замусоривать схему дефолтными значениями, удалим их
     const cleanedValue = Object.fromEntries(
       // сейчас все дефолты false
-      Object.entries(value).filter(([k, v]) => v || propertySchemaWithoutContentType?.[k as keyof PropertySchema])
+      Object.entries(nextValue).filter(([key, fieldValue]) => {
+        if (fieldValue !== undefined) {
+          return true;
+        }
+
+        return propertySchemaWithoutContentType?.[key as keyof PropertySchema] !== undefined;
+      })
     );
 
     onPropertyChange(cleanedValue);

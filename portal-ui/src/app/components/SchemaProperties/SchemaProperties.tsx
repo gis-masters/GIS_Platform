@@ -10,13 +10,15 @@ const cnSchemaProperties = cn('SchemaProperties');
 export interface SchemaPropertiesListProps {
   schema: Schema;
   readonly: boolean;
+  editing?: boolean;
   propertiesSchemaWithoutContentType?: PropertySchema[];
-  onPropertyChange?(newPropertySchema: PropertySchema): void;
+  onPropertyChange?(newPropertySchema: PropertySchema, oldName?: string): void;
 }
 
 export const SchemaProperties: FC<SchemaPropertiesListProps> = ({
   schema,
   readonly,
+  editing,
   propertiesSchemaWithoutContentType,
   onPropertyChange
 }) => (
@@ -24,7 +26,9 @@ export const SchemaProperties: FC<SchemaPropertiesListProps> = ({
     {schema.properties.map((el, idx) => (
       <SchemaPropertiesItem
         readonly={readonly}
+        editing={editing}
         key={idx}
+        propertyId={idx}
         propertySchema={el}
         propertySchemaWithoutContentType={
           propertiesSchemaWithoutContentType
