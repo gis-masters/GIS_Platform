@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.schemas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.common_contracts.generated.report_service.TemplateShortProjection;
+import ru.mycrg.common_contracts.generated.report_service.TemplateShortInfo;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.ReportClient;
 import ru.mycrg.http_client.ResponseModel;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Класс для проверки схемы, пользователь обязан указывать существующие шаблоны печати в схеме
@@ -42,10 +41,10 @@ public class SchemaPrintingTemplatesValidator {
         Set<ErrorInfo> mismatches = new HashSet<>();
 
         try {
-            ResponseModel<List<TemplateShortProjection>> response = reportClient.getAll();
+            ResponseModel<List<TemplateShortInfo>> response = reportClient.getAll();
 
             if (response.isSuccessful()) {
-                List<TemplateShortProjection> allTemplates = response.getBody() != null
+                List<TemplateShortInfo> allTemplates = response.getBody() != null
                         ? response.getBody()
                         : new ArrayList<>();
 
@@ -54,7 +53,7 @@ public class SchemaPrintingTemplatesValidator {
                         .filter(name -> allTemplates.stream().noneMatch(
                                 template -> template.getName()
                                                     .equals(name)))
-                        .collect(Collectors.toList());
+                        .toList();
 
                 for (String notExistName: notExistNames) {
                     mismatches.add(new ErrorInfo(

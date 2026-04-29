@@ -3,16 +3,16 @@ import { applyView, getReadablePropertyValue } from '../../../data/schema/schema
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
-import { PrintTemplate } from '../PrintTemplate';
+import { PrintTemplateOld } from '../PrintTemplateOld';
 
-export const rawFeatureData: PrintTemplate<WfsFeature> = new PrintTemplate({
+export const rawFeatureData: PrintTemplateOld<WfsFeature> = new PrintTemplateOld({
   name: 'rawFeatureData',
   title: 'Данные',
   margin: [5, 10, 20, 10],
   orientation: 'portrait',
   format: 'a4',
 
-  async render(this: PrintTemplate<WfsFeature>, entity: WfsFeature) {
+  async render(this: PrintTemplateOld<WfsFeature>, entity: WfsFeature) {
     const layer = getLayerByFeatureInCurrentProject(entity);
 
     if (!layer) {
@@ -47,7 +47,7 @@ export const rawFeatureData: PrintTemplate<WfsFeature> = new PrintTemplate({
     });
   },
 
-  async getFileName(this: PrintTemplate<WfsFeature>, entity: WfsFeature) {
+  async getFileName(this: PrintTemplateOld<WfsFeature>, entity: WfsFeature) {
     const layer = getLayerByFeatureInCurrentProject(entity);
 
     if (!layer) {

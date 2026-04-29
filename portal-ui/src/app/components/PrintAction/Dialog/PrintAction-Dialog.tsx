@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { type PrintTemplate } from '../../../services/report/templates/PrintTemplate';
+import { type PrintableTemplate } from '../../../services/report/report.models';
 import { Button } from '../../Button/Button';
 import { PrintActionTemplate } from '../Template/PrintAction-Template';
 
@@ -11,7 +11,7 @@ const cnPrintActionDialog = cn('PrintAction', 'Dialog');
 
 interface PrintActionDialogProps<T> {
   entity: T;
-  templates: PrintTemplate<T>[];
+  templates: PrintableTemplate<T>[];
   open: boolean;
   onClose(): void;
 }

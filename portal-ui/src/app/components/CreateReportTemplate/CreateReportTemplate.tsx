@@ -5,8 +5,8 @@ import { NoteAddOutlined } from '@mui/icons-material';
 
 import { communicationService } from '../../services/communication.service';
 import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
-import { type TemplateCreatePayload } from '../../services/report/reportTemplate/reportTemplate.models';
-import { createTemplate, getTemplate } from '../../services/report/reportTemplate/reportTemplate.service';
+import { type TemplateCreatePayload } from '../../services/reportTemplate/reportTemplate.models';
+import { createTemplate, getTemplate } from '../../services/reportTemplate/reportTemplate.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
 
@@ -25,8 +25,10 @@ const formSchema: SimpleSchema = {
       name: 'name',
       title: 'Идентификатор',
       required: true,
-      description: 'Уникальное системное имя шаблона',
-      propertyType: PropertyType.STRING
+      description: 'Уникальное системное имя: латиница a–z, цифры, _ и -',
+      propertyType: PropertyType.STRING,
+      regex: '^[a-z0-9_-]+$',
+      regexErrorMessage: 'Только латиница в нижнем регистре, цифры, символы _ и -'
     },
     {
       name: 'file',

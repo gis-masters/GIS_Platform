@@ -1,6 +1,6 @@
 {
   "properties": {
-    "name": "some_name",
+    "name": "user_template",
     "title": "Русское имя",
     "propertyType": "STRING"
   }

@@ -1,12 +1,14 @@
 ---
 name: e2e-mcp
 description: >-
-  Справочник portal-ui: WDIO+Cucumber e2e, tests/_harness, тестовые логины,
-  Playwright MCP. Подключать только по явному запросу пользователя (например
-  навык e2e-mcp, @e2e-mcp, «по навыку e2e-mcp»).
+  Отладка e2e portal-ui через Playwright MCP: пройти в браузере шаги .feature,
+  логины, harness, артефакты. Запуск WDIO — навык e2e-run. Подключать только по
+  явному запросу пользователя (например e2e-mcp, @e2e-mcp, «по навыку e2e-mcp»).
 ---
 
-# Отладка e2e (portal-ui)
+# Отладка e2e через браузер (portal-ui)
+
+Этот навык про **интерактив в браузере** (Playwright MCP): агент повторяет действия из сценария и видит DOM/скрины. **Запуск тестов** (`npm run test:e2e*`, `--spec`, предусловия) — в [e2e-run](../e2e-run/SKILL.md).
 
 ## Стек и расположение
 
@@ -14,26 +16,7 @@ description: >-
 - **Harness:** шаги, страницы, блоки — `tests/_harness/` (в т.ч. `commonSteps`, `blocks`, `pages`, `commands`).
 - **Канон логинов/паролей:** `tests/_harness/commands/auth/testUsers.ts` — при расхождении с таблицей ниже править навык **и** код.
 
-## Запуск
-
-Из корня `portal-ui` (нужны поднятый UI и окружение, как у команды):
-
-| Команда                | Назначение                                                                                                                                                                             |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run test:e2e`     | CI-ориентированный конфиг (`wdio.e2e.conf.ts`), удалённый Selenium/база из `wdio.base.conf.ts`.                                                                                        |
-| `npm run test:e2e:dev` | Отладка: `tests/_harness/config/wdio.e2e.dev.conf.ts`, `baseUrl` `http://<офисный-IP>:4200` (IP — `getMyOfficeIp()` в `tests/_harness/config/getMyOfficeIp.ts`), `specFileRetries: 0`. |
-
-Точечный прогон: весь файл или **один сценарий** — в аргументе `--spec` после `:` указывается **номер строки в файле, где стоит ключевое слово `Scenario:` или `Scenario Outline:`** (не строка с названием сценария в той же фразе, не шаг из Background).
-
-```bash
-npm run test:e2e:dev -- --spec tests/e2e/dataManagement/documentCreateChild.feature:14
-```
-
-**Проверка связки WDIO+Cucumber:** убедись, что `путь.feature:N` у тебя реально режет прогон до одного сценария (в логе видно ожидаемые шаги). Если полный файл падает, а с `:N` быстро PASSED и без нужных шагов — номер неверен или раннер ведёт себя иначе, чем ожидаешь.
-
-Дополнительно — стандартные опции WDIO/Cucumber (теги через `--cucumberOpts.tags=` и т.д.).
-
-## Артефакты при падении
+## Артефакты при падении прогона
 
 - Скриншоты ошибок: `tests/_screens/.tmp/errors/` (имя файла часто содержит текст шага).
 - Временные сравнения визуального сервиса: `tests/_screens/.tmp/` (частично очищается скриптами `test:e2e*`).
@@ -63,12 +46,12 @@ npm run test:e2e:dev -- --spec tests/e2e/dataManagement/documentCreateChild.feat
 
 ## Порядок отладки
 
-1. **Playwright MCP** (если сервер подключён в чате): падающий `.feature` → логин/пароль из таблицы ниже, суффикс `N` из `Test organization index: N` в логе прогона → `http://localhost:4200` → пройти в UI шаги сценария (роль из Given, затем When/And по смыслу) до места ошибки → `browser_snapshot` или скрин → правки `steps`/blocks при необходимости.
-2. Воспроизвести прогон: `npm run test:e2e:dev` с `--spec путь.feature` или `--spec путь.feature:номер_строки` (**номер** — строка с `Scenario:` / `Scenario Outline:`, см. выше); зафиксировать **последний зелёный шаг** перед падением.
+1. **Playwright MCP** (если сервер подключён в чате): открыть падающий `.feature` → логин/пароль из таблицы, суффикс `N` из **`Test organization index: N`** в логе прогона → `http://localhost:4200` → пройти в UI шаги (роль из Given, затем When/And) до места ошибки → `browser_snapshot` или скрин → при необходимости правки `steps`/blocks.
+2. Воспроизвести прогон WDIO — команды и `--spec` см. [e2e-run](../e2e-run/SKILL.md); зафиксировать **последний зелёный шаг** перед падением.
 3. По тексту шага искать реализацию в `tests/_harness/**/*.steps.ts` и блоки; смотреть `tests/_screens/.tmp/errors/`, при необходимости baseline в `tests/_screens/desktop_chrome/`.
 
 **Идентификатор сервера MCP:** в `portal-ui/.cursor/mcp.json` ключ `playwright`, но в вызове инструментов может требоваться **другой** `serverIdentifier` — смотри `SERVER_METADATA.json` в `~/.cursor/projects/<workspace>/mcps/…` (пример: `project-0-portal-ui-playwright`).
 
 ## Не смешивать
 
-- **Playwright MCP** в Cursor — для интерактива агента. **Отдельного Playwright test suite в проекте нет:** e2e только через **npm run test:e2e\*** (WebdriverIO + Cucumber), не через `npx playwright test`.
+- **Playwright MCP** в Cursor — для интерактива агента в браузере. **Отдельного Playwright test suite в проекте нет:** e2e только через **WebdriverIO + Cucumber** ([e2e-run](../e2e-run/SKILL.md)), не через `npx playwright test`.

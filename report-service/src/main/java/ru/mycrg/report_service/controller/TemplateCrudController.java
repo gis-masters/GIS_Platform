@@ -103,7 +103,6 @@ public class TemplateCrudController {
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<TemplateShortInfo> createNewTemplate(@Valid @RequestPart("dto") TemplateCreateDto dto,
                                                                @RequestPart("file") MultipartFile file) {
-        validateCreateTemplateRequest(dto);
         log.debug("Попытка сохранения шаблона {}", dto);
         TemplateShortInfo createdTemplateId = templateService.createTemplate(dto, file);
 
@@ -118,16 +117,6 @@ public class TemplateCrudController {
         templateService.deleteTemplate(name);
 
         return ResponseEntity.noContent().build();
-    }
-
-    private static void validateCreateTemplateRequest(TemplateCreateDto dto) {
-        if (dto.getName() == null || dto.getName().isEmpty()) {
-            throw new BadRequestException("Поле name является обязательным!!!");
-        }
-
-        if (dto.getTitle() == null || dto.getTitle().isEmpty()) {
-            throw new BadRequestException("Поле title является обязательным!!!");
-        }
     }
 
     private String defineFileContentType(HttpServletRequest request, Resource resource) {

@@ -136,7 +136,9 @@ public class ReportMigrationHandler {
                 Optional<TemplateCreateDto> oTemplateSchema = fromJson(systemSchemas.get(template).toString(),
                                                                        TemplateCreateDto.class);
                 oTemplateSchema.ifPresentOrElse(
-                        templateCreateDto -> insertTemplate(templateCreateDto, path),
+                        templateCreateDto -> insertTemplate(templateCreateDto,
+                                                            path,
+                                                            extractHidden(systemSchemas.get(template))),
                         () -> log.error("Для {} пустая схема. Невозможно сделать вставку в базу!", template));
 
                 log.info("Создан новый шаблон: {}", template);
@@ -146,17 +148,30 @@ public class ReportMigrationHandler {
         }
     }
 
-    private void insertTemplate(TemplateCreateDto templateCreateDto, String path) {
+    private void insertTemplate(TemplateCreateDto templateCreateDto, String path, boolean hidden) {
         String title = (templateCreateDto.getTitle() == null || templateCreateDto.getTitle().isEmpty())
                 ? "default value"
                 : templateCreateDto.getTitle();
         templateCreateDto.setTitle(title);
 
         Template template = new Template(templateCreateDto, path, "SYSTEM", now(), true);
+        template.setHidden(hidden);
 
         templateService.save(template);
 
         log.debug("Вставлена запись в БД для шаблона: {}", templateCreateDto.getName());
+    }
+
+    private boolean extractHidden(JsonNode schema) {
+        if (schema == null) {
+            return false;
+        }
+
+        JsonNode hiddenNode = schema.has("hidden")
+                ? schema.get("hidden")
+                : schema.get("Hidden");
+
+        return hiddenNode != null && hiddenNode.asBoolean(false);
     }
 
     private void updateTemplates(Set<String> templatesToUpdate,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -22,25 +22,18 @@ interface EditFeatureActionsProps {
   layer?: CrgVectorLayer;
 }
 
-@observer
-export class EditFeatureActions extends Component<EditFeatureActionsProps> {
-  render() {
-    const { feature, layer } = this.props;
-
-    return (
-      <div className={cnEditFeatureActions()}>
-        {layer && (
-          <>
-            <CreateBufferButton layer={layer} feature={feature} tooltipTitle='Создать буфер' />
-            <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
-          </>
-        )}
-        <PrintFeature feature={feature} layer={layer} />
-        {organizationSettings.downloadXml && layer && <XmlDownload feature={feature} layer={layer} />}
-        <OpenInAnotherProject feature={feature} />
-        <CopyUrlButton features={[feature]} />
-        <ZoomToFeature featureId={feature.id} zoomToLastCoordinate />
-      </div>
-    );
-  }
-}
+export const EditFeatureActions = observer(({ feature, layer }: EditFeatureActionsProps) => (
+  <div className={cnEditFeatureActions()}>
+    {layer && (
+      <>
+        <CreateBufferButton layer={layer} feature={feature} tooltipTitle='Создать буфер' />
+        <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
+      </>
+    )}
+    <PrintFeature feature={feature} layer={layer} />
+    {organizationSettings.downloadXml && layer && <XmlDownload feature={feature} layer={layer} />}
+    <OpenInAnotherProject feature={feature} />
+    <CopyUrlButton features={[feature]} />
+    <ZoomToFeature featureId={feature.id} zoomToLastCoordinate />
+  </div>
+));

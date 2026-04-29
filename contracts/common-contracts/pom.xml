@@ -6,7 +6,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>common-contracts</artifactId>
-    <version>2.11.11-SNAPSHOT</version>
+    <version>2.11.12-SNAPSHOT</version>
 
     <name>common-contracts Maven Webapp</name>
     <description>Common contract</description>

@@ -6,8 +6,8 @@ import { cn } from '@bem-react/classname';
 
 import { doConfirm } from '../../services/answer-modals.service';
 import { communicationService } from '../../services/communication.service';
-import { type TemplateInfo } from '../../services/report/reportTemplate/reportTemplate.models';
-import { deleteTemplate, downloadTemplate } from '../../services/report/reportTemplate/reportTemplate.service';
+import { type TemplateInfo } from '../../services/reportTemplate/reportTemplate.models';
+import { deleteTemplate, downloadTemplate } from '../../services/reportTemplate/reportTemplate.service';
 import { saveAsBlob } from '../../services/util/FileSaver';
 import { IconButton } from '../IconButton/IconButton';
 

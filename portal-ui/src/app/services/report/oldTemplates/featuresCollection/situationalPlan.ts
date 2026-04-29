@@ -11,7 +11,7 @@ import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { hideNumberFeaturesOnMap, numberFeaturesOnMap } from '../../helpers/numberFeaturesOnMap';
-import { PrintTemplate } from '../PrintTemplate';
+import { PrintTemplateOld } from '../PrintTemplateOld';
 
 interface SituationalPlanFormData {
   title: string;
@@ -20,14 +20,14 @@ interface SituationalPlanFormData {
   displayNumbers: boolean;
 }
 
-export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
+export const situationalPlan: PrintTemplateOld<WfsFeature[]> = new PrintTemplateOld({
   name: 'situationalPlan',
   title: 'Схема расположения объектов',
   margin: [5, 10, 20, 10],
   orientation: 'landscape',
   format: 'a4',
 
-  async render(this: PrintTemplate<WfsFeature[]>, data: WfsFeature[]): Promise<string> {
+  async render(this: PrintTemplateOld<WfsFeature[]>, data: WfsFeature[]): Promise<string> {
     const layer = getLayerByFeatureInCurrentProject(data[0]);
     if (!layer) {
       throw new Error('Не удалось сформировать ситуационный план. Не найден слой для объекта: ' + data[0].id);
@@ -148,7 +148,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     });
   },
 
-  getFileName(this: PrintTemplate<WfsFeature[]>, entity: WfsFeature[]) {
+  getFileName(this: PrintTemplateOld<WfsFeature[]>, entity: WfsFeature[]) {
     const layer = getLayerByFeatureInCurrentProject(entity[0]);
     if (!layer) {
       throw new Error('Не удалось получить имя файла. Не найден слой для объекта');

@@ -14,6 +14,8 @@ public class TemplateMapper {
                                     template.getPrintFormSchemaOverrides(),
                                     template.getCreatedBy(),
                                     String.valueOf(template.getCreatedAt()),
-                                    template.isSystem());
+                                    template.isSystem(),
+                                    template.isHidden(),
+                                    template.getType());
     }
 }

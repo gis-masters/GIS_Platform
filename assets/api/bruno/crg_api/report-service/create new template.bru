@@ -19,6 +19,6 @@ auth:bearer {
 }
 
 body:multipart-form {
-  dto: {"name":"featureExtractFullFlat","title":"featureExtractFullFlat"} @contentType(application/json)
+  dto: {"name":"feature_extract_full_flat","title":"feature_extract_full_flat"} @contentType(application/json)
   file: @file(/path/file.docx) @contentType(multipart/form-data)
 }

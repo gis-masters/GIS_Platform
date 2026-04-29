@@ -17,7 +17,7 @@ import { type Task, type TaskHistory } from '../../services/data/task/task.model
 import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { type PageOptions, type SortOrder, type ValueOf } from '../../services/models';
-import { type TemplateInfo } from '../../services/report/reportTemplate/reportTemplate.models';
+import { type TemplateInfo } from '../../services/reportTemplate/reportTemplate.models';
 import { type FilterQuery } from '../../services/util/filters/filters.models';
 import type { ExplorerService } from './Explorer.service';
 import type { ExplorerStore } from './Explorer.store';

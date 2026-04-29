@@ -39,12 +39,18 @@ public class Template {
     @Column(name = "is_system", nullable = false)
     private Boolean isSystem = false;
 
+    @Column(name = "hidden", nullable = false)
+    private Boolean hidden = false;
+    ;
+
+    @Column(name = "type")
+    private String type;
+
     public Template() {
     }
 
     public Template(Long id, String title, String name, String path, JsonNode printFormSchemaOverrides,
-                    String createdBy,
-                    LocalDateTime createdAt, Boolean isSystem) {
+                    String createdBy, LocalDateTime createdAt, Boolean isSystem, Boolean hidden, String type) {
         this.id = id;
         this.title = title;
         this.name = name;
@@ -53,6 +59,8 @@ public class Template {
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.isSystem = isSystem;
+        this.hidden = hidden;
+        this.type = type;
     }
 
     public Template(TemplateCreateDto dto, String path, String createdBy, LocalDateTime createdAt, boolean isSystem) {
@@ -131,5 +139,25 @@ public class Template {
 
     public void setSystem(Boolean system) {
         isSystem = system;
+    }
+
+    public Boolean getSystem() {
+        return isSystem;
+    }
+
+    public Boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

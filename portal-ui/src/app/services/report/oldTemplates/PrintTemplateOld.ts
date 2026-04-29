@@ -1,6 +1,6 @@
 type PrintPageOrientation = 'p' | 'portrait' | 'l' | 'landscape';
 
-interface PrintTemplateOptions<T> {
+interface PrintTemplateOldOptions<T> {
   name: string;
   title: string;
   format?: string | number[]; // Формат бумаги (A4, A3 или [ширина, высота])
@@ -10,7 +10,11 @@ interface PrintTemplateOptions<T> {
   getFileName(entity: T): string | Promise<string>;
 }
 
-export class PrintTemplate<T> {
+/**
+ * @deprecated переходим на новые шаблоны
+ * @see PrintTemplate
+ */
+export class PrintTemplateOld<T> {
   name: string;
   title: string;
   private format?: string | number[];
@@ -22,7 +26,7 @@ export class PrintTemplate<T> {
   private roboto?: string;
   private htmlFiles: Record<string, Promise<string>> = {};
 
-  constructor({ name, title, format, margin, orientation, render, getFileName }: PrintTemplateOptions<T>) {
+  constructor({ name, title, format, margin, orientation, render, getFileName }: PrintTemplateOldOptions<T>) {
     this.name = name;
     this.title = title;
     this.format = format;

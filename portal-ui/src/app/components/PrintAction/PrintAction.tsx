@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { type PrintTemplate } from '../../services/report/templates/PrintTemplate';
+import { type PrintableTemplate } from '../../services/report/report.models';
 import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../Actions/Item/Actions-Item.composed';
 import { type IconButtonProps } from '../IconButton/IconButton';
@@ -16,7 +16,7 @@ const cnPrintAction = cn('PrintAction');
 
 interface PrintActionProps<T> extends IClassNameProps {
   entity: T;
-  templates: PrintTemplate<T>[];
+  templates: PrintableTemplate<T>[];
   as: ActionsItemVariant;
   size?: IconButtonProps['size'];
 }

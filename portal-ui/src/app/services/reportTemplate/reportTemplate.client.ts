@@ -1,8 +1,8 @@
 import { boundClass } from 'autobind-decorator';
 
-import { Client } from '../../api/Client';
-import { http } from '../../api/http.service';
-import { Mime } from '../../util/Mime';
+import { Client } from '../api/Client';
+import { http } from '../api/http.service';
+import { Mime } from '../util/Mime';
 import { type TemplateCreatePayload, type TemplateInfo, type TemplateShortInfo } from './reportTemplate.models';
 
 @boundClass

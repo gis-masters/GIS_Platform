@@ -1,8 +1,18 @@
 package ru.mycrg.common_contracts.generated.report_service;
 
-public class TemplateShortInfo implements TemplateShortProjection{
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
+public class TemplateShortInfo implements TemplateShortProjection {
+
+    @NotBlank(message = "Поле является обязательным!")
+    @Pattern(
+            regexp = "^[a-z0-9_-]+$",
+            message = "Только латиница в нижнем регистре, цифры, символы _ и -"
+    )
     private String name;
+
+    @NotBlank(message = "Поле является обязательным!")
     private String title;
 
     public TemplateShortInfo() {

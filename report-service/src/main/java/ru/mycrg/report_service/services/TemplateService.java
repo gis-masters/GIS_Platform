@@ -49,6 +49,7 @@ public class TemplateService {
 
     public List<TemplateFullInfo> getAll() {
         return StreamSupport.stream(templateRepository.findAll().spliterator(), false)
+                            .filter(template -> !Boolean.TRUE.equals(template.isHidden()))
                             .map(TemplateMapper::mapToTemplateFullInfo)
                             .toList();
     }
@@ -65,7 +66,7 @@ public class TemplateService {
 
     public Template getTemplateByName(String name) {
         return templateRepository.findByName(name)
-                                 .orElseThrow(() -> new NotFoundException("Шаблон не найден по имени " + name));
+                                 .orElseThrow(() -> new NotFoundException("Шаблон не найден по имени", name));
     }
 
     public TemplateShortInfo createTemplate(TemplateCreateDto dto, MultipartFile file) {
@@ -83,6 +84,8 @@ public class TemplateService {
             throw new BadRequestException("Ошибка при сохранении шаблона на сервер. Подробнее: " + e.getMessage());
         }
         Template template = new Template(dto, path, authenticationFacade.getLogin(), now());
+        template.setHidden(false);
+
         save(template);
 
         return new TemplateShortInfo(template.getName(), template.getTitle());

@@ -1,16 +1,16 @@
 import { type LibraryRecord } from '../../../data/library/library.models';
 import { getLibrary } from '../../../data/library/library.service';
 import { applyContentType, getReadablePropertyValue } from '../../../data/schema/schema.utils';
-import { PrintTemplate } from '../PrintTemplate';
+import { PrintTemplateOld } from '../PrintTemplateOld';
 
-export const rawDocumentData: PrintTemplate<LibraryRecord> = new PrintTemplate({
+export const rawDocumentData: PrintTemplateOld<LibraryRecord> = new PrintTemplateOld({
   name: 'rawDocumentData',
   title: 'Данные',
   margin: [5, 10, 20, 10],
   orientation: 'portrait',
   format: 'a4',
 
-  async render(this: PrintTemplate<LibraryRecord>, entity: LibraryRecord) {
+  async render(this: PrintTemplateOld<LibraryRecord>, entity: LibraryRecord) {
     const library = await getLibrary(entity.libraryTableName);
     const schemaWithAppliedContentType = applyContentType(library.schema, entity.content_type_id);
 
@@ -33,7 +33,7 @@ export const rawDocumentData: PrintTemplate<LibraryRecord> = new PrintTemplate({
     });
   },
 
-  getFileName(this: PrintTemplate<LibraryRecord>, entity: LibraryRecord) {
+  getFileName(this: PrintTemplateOld<LibraryRecord>, entity: LibraryRecord) {
     return `${entity.title} [${this.title}]`;
   }
 });
