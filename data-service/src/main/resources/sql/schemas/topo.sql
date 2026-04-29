@@ -142,7 +142,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -157,8 +156,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -207,7 +205,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -222,8 +219,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -265,7 +261,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -280,8 +275,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -316,7 +310,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -331,8 +324,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -367,7 +359,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -382,8 +373,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -432,7 +422,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -447,8 +436,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "relat_h",
@@ -497,7 +485,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -512,8 +499,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "depth",
@@ -555,7 +541,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -570,8 +555,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -620,7 +604,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -635,8 +618,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -678,7 +660,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -693,8 +674,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -729,7 +709,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -744,8 +723,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -787,7 +765,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -802,8 +779,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -838,7 +814,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -853,8 +828,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -903,7 +877,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -918,8 +891,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -954,7 +926,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -969,30 +940,26 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "name_str",
               "title": "Название улицы",
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "type_str",
               "title": "Тип улицы",
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "func",
               "title": "FUNC",
               "hidden": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -1041,7 +1008,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1057,48 +1023,42 @@ SET is_system = true,
               "title": "Этаж",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "naznachen",
               "title": "Назначен",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "adres_type",
               "title": "Тип",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "adres_ylic",
               "title": "Улица",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "adres_dom",
               "title": "Дом",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "objectcode",
               "title": "ObjectCode",
               "required": true,
               "maxLength": 8,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -1139,24 +1099,18 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
               "name": "textstring",
               "title": "TextString",
-              "hidden": true,
-              "required": true,
               "valueType": "STRING",
               "asTitle": true
             },
             {
               "name": "fontname",
               "title": "FontName",
-              "hidden": true,
-              "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "fontsize",
@@ -1221,7 +1175,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1236,8 +1189,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -1272,7 +1224,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1287,8 +1238,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "z",
@@ -1337,7 +1287,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1352,48 +1301,42 @@ SET is_system = true,
               "title": "NAME",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "type",
               "title": "ТИП",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "code",
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "name_own",
               "title": "NAME_OWN",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "type_q",
               "title": "TYPE_Q",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "period",
               "title": "ПЕРИОД",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "z",
@@ -1416,16 +1359,14 @@ SET is_system = true,
               "title": "Состояние",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "mater_cons",
               "title": "MATER_CONS",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -1466,39 +1407,34 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
               "name": "desc1",
               "title": "Описание",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "type",
               "title": "ТИП",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "name",
               "title": "NAME",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "relobjecti",
               "title": "relObjectI",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "relat_h",
@@ -1521,16 +1457,14 @@ SET is_system = true,
               "title": "NAME_OWN",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "mater_cons",
               "title": "MATER_CONS",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "flow_rate",
@@ -1545,16 +1479,14 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "code_2",
               "title": "КОД_2",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "width",
@@ -1603,7 +1535,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1618,8 +1549,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape",
@@ -1654,7 +1584,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1669,8 +1598,7 @@ SET is_system = true,
               "title": "КОД",
               "required": true,
               "maxLength": 9,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "x",
@@ -1719,7 +1647,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1734,8 +1661,7 @@ SET is_system = true,
               "name": "desc1",
               "title": "Описание",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "shape_leng",
@@ -1778,7 +1704,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1793,8 +1718,7 @@ SET is_system = true,
               "name": "desc1",
               "title": "Описание",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "z",

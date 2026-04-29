@@ -141,7 +141,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             }
           ],
@@ -174,8 +173,7 @@ SET is_system = true,
             {
               "name": "name",
               "title": "Наименование объекта",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "objecttype",
@@ -196,8 +194,7 @@ SET is_system = true,
             {
               "name": "readablead",
               "title": "Адрес",
-              "valueType": "TEXT",
-              "asTitle": true
+              "valueType": "TEXT"
             },
             {
               "name": "status",
@@ -247,14 +244,12 @@ SET is_system = true,
             {
               "name": "purpose",
               "title": "Назначение",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "owner",
               "title": "Правообладатель",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "area_doc",
@@ -295,7 +290,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             }
           ],
@@ -323,7 +317,6 @@ SET is_system = true,
               "title": "Идентификатор объекта",
               "hidden": true,
               "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -391,7 +384,6 @@ SET is_system = true,
             {
               "name": "num_oks",
               "title": "Номер ОКС",
-              "asTitle": true,
               "required": true,
               "maxLength": 50,
               "valueType": "STRING"
@@ -405,7 +397,6 @@ SET is_system = true,
             {
               "name": "readablead",
               "title": "Адрес",
-              "asTitle": true,
               "required": true,
               "maxLength": 300,
               "valueType": "STRING"
@@ -567,13 +558,11 @@ SET is_system = true,
               "name": "n_ter",
               "title": "Номер территории",
               "hidden": true,
-              "required": true,
               "valueType": "INT"
             },
             {
               "name": "kod",
               "title": "Номер на плане",
-              "asTitle": true,
               "required": true,
               "maxLength": 8,
               "valueType": "STRING"
@@ -605,14 +594,12 @@ SET is_system = true,
             {
               "name": "cad_oks",
               "title": "Кадастровый номер объекта недвижимости",
-              "asTitle": true,
               "maxLength": 25,
               "valueType": "STRING"
             },
             {
               "name": "address",
               "title": "Адрес",
-              "asTitle": true,
               "required": true,
               "maxLength": 300,
               "valueType": "STRING"
@@ -664,7 +651,6 @@ SET is_system = true,
             {
               "name": "name",
               "title": "Фактическое назначение",
-              "asTitle": true,
               "required": true,
               "valueType": "STRING"
             },
@@ -919,7 +905,6 @@ SET is_system = true,
             {
               "name": "kod",
               "title": "Номер на плане",
-              "asTitle": true,
               "required": true,
               "maxLength": 8,
               "valueType": "STRING"
@@ -959,14 +944,12 @@ SET is_system = true,
             {
               "name": "cad_oks",
               "title": "Кадастровый номер объекта недвижимости",
-              "asTitle": true,
               "maxLength": 25,
               "valueType": "STRING"
             },
             {
               "name": "address",
               "title": "Адрес",
-              "asTitle": true,
               "required": true,
               "maxLength": 300,
               "valueType": "STRING"
@@ -1026,13 +1009,11 @@ SET is_system = true,
             {
               "name": "bti_name",
               "title": "Назначение по БТИ",
-              "asTitle": true,
               "valueType": "STRING"
             },
             {
               "name": "name",
               "title": "Фактическое назначение",
-              "asTitle": true,
               "valueType": "STRING"
             },
             {
@@ -1261,8 +1242,7 @@ SET is_system = true,
             {
               "name": "name_oks",
               "title": "Собственник",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "t_own",
@@ -1299,21 +1279,18 @@ SET is_system = true,
               "name": "address",
               "title": "Адрес",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "usage",
               "title": "Назначение здания",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "source",
               "title": "Источник данных",
               "hidden": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "area_doc",
@@ -1391,15 +1368,13 @@ SET is_system = true,
               "title": "Номер ОКС",
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "purpose",
               "title": "Назначение здания",
               "maxLength": 100,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "otypecode",
@@ -1498,27 +1473,23 @@ SET is_system = true,
               "title": "Вид объекта недвижимости",
               "required": true,
               "maxLength": 100,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "usage",
               "title": "Разрешенное использование",
-              "valueType": "TEXT",
-              "asTitle": true
+              "valueType": "TEXT"
             },
             {
               "name": "raddress",
               "title": "Адрес в соответствии с ФИАС",
               "required": true,
-              "valueType": "TEXT",
-              "asTitle": true
+              "valueType": "TEXT"
             },
             {
               "name": "escription",
               "title": "Описание местоположения ОКС",
-              "valueType": "TEXT",
-              "asTitle": true
+              "valueType": "TEXT"
             },
             {
               "name": "cost",
@@ -1546,7 +1517,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             }
           ],

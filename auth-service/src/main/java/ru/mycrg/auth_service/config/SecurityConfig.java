@@ -134,6 +134,7 @@ public class SecurityConfig {
                         .requestMatchers(GET,
                                          "/actuator/health",
                                          "/password-reset",
+                                         "/password-reset-token/**",
                                          "/esia/**",
                                          "/users/organizations",
                                          "/specializations/**").permitAll()

@@ -84,8 +84,7 @@ SET is_system = true,
                   "value": "2"
                 }
               ],
-              "foreignKeyType": "INTEGER",
-              "asTitle": true
+              "foreignKeyType": "INTEGER"
             },
             {
               "name": "pline_cnt",
@@ -187,7 +186,6 @@ SET is_system = true,
             {
               "name": "line_type",
               "title": "Вид расположения",
-              "asTitle": true,
               "required": true,
               "valueType": "CHOICE",
               "enumerations": [
@@ -337,7 +335,6 @@ SET is_system = true,
             {
               "name": "classid",
               "title": "Код объекта",
-              "asTitle": true,
               "required": true,
               "valueType": "CHOICE",
               "enumerations": [
@@ -368,7 +365,6 @@ SET is_system = true,
             {
               "name": "type_distr",
               "title": "Тип распределительных газопроводов по давлению ",
-              "asTitle": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -540,7 +536,6 @@ SET is_system = true,
             {
               "name": "pline_type",
               "title": "Вид расположения трубопровода",
-              "asTitle": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -712,7 +707,6 @@ SET is_system = true,
             {
               "name": "line_type",
               "title": "Вид расположения трубопровода",
-              "asTitle": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -763,7 +757,6 @@ SET is_system = true,
             {
               "name": "balabce_holder",
               "title": "Принадлежность сети",
-              "asTitle": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -849,7 +842,6 @@ SET is_system = true,
             {
               "name": "classid",
               "title": "Код объекта",
-              "asTitle": true,
               "required": true,
               "valueType": "CHOICE",
               "enumerations": [
@@ -920,7 +912,6 @@ SET is_system = true,
             {
               "name": "balabce_holder",
               "title": "Принадлежность сети",
-              "asTitle": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {

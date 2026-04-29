@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.controller;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -7,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.auth_service.service.PasswordResetService;
 import ru.mycrg.auth_service_contract.dto.InitPasswordResetDto;
 import ru.mycrg.auth_service_contract.dto.PasswordResetDto;
-
-import jakarta.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 

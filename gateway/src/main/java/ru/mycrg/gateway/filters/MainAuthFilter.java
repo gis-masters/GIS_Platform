@@ -229,6 +229,8 @@ public class MainAuthFilter extends OncePerRequestFilter {
                 || (request.getServletPath().equals("/specializations") && request.getMethod().equals("GET"))
                 || (request.getServletPath().equals("/password-reset") && request.getMethod().equals("POST"))
                 || (request.getServletPath().equals("/password-reset") && request.getMethod().equals("GET"))
+                || (request.getServletPath().startsWith("/password-reset-token/")
+                && request.getMethod().equals("GET"))
                 || (request.getServletPath().equals("/request-password-reset") && request.getMethod().equals("POST"));
     }
 

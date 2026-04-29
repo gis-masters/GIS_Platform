@@ -63,6 +63,7 @@ crg-options:
   system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
   reset-password-expiration-time: 60 # In minutes
   reset-password-request-rate: 10 #In seconds
+  password-reset-token-endpoint-enabled: false
 
 
 esia:

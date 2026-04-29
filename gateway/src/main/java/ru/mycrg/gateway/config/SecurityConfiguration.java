@@ -83,6 +83,7 @@ public class SecurityConfiguration {
                         .requestMatchers(GET,
                                          "/actuator/health",
                                          "/password-reset",
+                                         "/password-reset-token/**",
                                          "/specializations",
                                          "/esia/**").permitAll()
                         .anyRequest().authenticated());

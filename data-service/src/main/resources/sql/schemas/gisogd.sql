@@ -4295,7 +4295,6 @@ SET is_system = true,
             "name": "inner_path",
             "title": "Где лежит",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         },
         {
@@ -4505,7 +4504,6 @@ SET is_system = true,
         {
             "name": "public_easement_type",
             "title": "Вид публичного сервитута",
-            "asTitle": true,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -4615,7 +4613,6 @@ SET is_system = true,
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
             "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
-            "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
             "valueType": "CHOICE",
@@ -4935,7 +4932,6 @@ SET is_system = true,
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
             "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
-            "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
             "valueType": "CHOICE",
@@ -5747,7 +5743,6 @@ SET is_system = true,
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
             "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
-            "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
             "valueType": "CHOICE",
@@ -5861,7 +5856,6 @@ SET is_system = true,
             "title": "Идентификатор объекта",
             "hidden": true,
             "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "required": true,
             "valueType": "STRING"
         },
         {
@@ -5875,70 +5869,61 @@ SET is_system = true,
             "name": "l_coordsys",
             "title": "Система координат",
             "maxLength": 50,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_title",
             "title": "L_Title",
             "hidden": true,
             "maxLength": 50,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_seclabel",
             "title": "L_SecLabel",
             "hidden": true,
             "maxLength": 50,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_surtype",
             "title": "L_SurType",
             "hidden": true,
             "maxLength": 50,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_year",
             "title": "L_Year",
             "hidden": true,
             "maxLength": 50,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_hisys",
             "title": "L_HiSys",
             "hidden": true,
             "maxLength": 50,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_horiz",
             "title": "L_Horiz",
             "hidden": true,
             "maxLength": 50,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_enterpri",
             "title": "L_Enterpri",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "l_countreg",
             "title": "L_CountReg",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "shape_leng",
@@ -6175,7 +6160,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -7635,8 +7619,7 @@ SET is_system = true,
         {
             "name": "note",
             "title": "Примечания",
-            "valueType": "TEXT",
-            "asTitle": true
+            "valueType": "TEXT"
         },
         {
             "name": "documents",
@@ -7662,14 +7645,11 @@ SET is_system = true,
             "name": "category",
             "title": "Код категории",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "area",
             "title": "Площадь,кв.м",
-            "hidden": true,
-            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7678,28 +7658,23 @@ SET is_system = true,
             "name": "name",
             "title": "Name",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "date_creat",
             "title": "Дата создания объекта",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "document_d",
             "title": "document_d",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "cost",
             "title": "Кадастровая стоимость",
-            "hidden": true,
-            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7708,15 +7683,13 @@ SET is_system = true,
             "name": "cs_name",
             "title": "СК",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "dateupload",
             "title": "dateupload",
             "hidden": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         }
     ],
     "geometryType": "MultiPolygon"
@@ -7742,7 +7715,6 @@ SET is_system = true,
             "title": "Идентификатор объекта",
             "hidden": true,
             "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "required": true,
             "valueType": "STRING"
         },
         {
@@ -7757,8 +7729,7 @@ SET is_system = true,
             "title": "КОД",
             "required": true,
             "maxLength": 9,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "shape_leng",
@@ -7842,7 +7813,6 @@ SET is_system = true,
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
             "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
-            "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
             "valueType": "CHOICE",
@@ -9994,8 +9964,7 @@ SET is_system = true,
             "name": "address",
             "title": "Адрес",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "typeoti",
@@ -10129,7 +10098,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ], 
@@ -10308,22 +10276,19 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         },
         {
             "name": "aisums_property_type",
             "title": "Тип собственности АИС УМС",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "aisums_number",
             "title": "Номер АИС УМС",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         }
     ],
     "geometryType": "MultiLineString"
@@ -10625,14 +10590,12 @@ SET is_system = true,
         {
             "name": "kvartal",
             "title": "Номер кадастрового квартала",
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "fio_owner",
             "title": "Правообладатель",
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "adr_owner",
@@ -10642,8 +10605,7 @@ SET is_system = true,
         {
             "name": "num_app",
             "title": "№ заявления",
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "date_app",
@@ -10653,14 +10615,12 @@ SET is_system = true,
         {
             "name": "declarant",
             "title": "Заявитель",
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "num_decis",
             "title": "Номер решения",
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "date_decis",
@@ -10670,14 +10630,12 @@ SET is_system = true,
         {
             "name": "decision",
             "title": "Наименование решения",
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "note",
             "title": "Примечание",
-            "valueType": "TEXT",
-            "asTitle": true
+            "valueType": "TEXT"
         },
         {
             "name": "documents",
@@ -10869,7 +10827,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         },
         {
@@ -10920,8 +10877,7 @@ SET is_system = true,
         {
             "name": "note",
             "title": "Комментарий к проекту",
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "creator",
@@ -11130,7 +11086,6 @@ SET is_system = true,
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
             "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
-            "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
             "valueType": "CHOICE",
@@ -11246,8 +11201,7 @@ SET is_system = true,
             "name": "location",
             "title": "Местоположение",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "cad_num",
@@ -11260,8 +11214,7 @@ SET is_system = true,
             "name": "numb_statement",
             "title": "Номер заявления",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "regdate",
@@ -11272,15 +11225,13 @@ SET is_system = true,
             "name": "applicant",
             "title": "Заявитель",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "contact",
             "title": "Контактные данные заявителя",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "docstatus",
@@ -11495,7 +11446,6 @@ SET is_system = true,
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
             "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
-            "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
             "valueType": "CHOICE",
@@ -11611,7 +11561,6 @@ SET is_system = true,
             "title": "Идентификатор объекта",
             "hidden": true,
             "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "required": true,
             "valueType": "STRING"
         },
         {
@@ -11626,8 +11575,7 @@ SET is_system = true,
             "title": "КОД",
             "required": true,
             "maxLength": 9,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "shape_leng",
@@ -11771,7 +11719,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -12606,7 +12553,6 @@ SET is_system = true,
             "title": "Идентификатор объекта",
             "hidden": true,
             "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "required": true,
             "valueType": "STRING"
         },
         {
@@ -12621,8 +12567,7 @@ SET is_system = true,
             "title": "КОД",
             "required": true,
             "maxLength": 9,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "shape_leng",
@@ -12731,7 +12676,6 @@ SET is_system = true,
             "title": "Регламент существует",
             "hidden": true,
             "length": 1,
-            "required": true,
             "maxLength": 1,
             "valueType": "STRING"
         },
@@ -12739,7 +12683,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -12809,7 +12752,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -12891,7 +12833,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -12961,7 +12902,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -13029,7 +12969,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -13111,7 +13050,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -13193,7 +13131,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -13263,7 +13200,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -13339,7 +13275,6 @@ SET is_system = true,
             "name": "ruleid",
             "title": "Идентификатор стиля",
             "hidden": true,
-            "required": true,
             "valueType": "STRING"
         }
     ],
@@ -13591,8 +13526,7 @@ SET is_system = true,
             "name": "note",
             "title": "Примечания",
             "required": true,
-            "valueType": "TEXT",
-            "asTitle": true
+            "valueType": "TEXT"
         },
         {
             "name": "shape",
@@ -13733,21 +13667,20 @@ SET is_system = true,
             "name": "cad_num",
             "title": "Кадастровый номер",
             "required": true,
-            "valueType": "STRING"
+            "valueType": "STRING",
+            "asTitle": true
         },
         {
             "name": "owner",
             "title": "Землепользователь",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "address",
             "title": "Место расположение земельного участка",
             "required": true,
-            "valueType": "STRING",
-            "asTitle": true
+            "valueType": "STRING"
         },
         {
             "name": "landuse",
@@ -19080,7 +19013,6 @@ SET is_system = true,
          {
            "name": "request_type",
            "title": "Способ направления данных",
-           "asTitle": true,
            "required": true,
            "valueType": "CHOICE",
            "enumerations": [
@@ -19127,7 +19059,6 @@ SET is_system = true,
          {
            "name": "data_type",
            "title": "Форма данных",
-           "asTitle": true,
            "required": true,
            "valueType": "CHOICE",
            "enumerations": [
@@ -19144,7 +19075,6 @@ SET is_system = true,
          {
            "name": "record_status",
            "title": "Статус",
-           "asTitle": true,
            "required": true,
            "valueType": "CHOICE",
            "enumerations": [
@@ -19209,7 +19139,6 @@ SET is_system = true,
          {
            "name": "gisogdrf_sync_status",
            "title": "Статус синхронизации",
-           "asTitle": true,
            "minWidth": 200,
            "readOnly": true,
            "valueType": "CHOICE",
@@ -48300,7 +48229,6 @@ SET is_system = true,
       "name": "inner_path",
       "title": "Где лежит",
       "hidden": true,
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -48313,7 +48241,6 @@ SET is_system = true,
       "name": "oktmo",
       "title": "ОКТМО",
       "hidden": true,
-      "required": true,
       "maxLength": 11,
       "valueType": "STRING"
     },

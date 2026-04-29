@@ -61,7 +61,6 @@ SET is_system = true,
                 "name": "ruleid",
                 "title": "Идентификатор стиля",
                 "hidden": true,
-                "required": true,
                 "valueType": "STRING"
               }
             ],
@@ -399,7 +398,6 @@ SET is_system = true,
                 "name": "ruleid",
                 "title": "Идентификатор стиля",
                 "hidden": true,
-                "required": true,
                 "valueType": "STRING"
               }
             ],
@@ -510,12 +508,12 @@ SET is_system = true,
           "name": "ruleid",
           "title": "Идентификатор стиля",
           "hidden": true,
-          "required": true,
           "valueType": "STRING"
         },
         {
           "name": "created_by",
           "title": "Создатель",
+          "hidden": true,
           "readOnly": true,
           "valueType": "STRING",
           "description": "Пользователь создавший объект (Заполняется автоматически)"
@@ -523,6 +521,7 @@ SET is_system = true,
         {
           "name": "created_at",
           "title": "Дата создания",
+          "hidden": true,
           "readOnly": true,
           "valueType": "DATETIME",
           "description": "Дата создания объекта (Заполняется автоматически)"

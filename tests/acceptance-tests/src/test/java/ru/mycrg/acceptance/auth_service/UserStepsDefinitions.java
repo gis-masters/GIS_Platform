@@ -104,14 +104,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует пользователь")
     public void initializeUser(DataTable dataTable) {
-        userDto = mapToDto(dataTable.asLists(String.class).get(0));
+        userDto = mapToDto(dataTable.asLists(String.class).getFirst());
 
         createUser(userDto);
     }
 
     @Given("Существует другой пользователь")
     public void initAnotherUser(DataTable dataTable) {
-        anotherUserDto = mapToDto(dataTable.asLists(String.class).get(0));
+        anotherUserDto = mapToDto(dataTable.asLists(String.class).getFirst());
 
         createUser(anotherUserDto, 1, true);
     }

@@ -9,6 +9,7 @@ import ru.mycrg.auth_service.entity.PasswordResetToken;
 import ru.mycrg.auth_service.entity.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +22,8 @@ public interface PasswordResetTokenRepository extends CrudRepository<PasswordRes
     @Modifying
     @Query(value = "DELETE FROM PasswordResetToken WHERE createdAt < :dateTime")
     void deleteExpiredTokens(@Param("dateTime") LocalDateTime dateTime);
+
+    List<PasswordResetToken> findAllByUser_Id(Long userId);
 
     @Query(value = "SELECT * FROM password_reset_tokens AS tokens " +
             "WHERE tokens.user_id = :userId " +

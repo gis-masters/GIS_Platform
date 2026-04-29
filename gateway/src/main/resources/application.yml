@@ -119,6 +119,19 @@ spring:
                 - RemoveResponseHeader=Access-Control-Allow-Methods
                 - RemoveResponseHeader=Access-Control-Expose-Headers
                 - RemoveResponseHeader=Access-Control-Max-Age
+            - id: crg-auth-service-password-reset-token
+              uri: http://auth-service:9000
+              predicates:
+                - Path=/password-reset-token,/password-reset-token/**
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RemoveResponseHeader=Set-Cookie
+                - RemoveResponseHeader=Access-Control-Allow-Origin
+                - RemoveResponseHeader=Access-Control-Allow-Credentials
+                - RemoveResponseHeader=Access-Control-Allow-Headers
+                - RemoveResponseHeader=Access-Control-Allow-Methods
+                - RemoveResponseHeader=Access-Control-Expose-Headers
+                - RemoveResponseHeader=Access-Control-Max-Age
             - id: crg-gis-service-projects
               uri: http://crg-gis-service:8082
               predicates:

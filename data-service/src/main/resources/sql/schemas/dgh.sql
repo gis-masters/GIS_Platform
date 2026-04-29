@@ -370,37 +370,31 @@ SET is_system = true,
             {
               "name": "num_zu",
               "title": "Номер ЗУ",
-              "hidden": true,
               "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "landuser",
               "title": "Землепользователь",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "usage",
               "title": "Разрешенное использование",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "landuse",
               "title": "Вид разрешенного использования",
-              "hidden": true,
               "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "ccode",
               "title": "Категория землепользования (код)",
-              "hidden": true,
               "required": true,
               "valueType": "CHOICE",
               "enumerations": [
@@ -537,7 +531,6 @@ SET is_system = true,
             {
               "name": "otypecode",
               "title": "Вид объекта недвижимости (код)",
-              "hidden": true,
               "required": true,
               "valueType": "CHOICE",
               "enumerations": [
@@ -630,16 +623,12 @@ SET is_system = true,
             {
               "name": "objecttype",
               "title": "Вид объекта недвижимости",
-              "hidden": true,
-              "required": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "ptypecode",
               "title": "Вид земельного участка (код)",
-              "hidden": true,
-              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -671,29 +660,21 @@ SET is_system = true,
             {
               "name": "parceltype",
               "title": "Вид Земельного участка",
-              "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
               "name": "rdate",
               "title": "Дата постановки на учет/ регистрации",
-              "hidden": true,
-              "required": true,
               "valueType": "DATETIME"
             },
             {
               "name": "cdate",
               "title": "Дата снятия с учета/регистрации",
-              "hidden": true,
-              "required": true,
               "valueType": "DATETIME"
             },
             {
               "name": "cost",
               "title": "Кадастровая стоимость",
-              "hidden": true,
-              "required": true,
               "valueType": "DOUBLE",
               "totalDigits": 38,
               "fractionDigits": 8
@@ -749,38 +730,29 @@ SET is_system = true,
             {
               "name": "num_zu",
               "title": "Номер ЗУ",
-              "hidden": true,
-              "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "tenant",
               "title": "Арендатор",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "usage",
               "title": "Разрешенное использование",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "landuse",
               "title": "Вид разрешенного использования",
-              "hidden": true,
-              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "ccode",
               "title": "Категория землепользования (код)",
-              "hidden": true,
-              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -916,8 +888,6 @@ SET is_system = true,
             {
               "name": "otypecode",
               "title": "Вид объекта недвижимости (код)",
-              "hidden": true,
-              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -1009,16 +979,12 @@ SET is_system = true,
             {
               "name": "objecttype",
               "title": "Вид объекта недвижимости",
-              "hidden": true,
-              "required": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "ptypecode",
               "title": "Вид земельного участка (код)",
-              "hidden": true,
-              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -1050,29 +1016,21 @@ SET is_system = true,
             {
               "name": "parceltype",
               "title": "Вид Земельного участка",
-              "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
               "name": "rdate",
               "title": "Дата постановки на учет/ регистрации",
-              "hidden": true,
-              "required": true,
               "valueType": "DATETIME"
             },
             {
               "name": "cdate",
               "title": "Дата снятия с учета/регистрации",
-              "hidden": true,
-              "required": true,
               "valueType": "DATETIME"
             },
             {
               "name": "cost",
               "title": "Кадастровая стоимость",
-              "hidden": true,
-              "required": true,
               "valueType": "DOUBLE",
               "totalDigits": 38,
               "fractionDigits": 8
@@ -1474,38 +1432,29 @@ SET is_system = true,
             {
               "name": "num_zu",
               "title": "Номер ЗУ",
-              "hidden": true,
-              "required": true,
               "maxLength": 50,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "landuser",
               "title": "Землепользователь",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "usage",
               "title": "Разрешенное использование",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "landuse",
               "title": "Вид разрешенного использования",
-              "hidden": true,
-              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "ccode",
               "title": "Категория землепользования (код)",
-              "hidden": true,
-              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -1641,8 +1590,6 @@ SET is_system = true,
             {
               "name": "otypecode",
               "title": "Вид объекта недвижимости (код)",
-              "hidden": true,
-              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -1734,16 +1681,12 @@ SET is_system = true,
             {
               "name": "objecttype",
               "title": "Вид объекта недвижимости",
-              "hidden": true,
-              "required": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "ptypecode",
               "title": "Вид земельного участка (код)",
-              "hidden": true,
-              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -1775,29 +1718,21 @@ SET is_system = true,
             {
               "name": "parceltype",
               "title": "Вид Земельного участка",
-              "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
               "name": "rdate",
               "title": "Дата постановки на учет/ регистрации",
-              "hidden": true,
-              "required": true,
               "valueType": "DATETIME"
             },
             {
               "name": "cdate",
               "title": "Дата снятия с учета/регистрации",
-              "hidden": true,
-              "required": true,
               "valueType": "DATETIME"
             },
             {
               "name": "cost",
               "title": "Кадастровая стоимость",
-              "hidden": true,
-              "required": true,
               "valueType": "DOUBLE",
               "totalDigits": 38,
               "fractionDigits": 8
@@ -1885,8 +1820,7 @@ SET is_system = true,
             {
               "name": "responsi_1",
               "title": "Отвественный",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "cad_num",
@@ -1897,26 +1831,22 @@ SET is_system = true,
             {
               "name": "landuser",
               "title": "Землепользователь",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "tenant",
               "title": "Арендатор",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "usage",
               "title": "Вид разрешенного использования",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "usefact",
               "title": "Фактическое использование",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "area",
@@ -1974,8 +1904,7 @@ SET is_system = true,
             {
               "name": "usage",
               "title": "Разрешенное использование",
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "landuse",
@@ -2322,8 +2251,7 @@ SET is_system = true,
               "name": "contnumact",
               "title": "Количество контейнеров фактическое",
               "required": true,
-              "valueType": "STRING",
-              "asTitle": true
+              "valueType": "STRING"
             },
             {
               "name": "location",
@@ -2401,8 +2329,7 @@ SET is_system = true,
               "name": "notes",
               "title": "Примечания",
               "required": true,
-              "valueType": "TEXT",
-              "asTitle": true
+              "valueType": "TEXT"
             },
             {
               "name": "shape",

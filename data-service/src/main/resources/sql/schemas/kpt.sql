@@ -198,35 +198,30 @@ SET is_system = true,
             {
               "name": "btypecode",
               "title": "Вид объекта реестра границ (код)",
-              "asTitle": true,
               "maxLength": 50,
               "valueType": "STRING"
             },
             {
               "name": "btype",
               "title": "Вид объекта реестра границ",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "objectname",
               "title": "Наименование водного объекта",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "wocode",
               "title": "Вид объекта реестра границ (код)",
-              "asTitle": true,
               "maxLength": 50,
               "valueType": "STRING"
             },
             {
               "name": "wotype",
               "title": "Вид объекта реестра границ",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
@@ -279,7 +274,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -329,14 +323,12 @@ SET is_system = true,
             {
               "name": "num_zu",
               "title": "Номер ЗУ",
-              "asTitle": true,
               "maxLength": 50,
               "valueType": "STRING"
             },
             {
               "name": "usage",
               "title": "Разрешенное использование по документу",
-              "asTitle": true,
               "valueType": "TEXT"
             },
             {
@@ -558,13 +550,11 @@ SET is_system = true,
               "name": "cad_num",
               "title": "Кадастровый номер",
               "hidden": true,
-              "asTitle": true,
               "valueType": "STRING"
             },
             {
               "name": "num_oks",
               "title": "Номер ОКС",
-              "asTitle": true,
               "required": true,
               "maxLength": 50,
               "valueType": "STRING"
@@ -591,7 +581,6 @@ SET is_system = true,
             {
               "name": "readablead",
               "title": "Адрес в соответствии с ФИАС",
-              "asTitle": true,
               "required": true,
               "valueType": "TEXT"
             },
@@ -676,7 +665,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -738,13 +726,11 @@ SET is_system = true,
               "name": "cad_num",
               "title": "Кадастровый номер",
               "hidden": true,
-              "asTitle": true,
               "valueType": "STRING"
             },
             {
               "name": "num_oks",
               "title": "Номер ОКС",
-              "asTitle": true,
               "required": true,
               "maxLength": 50,
               "valueType": "STRING"
@@ -771,7 +757,6 @@ SET is_system = true,
             {
               "name": "readablead",
               "title": "Адрес в соответствии с ФИАС",
-              "asTitle": true,
               "required": true,
               "valueType": "TEXT"
             },
@@ -874,7 +859,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -937,35 +921,30 @@ SET is_system = true,
             {
               "name": "btypecode",
               "title": "Вид объекта реестра границ (код)",
-              "asTitle": true,
               "maxLength": 50,
               "valueType": "STRING"
             },
             {
               "name": "btype",
               "title": "Вид объекта реестра границ",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "objectname",
               "title": "Наименование водного объекта",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "wocode",
               "title": "Вид объекта реестра границ (код)",
-              "asTitle": true,
               "maxLength": 50,
               "valueType": "STRING"
             },
             {
               "name": "wotype",
               "title": "Вид объекта реестра границ",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
@@ -1018,7 +997,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1070,7 +1048,6 @@ SET is_system = true,
               "name": "cad_num",
               "title": "Кадастровый номер",
               "hidden": true,
-              "asTitle": true,
               "valueType": "STRING"
             },
             {
@@ -1129,7 +1106,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1331,7 +1307,6 @@ SET is_system = true,
               "name": "cad_num",
               "title": "Кадастровый номер",
               "hidden": true,
-              "asTitle": true,
               "valueType": "STRING"
             },
             {
@@ -1604,7 +1579,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1665,14 +1639,12 @@ SET is_system = true,
             {
               "name": "boundary_1",
               "title": "Вид объекта реестра границ",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
             {
               "name": "registrationdate",
               "title": "Дата постановки на учет",
-              "asTitle": true,
               "maxLength": 100,
               "valueType": "STRING"
             },
@@ -1719,7 +1691,6 @@ SET is_system = true,
               "name": "ruleid",
               "title": "Идентификатор стиля",
               "hidden": true,
-              "required": true,
               "valueType": "STRING"
             },
             {
@@ -1818,7 +1789,6 @@ SET is_system = true,
             {
               "name": "boundary_1",
               "title": "Вид объекта реестра границ",
-              "required": true,
               "hidden": true,
               "maxLength": 100,
               "valueType": "STRING"
