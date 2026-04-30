@@ -1,21 +1,11 @@
 package ru.mycrg.integration_service.bpmn.publication.store;
 
-import okhttp3.Request;
-import okhttp3.Response;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service_contract.queue.request.FilePublicationEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-
-import java.net.URL;
-
-import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.FAIL_REASON;
 
 @Service("geoserverDeleteStoreDelegate")
 public class GeoserverDeleteStoreDelegate implements JavaDelegate {

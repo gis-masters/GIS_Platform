@@ -1,0 +1,6 @@
+server:
+  port: 8448
+
+spring:
+  application:
+    name: cryptopro

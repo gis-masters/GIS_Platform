@@ -30,7 +30,7 @@ public class FileService {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            throw new FileNotFoundException(("Файл '" + filePath + "' не найден!"));
+            throw new FileNotFoundException("Файл '" + filePath + "' не найден!");
         }
 
         if (!file.isFile()) {

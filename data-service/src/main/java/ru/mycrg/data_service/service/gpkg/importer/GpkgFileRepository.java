@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static java.util.Collections.nCopies;
 import static ru.mycrg.data_service.service.gpkg.export.tables.MediaFilesWriter.GPKG_MEDIA_FILES_TABLE;
 
 @Repository
@@ -142,7 +143,7 @@ public class GpkgFileRepository {
             return new HashMap<>();
         }
 
-        String placeholders = String.join(",", Collections.nCopies(nameSet.size(), "?"));
+        String placeholders = String.join(",", nCopies(nameSet.size(), "?"));
 
         String query = "SELECT table_name, feature_count FROM gpkg_ogr_contents WHERE table_name IN (" + placeholders + ")";
 
@@ -177,7 +178,7 @@ public class GpkgFileRepository {
         if (names == null || names.isEmpty()) {
             return new HashMap<>();
         }
-        String values = String.join(",", Collections.nCopies(names.size(), "(?)"));
+        String values = String.join(",", nCopies(names.size(), "(?)"));
 
         String sql =
                 "WITH input(name) AS (VALUES " + values + ") " +
@@ -219,7 +220,7 @@ public class GpkgFileRepository {
             return false;
         }
 
-        String placeholders = String.join(",", java.util.Collections.nCopies(tableNames.size(), "?"));
+        String placeholders = String.join(",", nCopies(tableNames.size(), "?"));
 
         String sql = "SELECT COUNT(DISTINCT table_name) " +
                 "FROM gpkg_contents WHERE table_name IN (" + placeholders + ")";
@@ -232,7 +233,11 @@ public class GpkgFileRepository {
             }
 
             try (ResultSet rs = ps.executeQuery()) {
-                int found = rs.next() ? rs.getInt(1) : 0;
+                if (!rs.next()) {
+                    return false;
+                }
+
+                int found = rs.getInt(1);
 
                 return found == tableNames.size();
             }
@@ -304,7 +309,9 @@ public class GpkgFileRepository {
 
     /**
      * Использовать только внутри try-with-resousrces
+     *
      * @param filePath путь к файлу на сервере
+     *
      * @return интерфейс подключения jdbc:sqlite
      */
     protected Connection getConnectionToGpkg(String filePath) {

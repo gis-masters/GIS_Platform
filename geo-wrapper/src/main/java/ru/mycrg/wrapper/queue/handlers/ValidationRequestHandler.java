@@ -15,7 +15,6 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.wrapper.dao.BaseDaoService;
-import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.Util;
@@ -92,7 +91,7 @@ public class ValidationRequestHandler implements IEventHandler {
             baseDaoService.deleteAllRecordsFromExtTableWhichNotExist(jdbcTemplate, resource);
 
             List<Map<String, Object>> nextBatch;
-            int batchSize = DaoProperties.BATCH_SIZE;
+            int batchSize = BATCH_SIZE;
             while (true) {
                 nextBatch = baseDaoService.fetchBatchOfRowsNeededToValidation(jdbcTemplate, resource, batchSize);
                 if (nextBatch.isEmpty()) {

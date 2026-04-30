@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.parsers.exceptions.GmlParserException;
 
 import java.util.ArrayList;

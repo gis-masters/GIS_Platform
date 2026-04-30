@@ -1,11 +1,9 @@
 package ru.mycrg.data_service.service.import_;
 
-import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.NodeList;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -21,14 +19,16 @@ import ru.mycrg.data_service.service.parsers.XmlParser;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
-import ru.mycrg.data_service.service.schemas.SchemaUtil;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.util.ImportValidationHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static ru.mycrg.data_service.service.import_.ImportType.MP;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyNameByType;

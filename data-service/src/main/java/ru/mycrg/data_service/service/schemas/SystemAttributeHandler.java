@@ -113,7 +113,7 @@ public class SystemAttributeHandler {
 
         Map<String, Object> contentWithOldVersions = new HashMap<>(previousRecordContent);
 
-        List<DocumentVersioningDto> allVersions = Objects.nonNull(contentWithOldVersions.get(VERSIONS.getName()))
+        List<DocumentVersioningDto> allVersions = nonNull(contentWithOldVersions.get(VERSIONS.getName()))
                 ? (List<DocumentVersioningDto>) contentWithOldVersions.get(VERSIONS.getName())
                 : new ArrayList<>();
 

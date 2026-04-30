@@ -93,12 +93,10 @@ public class GeoServerSpeaker {
                         } else if (inExternalGraphic && "Format".equals(localName)) {
                             // Читаем содержимое элемента Format
                             String formatContent = reader.getElementText();
-                            if ("image/svg+xml".equals(formatContent)) {
+                            if ("image/svg+xml".equals(formatContent) && pendingHref != null) {
                                 // Если уже нашли href и это SVG формат, добавляем в список
-                                if (pendingHref != null) {
-                                    svgUrls.add(pendingHref);
-                                    log.debug("Найденная SVG URL: {}", pendingHref);
-                                }
+                                svgUrls.add(pendingHref);
+                                log.debug("Найденная SVG URL: {}", pendingHref);
                             }
                         }
                         break;

@@ -60,10 +60,8 @@ public class EcqlHandler {
             for (int i = 0; i < target.length(); i++) {
                 char currentChar = target.charAt(i);
                 if (!startReplacing) {
-                    if (!waitOpenBrace) { // Пока флаг "найдена открывающая скобка" не активна
-                        if (isInFound(target, i)) { // Ожидаем найти 'IN'
-                            waitOpenBrace = true;
-                        }
+                    if (!waitOpenBrace && isInFound(target, i)) { // Пока флаг "найдена открывающая скобка" не активна
+                        waitOpenBrace = true; // Ожидаем найти 'IN'
                     }
 
                     // Дождались начала блока 'IN (' - теперь можно заменять все встречаемые символы `'` => `__'`

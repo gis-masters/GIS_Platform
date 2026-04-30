@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.*;
+import static java.util.Optional.ofNullable;
 
 public class GpzuDocumentDataProvider {
 
@@ -164,8 +164,8 @@ public class GpzuDocumentDataProvider {
         Optional<LegalDataType> oLegalData = ofNullable(request.getLegalData());
 
         return oDelegateLegalData.map(DelegateLegalDataType::getOrgFullname)
-                .orElse(oLegalData.map(LegalDataType::getOrgFullname)
-                                  .orElse(""));
+                                 .orElse(oLegalData.map(LegalDataType::getOrgFullname)
+                                                   .orElse(""));
     }
 
     public String getCompanyOrgOgrn() {
@@ -216,14 +216,14 @@ public class GpzuDocumentDataProvider {
     }
 
     public String getDocumentName() {
-        return Optional.ofNullable(request)
-                       .map(RequestType::getDocuments)
-                       .map(DocumentsType::getDecisionDocumentsBlock)
-                       .map(docInfoTypes -> docInfoTypes.stream()
-                                                        .map(DocInfoType::getName)
-                                                        .filter(Objects::nonNull)
-                                                        .collect(Collectors.joining(", ")))
-                       .orElse("");
+        return ofNullable(request)
+                .map(RequestType::getDocuments)
+                .map(DocumentsType::getDecisionDocumentsBlock)
+                .map(docInfoTypes -> docInfoTypes.stream()
+                                                 .map(DocInfoType::getName)
+                                                 .filter(Objects::nonNull)
+                                                 .collect(Collectors.joining(", ")))
+                .orElse("");
     }
 
     public String getPhoneNumber() {

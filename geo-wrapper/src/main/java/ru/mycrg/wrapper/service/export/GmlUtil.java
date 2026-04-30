@@ -13,7 +13,7 @@ public class GmlUtil {
     }
 
     public static int calculatePercent(long processedRows, long totalRows) {
-        int result = Math.round(((float) processedRows / (float) totalRows) * 100);
+        int result = Math.round((float) processedRows / (float) totalRows) * 100;
 
         // 2% на остальные действия после основной выборки.
         return Math.min(result, 98);

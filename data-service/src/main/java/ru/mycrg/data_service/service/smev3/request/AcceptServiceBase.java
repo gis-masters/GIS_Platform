@@ -254,7 +254,7 @@ public abstract class AcceptServiceBase {
                 throw new BadRequestException("Вы не можете поменять статус без приложенного документа");
             }
 
-            TypeDocumentData firstDocument = dataSectionDocs.get(0);
+            TypeDocumentData firstDocument = dataSectionDocs.getFirst();
             Long inboxDocId = firstDocument.getId();
             ResourceQualifier inboxLibraryQualifier = libraryRecordQualifier(firstDocument.getLibraryTableName(),
                                                                              inboxDocId);
@@ -422,7 +422,7 @@ public abstract class AcceptServiceBase {
         taskProps.put(TASK_DESCRIPTION_PROPERTY, description);
         taskProps.put(CONTENT_TYPE_ID.getName(), getContentType());
         taskProps.put(TASK_TYPE_PROPERTY, CUSTOM.name());
-        taskProps.put(TASK_STATUS_PROPERTY, TaskStatus.CREATED);
+        taskProps.put(TASK_STATUS_PROPERTY, CREATED);
         taskProps.put(TASK_OWNER_ID_PROPERTY, Long.valueOf("2"));
 
         taskLogService.create(new TaskLogDto(eventType, taskId, SYSTEM_USER_ID), taskProps);
@@ -546,7 +546,7 @@ public abstract class AcceptServiceBase {
     private Map<String, Object> prepareTaskContent(Long performerId) {
         Map<String, Object> taskProps = new HashMap<>();
         taskProps.put(TASK_TYPE_PROPERTY, CUSTOM.name());
-        taskProps.put(TASK_STATUS_PROPERTY, TaskStatus.CREATED.name());
+        taskProps.put(TASK_STATUS_PROPERTY, CREATED.name());
         taskProps.put(TASK_INTERMEDIATE_STATUS_PROPERTY, APPLICATION_RECEIVED.getIntermediateStatus());
         taskProps.put(CONTENT_TYPE_ID.getName(), getContentType());
         taskProps.put(CREATED_AT.getName(), LocalDate.now());
@@ -637,7 +637,7 @@ public abstract class AcceptServiceBase {
         String jacksonData = getJsonString(fileDescriptions);
         Map<String, Object> payload = savedDocument.getContent();
         payload.put(FILE_ATTRIBUTE, jacksonData);
-        ResourceQualifier rnvResQualifier = ResourceQualifier.libraryRecordQualifier(INBOX_LIBRARY_ID, savedDocumentId);
+        ResourceQualifier rnvResQualifier = libraryRecordQualifier(INBOX_LIBRARY_ID, savedDocumentId);
         recordsDao.updateRecordById(rnvResQualifier, payload, rnvSchema);
 
         TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitle, INBOX_LIBRARY_ID);

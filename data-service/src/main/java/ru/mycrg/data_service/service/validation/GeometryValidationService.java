@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.validation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.GeometryValidationResultDto;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;

@@ -4,8 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dto.ResourceType;
-import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
 import ru.mycrg.data_service.service.smev3.fields.*;
@@ -48,21 +48,21 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
     private void loadRecords(Long section13Id) {
         // section13Record
         rue.section13Record = getRecordById(
-                FieldsSection.TABLE_13,
-                FieldsSection.TABLE_13,
+                TABLE_13,
+                TABLE_13,
                 section13Id
         );
         log.debug("section13Record read. is not null {}", rue.section13Record != null);
 
         rue.developer_CustomerRecord = asRefRecord(
                 rue.section13Record,
-                FieldsSection.PROPERTY_DEVELOPER_DATA_CONNECTION
+                PROPERTY_DEVELOPER_DATA_CONNECTION
         ).orElse(null);
         log.debug("developer_CustomerRecord read. is not null {}", rue.developer_CustomerRecord != null);
 
         rue.supplier_SupplierRecord = asRefRecord(
                 rue.section13Record,
-                FieldsSection.PROPERTY_SUPPLIER_DATA_CONNECTION
+                PROPERTY_SUPPLIER_DATA_CONNECTION
         ).orElse(null);
         log.debug("supplier_SupplierRecord read. is not null {}", rue.supplier_SupplierRecord != null);
 
@@ -156,13 +156,13 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         // rsoksSection13
         rue.rsoksSection13SupplierRecord = asRefRecord(
                 rue.rsoksSection13Record,
-                FieldsSection.PROPERTY_SUPPLIER_DATA_CONNECTION
+                PROPERTY_SUPPLIER_DATA_CONNECTION
         ).orElse(null);
         log.debug("rsoksSection13SupplierRecord read. is not null {}", rue.rsoksSection13SupplierRecord != null);
 
         rue.usersAfterTriggerRecord = asRefRecord(
                 rue.rsoksSection13Record,
-                FieldsSection.PROPERTY_ISSUE_PERSON_CONNECTION
+                PROPERTY_ISSUE_PERSON_CONNECTION
         ).orElse(null);
         log.debug("usersAfterTriggerRecord read. is not null {}", rue.usersAfterTriggerRecord != null);
 
@@ -189,17 +189,17 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         var type = new ExploitationType();
 
         // section13Record
-        asString(rue.section13Record, FieldsSection.PROPERTY_DOC_NUM)
+        asString(rue.section13Record, PROPERTY_DOC_NUM)
                 .ifPresent(type::setPermitNumber);
-        asXMLGregorianCalendar(rue.section13Record, FieldsSection.PROPERTY_DOC_DATE)
+        asXMLGregorianCalendar(rue.section13Record, PROPERTY_DOC_DATE)
                 .ifPresent(type::setPermitDate);
-        asInt(rue.section13Record, FieldsSection.PROPERTY_CONST_GOVERNMENT_ORDER_ID)
+        asInt(rue.section13Record, PROPERTY_CONST_GOVERNMENT_ORDER_ID)
                 .ifPresent(type::setGovernmentOrderId);
-        asString(rue.section13Record, FieldsSection.PROPERTY_CONST_CADASTRAL_DISTRICT)
+        asString(rue.section13Record, PROPERTY_CONST_CADASTRAL_DISTRICT)
                 .ifPresent(type::setCadastralDistrict);
-        asString(rue.section13Record, FieldsSection.PROPERTY_CONST_CADASTRAL_AREA)
+        asString(rue.section13Record, PROPERTY_CONST_CADASTRAL_AREA)
                 .ifPresent(type::setCadastralArea);
-        asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_CONSTRUCTION_TYPE)
+        asRefBookType(rue.section13Record, TABLE_13, PROPERTY_CONSTRUCTION_TYPE)
                 .ifPresent(type::setConstructionKind);
 
         // usersAfterTriggerRecord
@@ -208,9 +208,9 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         type.setIssuePerson(supplierIssuePerson());
 
         // rsoksSection13Record
-        asString(rue.rsoksSection13Record, FieldsSection.PROPERTY_DOC_NUM)
+        asString(rue.rsoksSection13Record, PROPERTY_DOC_NUM)
                 .ifPresent(type::setConstPermitNumber);
-        asXMLGregorianCalendar(rue.rsoksSection13Record, FieldsSection.PROPERTY_DOC_DATE)
+        asXMLGregorianCalendar(rue.rsoksSection13Record, PROPERTY_DOC_DATE)
                 .ifPresent(type::setConstPermitDate);
 
         // Добавляем вложение
@@ -295,19 +295,19 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         var type = new ObjectInfoType();
 
         // section13Record
-        asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_OBJECT_KIND)
+        asRefBookType(rue.section13Record, TABLE_13, PROPERTY_OBJECT_KIND)
                 .ifPresent(type::setObjectKind);
-        asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_OBJECT_PURPOSE)
+        asRefBookType(rue.section13Record, TABLE_13, PROPERTY_OBJECT_PURPOSE)
                 .ifPresent(type::setObjectPurpose);
-        asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_OBJECT_PURPOSE_FUNCTIONAL)
+        asRefBookType(rue.section13Record, TABLE_13, PROPERTY_OBJECT_PURPOSE_FUNCTIONAL)
                 .ifPresent(type::setObjectPurposeFunctional);
-        asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_BUILD_CAPITAL_TYPE)
+        asRefBookType(rue.section13Record, TABLE_13, PROPERTY_BUILD_CAPITAL_TYPE)
                 .ifPresent(type::setBuildCapitalType);
-        asString(rue.section13Record, FieldsSection.PROPERTY_OBJECT_NAME_EIS)
+        asString(rue.section13Record, PROPERTY_OBJECT_NAME_EIS)
                 .ifPresent(type::setObjectName);
 
         //TODO обратить внимание
-        asString(rue.section13Record, FieldsSection.PROPERTY_LACOTEAN)
+        asString(rue.section13Record, PROPERTY_LACOTEAN)
                 .ifPresent(s -> {
                     var addressFullType = new AddressFullType();
                     addressFullType.setRegion(SmevRequestConst.CRIMEA_REGION);
@@ -318,9 +318,9 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
                 });
 
         // section13viaRsoksRecord
-        asString(rue.rsoksSection13Record, FieldsSection.PROPERTY_NAME_FROM_P_D)
+        asString(rue.rsoksSection13Record, PROPERTY_NAME_FROM_P_D)
                 .ifPresent(type::setConstObjectName);
-        asString(rue.rsoksSection13Record, FieldsSection.PROPERTY_IDENTIFIER)
+        asString(rue.rsoksSection13Record, PROPERTY_IDENTIFIER)
                 .ifPresent(type::setConstObjectID);
 
         // rveoksRecord
@@ -365,7 +365,7 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         type.setOverallPerformance(overallPerformanceType());
         type.setEnergyEfficiency(energyEfficiencyType());
 
-        asString(rue.section13Record, FieldsSection.PROPERTY_OBJECT_PURPOSE_FUNCTIONAL)
+        asString(rue.section13Record, PROPERTY_OBJECT_PURPOSE_FUNCTIONAL)
                 .ifPresentOrElse(objecPpurposeFunctional -> {
                     switch (objecPpurposeFunctional) {
                         case PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_4: {
@@ -858,7 +858,7 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         type.setObjectType(objectType);
 
         // section13
-        asString(rue.section13Record, FieldsSection.PROPERTY_OBJECT_NAME_EIS)
+        asString(rue.section13Record, PROPERTY_OBJECT_NAME_EIS)
                 .ifPresent(type::setObjectName);
 
         return type;

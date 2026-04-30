@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static ru.mycrg.auth_facade.JwtDetails.USER_CRG_LOGIN;
-import static ru.mycrg.auth_facade.JwtDetails.USER_NAME;
 import static ru.mycrg.auth_service.security.TokenClaimsService.ORG_ID;
 
 @Service
@@ -65,7 +64,8 @@ public class JwtTokenService {
 
     public JwtToken refreshToken(String refreshToken) {
         Map<String, Object> claims = parseAndValidate(refreshToken, JwtTokenKinds.REFRESH);
-        String login = firstNonBlank(getStringClaim(claims, USER_CRG_LOGIN), getStringClaim(claims, JwtClaimNames.SUBJECT));
+        String login = firstNonBlank(getStringClaim(claims, USER_CRG_LOGIN),
+                                     getStringClaim(claims, JwtClaimNames.SUBJECT));
         if (login == null) {
             throw new BadCredentialsException("Refresh token does not contain user login");
         }
@@ -77,10 +77,6 @@ public class JwtTokenService {
         }
 
         return issueTokenPair(login, parseOptionalLong(claims.get(ORG_ID)));
-    }
-
-    public Map<String, Object> parseAccessToken(String tokenValue) {
-        return parseAndValidate(tokenValue, JwtTokenKinds.ACCESS);
     }
 
     private JwtToken issueTokenPair(String login, Long orgId) {

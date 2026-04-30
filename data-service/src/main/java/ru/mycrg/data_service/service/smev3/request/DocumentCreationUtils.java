@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.apache.poi.xwpf.usermodel.ParagraphAlignment.*;
-import static org.apache.poi.xwpf.usermodel.ParagraphAlignment.BOTH;
 import static org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge.CONTINUE;
 import static org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge.RESTART;
 
@@ -66,7 +65,7 @@ public class DocumentCreationUtils {
         XWPFTableRow firstRow = table.getRow(32);
         XWPFTableCell mergedCell = firstRow.getCell(0);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        paragraph.setAlignment(CENTER);
         addTextToParagraph(paragraph,
                            "Раздел 5.1. Сведения о ранее выданных разрешениях на ввод объекта в эксплуатацию в отношении этапа строительства, реконструкции объекта капитального строительства ",
                            false, 12, false);
@@ -83,17 +82,17 @@ public class DocumentCreationUtils {
         XWPFTableRow row = table.getRow(rowNumber);
         XWPFTableCell mergedCell = row.getCell(0);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         addTextToParagraph(paragraph, text, false, 12, false);
 
         XWPFTableCell mergedCell1 = row.getCell(1);
         XWPFParagraph paragraph1 = mergedCell1.getParagraphs().get(0);
-        paragraph1.setAlignment(ParagraphAlignment.LEFT);
+        paragraph1.setAlignment(LEFT);
         addTextToParagraph(paragraph1, text2, false, 12, false);
 
         XWPFTableCell mergedCell2 = row.getCell(2);
         XWPFParagraph paragraph2 = mergedCell2.getParagraphs().get(0);
-        paragraph2.setAlignment(ParagraphAlignment.LEFT);
+        paragraph2.setAlignment(LEFT);
         addTextToParagraph(paragraph2, text3, false, 12, false);
     }
 
@@ -102,7 +101,7 @@ public class DocumentCreationUtils {
         XWPFTableRow firstRow = table.getRow(row);
         XWPFTableCell mergedCell = firstRow.getCell(0);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         addTextToParagraph(paragraph, text, false, 12, false);
     }
 
@@ -111,21 +110,21 @@ public class DocumentCreationUtils {
         XWPFTableRow row = table.getRow(3);
         XWPFTableCell mergedCell = row.getCell(2);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         addTextToParagraph(paragraph,
                            "Фамилия, имя, отчество (при наличии) – для физического лица, осуществлявшего финансирование; Полное наименование – для юридического лица, осуществлявшего финансирование:",
                            false, 12, false);
 
         XWPFTableCell mergedCell2 = row.getCell(3);
         XWPFParagraph paragraph2 = mergedCell2.getParagraphs().get(0);
-        paragraph2.setAlignment(ParagraphAlignment.LEFT);
+        paragraph2.setAlignment(LEFT);
         addTextToParagraph(paragraph2, "Реквизиты документа, удостоверяющего личность – для физического лица, " +
                                    "осуществлявшего финансирование; Основной государственный регистрационный номер – для юридического лица, осуществлявшего финансирование:",
                            false, 12, false);
 
         XWPFTableCell mergedCell3 = row.getCell(4);
         XWPFParagraph paragraph3 = mergedCell3.getParagraphs().get(0);
-        paragraph3.setAlignment(ParagraphAlignment.LEFT);
+        paragraph3.setAlignment(LEFT);
         addTextToParagraph(paragraph3, "Адрес (адреса) электронной почты лица, осуществлявшего финансирование:",
                            false, 12, false);
     }
@@ -135,7 +134,7 @@ public class DocumentCreationUtils {
         XWPFTableRow row = table.getRow(rowNumber);
         XWPFTableCell mergedCell = row.getCell(1);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         addTextToParagraph(paragraph, text, false, 12, false);
     }
 
@@ -196,7 +195,7 @@ public class DocumentCreationUtils {
 
     private static void setCellText(XWPFTableCell cell, List<String> text) {
         XWPFParagraph paragraph = cell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         addTextToParagraph(paragraph, text, false, 12);
     }
 
@@ -308,7 +307,7 @@ public class DocumentCreationUtils {
 
     public static void addTextWithSuperscript(XWPFDocument document) {
         XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        paragraph.setAlignment(CENTER);
         paragraph.setSpacingAfter(5);
         addTextToParagraph(paragraph, "машино-места (не заполняется в случаях, указанных в пунктах 1-2 части ", false,
                            12, false);
@@ -322,7 +321,7 @@ public class DocumentCreationUtils {
 
     private static void setCenterCellText(XWPFTableCell cell, String text) {
         XWPFParagraph paragraph = cell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        paragraph.setAlignment(CENTER);
         addTextToParagraph(paragraph, text, false, 11, false);
     }
 
@@ -333,7 +332,7 @@ public class DocumentCreationUtils {
         XWPFTableCell mergedCell = firstRow.getCell(0);
 
         XWPFParagraph paragraph1 = mergedCell.getParagraphs().get(0);
-        paragraph1.setAlignment(ParagraphAlignment.CENTER);
+        paragraph1.setAlignment(CENTER);
         if (Boolean.TRUE.equals(request.getVariantChoice().getKPVI25().isDesignDocumentationAmended())) {
             addTextToParagraph(paragraph1, "<*> Заявление", true, 12, false);
             paragraph1.createRun().addBreak();
@@ -364,7 +363,7 @@ public class DocumentCreationUtils {
         paragraph1.createRun().addBreak();
 
         XWPFParagraph paragraph2 = mergedCell.addParagraph();
-        paragraph2.setAlignment(ParagraphAlignment.BOTH);
+        paragraph2.setAlignment(BOTH);
         addTextToParagraph(paragraph2, "Сообщаю о необходимости внесения изменений в разрешение на строительство",
                            false, 12, false);
         paragraph2.createRun().addBreak();
@@ -402,7 +401,7 @@ public class DocumentCreationUtils {
         }
 
         XWPFParagraph paragraph3 = mergedCell.addParagraph();
-        paragraph3.setAlignment(ParagraphAlignment.CENTER);
+        paragraph3.setAlignment(CENTER);
         addTextToParagraph(paragraph3, "(указать одно из обстоятельств, предусмотренных частями 21.5 - 21.7, 21.9",
                            false, 12, false);
         paragraph3.createRun().addBreak();
@@ -421,7 +420,7 @@ public class DocumentCreationUtils {
 
     public static void addCenterText(XWPFDocument document, String text, int fontSize, boolean isBold) {
         XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        paragraph.setAlignment(CENTER);
         paragraph.setSpacingAfter(5);
         addRunToParagraph(paragraph, text, fontSize, false, isBold);
     }
@@ -429,14 +428,14 @@ public class DocumentCreationUtils {
     public static void addTextWithSpacingAndUnderline(XWPFDocument document, String text, int spacing, int fontSize,
                                                       boolean isBold) {
         XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         paragraph.setSpacingAfter(spacing);
         addRunToParagraph(paragraph, text, fontSize, true, isBold);
     }
 
     public static XWPFParagraph createParagraph(XWPFDocument document, String text, int spacing, int fontSize) {
         XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         paragraph.setSpacingAfter(spacing);
         addRunToParagraph(paragraph, text, fontSize, false, false);
         return paragraph;

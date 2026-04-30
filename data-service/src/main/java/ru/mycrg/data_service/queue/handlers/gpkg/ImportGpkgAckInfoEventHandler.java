@@ -11,7 +11,6 @@ import ru.mycrg.data_service.dao.GpkgRepositoryDetached;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
 import ru.mycrg.data_service.service.gpkg.importer.GpkgReaderService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.CrsHandler;

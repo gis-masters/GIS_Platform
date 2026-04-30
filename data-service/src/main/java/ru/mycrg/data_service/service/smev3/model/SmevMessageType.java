@@ -25,7 +25,7 @@ public enum SmevMessageType {
             return null;
         }
 
-        return Arrays.stream(SmevMessageType.values())
+        return Arrays.stream(values())
                      .filter(type -> type.getSmevValue().equals(value))
                      .findFirst()
                      .orElse(null);

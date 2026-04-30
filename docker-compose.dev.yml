@@ -25,6 +25,16 @@ services:
     ports:
       - "8084:8084"
 
+  notification-service:
+    build: notification-service
+    ports:
+      - "8668:8668"
+
+  cryptopro-service:
+    build: crypt-service
+    ports:
+      - "8448:8448"
+
   geo-wrapper:
     build: geo-wrapper
 

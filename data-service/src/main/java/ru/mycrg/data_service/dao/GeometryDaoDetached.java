@@ -2,7 +2,6 @@ package ru.mycrg.data_service.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 

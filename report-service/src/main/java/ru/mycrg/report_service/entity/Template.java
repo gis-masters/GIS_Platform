@@ -41,7 +41,6 @@ public class Template {
 
     @Column(name = "hidden", nullable = false)
     private Boolean hidden = false;
-    ;
 
     @Column(name = "type")
     private String type;

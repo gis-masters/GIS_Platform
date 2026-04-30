@@ -291,9 +291,9 @@ public class RnvDocumentDataProvider implements IDocumentDataProvider {
     private String getPersonalData(RequestType request,
                                    Function<RecipientPersonalDataType, String> recipientPersonalDataType,
                                    Function<DelegatePersonalDataType, String> delegatePersonalDataType) {
-        Optional<RecipientPersonalDataType> oRecipientPersonalData = Optional.ofNullable(
+        Optional<RecipientPersonalDataType> oRecipientPersonalData = ofNullable(
                 request.getRecipientPersonalData());
-        Optional<DelegatePersonalDataType> oDelegatePersonalData = Optional.ofNullable(
+        Optional<DelegatePersonalDataType> oDelegatePersonalData = ofNullable(
                 request.getDelegatePersonalData());
 
         return oRecipientPersonalData.map(recipientPersonalDataType)
@@ -304,8 +304,8 @@ public class RnvDocumentDataProvider implements IDocumentDataProvider {
     private String getOrgData(RequestType request,
                               Function<LegalDataType, String> legalDataType,
                               Function<DelegateLegalDataType, String> delegateLegalDataType) {
-        Optional<LegalDataType> oLegalData = Optional.ofNullable(request.getLegalData());
-        Optional<DelegateLegalDataType> oDelegateLegalData = Optional.ofNullable(
+        Optional<LegalDataType> oLegalData = ofNullable(request.getLegalData());
+        Optional<DelegateLegalDataType> oDelegateLegalData = ofNullable(
                 request.getDelegateLegalData());
 
         return oLegalData.map(legalDataType)

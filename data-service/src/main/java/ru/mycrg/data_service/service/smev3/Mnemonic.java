@@ -175,9 +175,9 @@ public enum Mnemonic {
 
     @Nullable
     public static Mnemonic fromStringPair(@NotNull String mnemonic, String version) {
-        return Arrays.stream(Mnemonic.values())
-                .filter(enm -> enm.mnemonic.equals(mnemonic) && enm.version.equals(version))
-                .findFirst()
-                .orElse(null);
+        return Arrays.stream(values())
+                     .filter(enm -> enm.mnemonic.equals(mnemonic) && enm.version.equals(version))
+                     .findFirst()
+                     .orElse(null);
     }
 }

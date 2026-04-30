@@ -11,7 +11,6 @@ import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcess
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
-import ru.mycrg.integration_service.bpmn.enums.GpkgImportProcessPermittedStatus;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.integration_service.service.DataServiceSpeaker;

@@ -1,8 +1,6 @@
 package ru.mycrg.data_service.entity.smev;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -11,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.config.CrgCommonConfig;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

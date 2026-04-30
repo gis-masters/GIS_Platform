@@ -59,7 +59,7 @@ public class RpcConsumer {
         try {
             if ("DELETE".equals(operation)) {
                 Object reloadHeader = messageProperties.getHeaders().get("isNeedToReloadGeoserver");
-                boolean isNeedToReload = reloadHeader instanceof Boolean ? (Boolean) reloadHeader : true;
+                boolean isNeedToReload = !(reloadHeader instanceof Boolean) || (Boolean) reloadHeader;
                 srsService.deleteAndReload(srs.get(), token, isNeedToReload);
             } else {
                 srsService.addAndReload(srs.get(), token);

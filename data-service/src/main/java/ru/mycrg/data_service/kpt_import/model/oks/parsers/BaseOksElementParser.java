@@ -5,7 +5,6 @@ import org.postgis.MultiPoint;
 import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.kpt_import.KptImportUtils;
 import ru.mycrg.data_service.kpt_import.geometry_parsers.OksGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 
@@ -142,7 +141,7 @@ public abstract class BaseOksElementParser {
 
         Map<String, Object> content = new HashMap<>();
         content.put(CADASTRALNUM, cadastralnumber);
-        content.put("num_oks", KptImportUtils.extractNumberFromCadastralNum(cadastralnumber));
+        content.put("num_oks", extractNumberFromCadastralNum(cadastralnumber));
         content.put("objecttype", extractObjectType(objectType));
         content.put("readablead", extractReadableAddress(xmlRecord));
         content.put("purpose", extractPurpose(xmlRecord));
@@ -158,7 +157,7 @@ public abstract class BaseOksElementParser {
 
         Map<String, Object> content = new HashMap<>();
         content.put(CADASTRALNUM, cadastralnumber);
-        content.put("num_oks", KptImportUtils.extractNumberFromCadastralNum(cadastralnumber));
+        content.put("num_oks", extractNumberFromCadastralNum(cadastralnumber));
         content.put("objecttype", extractObjectType(objectType));
         content.put("readablead", extractReadableAddress(xmlRecord));
         content.put("purpose", extractPurpose(xmlRecord));
@@ -174,7 +173,7 @@ public abstract class BaseOksElementParser {
 
         Map<String, Object> content = new HashMap<>();
         content.put(CADASTRALNUM, cadastralnumber);
-        content.put("num_oks", KptImportUtils.extractNumberFromCadastralNum(cadastralnumber));
+        content.put("num_oks", extractNumberFromCadastralNum(cadastralnumber));
         content.put("purpose", extractPurpose(xmlRecord));
         content.put("objecttype", extractObjectType(objectType));
         content.put("usage", extractUsage(xmlRecord));

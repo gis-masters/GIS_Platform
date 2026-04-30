@@ -19,9 +19,10 @@
         <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud.version>2025.1.1</spring-cloud.version>
-        <legacy.spring-cloud-starter-oauth2.version>2.0.2.RELEASE</legacy.spring-cloud-starter-oauth2.version>
 
         <surefire.version>3.3.1</surefire.version>
+        <maven.pmd.plugin.version>3.28.0</maven.pmd.plugin.version>
+        <pmd.ruleset.path>${project.parent.basedir}/config/pmd/java-main.xml</pmd.ruleset.path>
     </properties>
 
     <dependencyManagement>
@@ -33,14 +34,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- Keep legacy starters resolvable until oauth2 migration is done. -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-oauth2</artifactId>
-                <version>${legacy.spring-cloud-starter-oauth2.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -68,6 +61,33 @@
         </repository>
     </repositories>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven.pmd.plugin.version}</version>
+                <configuration>
+                    <targetJdk>${java.version}</targetJdk>
+                    <printFailingErrors>true</printFailingErrors>
+                    <verbose>true</verbose>
+                    <linkXRef>false</linkXRef>
+                    <rulesets>
+                        <ruleset>${pmd.ruleset.path}</ruleset>
+                    </rulesets>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <modules>
         <module>gateway</module>
         <module>auth-service</module>
@@ -78,6 +98,9 @@
 
         <module>report-service</module>
         <module>geo-wrapper</module>
+
+        <module>notification-service</module>
+        <module>crypt-service</module>
 
         <module>_libs/mediator</module>
         <module>_libs/geo-json</module>
@@ -106,4 +129,18 @@
 
         <module>tests/acceptance-tests</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>pmd-root-ruleset-path</id>
+            <activation>
+                <file>
+                    <exists>config/pmd/java-main.xml</exists>
+                </file>
+            </activation>
+            <properties>
+                <pmd.ruleset.path>${project.basedir}/config/pmd/java-main.xml</pmd.ruleset.path>
+            </properties>
+        </profile>
+    </profiles>
 </project>

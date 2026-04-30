@@ -3,8 +3,8 @@ package ru.mycrg.data_service.service.smev3.request.terminate_rns;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.fields.FieldsCustomer;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
@@ -26,7 +26,7 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
     private static final Logger log = LoggerFactory.getLogger(TerminateRnsXmlBuildProcessor.class);
 
     // юридическое лицо
-    private static final BigInteger LEGAL_ENTITY = new BigInteger("1");
+    private static final BigInteger LEGAL_ENTITY = BigInteger.ONE;
 
     private final ReusableElements rue = new ReusableElements();
 

@@ -207,7 +207,7 @@ public class ProjectService {
             if (bestRoleFromParents != null) {
                 log.debug("Нашли лучшую роль от родителей");
 
-                return toProjection(projectItem, Roles.valueToRole(bestRoleFromParents));
+                return toProjection(projectItem, valueToRole(bestRoleFromParents));
             } else {
                 log.debug("Не найдена bestRoleFromParents");
 
@@ -353,7 +353,7 @@ public class ProjectService {
 
         Optional<String> oBestRole = permissionRepository.getBestRoleForProject(userIds, projectItem.getId());
         if (oBestRole.isPresent()) {
-            return toProjection(projectItem, Roles.stringToRole(oBestRole.get()));
+            return toProjection(projectItem, stringToRole(oBestRole.get()));
         }
 
         throw new ForbiddenException("Недостаточно прав для просмотра объекта: " + projectItem.getId());

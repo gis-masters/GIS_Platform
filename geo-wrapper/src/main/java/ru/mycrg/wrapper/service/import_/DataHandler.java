@@ -1,6 +1,8 @@
 package ru.mycrg.wrapper.service.import_;
 
 import org.postgresql.util.PGobject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.common_utils.ScriptCalculator;
@@ -18,6 +20,8 @@ import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
 public class DataHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(DataHandler.class);
 
     private final CrgScriptEngine crgScriptEngine;
     private final ScriptCalculator scriptCalculator;
@@ -83,6 +87,7 @@ public class DataHandler {
                 }
             } else if (value instanceof PGobject) {
                 // do nothing with geometry
+                log.warn("Ничего не делаем с геометрией типа PGobject");
             } else {
                 decodedRow.put(key, NULL_MARKER);
 

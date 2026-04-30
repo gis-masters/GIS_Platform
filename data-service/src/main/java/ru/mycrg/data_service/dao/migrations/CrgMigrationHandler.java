@@ -102,7 +102,7 @@ public class CrgMigrationHandler {
         }
 
         try (HikariDataSource tempDataSource = datasourceFactory.getNotPoolableSystemDataSource(dbName)) {
-            try (final Connection connection = tempDataSource.getConnection()) {
+            try (Connection connection = tempDataSource.getConnection()) {
                 log.debug("====== Выполняем основные миграции ======");
                 Arrays.stream(ctx.getResources("classpath:sql/common/**"))
                       .filter(resource -> isFile(resource.getFilename()))

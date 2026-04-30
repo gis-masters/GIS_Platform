@@ -1,8 +1,10 @@
 package ru.mycrg.data_service.service.smev3.request.accept_rns;
 
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.accept_rns_1_0_3.*;
+import ru.mycrg.data_service.accept_rns_1_0_3.KPVI25Type;
+import ru.mycrg.data_service.accept_rns_1_0_3.RequestType;
 import ru.mycrg.data_service.service.smev3.request.IDocumentDataProvider;
 
 import static org.apache.poi.xwpf.usermodel.ParagraphAlignment.*;
@@ -51,61 +53,61 @@ public class RnsChangeStrategy implements IRnsRequestDocumentCreator {
     private static XWPFDocument createTemplate(RequestType request) {
         IDocumentDataProvider dataProvider = new RnsDocumentDataProvider();
         XWPFDocument document = new XWPFDocument();
-        addText(document, "Приложение № 3", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "к Административному регламенту", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "предоставления                Министерством", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "жилищной политики и государственного", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "строительного    надзора    Республики Крым", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "государственной услуги по выдаче", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "разрешения на строительство на", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "территории", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "Республики Крым  ", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "Министерство жилищной политики и ", ParagraphAlignment.BOTH, 3875, 5, 12);
-        addText(document, "государственного строительного надзора ", ParagraphAlignment.BOTH, 3875, 5, 12);
-        addText(document, "Республики Крым", ParagraphAlignment.BOTH, 3875, 5, 12);
-        addText(document, "", ParagraphAlignment.BOTH, 3875, 5, 12);
+        addText(document, "Приложение № 3", BOTH, 5000, 5, 12);
+        addText(document, "к Административному регламенту", BOTH, 5000, 5, 12);
+        addText(document, "предоставления                Министерством", BOTH, 5000, 5, 12);
+        addText(document, "жилищной политики и государственного", BOTH, 5000, 5, 12);
+        addText(document, "строительного    надзора    Республики Крым", BOTH, 5000, 5, 12);
+        addText(document, "государственной услуги по выдаче", BOTH, 5000, 5, 12);
+        addText(document, "разрешения на строительство на", BOTH, 5000, 5, 12);
+        addText(document, "территории", BOTH, 5000, 5, 12);
+        addText(document, "Республики Крым  ", BOTH, 5000, 5, 12);
+        addText(document, "", BOTH, 5000, 5, 12);
+        addText(document, "Министерство жилищной политики и ", BOTH, 3875, 5, 12);
+        addText(document, "государственного строительного надзора ", BOTH, 3875, 5, 12);
+        addText(document, "Республики Крым", BOTH, 3875, 5, 12);
+        addText(document, "", BOTH, 3875, 5, 12);
         addTextWithUnderline(document, "от кого:    " + dataProvider.getOrgFullName(request) + "    ",
-                             ParagraphAlignment.LEFT, 3875, 5,
+                             LEFT, 3875, 5,
                              12);
-        addText(document, " (для юридического лица - наименование", ParagraphAlignment.LEFT, 3875, 5, 12);
-        addText(document, "юридического лица,", ParagraphAlignment.LEFT, 3875, 5, 12);
+        addText(document, " (для юридического лица - наименование", LEFT, 3875, 5, 12);
+        addText(document, "юридического лица,", LEFT, 3875, 5, 12);
         addTextWithUnderline(document,
                              "    " + dataProvider.getOrgInn(request) + "  " + dataProvider.getOrgOgrn(
                                      request) + "  " + dataProvider.getOrgRegAddress(
                                      request) + (dataProvider.getOrgPostAddress(
                                      request).equals("") ? dataProvider.getOrgPostAddress(request) :
                                      " / " + dataProvider.getOrgPostAddress(request)) +
-                                     "   ", ParagraphAlignment.LEFT, 3875, 5, 12);
-        addText(document, "ИНН, ОГРН, дата и № регистрации;", ParagraphAlignment.LEFT, 3875, 5, 12);
-        addText(document, "юридический и почтовый адреса;", ParagraphAlignment.LEFT, 3875, 5, 12);
-        addTextWithUnderline(document, "    " + dataProvider.getOrgPhone(request) + "    ", ParagraphAlignment.LEFT,
+                                     "   ", LEFT, 3875, 5, 12);
+        addText(document, "ИНН, ОГРН, дата и № регистрации;", LEFT, 3875, 5, 12);
+        addText(document, "юридический и почтовый адреса;", LEFT, 3875, 5, 12);
+        addTextWithUnderline(document, "    " + dataProvider.getOrgPhone(request) + "    ", LEFT,
                              3875,
                              5, 12);
-        addText(document, "ФИО руководителя, контактные телефоны", ParagraphAlignment.LEFT, 3875, 5, 12);
+        addText(document, "ФИО руководителя, контактные телефоны", LEFT, 3875, 5, 12);
         addTextWithUnderline(document,
                              "    " + dataProvider.getFullfio(request) + "  " + dataProvider.getDateBirth(
                                      request) + "    ",
-                             ParagraphAlignment.LEFT,
+                             LEFT,
                              3875, 5,
                              12);
-        addText(document, "для физического лица - Ф.И.О., год рождения", ParagraphAlignment.LEFT, 3875, 5, 12);
+        addText(document, "для физического лица - Ф.И.О., год рождения", LEFT, 3875, 5, 12);
         addTextWithUnderline(document,
                              "    " + dataProvider.getDocSeries(request) + " " + dataProvider.getDocNumber(
                                      request) + " " + dataProvider.getIssueDate(request) +
                                      "    ",
-                             ParagraphAlignment.LEFT, 3875, 5,
+                             LEFT, 3875, 5,
                              12);
-        addText(document, "паспортные данные: серия, номер, дата выдачи,", ParagraphAlignment.LEFT, 3875, 5, 12);
-        addText(document, "кем выдан, гражданство, адрес проживания,", ParagraphAlignment.LEFT, 3875, 5, 12);
+        addText(document, "паспортные данные: серия, номер, дата выдачи,", LEFT, 3875, 5, 12);
+        addText(document, "кем выдан, гражданство, адрес проживания,", LEFT, 3875, 5, 12);
         addTextWithUnderline(document, "    " + dataProvider.getPhone(request) + "  " + dataProvider.getEmail(request) +
                                      "    ",
-                             ParagraphAlignment.LEFT,
+                             LEFT,
                              3875, 5, 12);
-        addText(document, "контактный телефон и (или) иные контакты)", ParagraphAlignment.LEFT, 3875, 5, 12);
-        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addText(document, "Заявление о продлении срока действия разрешения на строительство", ParagraphAlignment.CENTER,
+        addText(document, "контактный телефон и (или) иные контакты)", LEFT, 3875, 5, 12);
+        addText(document, "", BOTH, 5000, 5, 12);
+        addText(document, "", BOTH, 5000, 5, 12);
+        addText(document, "Заявление о продлении срока действия разрешения на строительство", CENTER,
                 0, 5, 12);
         addTextWithSpacingAndUnderline(document,
                                        "Прошу продлить срок действия разрешение на строительство (реконструкцию) от ",
@@ -118,7 +120,7 @@ public class RnsChangeStrategy implements IRnsRequestDocumentCreator {
                            5, 11);
         addTextWithSpacing(document, "__________________________________________________________________________",
                            0, 11);
-        addText(document, "(наименование объекта капитального строительства)", ParagraphAlignment.CENTER, 0, 10, 11);
+        addText(document, "(наименование объекта капитального строительства)", CENTER, 0, 10, 11);
         addTextWithSpacing(document, "на земельном участке, расположенном по адресу",
                            5, 11);
         addTextWithSpacing(document, "__________________________________________________________________________",
@@ -130,13 +132,13 @@ public class RnsChangeStrategy implements IRnsRequestDocumentCreator {
         addTextWithSpacing(document, "__________________________________________________________________________",
                            0, 11);
         addText(document, "               (городской округ, поселение, улица, номер дома и кадастровый номер участка)",
-                ParagraphAlignment.LEFT, 0, 5, 11);
+                LEFT, 0, 5, 11);
         addTextWithUnderlineAndTab(document, "сроком на ", 5, 11, dataProvider.getPermitTerm(request));
-        addText(document, "     (в соответствии с ПОС)", ParagraphAlignment.CENTER, 0, 5, 11);
+        addText(document, "     (в соответствии с ПОС)", CENTER, 0, 5, 11);
         addTextWithSpacing(document, "в связи с ", 0, 11);
         addTextWithSpacing(document, "_____________________________________________________________________________",
                            0, 11);
-        addText(document, "(указать причину (основание) продления разрешения)", ParagraphAlignment.CENTER, 0, 5, 11);
+        addText(document, "(указать причину (основание) продления разрешения)", CENTER, 0, 5, 11);
         addTextWithSpacing(document, "Состояние объекта: ", 10, 11);
 
         XWPFTable table = document.createTable(7, 3);
@@ -150,21 +152,21 @@ public class RnsChangeStrategy implements IRnsRequestDocumentCreator {
         setTableNode(table, 4, "Специальные внутренние работы", "", "");
         setTableNode(table, 5, "Инженерные сети", "", "");
         setTableNode(table, 6, "Благоустройство территории", "", "");
-        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 11);
-        addText(document, "Приложения:", ParagraphAlignment.BOTH, 0, 5, 11);
-        addText(document, "1. Календарный план строительства;", ParagraphAlignment.BOTH, 0, 5, 11);
+        addText(document, "", BOTH, 5000, 5, 11);
+        addText(document, "Приложения:", BOTH, 0, 5, 11);
+        addText(document, "1. Календарный план строительства;", BOTH, 0, 5, 11);
         addText(document, "2. Оригинал разрешения на строительство (до начала предоставления государственной услуги в" +
-                " ", ParagraphAlignment.BOTH, 0, 5, 11);
-        addText(document, "электронном виде). ", ParagraphAlignment.BOTH, 0, 5, 11);
+                " ", BOTH, 0, 5, 11);
+        addText(document, "электронном виде). ", BOTH, 0, 5, 11);
 
-        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 11);
+        addText(document, "", BOTH, 5000, 5, 11);
         addTextWithSpacing(document, "            Застройщик:", 5, 11);
-        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 11);
+        addText(document, "", BOTH, 5000, 5, 11);
         addTextWithSpacing(document, "            _____________            __________________          " +
                 "_____________________            М.П.", 5, 11);
         addTextWithSpacing(document, "              (должность)                       (подпись)                    " +
                 "  (расшифровка подписи)", 5, 11);
-        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 11);
+        addText(document, "", BOTH, 5000, 5, 11);
         addTextWithSpacing(document, " _____ ________________20___г.", 5, 11);
 
         return document;
@@ -297,7 +299,7 @@ public class RnsChangeStrategy implements IRnsRequestDocumentCreator {
         setTableNode(table, 70, "6.1.X.2. Номер: ", dataProvider.getDocExpertiseNumber(request));
         setTableNode(table, 71, "6.1.X.3. Наименование органа или организации, выдавшей положительное заключение " +
                 "экспертизы проектной документации:", dataProvider.getDocExpIssuer(request).trim().equals("null") ?
-                "" : dataProvider.getDocExpIssuer(request));
+                             "" : dataProvider.getDocExpIssuer(request));
         mergeCellsAndSetValue(table, 72, "6.2. Сведения о государственной экологической экспертизе ", false, LEFT);
         setTableNode(table, 73, "6.2.X.1. Дата утверждения:", dataProvider.getEcoExpertiseDate(request));
         setTableNode(table, 74, "6.2.X.2. Номер:", dataProvider.getEcoExpertiseNumber(request));

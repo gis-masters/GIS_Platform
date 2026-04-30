@@ -166,7 +166,7 @@ public class SchemaUtil {
     public static void enrichPropsByIsDeleted(List<SimplePropertyDto> schemaProperties) {
         List<String> propertyNames = schemaProperties.stream()
                                                      .map(SimplePropertyDto::getName)
-                                                     .collect(Collectors.toList());
+                                                     .toList();
 
         if (!propertyNames.contains(IS_DELETED.getName())) {
             SimplePropertyDto isDeleted = new SimplePropertyDto();
@@ -174,7 +174,7 @@ public class SchemaUtil {
             isDeleted.setTitle("Признак удаления");
             isDeleted.setReadOnly(true);
             isDeleted.setHidden(true);
-            isDeleted.setValueType(ValueType.BOOLEAN);
+            isDeleted.setValueType(BOOLEAN);
             isDeleted.setDefaultValue(false);
 
             schemaProperties.add(isDeleted);
@@ -184,7 +184,7 @@ public class SchemaUtil {
     public static void enrichPropsBySystemAttributes(List<SimplePropertyDto> schemaProperties) {
         List<String> propertyNames = schemaProperties.stream()
                                                      .map(SimplePropertyDto::getName)
-                                                     .collect(Collectors.toList());
+                                                     .toList();
 
         if (!propertyNames.contains(CREATED_BY.getName())) {
             SimplePropertyDto createdBy = new SimplePropertyDto();
@@ -192,7 +192,7 @@ public class SchemaUtil {
             createdBy.setTitle("Создатель");
             createdBy.setDescription("Пользователь создавший объект (Заполняется автоматически)");
             createdBy.setReadOnly(true);
-            createdBy.setValueType(ValueType.STRING);
+            createdBy.setValueType(STRING);
 
             schemaProperties.add(createdBy);
         }
@@ -203,7 +203,7 @@ public class SchemaUtil {
             createdAt.setTitle("Дата создания");
             createdAt.setDescription("Дата создания объекта (Заполняется автоматически)");
             createdAt.setReadOnly(true);
-            createdAt.setValueType(ValueType.DATETIME);
+            createdAt.setValueType(DATETIME);
 
             schemaProperties.add(createdAt);
         }
@@ -215,7 +215,7 @@ public class SchemaUtil {
             updatedBy.setDescription("Пользователь редактировавший объект последним (Заполняется автоматически)");
             updatedBy.setReadOnly(true);
             updatedBy.setHidden(true);
-            updatedBy.setValueType(ValueType.STRING);
+            updatedBy.setValueType(STRING);
 
             schemaProperties.add(updatedBy);
         }
@@ -227,7 +227,7 @@ public class SchemaUtil {
             lastModified.setDescription("Дата последнего редактирования объекта (Заполняется автоматически)");
             lastModified.setReadOnly(true);
             lastModified.setHidden(true);
-            lastModified.setValueType(ValueType.DATETIME);
+            lastModified.setValueType(DATETIME);
 
             schemaProperties.add(lastModified);
         }

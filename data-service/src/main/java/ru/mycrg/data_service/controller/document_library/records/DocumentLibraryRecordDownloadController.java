@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.controller.document_library.records;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.MediaType;
@@ -14,14 +15,11 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;

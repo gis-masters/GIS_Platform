@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.geoserver_client.services.rule.RulesService;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 
-import java.util.UUID;
-
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.geoserver_client.services.rule.GeoServerPermissions.*;

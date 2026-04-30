@@ -83,7 +83,7 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
 
         FileResourceQualifier fileQualifier = mapToFileQualifier(file.getResourceQualifier());
         String filename = StringUtils.getFilename(file.getPath());
-        String nativeName = StringUtils.stripFilenameExtension(filename);
+        String nativeName = stripFilenameExtension(filename);
         String featureTypeName = buildFeatureTypeName(fileQualifier.getTable(),
                                                       fileQualifier.getRecordId(),
                                                       file.getId());

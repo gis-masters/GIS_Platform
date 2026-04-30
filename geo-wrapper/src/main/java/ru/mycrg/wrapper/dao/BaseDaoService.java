@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 import static ru.mycrg.http_client.JsonConverter.toJsonNode;
@@ -50,11 +49,11 @@ public class BaseDaoService {
         String table = resource.getTableName();
         String extensionTableName = table + EXTENSION_POSTFIX;
 
-        String rowsNeedingValidation = format("select target.*, target.xmin, ext.* from %s.%s as target " +
-                                                      "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
-                                                      "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
-                                                      "ORDER BY target.objectid " +
-                                                      "LIMIT ?", schema, table, schema, extensionTableName);
+        String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
+                                                             "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
+                                                             "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
+                                                             "ORDER BY target.objectid " +
+                                                             "LIMIT ?", schema, table, schema, extensionTableName);
 
         log.debug("Sql (rowsNeedingValidation): {}, {}", rowsNeedingValidation, limit);
 
@@ -68,14 +67,14 @@ public class BaseDaoService {
         String table = resource.getTableName();
         String extensionTableName = table + EXTENSION_POSTFIX;
 
-        String deleteFromExtTable = format("DELETE " +
-                                                   " FROM %3$s.%1$s as extTable" +
-                                                   " WHERE extTable.object_id IN (SELECT extension.object_id as id" +
-                                                   "                                      FROM %3$s.%1$s as extension" +
-                                                   "                                      LEFT JOIN %3$s.%2$s as main" +
-                                                   "                                      ON extension.object_id = main.objectid" +
-                                                   "                                      WHERE main.objectid is NULL)",
-                                           extensionTableName, table, schema);
+        String deleteFromExtTable = String.format("DELETE " +
+                                                          " FROM %3$s.%1$s as extTable" +
+                                                          " WHERE extTable.object_id IN (SELECT extension.object_id as id" +
+                                                          "                                      FROM %3$s.%1$s as extension" +
+                                                          "                                      LEFT JOIN %3$s.%2$s as main" +
+                                                          "                                      ON extension.object_id = main.objectid" +
+                                                          "                                      WHERE main.objectid is NULL)",
+                                                  extensionTableName, table, schema);
 
         log.debug("deleteAllRecordsFromExtTableWhichNotExist query: [{}]", deleteFromExtTable);
 
@@ -91,13 +90,13 @@ public class BaseDaoService {
 
         log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
-        String upsert = format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
-                                       "VALUES (?, to_json(?::json), ?, ?, ?) " +
-                                       "ON CONFLICT(object_id) DO UPDATE " +
-                                       "SET violations = EXCLUDED.violations, _xmin = EXCLUDED._xmin, " +
-                                       "valid = EXCLUDED.valid, class_id = EXCLUDED.class_id",
-                               schema,
-                               extensionTableName);
+        String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
+                                              "VALUES (?, to_json(?::json), ?, ?, ?) " +
+                                              "ON CONFLICT(object_id) DO UPDATE " +
+                                              "SET violations = EXCLUDED.violations, _xmin = EXCLUDED._xmin, " +
+                                              "valid = EXCLUDED.valid, class_id = EXCLUDED.class_id",
+                                      schema,
+                                      extensionTableName);
 
         jdbcTemplate
                 .batchUpdate(upsert, violations, violations.size(),
@@ -113,7 +112,7 @@ public class BaseDaoService {
     public Long countTotalRows(ResourceProjection resource) {
         try {
             String schemaName = resource.getSchemaName();
-            String sqlRequest = format("SELECT count(*) FROM %s.%s", schemaName, resource.getTableName());
+            String sqlRequest = String.format("SELECT count(*) FROM %s.%s", schemaName, resource.getTableName());
 
             return datasourceFactory.getJdbcTemplate(resource.getDbName()).queryForObject(sqlRequest, Long.class);
         } catch (Exception e) {
@@ -154,7 +153,7 @@ public class BaseDaoService {
     public void delete(JdbcTemplate jdbcTemplate, String schema, String table) {
         log.debug("Try delete: {}:{}", schema, table);
 
-        jdbcTemplate.execute(format("DROP TABLE IF EXISTS %s.\"%s\"", schema, table));
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"", schema, table));
     }
 
     /**
@@ -169,9 +168,9 @@ public class BaseDaoService {
     @Transactional
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection source, String orderField,
                                                 int limit, int offset, int epsg) {
-        String sqlRequest = format("SELECT st_asBinary(st_transform(shape, %d)) as crg_b_geometry, * " +
-                                           "FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
-                                   epsg, source.getSchemaName(), source.getTableName(), orderField);
+        String sqlRequest = String.format("SELECT st_asBinary(st_transform(shape, %d)) as crg_b_geometry, * " +
+                                                  "FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
+                                          epsg, source.getSchemaName(), source.getTableName(), orderField);
 
         log.trace("Fetch sql: {}", sqlRequest);
 
@@ -273,7 +272,7 @@ public class BaseDaoService {
         StringBuilder sourceColumns = new StringBuilder("SELECT ");
         for (MatchingPair matchingPair: mapping) {
             TargetAttribute target = matchingPair.getTarget();
-            if (target.getType().equals("serial") || target.getType().equals(DaoProperties.NOT_IMPORT)) {
+            if (target.getType().equals("serial") || target.getType().equals(NOT_IMPORT)) {
                 continue;
             }
             if (checkIfPropertiesIsGenerated(properties, matchingPair)) {
@@ -339,11 +338,11 @@ public class BaseDaoService {
     }
 
     private String prepareUpdateRequest(ResourceProjection target, Map<String, Object> item) {
-        final String[] sql = {format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
+        final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
 
         item.forEach((key, value) -> {
             if (!PRIMARY_KEY.equals(key)) {
-                if (DaoProperties.NULL_MARKER.equals(value)) {
+                if (NULL_MARKER.equals(value)) {
                     sql[0] = sql[0] + key + "=NULL, ";
                 } else {
                     sql[0] = sql[0] + key + "='" + value + "', ";

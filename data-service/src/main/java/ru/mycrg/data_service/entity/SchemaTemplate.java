@@ -1,16 +1,14 @@
 package ru.mycrg.data_service.entity;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.LastModifiedDate;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import java.time.LocalDateTime;
-
-import static java.time.LocalDateTime.now;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Entity

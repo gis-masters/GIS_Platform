@@ -1,0 +1,66 @@
+server:
+  port: 8668
+
+spring:
+  application:
+    name: notification
+  sql:
+    init:
+      platform: postgres
+  web:
+    resources:
+      add-mappings: false
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5434/crg_notification_db
+    username: fiz
+    password: 314
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5434/crg_notification_db
+    user: fiz
+    password: 314
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    datatype:
+      datetime:
+        write-dates-as-timestamps: false
+  task:
+    scheduling:
+      pool:
+        size: 5
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 25
+
+logging:
+  level:
+    ru.mycrg.notification: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      cache:
+        time-to-live: 30s
+
+telegram:
+  profiles:
+    - name: testAndrewBot
+      token: 7622977618:AAGwNy2PRT-LkwDZjZq3o0JXORF6inrDh2M
+    - name: GeoplanTask_bot
+      token: 8142805502:AAFRpASRDqOopHv7-mxoL44n6KQfHDK_oEM

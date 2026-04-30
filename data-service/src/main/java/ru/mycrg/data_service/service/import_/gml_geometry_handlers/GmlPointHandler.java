@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import static ru.mycrg.data_service.service.parsers.utils.GmlParserUtils.getCoordinatesFromElement;
 import static ru.mycrg.data_service.service.parsers.utils.GmlParserUtils.getCrs;
-import static ru.mycrg.data_service_contract.enums.GeometryType.MULTI_CURVE;
 import static ru.mycrg.data_service_contract.enums.GeometryType.POINT;
 
 @Component
@@ -22,7 +21,7 @@ public class GmlPointHandler implements IGmlImportGeometryHandler {
         Element attributeElement = (Element) element.getElementsByTagName(GML_POINT).item(0);
         Integer srid = getCrs(defaultEpsg, attributeElement);
 
-        Point point = getCoordinatesFromElement(attributeElement, invertCoordinates).get(0);
+        Point point = getCoordinatesFromElement(attributeElement, invertCoordinates).getFirst();
         point.setSrid(srid);
 
         return Optional.of(new PGgeometry(point));

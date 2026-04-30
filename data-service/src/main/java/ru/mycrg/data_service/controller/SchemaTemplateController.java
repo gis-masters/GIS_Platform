@@ -7,8 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common_contracts.generated.data_service.SchemaTemplateProjection;
 import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.CreateSchemaTemplateRequest;
-import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.UpdateSchemaTemplateRequest;
 import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.DeleteSchemaTemplateRequest;
+import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.UpdateSchemaTemplateRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
@@ -33,7 +33,7 @@ public class SchemaTemplateController {
     @GetMapping("/schemasTemplate")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<SchemaTemplateProjection>> getSchemaTemplates(@RequestParam List<String> schemaIds) {
-        return ResponseEntity.ok((schemaTemplateService.getSchemaTemplatesProjection(schemaIds)));
+        return ResponseEntity.ok(schemaTemplateService.getSchemaTemplatesProjection(schemaIds));
     }
 
     @GetMapping("/schemas")

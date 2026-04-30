@@ -15,12 +15,10 @@ import ru.mycrg.data_service_contract.dto.ImportRecordReport;
 
 import java.util.List;
 
+import static org.apache.axis.utils.StringUtils.isEmpty;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.util.StringUtils.getFilenameExtension;
-import static org.springframework.util.StringUtils.isEmpty;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @RestController

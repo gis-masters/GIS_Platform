@@ -11,7 +11,6 @@ import ru.mycrg.data_service_contract.queue.request.gpkg.AppendGpkgInfoEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class AskDataAppendInfo implements JavaDelegate {
         try {
             resources = (List<ExportResourceModel>) delegateExecution
                     .getVariable(EXPORT_GPKG_VECTOR_LIST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.debug("Нет списка векторных таблицы, значит экспорт только растров.");
             resources = Collections.emptyList();
         }

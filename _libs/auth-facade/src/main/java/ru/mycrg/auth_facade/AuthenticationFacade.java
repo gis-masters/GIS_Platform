@@ -7,8 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -126,12 +124,6 @@ public class AuthenticationFacade implements IAuthenticationFacade {
             }
 
             Object details = authentication.getDetails();
-            if (details instanceof OAuth2AuthenticationDetails oAuth2Details) {
-                Object decodedDetails = oAuth2Details.getDecodedDetails();
-                if (decodedDetails instanceof Map<?, ?> map) {
-                    return asStringMap(map);
-                }
-            }
             if (details instanceof JwtAuthenticationDetails jwtDetails) {
                 return jwtDetails.getDecodedDetails();
             }
@@ -172,9 +164,6 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         }
 
         Object details = authentication.getDetails();
-        if (details instanceof OAuth2AuthenticationDetails oAuth2Details) {
-            return Optional.ofNullable(oAuth2Details.getTokenValue());
-        }
         if (details instanceof JwtAuthenticationDetails jwtDetails) {
             return Optional.ofNullable(jwtDetails.getTokenValue());
         }

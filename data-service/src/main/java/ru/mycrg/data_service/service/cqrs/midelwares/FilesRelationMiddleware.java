@@ -65,8 +65,9 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
             // IDeleteFilesRelation deleteFilesRelation = (IDeleteFilesRelation) request;
             // закомментировано, так как решается вопрос о том каким образом будут подчищаться хвосты
             // deleteRelatedFiles(deleteFilesRelation.getSchema(), deleteFilesRelation.getRecord());
+            log.warn("Неизвестно что делать");
         } else {
-            log.warn("Unknown request type");
+            log.warn("Неизвестный тип запроса");
         }
 
         return response;

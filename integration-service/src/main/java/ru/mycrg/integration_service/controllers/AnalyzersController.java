@@ -1,8 +1,5 @@
 package ru.mycrg.integration_service.controllers;
 
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -11,16 +8,10 @@ import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.integration_service.dto.ResourceAnalyzeModel;
 import ru.mycrg.integration_service.service.ResourceAnalyzerService;
 
-import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
-import static ru.mycrg.http_client.JsonConverter.fromJson;
-import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 
 @RestController
 @RequestMapping(value = "/resource-analyzers")

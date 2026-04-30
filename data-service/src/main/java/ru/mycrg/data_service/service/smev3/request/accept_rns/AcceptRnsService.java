@@ -137,19 +137,19 @@ public class AcceptRnsService extends AcceptServiceBase {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
                                     .getRequest();
-        String recipientFio = Optional.ofNullable(request.getRecipientPersonalData())
-                                      .map(RecipientPersonalDataType::getFullfio)
-                                      .orElse(null);
-        String delegateRecipientFio = Optional.ofNullable(request.getDelegatePersonalData())
-                                              .map(DelegatePersonalDataType::getFullfio)
-                                              .orElse(null);
-        String representativeFio = Optional.ofNullable(request.getLegalData())
-                                           .map(LegalDataType::getRepresentativeInfo)
-                                           .map(RepresentativeInfoType::getFullfio)
-                                           .orElse(null);
-        String businessmanName = Optional.ofNullable(request.getBusinessmanData())
-                                         .map(BusinessmanDataType::getOrgFullname)
-                                         .orElse(null);
+        String recipientFio = ofNullable(request.getRecipientPersonalData())
+                .map(RecipientPersonalDataType::getFullfio)
+                .orElse(null);
+        String delegateRecipientFio = ofNullable(request.getDelegatePersonalData())
+                .map(DelegatePersonalDataType::getFullfio)
+                .orElse(null);
+        String representativeFio = ofNullable(request.getLegalData())
+                .map(LegalDataType::getRepresentativeInfo)
+                .map(RepresentativeInfoType::getFullfio)
+                .orElse(null);
+        String businessmanName = ofNullable(request.getBusinessmanData())
+                .map(BusinessmanDataType::getOrgFullname)
+                .orElse(null);
 
         List<String> fullfios = Arrays.asList(recipientFio, delegateRecipientFio, representativeFio, businessmanName);
 
@@ -304,13 +304,13 @@ public class AcceptRnsService extends AcceptServiceBase {
     }
 
     private String getCadastalNumbers(RequestType request) {
-        return Optional.ofNullable(request)
-                       .map(RequestType::getLandPlotData)
-                       .map(LandPlotDataType::getLandPlotCadastralNumberBlock)
-                       .stream()
-                       .flatMap(List::stream)
-                       .map(block -> String.join(", ", block.getLandPlotCadastralNumber()))
-                       .collect(Collectors.joining(", "));
+        return ofNullable(request)
+                .map(RequestType::getLandPlotData)
+                .map(LandPlotDataType::getLandPlotCadastralNumberBlock)
+                .stream()
+                .flatMap(List::stream)
+                .map(block -> String.join(", ", block.getLandPlotCadastralNumber()))
+                .collect(Collectors.joining(", "));
     }
 
     private String getGoalDescription(RequestType request) {
@@ -318,8 +318,8 @@ public class AcceptRnsService extends AcceptServiceBase {
 
             return String.valueOf(request.getGoal());
         }
-        Optional<KPVI25Type> variantChoice = Optional.ofNullable(request.getVariantChoice())
-                                                     .map(VariantChoiceType::getKPVI25);
+        Optional<KPVI25Type> variantChoice = ofNullable(request.getVariantChoice())
+                .map(VariantChoiceType::getKPVI25);
 
         if (variantChoice.map(KPVI25Type::isRenewalConstructionPermit).orElse(false)) {
 

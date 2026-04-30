@@ -136,7 +136,7 @@ public class StartCycleProcessFile implements JavaDelegate {
 
         String joined = fileProps.stream()
                                  .map(p -> String.format("(%s IS NOT NULL)", p))
-                                 .collect(java.util.stream.Collectors.joining(" OR "));
+                                 .collect(Collectors.joining(" OR "));
 
         return "(" + joined + ")";
     }

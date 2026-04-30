@@ -196,7 +196,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
 
     @Override
     public FileType getFileType() {
-        return FileType.GML;
+        return GML;
     }
 
     private String getResultName(IRecord document, File file) {

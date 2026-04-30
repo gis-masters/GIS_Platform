@@ -87,6 +87,10 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
         </dependency>
@@ -132,7 +136,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.3</version>
+            <version>9.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-core -->
@@ -391,6 +395,7 @@
     </repositories>
 
     <build>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -623,6 +628,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <excludeRoots>
+                        <excludeRoot>${project.build.directory}/generated-sources/jaxb</excludeRoot>
+                    </excludeRoots>
+                </configuration>
             </plugin>
 
             <plugin>

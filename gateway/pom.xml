@@ -189,6 +189,28 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.28.0</version>
+                <configuration>
+                    <targetJdk>${java.version}</targetJdk>
+                    <printFailingErrors>true</printFailingErrors>
+                    <verbose>true</verbose>
+                    <linkXRef>false</linkXRef>
+                    <rulesets>
+                        <ruleset>${project.basedir}/../config/pmd/java-main.xml</ruleset>
+                    </rulesets>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

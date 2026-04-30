@@ -1,14 +1,11 @@
 package ru.mycrg.data_service.service.import_.gml_geometry_handlers;
 
 import org.postgis.LineString;
-import org.postgis.MultiLineString;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

@@ -48,7 +48,7 @@ public enum GpkgImportProcessPermittedStatus {
             throw new IllegalArgumentException("Переданное значение не может быть null");
         }
 
-        for (GpkgImportProcessPermittedStatus s: GpkgImportProcessPermittedStatus.values()) {
+        for (GpkgImportProcessPermittedStatus s: values()) {
             if (s.value.equalsIgnoreCase(status)) {
                 return s;
             }

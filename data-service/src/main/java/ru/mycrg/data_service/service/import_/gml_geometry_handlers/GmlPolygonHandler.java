@@ -1,14 +1,10 @@
 package ru.mycrg.data_service.service.import_.gml_geometry_handlers;
 
-import org.postgis.MultiPolygon;
 import org.postgis.PGgeometry;
 import org.postgis.Polygon;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.service.parsers.utils.GmlParserUtils.getCrs;

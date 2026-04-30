@@ -343,7 +343,7 @@ services:
   portal-ui:
     container_name: crg-ui
     image: ${DOCKER_CRG_HOST}/crg-ui:${CRG_UI_TAG}
-    profiles: ["ui"]
+    profiles: [ "ui" ]
     restart: always
     environment:
       UI_PLATFORM: $UI_PLATFORM
@@ -386,8 +386,12 @@ services:
 
   cryptopro-service:
     container_name: crg-cryptopro-service
-    image: ${DOCKER_CRG_HOST}/crg-cryptopro:5.2
+    image: ${DOCKER_CRG_HOST}/crg-cryptopro:${CRG_CRYPTOPRO_TAG}
     restart: always
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${CRYPTOPRO_XMX_SIZE:-400m}
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     volumes:
@@ -414,7 +418,6 @@ services:
       SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_notification_db
       SPRING_FLYWAY_USER: ${CRG_USER}
       SPRING_FLYWAY_PASSWORD: ${DB_PASS}
-
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     volumes:
