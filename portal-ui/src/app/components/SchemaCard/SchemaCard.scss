@@ -1,0 +1,23 @@
+body .SchemaCard {
+  &-GeometryTypeSelect {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &-GeometryTypeView {
+    display: flex;
+    align-items: center;
+  }
+
+  &-TagsSelect {
+    .MuiInputBase-root {
+      border-bottom: 1px solid black;
+    }
+
+    .MuiInputBase-root::before,
+    .MuiInputBase-root::after {
+      display: none;
+    }
+  }
+}

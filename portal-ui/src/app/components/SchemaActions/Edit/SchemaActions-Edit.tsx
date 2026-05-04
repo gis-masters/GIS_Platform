@@ -248,6 +248,7 @@ export const SchemaActionsEdit = observer((props: SchemaActionsEditProps) => {
 
     try {
       await updateSchema(currentSchema);
+
       setLoading(false);
       closeDialog();
     } catch (error) {

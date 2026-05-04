@@ -82,7 +82,7 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
     const handleCloseClick = useCallback(() => {
       onClose(false);
       setLoading(false);
-    }, [onClose]);
+    }, [onClose, setLoading]);
 
     const handleSelectClick = useCallback(
       async (certName: Certificate[]) => {
@@ -129,7 +129,7 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
         onClose(false);
         setLoading(false);
       },
-      [document, propertyName, fileHash, prevSignatures, title, updateFileInfo]
+      [setLoading, onClose, fileHash, prevSignatures, title, id, document, propertyName, feature, updateFileInfo]
     );
 
     useEffect(() => {
@@ -176,7 +176,7 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
       if (open) {
         void getInfoForSignature();
       }
-    }, [id, open]);
+    }, [id, open, setCertificates, setDisabledCertificates, setFileHash, setLoading, setPrevSignatures]);
 
     const getRowId = useCallback((rowData: Certificate) => {
       return rowData.thumbprint;

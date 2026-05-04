@@ -63,6 +63,7 @@ export interface Schema {
   properties: PropertySchema[];
 
   tableName?: string;
+  originName?: string;
   styleName?: string;
   geometryType?: SupportedGeometryType;
   readOnly?: boolean;
