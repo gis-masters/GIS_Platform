@@ -1,0 +1,4 @@
+# CryptoPro detached signatures verify exact file bytes.
+# Do not let Git normalize line endings for signed healthcheck fixtures.
+crypt-service/assets/test/test.dxf binary
+crypt-service/assets/test/test.dxf.sig binary

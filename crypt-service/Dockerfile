@@ -23,7 +23,7 @@ RUN set -eux; \
 
 # Проверяем работоспособность проверив отсоединённую подпись тестового файла
 HEALTHCHECK --interval=30s --timeout=30s --retries=3 \
-    CMD ./opt/cryptcp -verify -nochain -verall -fext .sig -detached /opt/test/signed.dxf || exit 1
+    CMD ./opt/cryptcp -verify -nochain -verall -fext .sig -detached /opt/test/test.dxf || exit 1
 
 ENV XMX_SIZE=400m
 

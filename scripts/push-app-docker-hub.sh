@@ -97,6 +97,19 @@ docker build -t 10.10.10.165:5000/geo-wrapper:latest geo-wrapper/ || {
     exit 1
 }
 
+printInfo "Сборка образа crg-crypt"
+docker build -t 10.10.10.165:5000/crg-cryptopro:latest crypt-service/ || {
+    printError "Сборка образа crypt-service не удалась"
+    exit 1
+}
+
+printInfo "Сборка образа crg-notification-service"
+docker build -t 10.10.10.165:5000/crg-notification-service:latest notification-service/ || {
+    printError "Сборка образа crg-notification-service не удалась"
+    exit 1
+}
+
+
 printInfo "Ретегирование образов"
 docker tag 10.10.10.165:5000/crg-ui:latest                   gismaster/crg-ui:2_ru
 docker tag 10.10.10.165:5000/geo-wrapper:latest              gismaster/geo-wrapper:2_ru
@@ -108,6 +121,7 @@ docker tag 10.10.10.165:5000/crg-audit-service:latest        gismaster/crg-audit
 docker tag 10.10.10.165:5000/crg-report-service:latest       gismaster/crg-report-service:2_ru
 docker tag 10.10.10.165:5000/crg-integration-service:latest  gismaster/crg-integration-service:2_ru
 docker tag 10.10.10.165:5000/crg-notification-service:latest gismaster/crg-notification-service:2_ru
+docker tag 10.10.10.165:5000/crg-cryptopro:latest            gismaster/crg-cryptopro:2_ru
 
 printInfo "Публикуем в реестр hub.docker"
 docker push gismaster/crg-ui:2_ru
@@ -120,5 +134,6 @@ docker push gismaster/crg-audit-service:2_ru
 docker push gismaster/crg-report-service:2_ru
 docker push gismaster/crg-integration-service:2_ru
 docker push gismaster/crg-notification-service:2_ru
+docker push gismaster/crg-cryptopro:2_ru
 
 printSuccess "Свежие 2_ru образы опубликованы"

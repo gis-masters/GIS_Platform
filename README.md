@@ -7,7 +7,7 @@
 <details open>
 <summary><strong>Рекомендованные</strong></summary>
 
-- **ОС**: Linux Ubuntu/Debian 24
+- **ОС**: Linux Ubuntu/Debian (тестируется на Ubuntu 22)
 - **Процессор**: Intel Core i7-13700K
 - **Оперативная память: 64 GB
 - **SSD NVMe**: 1 TB
@@ -16,7 +16,7 @@
 <details>
 <summary><strong>Минимальные</strong></summary>
 
-- **ОС**: Linux Ubuntu/Debian 20
+- **ОС**: Linux Ubuntu/Debian
 - **Процессор**: Intel Core i5-12400F
 - **Оперативная память: 32 GB
 - **Место на диске**: 20 GB (без учёта веса ОС, docker, файлов пользователей)
