@@ -18,18 +18,20 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:
       connection-timeout: 50000
-
   jpa:
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
   flyway:
     enabled: true
     placeholders:
       db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
+  servlet:
+    multipart:
+      max-file-size: 51MB
+      max-request-size: 51MB
 
 crg-options:
   data_service_url: http://127.0.0.1:8084
