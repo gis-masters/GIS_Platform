@@ -228,7 +228,6 @@ SET is_system = true,
             {
               "name": "rdate",
               "title": "Дата постановки на учет",
-              "required": true,
               "valueType": "DATETIME"
             },
             {
@@ -951,7 +950,6 @@ SET is_system = true,
             {
               "name": "rdate",
               "title": "Дата постановки на учет",
-              "required": true,
               "valueType": "DATETIME"
             },
             {
@@ -1170,7 +1168,7 @@ SET is_system = true,
             {
               "name": "registrati",
               "title": "Дата постановки на учет",
-              "valueType": "STRING"
+              "valueType": "DATETIME"
             },
             {
               "name": "boundary_1",
@@ -1645,8 +1643,7 @@ SET is_system = true,
             {
               "name": "registrationdate",
               "title": "Дата постановки на учет",
-              "maxLength": 100,
-              "valueType": "STRING"
+              "valueType": "DATETIME"
             },
             {
               "name": "created_at",
@@ -1784,7 +1781,7 @@ SET is_system = true,
             {
               "name": "registrati",
               "title": "Дата постановки на учет",
-              "valueType": "STRING"
+              "valueType": "DATETIME"
             },
             {
               "name": "boundary_1",
