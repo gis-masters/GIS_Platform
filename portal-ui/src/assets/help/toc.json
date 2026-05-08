@@ -563,6 +563,11 @@
         "id": "fullText",
         "title": "Полнотекстовый поиск",
         "contentUrl": "/assets/help/5dataManagement/18fullText/18fullText.html"
+      },
+      {
+        "id": "reportTemplates",
+        "title": "Шаблоны отчетов",
+        "contentUrl": "/assets/help/5dataManagement/33reportTemplates/33reportTemplates.html"
       }
     ]
   },
