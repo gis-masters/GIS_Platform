@@ -5,12 +5,15 @@ public class CarbonDto {
     private Object data;
     private String convertTo;
 
-    public CarbonDto() {
-    }
+    //Специально без сетеров и пустого конструктора чтобы "гарантировать" что поля будут заполнены
+    private final String lang;
+    private final String timezone;
 
-    public CarbonDto(Object data, String convertTo) {
+    public CarbonDto(Object data, String convertTo, String lang, String timezone) {
         this.data = data;
         this.convertTo = convertTo;
+        this.lang = lang;
+        this.timezone = timezone;
     }
 
     public Object getData() {
@@ -27,5 +30,13 @@ public class CarbonDto {
 
     public void setConvertTo(String convertTo) {
         this.convertTo = convertTo;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public String getTimezone() {
+        return timezone;
     }
 }

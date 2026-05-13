@@ -35,6 +35,9 @@ spring:
 
 crg-options:
   data_service_url: http://127.0.0.1:8084
-  carbone_url: http://127.0.0.1:4000
+  carbone:
+    url: ${CRG_OPTIONS_CARBONE_URL:http://127.0.0.1:4000}
+    lang: ${CRG_OPTIONS_CARBONE_LANG:ru}
+    timezone: ${CRG_OPTIONS_CARBONE_TIMEZONE:Europe/Moscow}
   jwt:
     secret: your_jwt_secret_here

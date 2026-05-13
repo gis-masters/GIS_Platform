@@ -5,6 +5,7 @@ import io.carbone.CarboneException;
 import io.carbone.ICarboneServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.report_service.ReportMainDto;
@@ -36,19 +37,25 @@ public class CarboneBasedReportService implements IReportService {
     private final DataServiceSpeaker dataServiceSpeaker;
     private final IAuthenticationFacade authenticationFacade;
     private final ICarboneServices carboneServices;
+    private final String carboneLang;
+    private final String carboneTimezone;
 
     public CarboneBasedReportService(FileService fileService,
                                      TemplateService templateService,
                                      ReplacePictureService replacePictureService,
                                      DataServiceSpeaker dataServiceSpeaker,
                                      IAuthenticationFacade authenticationFacade,
-                                     ICarboneServices carboneServices) {
+                                     ICarboneServices carboneServices,
+                                     @Value("${crg-options.carbone.lang}") String carboneLang,
+                                     @Value("${crg-options.carbone.timezone}") String carboneTimezone) {
         this.fileService = fileService;
         this.templateService = templateService;
         this.replacePictureService = replacePictureService;
         this.dataServiceSpeaker = dataServiceSpeaker;
         this.authenticationFacade = authenticationFacade;
         this.carboneServices = carboneServices;
+        this.carboneLang = carboneLang;
+        this.carboneTimezone = carboneTimezone;
     }
 
     @Override
@@ -68,7 +75,7 @@ public class CarboneBasedReportService implements IReportService {
 
             // 4 - Попросить движок создать файл
             CarboneDocument report = carboneServices.
-                    render(toJson(new CarbonDto(dto.getData(), firstRenderFormat.name().toLowerCase())), templateId);
+                    render(toJson(createCarbonDto(dto.getData(), firstRenderFormat.name().toLowerCase())), templateId);
 
             // 5 - Модифицировать шаблон переданной media
             File newTemplate = replacePictureService
@@ -132,7 +139,7 @@ public class CarboneBasedReportService implements IReportService {
 
         // 5.2: Рендер с пустыми данными = конвертация формата
         CarboneDocument converted = carboneServices.render(
-                toJson(new CarbonDto(new HashMap<>(), format.name().toLowerCase())),
+                toJson(createCarbonDto(new HashMap<>(), format.name().toLowerCase())),
                 docxTemplateId
         );
 
@@ -142,5 +149,9 @@ public class CarboneBasedReportService implements IReportService {
         carboneServices.deleteTemplate(docxTemplateId);
 
         return newTemplate;
+    }
+
+    private CarbonDto createCarbonDto(Object data, String convertTo) {
+        return new CarbonDto(data, convertTo, carboneLang, carboneTimezone);
     }
 }
