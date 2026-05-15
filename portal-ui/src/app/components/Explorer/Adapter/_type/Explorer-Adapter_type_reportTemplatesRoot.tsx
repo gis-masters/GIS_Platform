@@ -9,6 +9,7 @@ import { getTemplate, getTemplates } from '../../../../services/reportTemplate/r
 import { filterObjects } from '../../../../services/util/filters/filterObjects';
 import { sortObjects } from '../../../../services/util/sortObjects';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { CreateReportTemplate } from '../../../CreateReportTemplate/CreateReportTemplate';
 import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
 
@@ -23,7 +24,7 @@ export class ExplorerAdapterTypeReportTemplatesRoot {
   }
 
   static getDescription(): string {
-    return 'Шаблоны печатных отчётов: на их основе формируются документы для печати и выгрузки. Доступно только администратору организации.';
+    return 'Шаблоны печатных отчётов: на их основе формируются документы для печати и выгрузки. Создание и удаление шаблонов доступно администратору организации.';
   }
 
   static getMeta(): string {
@@ -120,7 +121,11 @@ export class ExplorerAdapterTypeReportTemplatesRoot {
   }
 
   static getToolbarActions(): ReactNode {
-    return <CreateReportTemplate />;
+    if (currentUser.isAdmin) {
+      return <CreateReportTemplate />;
+    }
+
+    return null;
   }
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<TemplateInfo>>[] {

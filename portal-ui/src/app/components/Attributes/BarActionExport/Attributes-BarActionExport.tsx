@@ -7,7 +7,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { type PropertySchema } from '../../../services/data/schema/schema.models';
-import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
+import { applyView } from '../../../services/data/schema/utils/applyView';
+import { getReadablePropertyValue } from '../../../services/data/schema/utils/getReadablePropertyValue';
 import { type CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { type PageOptions } from '../../../services/models';

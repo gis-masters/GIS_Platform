@@ -17,6 +17,6 @@ export class FeatureExtractPrintTemplate extends FeaturePrintTemplate {
   protected override getTemplateName(prepared: PrintPreparedData, entity: WfsFeature): string {
     const compact = hasMapPreviewInTemplateData(prepared.templateData) && isCompactGeometry(entity.geometry, 20);
 
-    return compact ? 'feature_extract_compact' : 'feature_extract_full';
+    return compact ? 'sys_feature_extract_compact' : 'sys_feature_extract_full';
   }
 }

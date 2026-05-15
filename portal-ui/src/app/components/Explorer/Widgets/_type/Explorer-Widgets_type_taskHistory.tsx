@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { type Schema } from '../../../../services/data/schema/schema.models';
-import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../../services/data/schema/utils/applyContentType';
 import { getTaskSchema } from '../../../../services/data/task/task.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeTaskHistory } from '../../Adapter/_type/Explorer-Adapter_type_taskHistory';

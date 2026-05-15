@@ -21,6 +21,8 @@ type PrintMapSchemaOptions = {
   pageFormatId: string;
   autoGenerate: boolean;
   focusFeature?: WfsFeature;
+  showSelectionInPrintByDefault: boolean;
+  hideLegendInPrintByDefault: boolean;
 };
 
 function readPrintMapSchemaProperty(property: PropertySchema): PrintMapSchemaOptions {
@@ -28,27 +30,59 @@ function readPrintMapSchemaProperty(property: PropertySchema): PrintMapSchemaOpt
     throw new Error('PrintMapImageControl: ожидается propertyType CUSTOM');
   }
 
-  const { format, autoGenerate, focusFeature: focusRaw } = property;
+  const { format, autoGenerate, focusFeature: focusRaw, showSelectionInPrintByDefault } = property;
   const pageFormatId = typeof format === 'string' ? format : 'square';
   const focusFeature = focusRaw !== undefined && isWfsFeature(focusRaw) ? focusRaw : undefined;
   const autoGenerateEnabled = autoGenerate === true;
+  const selectionDefault = showSelectionInPrintByDefault === true;
+  const hideLegendInPrintByDefault = property.hideLegendInPrintByDefault === true;
 
-  return { pageFormatId, autoGenerate: autoGenerateEnabled, focusFeature };
+  return {
+    pageFormatId,
+    autoGenerate: autoGenerateEnabled,
+    focusFeature,
+    showSelectionInPrintByDefault: selectionDefault,
+    hideLegendInPrintByDefault
+  };
 }
+
+function applyShowSelectionInPrintDefault(enabled: boolean) {
+  if (!enabled) {
+    return;
+  }
+
+  printSettings.setValues({
+    showSystemLayers: { ...printSettings.showSystemLayers, draft: true }
+  });
+}
+
+function applyLegendInPrintDefault(enabled: boolean) {
+  printSettings.setValues({
+    legend: { ...printSettings.legend, enabled }
+  });
+}
+
+type PrintMapImageControlState = {
+  printDialogOpen: boolean;
+  mapLoading: boolean;
+  setPrintDialogOpen(open: boolean): void;
+  setMapLoading(loading: boolean): void;
+};
 
 const PrintMapImageControl = observer((props: FormControlProps) => {
   const { fieldValue, property, onChange } = props;
-  const { pageFormatId, focusFeature, autoGenerate } = readPrintMapSchemaProperty(property);
+  const { pageFormatId, focusFeature, autoGenerate, showSelectionInPrintByDefault, hideLegendInPrintByDefault } =
+    readPrintMapSchemaProperty(property);
 
-  const state = useLocalObservable(() => ({
+  const state = useLocalObservable<PrintMapImageControlState>(() => ({
     printDialogOpen: false,
     mapLoading: false,
 
-    setPrintDialogOpen(open: boolean) {
+    setPrintDialogOpen(open) {
       this.printDialogOpen = open;
     },
 
-    setMapLoading(loading: boolean) {
+    setMapLoading(loading) {
       this.mapLoading = loading;
     }
   }));
@@ -64,6 +98,8 @@ const PrintMapImageControl = observer((props: FormControlProps) => {
       state.setMapLoading(true);
       try {
         printSettings.setPageFormatId(pageFormatId);
+        applyShowSelectionInPrintDefault(showSelectionInPrintByDefault);
+        applyLegendInPrintDefault(!hideLegendInPrintByDefault);
 
         if (focusFeature) {
           await applyPrintFocusForFeatureExtract(focusFeature, { pageFormatId });
@@ -87,7 +123,16 @@ const PrintMapImageControl = observer((props: FormControlProps) => {
     return () => {
       cancelled = true;
     };
-  }, [autoGenerate, focusFeature, onChange, pageFormatId, property.name, state]);
+  }, [
+    autoGenerate,
+    focusFeature,
+    onChange,
+    pageFormatId,
+    property.name,
+    hideLegendInPrintByDefault,
+    showSelectionInPrintByDefault,
+    state
+  ]);
 
   const handleExport = useCallback(
     (value: string) => {
@@ -112,8 +157,10 @@ const PrintMapImageControl = observer((props: FormControlProps) => {
       }
     }
 
+    applyShowSelectionInPrintDefault(showSelectionInPrintByDefault);
+    applyLegendInPrintDefault(!hideLegendInPrintByDefault);
     state.setPrintDialogOpen(true);
-  }, [fieldValue, focusFeature, pageFormatId, state]);
+  }, [fieldValue, focusFeature, pageFormatId, hideLegendInPrintByDefault, showSelectionInPrintByDefault, state]);
 
   const closePrintDialog = useCallback(() => {
     state.setPrintDialogOpen(false);

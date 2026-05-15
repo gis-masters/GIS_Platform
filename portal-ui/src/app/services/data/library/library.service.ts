@@ -5,7 +5,8 @@ import { type PageOptions } from '../../models';
 import { type RoleAssignmentBody } from '../../permissions/permissions.models';
 import { addEntityPermission, removeEntityPermission } from '../../permissions/permissions.service';
 import { type Schema } from '../schema/schema.models';
-import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
+import { convertNewToOldSchema } from '../schema/utils/convertNewToOldSchema';
+import { convertOldToNewSchema } from '../schema/utils/convertOldToNewSchema';
 import { libraryClient } from './library.client';
 import {
   type DocumentVersion,

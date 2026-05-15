@@ -5,20 +5,18 @@ import { isEqual, isNumber } from 'lodash';
 import { type Schema } from '../../../services/data/schema/schema.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import {
-  applyView,
-  applyViewOld,
-  changeSchemaNamesCaseByFeature,
-  convertNewToOldSchema,
-  convertOldToNewProperties,
-  convertOldToNewSchema,
-  getFieldRelations
-} from '../../../services/data/schema/schema.utils';
-import {
   type EditedField,
   type OldPropertySchema,
   type OldSchema,
   ValueType
 } from '../../../services/data/schema/schemaOld.models';
+import { applyView } from '../../../services/data/schema/utils/applyView';
+import { applyViewOld } from '../../../services/data/schema/utils/applyViewOld';
+import { changeSchemaNamesCaseByFeature } from '../../../services/data/schema/utils/changeSchemaNamesCaseByFeature';
+import { convertNewToOldSchema } from '../../../services/data/schema/utils/convertNewToOldSchema';
+import { convertOldToNewProperties } from '../../../services/data/schema/utils/convertOldToNewProperties';
+import { convertOldToNewSchema } from '../../../services/data/schema/utils/convertOldToNewSchema';
+import { getFieldRelations } from '../../../services/data/schema/utils/getFieldRelations';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import {
   type CrgVectorableLayer,

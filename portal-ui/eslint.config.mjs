@@ -312,6 +312,9 @@ export default defineConfig([globalIgnores([
             selector: "MemberExpression[object.name='React']",
             message: "Using \"React.\" is forbidden. Use direct imports instead.",
         }, {
+            selector: "JSXMemberExpression[object.name='React']",
+            message: "Using \"React.\" is forbidden. Use direct imports instead.",
+        }, {
             selector: "TSQualifiedName[left.name='React'][right.name!='MouseEvent'][right.name!='TouchEvent'][right.name!='KeyboardEvent'][right.name!='AnimationEvent'][right.name!='ClipboardEvent'][right.name!='CompositionEvent'][right.name!='DragEvent'][right.name!='FocusEvent'][right.name!='FormEvent'][right.name!='TransitionEvent'][right.name!='UIEvent'][right.name!='WheelEvent']",
             message: "Using \"React.\" in types is forbidden, except for events that overlap with global types. Use direct imports instead.",
         }, {

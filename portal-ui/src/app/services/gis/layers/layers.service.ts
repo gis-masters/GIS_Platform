@@ -10,11 +10,9 @@ import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.u
 import { getLibraryRecord } from '../../data/library/library.service';
 import { type PropertyOption, type Schema } from '../../data/schema/schema.models';
 import { schemaService } from '../../data/schema/schema.service';
-import {
-  convertGeoserverPropertiesToSchemaProperties,
-  getGeometryTypeFromGeoserverAttributes
-} from '../../data/schema/schema.utils';
 import { tablesSchemasCache } from '../../data/schema/tablesSchemasCache';
+import { convertGeoserverPropertiesToSchemaProperties } from '../../data/schema/utils/convertGeoserverPropertiesToSchemaProperties';
+import { getGeometryTypeFromGeoserverAttributes } from '../../data/schema/utils/getGeometryTypeFromGeoserverAttributes';
 import { getVectorTable } from '../../data/vectorData/vectorData.service';
 import { type FeatureType } from '../../geoserver/featureType/featureType.model';
 import { getFeatureType } from '../../geoserver/featureType/featureType.service';

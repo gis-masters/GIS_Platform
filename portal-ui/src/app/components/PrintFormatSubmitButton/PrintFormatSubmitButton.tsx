@@ -1,7 +1,7 @@
-import React, { type FC, useCallback } from 'react';
+import React, { type FC, useCallback, useRef } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { type CreateReportRequest } from '../../services/report/report.models';
+import { type CreateReportRequest, isOutputFormat } from '../../services/report/report.models';
 import { type SubmitComponentProps } from '../../stores/AnswerModals.store';
 import { SplitButton } from '../SplitButton/SplitButton';
 import { PrintFormatSubmitButtonFormat } from './Format/PrintFormatSubmitButton-Format';
@@ -10,15 +10,21 @@ type OutputFormat = CreateReportRequest['outputFormat'];
 
 const cnPrintFormatSubmitButton = cn('PrintFormatSubmitButton');
 
-const alternativeFormats: { format: OutputFormat; label: string }[] = [
-  { format: 'DOCX', label: 'DOCX' },
-  { format: 'ODT', label: 'ODT' },
-  { format: 'JPEG', label: 'JPEG' }
-];
+const allOutputFormats: OutputFormat[] = ['PDF', 'DOCX', 'ODT', 'JPEG'];
 
 export const PrintFormatSubmitButton: FC<SubmitComponentProps> = ({ formId, submit, submitData }) => {
+  const defaultOutputFormatRef = useRef<OutputFormat>(
+    isOutputFormat(submitData.outputFormat) ? submitData.outputFormat : 'PDF'
+  );
+
+  const primaryFormat = defaultOutputFormatRef.current;
+
+  const alternativeFormats = allOutputFormats
+    .filter(format => format !== primaryFormat)
+    .map(format => ({ format, label: format }));
+
   const handleMainClick = useCallback(() => {
-    submitData.outputFormat = 'PDF';
+    submitData.outputFormat = defaultOutputFormatRef.current;
   }, [submitData]);
 
   const handleFormatSelect = useCallback(
@@ -44,7 +50,7 @@ export const PrintFormatSubmitButton: FC<SubmitComponentProps> = ({ formId, subm
         </>
       }
     >
-      Печать (PDF)
+      Печать ({primaryFormat})
     </SplitButton>
   );
 };

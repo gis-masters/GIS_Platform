@@ -5,7 +5,8 @@ import { type CrgFeature, type NewWfsFeature, type WfsFeature } from '../../geos
 import { type PageOptions } from '../../models';
 import { FilterQuery } from '../../util/filters/filters.models';
 import { type Schema } from '../schema/schema.models';
-import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
+import { convertNewToOldSchema } from '../schema/utils/convertNewToOldSchema';
+import { convertOldToNewSchema } from '../schema/utils/convertOldToNewSchema';
 import { vectorDataClient } from './vectorData.client';
 import {
   type Dataset,

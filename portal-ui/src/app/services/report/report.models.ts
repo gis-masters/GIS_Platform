@@ -1,4 +1,5 @@
 import { type ReportMainDto, type ReportOutputFormat } from '../../../server-types/common-contracts';
+import { type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { type PrintableCoordinatesChunk } from './utils/buildCoordinatesList';
 import { type FeatureSize } from './utils/getFeatureSize';
 
@@ -28,7 +29,7 @@ export type PrintableTemplate<T> = {
 };
 
 /** Имена шаблонов печати объекта по умолчанию, если в схеме слоя нет `printTemplates` */
-export const defaultFeaturePrintTemplateNames = ['feature_extract'] as const;
+export const defaultFeaturePrintTemplateNames = ['sys_feature_extract'] as const;
 
 export type FeatureAttribute = {
   title: string;
@@ -43,4 +44,5 @@ export type FeatureTemplateData = {
   size?: FeatureSize;
   attributes: FeatureAttribute[];
   coordinatesList?: PrintableCoordinatesChunk[];
+  feature: WfsFeature;
 };

@@ -1,4 +1,4 @@
-import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/schema.utils';
+import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/utils/convertOldToNewSchema';
 import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
 import { type VectorTable } from '../../../../src/app/services/data/vectorData/vectorData.models';
 import { requestAsAdmin } from '../requestAs';

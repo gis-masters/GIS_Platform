@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { usersService } from '../../../services/auth/users/users.service';
 import { type ContentType, type Schema } from '../../../services/data/schema/schema.models';
-import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../services/data/schema/utils/applyContentType';
 import { type Task } from '../../../services/data/task/task.models';
 import { createTask } from '../../../services/data/task/task.service';
 import { FormDialog } from '../../FormDialog/FormDialog';

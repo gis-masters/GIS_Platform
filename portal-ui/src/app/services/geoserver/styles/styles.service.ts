@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { applyView } from '../../data/schema/schema.utils';
+import { applyView } from '../../data/schema/utils/applyView';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { mapService } from '../../map/map.service';

@@ -50,6 +50,12 @@ export abstract class Block<S extends Selectors = Selectors> {
     await $root.waitForExist({ reverse: true });
   }
 
+  async isExisting(): Promise<boolean> {
+    const $root = await this.findBySelector('root');
+
+    return $root.isExisting();
+  }
+
   async assertSelfie(tag = 'plain', checkElementOptions: WdioCheckElementMethodOptions = {}): Promise<void> {
     const $root = await this.findBySelector('root');
 

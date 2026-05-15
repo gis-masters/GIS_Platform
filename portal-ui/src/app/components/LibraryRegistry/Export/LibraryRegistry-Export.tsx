@@ -9,7 +9,7 @@ import { boundMethod } from 'autobind-decorator';
 import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { getAllLibraryRecordsAsRegistry } from '../../../services/data/library/library.service';
 import { type PropertySchema } from '../../../services/data/schema/schema.models';
-import { getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
+import { getReadablePropertyValue } from '../../../services/data/schema/utils/getReadablePropertyValue';
 import { type PageOptions } from '../../../services/models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { sleep } from '../../../services/util/sleep';

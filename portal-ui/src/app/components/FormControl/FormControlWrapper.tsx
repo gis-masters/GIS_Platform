@@ -1,8 +1,8 @@
 import React, { type FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
-import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
 import { type OldPropertySchema, type ValueType } from '../../services/data/schema/schemaOld.models';
+import { convertOldToNewProperties } from '../../services/data/schema/utils/convertOldToNewProperties';
 import { type ErrorMessages, validateField } from '../../services/util/FeaturePropertyValidatorsReact';
 import { type FormControlProps } from '../Form/Control/Form-Control';
 import { FormControl } from '../Form/Control/Form-Control.composed';

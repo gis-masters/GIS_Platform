@@ -1,9 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { HomeOutlined } from '@mui/icons-material';
 
-import { flags } from '../../../../services/common/feature-flags/feature-flags.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { type Adapter, type ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
@@ -46,25 +44,18 @@ function getChildren(): ExplorerItemData[] {
     });
   }
 
-  baseChildren.push({
-    type: ExplorerItemType.SCHEMAS_ROOT,
-    payload: null
-  });
-
-  if (!currentUser.isAdmin) {
-    return baseChildren;
-  }
-
-  const adminChildren: ExplorerItemData[] = [];
-
-  if (flags.reportTemplatesInDataManagement) {
-    adminChildren.push({
+  baseChildren.push(
+    {
+      type: ExplorerItemType.SCHEMAS_ROOT,
+      payload: null
+    },
+    {
       type: ExplorerItemType.REPORT_TEMPLATES_ROOT,
       payload: null
-    });
-  }
+    }
+  );
 
-  return [...baseChildren, ...adminChildren];
+  return baseChildren;
 }
 
 @staticImplements<Adapter>()
@@ -137,10 +128,6 @@ export class ExplorerAdapterTypeRoot {
       };
     }
     if (id === 'reportTemplatesRoot') {
-      if (!flags.reportTemplatesInDataManagement) {
-        return undefined;
-      }
-
       return {
         type: ExplorerItemType.REPORT_TEMPLATES_ROOT,
         payload: null

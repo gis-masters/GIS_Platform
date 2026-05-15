@@ -1,9 +1,17 @@
 import { boundClass } from 'autobind-decorator';
+import { type AxiosResponse, isAxiosError } from 'axios';
 
 import { Client } from '../api/Client';
 import { http } from '../api/http.service';
+import { replaceUrl } from '../api/server-urls.service';
 import { Mime } from '../util/Mime';
 import { type TemplateCreatePayload, type TemplateInfo, type TemplateShortInfo } from './reportTemplate.models';
+import { parseContentDispositionFilename } from './reportTemplate.utils';
+
+export interface TemplateDownloadBlob {
+  blob: Blob;
+  filenameHint?: string;
+}
 
 @boundClass
 class ReportTemplateClient extends Client {
@@ -37,7 +45,37 @@ class ReportTemplateClient extends Client {
   }
 
   async downloadTemplate(name: string): Promise<Blob> {
-    return http.get<Blob>(`${this.getTemplateUrl(name)}/download`, { responseType: 'blob' });
+    const { blob } = await this.downloadTemplateBlob(name);
+
+    return blob;
+  }
+
+  async downloadTemplateBlob(name: string): Promise<TemplateDownloadBlob> {
+    const url = replaceUrl(`${this.getTemplateUrl(name)}/download`);
+
+    const fetchBlob = async () =>
+      http.axios.get<Blob>(url, {
+        responseType: 'blob'
+      });
+
+    let response: AxiosResponse<Blob>;
+    try {
+      response = await fetchBlob();
+    } catch (error: unknown) {
+      if (isAxiosError(error) && error.response?.status === 401) {
+        await http.waitForAuth();
+        response = await fetchBlob();
+      } else {
+        throw error;
+      }
+    }
+
+    const rawDisposition: unknown = response.headers['content-disposition'];
+    const filenameHint = parseContentDispositionFilename(
+      typeof rawDisposition === 'string' ? rawDisposition : undefined
+    );
+
+    return { blob: response.data, filenameHint };
   }
 
   async deleteTemplate(name: string): Promise<void> {

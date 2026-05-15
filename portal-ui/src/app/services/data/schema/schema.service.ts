@@ -9,10 +9,12 @@ import { getLayerSchema } from '../../gis/layers/layers.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
 import { type BugObject } from '../validation/validation.models';
 import { schemaClient } from './schema.client';
-import { type PropertySchemaChoice, PropertyType, type Schema } from './schema.models';
-import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
+import { type PropertySchemaChoice, PropertyType, type Schema, type SchemaValidator } from './schema.models';
 import { type OldPropertySchema, type OldSchema } from './schemaOld.models';
 import { tablesSchemasCache } from './tablesSchemasCache';
+import { convertNewToOldSchema } from './utils/convertNewToOldSchema';
+import { convertOldToNewSchema } from './utils/convertOldToNewSchema';
+import { printTemplatesExist } from './validators/printTemplatesExist';
 
 class SchemaService {
   private static _instance: SchemaService;
@@ -27,6 +29,8 @@ class SchemaService {
   private fetchingAllSchemas?: Promise<void>;
   private fetchingNow = 0;
   private readonly debouncedFetch: DebouncedFunc<(fetchAll?: boolean) => Promise<void>>;
+
+  private readonly schemaWarningValidators: SchemaValidator[] = [printTemplatesExist];
 
   private constructor() {
     this.debouncedFetch = debounce(this.fetch, 20);
@@ -265,6 +269,19 @@ class SchemaService {
     this.fetchingAllSchemas = undefined;
     await schemaClient.updateSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'update', data: schema });
+  }
+
+  async getSchemaWarnings(schema: Schema): Promise<string[]> {
+    const warnings: string[] = [];
+
+    for (const validator of this.schemaWarningValidators) {
+      const lines = await validator(schema);
+      for (const line of lines) {
+        warnings.push(line);
+      }
+    }
+
+    return warnings;
   }
 }
 

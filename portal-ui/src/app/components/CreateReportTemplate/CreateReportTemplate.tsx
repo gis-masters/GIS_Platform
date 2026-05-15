@@ -2,14 +2,15 @@ import React, { type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { NoteAddOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
-import { communicationService } from '../../services/communication.service';
 import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { type TemplateCreatePayload } from '../../services/reportTemplate/reportTemplate.models';
-import { createTemplate, getTemplate } from '../../services/reportTemplate/reportTemplate.service';
+import { createTemplate } from '../../services/reportTemplate/reportTemplate.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
 
+const cnCreateReportTemplate = cn('CreateReportTemplate');
 const CARBONE_DOCS_LINK = 'https://carbone.io/documentation.html';
 
 const formSchema: SimpleSchema = {
@@ -69,15 +70,13 @@ export const CreateReportTemplate: FC = observer(() => {
 
   const create = useCallback(async ({ name, title, file }: CreateReportTemplateFormValue) => {
     const dto: TemplateCreatePayload = { name, title, printFormSchemaOverrides: null };
-    const created = await createTemplate(dto, file);
-    const full = await getTemplate(created.name);
-    communicationService.reportTemplateUpdated.emit({ type: 'create', data: full });
+    await createTemplate(dto, file);
   }, []);
 
   return (
     <>
       <Tooltip title='Создать шаблон отчёта'>
-        <IconButton onClick={openDialog}>
+        <IconButton className={cnCreateReportTemplate()} onClick={openDialog}>
           <NoteAddOutlined />
         </IconButton>
       </Tooltip>

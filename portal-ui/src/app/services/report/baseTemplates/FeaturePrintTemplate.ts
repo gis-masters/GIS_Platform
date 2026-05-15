@@ -8,9 +8,11 @@ import { doFormPrompt } from '../../answer-modals.service';
 import { flags } from '../../common/feature-flags/feature-flags.service';
 import { getProjectionByCode } from '../../data/projections/projections.service';
 import { getProjectionUnit } from '../../data/projections/projections.util';
-import { type PropertySchema, PropertyType } from '../../data/schema/schema.models';
-import { applyView, getReadablePropertyValue } from '../../data/schema/schema.utils';
+import { type PropertySchema, PropertyType, type Schema } from '../../data/schema/schema.models';
+import { applyView } from '../../data/schema/utils/applyView';
+import { getReadablePropertyValue } from '../../data/schema/utils/getReadablePropertyValue';
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import {
@@ -24,36 +26,35 @@ import { getFeatureSize } from '../utils/getFeatureSize';
 import { PrintTemplate } from './PrintTemplate';
 
 export class FeaturePrintTemplate extends PrintTemplate<WfsFeature> {
-  override async getFileName(entity: WfsFeature): Promise<string> {
-    const layer = getLayerByFeatureInCurrentProject(entity);
+  protected getLayerByFeature(feature: WfsFeature): CrgVectorLayer {
+    const layer = getLayerByFeatureInCurrentProject(feature);
     if (!layer) {
-      throw new Error('Не удалось получить имя файла. Не найден слой для объекта');
+      throw new Error('Не найден слой для объекта');
     }
 
-    const schema = await getLayerSchema(layer);
-    if (!schema) {
-      throw new Error(`Не удалось получить имя файла. Не удалось получить схему слоя ${layer.title}`);
+    return layer;
+  }
+
+  protected async getLayerSchemaWithAppliedView(feature: WfsFeature): Promise<Schema> {
+    const layer = this.getLayerByFeature(feature);
+    const rawSchema = await getLayerSchema(layer);
+    if (!rawSchema) {
+      throw new Error(`Не удалось получить схему слоя ${layer.title}`);
     }
 
-    const schemaWithAppliedView = applyView(schema, layer.view);
+    return applyView(rawSchema, layer.view);
+  }
+
+  override async getFileName(entity: WfsFeature): Promise<string> {
+    const schemaWithAppliedView = await this.getLayerSchemaWithAppliedView(entity);
     const { title } = getFeaturesListItemTitle(entity, schemaWithAppliedView);
 
-    return `${title} [${this.title}]`;
+    return `${this.title} [${title}]`;
   }
 
   override async getData(feature: WfsFeature): Promise<PrintPreparedData | void> {
-    const layer = getLayerByFeatureInCurrentProject(feature);
-
-    if (!layer) {
-      throw new Error('Не удалось извлечь фичу. Не найден слой для объекта');
-    }
-
-    const schema = await getLayerSchema(layer);
-    if (!schema) {
-      throw new Error(`Не удалось извлечь фичу. Не удалось получить схему слоя ${layer.title}`);
-    }
-
-    const schemaWithAppliedView = applyView(schema, layer.view);
+    const schemaWithAppliedView = await this.getLayerSchemaWithAppliedView(feature);
+    const layer = this.getLayerByFeature(feature);
     const { title } = getFeaturesListItemTitle(feature, schemaWithAppliedView);
     const propertiesForSelect = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
@@ -108,7 +109,7 @@ export class FeaturePrintTemplate extends PrintTemplate<WfsFeature> {
 
     const attributes = Object.entries(feature.properties)
       .map(([key, value]) => {
-        const propertySchema = schema.properties.find(({ name }) => name === key);
+        const propertySchema = schemaWithAppliedView.properties.find(({ name }) => name === key);
         const disabled = propertySchema && !mapDialogResult.properties?.some(({ name }) => name === key);
 
         return {
@@ -134,7 +135,8 @@ export class FeaturePrintTemplate extends PrintTemplate<WfsFeature> {
       crs: projection?.title || layer.nativeCRS,
       size,
       attributes,
-      coordinatesList
+      coordinatesList,
+      feature
     };
 
     return {

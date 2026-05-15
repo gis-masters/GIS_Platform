@@ -1,14 +1,18 @@
+import { area, feature, featureCollection, intersect } from '@turf/turf';
+import type { MultiPolygon as GeoMultiPolygon, Polygon as GeoPolygon } from 'geojson';
 import { chunk } from 'lodash';
 import { and, intersects } from 'ol/format/filter';
-import { type MultiPolygon } from 'ol/geom';
+import GeoJSON from 'ol/format/GeoJSON';
+import { MultiPolygon, Polygon } from 'ol/geom';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { usersService } from '../../auth/users/users.service';
-import { getOlProjection } from '../../data/projections/projections.service';
+import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
-import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
+import { applyView } from '../../data/schema/utils/applyView';
+import { getGeometryFieldName } from '../../data/schema/utils/getGeometryFieldName';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
@@ -21,6 +25,7 @@ import { cql2ol } from '../../util/cql/cql2ol';
 import { parseCql } from '../../util/cql/parseCql';
 import { filterFeatures } from '../../util/filters/filterObjects';
 import { Mime } from '../../util/Mime';
+import { wfsGeometryToGeometry } from '../../util/open-layers.util';
 import { isArray } from '../../util/typeGuards/isArray';
 import {
   buildComplexName,
@@ -29,8 +34,13 @@ import {
   extractResourceIdFromComplexName
 } from '../featureType/featureType.util';
 import { wfsClient } from './wfs.client';
-import { type WfsFeature, type WfsFeatureCollection } from './wfs.models';
-import { generateWfsSortParam, getEmptyGeometry } from './wfs.util';
+import {
+  type GetWfsIntersectionsOptions,
+  type WfsFeature,
+  type WfsFeatureCollection,
+  type WfsLayerIntersectionItem
+} from './wfs.models';
+import { explodePolygons, generateWfsSortParam, getEmptyGeometry, isArealWfsGeometry } from './wfs.util';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
   if (!layer.complexName) {
@@ -237,10 +247,11 @@ export async function makeXmlPolygonIntersect(
   complexName: string,
   polygon: MultiPolygon,
   srsName: string,
-  selectionType: MapSelectionTypes
+  selectionType: MapSelectionTypes,
+  options?: { skipMaxFeaturesLimit?: boolean }
 ): Promise<string> {
   const tableName = extractResourceIdFromComplexName(complexName);
-  const layer = currentProject.getLayerByResourceIdFromVisibleVectorLayers(tableName);
+  const layer = currentProject.getLayerByResourceIdFromAllVectorableLayers(tableName);
   const baseSchema = await getLayerSchema(layer as CrgVectorLayer);
 
   if (!baseSchema) {
@@ -261,7 +272,7 @@ export async function makeXmlPolygonIntersect(
 
   const subtractForLimit = selectionType === MapSelectionTypes.ADD ? selectedFeaturesStore.features.length : 0;
   const maxFeatures =
-    selectionType === MapSelectionTypes.REMOVE
+    options?.skipMaxFeaturesLimit || selectionType === MapSelectionTypes.REMOVE
       ? undefined
       : Math.max(selectedFeaturesStore.limit - subtractForLimit, 1);
 
@@ -276,6 +287,136 @@ export async function makeXmlPolygonIntersect(
   });
 
   return new XMLSerializer().serializeToString(featureRequest);
+}
+
+async function computeArealOverlap(
+  sourceFeature: WfsFeature,
+  sourceLayer: CrgVectorLayer,
+  targetFeature: WfsFeature,
+  targetLayer: CrgVectorLayer
+): Promise<{ intersectionArea: number; intersectionAreaPercent: number }> {
+  const srcGeom = sourceFeature.geometry;
+  const tgtGeom = targetFeature.geometry;
+
+  if (!isArealWfsGeometry(srcGeom) || !isArealWfsGeometry(tgtGeom)) {
+    throw new Error('Ожидались площадные геометрии для расчета площади пересечения');
+  }
+
+  await getProjectionByCode(sourceLayer.nativeCRS);
+  await getProjectionByCode(targetLayer.nativeCRS);
+
+  const olSrc = wfsGeometryToGeometry(srcGeom);
+  const olTgt = wfsGeometryToGeometry(tgtGeom);
+  olSrc.transform(sourceLayer.nativeCRS, 'EPSG:4326');
+  olTgt.transform(targetLayer.nativeCRS, 'EPSG:4326');
+
+  const format = new GeoJSON();
+  const srcJson = format.writeGeometryObject(olSrc) as GeoPolygon | GeoMultiPolygon;
+  const tgtJson = format.writeGeometryObject(olTgt) as GeoPolygon | GeoMultiPolygon;
+
+  const srcPolys = explodePolygons(srcJson);
+  const tgtPolys = explodePolygons(tgtJson);
+
+  let intersectionArea = 0;
+
+  for (const pa of srcPolys) {
+    for (const pb of tgtPolys) {
+      const fc = featureCollection([feature(pa), feature(pb)]);
+      const inter = intersect(fc);
+
+      if (inter?.geometry) {
+        intersectionArea += area(inter);
+      }
+    }
+  }
+
+  const sourceTotal = srcPolys.reduce((s, p) => s + area(feature(p)), 0);
+  const intersectionAreaPercent = sourceTotal > 0 ? Math.round((intersectionArea / sourceTotal) * 100 * 100) / 100 : 0;
+
+  return {
+    intersectionArea: Math.round(intersectionArea * 100) / 100,
+    intersectionAreaPercent
+  };
+}
+
+function sourceFeatureToMapMultiPolygon(
+  sourceFeature: WfsFeature,
+  sourceLayer: CrgVectorLayer,
+  mapProjCode: string
+): MultiPolygon {
+  const g = sourceFeature.geometry;
+
+  if (!isArealWfsGeometry(g)) {
+    throw new Error('Исходная фича должна иметь геометрию Polygon или MultiPolygon');
+  }
+
+  const olGeom = wfsGeometryToGeometry(g);
+  let multi: MultiPolygon;
+
+  if (olGeom instanceof MultiPolygon) {
+    multi = olGeom;
+  } else if (olGeom instanceof Polygon) {
+    multi = new MultiPolygon([olGeom.getCoordinates()]);
+  } else {
+    throw new TypeError('Исходная геометрия должна быть Polygon или MultiPolygon');
+  }
+
+  multi.transform(sourceLayer.nativeCRS, mapProjCode);
+
+  return multi;
+}
+
+export async function getWfsIntersectionsForFeature(
+  sourceFeature: WfsFeature,
+  sourceLayer: CrgVectorLayer,
+  targetLayer: CrgVectorLayer,
+  options?: GetWfsIntersectionsOptions
+): Promise<WfsLayerIntersectionItem[]> {
+  if (!targetLayer.complexName) {
+    throw new Error(`У целевого слоя ${targetLayer.title} не задан complexName`);
+  }
+
+  if (!isArealWfsGeometry(sourceFeature.geometry)) {
+    throw new Error('Исходная фича должна иметь геометрию Polygon или MultiPolygon');
+  }
+
+  await getProjectionByCode(sourceLayer.nativeCRS);
+  const olProj = await getOlProjection();
+  const mapCode = getProjectionCode(olProj);
+  const buffer = sourceFeatureToMapMultiPolygon(sourceFeature, sourceLayer, mapCode);
+
+  const xml = await makeXmlPolygonIntersect(
+    targetLayer.complexName,
+    buffer,
+    targetLayer.nativeCRS,
+    MapSelectionTypes.REPLACE,
+    { skipMaxFeaturesLimit: options?.skipMaxFeaturesLimit ?? false }
+  );
+
+  const { features = [] } = await getFeatureCollectionByXmlFilter(xml);
+  const sourceIsArealFeature = isArealWfsGeometry(sourceFeature.geometry);
+
+  const items: WfsLayerIntersectionItem[] = [];
+
+  for (const f of features) {
+    const geometryType = f.geometry?.type ?? 'unknown';
+    const base: WfsLayerIntersectionItem = { feature: f, geometryType };
+
+    if (!options?.skipAreaComputation && sourceIsArealFeature && isArealWfsGeometry(f.geometry)) {
+      const { intersectionArea, intersectionAreaPercent } = await computeArealOverlap(
+        sourceFeature,
+        sourceLayer,
+        f,
+        targetLayer
+      );
+      base.intersectionArea = intersectionArea;
+      base.intersectionAreaPercent = intersectionAreaPercent;
+    }
+
+    items.push(base);
+  }
+
+  return items;
 }
 
 export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature> {

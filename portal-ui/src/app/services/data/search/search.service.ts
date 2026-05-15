@@ -2,7 +2,7 @@ import { type SupportedGeometryType, type WfsFeature } from '../../geoserver/wfs
 import { type PageOptions } from '../../models';
 import { isPageableResources } from '../../util/typeGuards/isPageableResources';
 import { awaitProcess, createSearchProcess } from '../processes/processes.service';
-import { getGeometryFieldName } from '../schema/schema.utils';
+import { getGeometryFieldName } from '../schema/utils/getGeometryFieldName';
 import { getVectorTable } from '../vectorData/vectorData.service';
 import { type SearchItemData, type SearchRequest } from './search.model';
 

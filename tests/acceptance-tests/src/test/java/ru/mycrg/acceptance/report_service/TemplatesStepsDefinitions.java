@@ -69,9 +69,9 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
                          get();
     }
 
-    @Then("ответ соответствует шаблону печати по имени \"feature_extract_compact\"")
-    public void checkAnswerOnDefaultTemplate() {
-        assertEquals("feature_extract_compact", response.jsonPath().get("name"));
+    @Then("ответ соответствует шаблону печати по имени {string}")
+    public void checkAnswerOnDefaultTemplate(String expectedName) {
+        assertEquals(expectedName, response.jsonPath().get("name"));
         assertEquals("Выписка об объекте", response.jsonPath().get("title"));
         assertEquals("SYSTEM", response.jsonPath().get("createdBy"));
         assertTrue(response.jsonPath().getBoolean("system"));

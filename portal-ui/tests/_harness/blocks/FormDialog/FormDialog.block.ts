@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { Block } from '../../classes/Block';
 import { DialogBlock } from '../Dialog/Dialog.block';
 import { FormBlock } from '../Form/Form.block';
@@ -23,6 +25,15 @@ class FormDialogBlock extends Block {
     const dialogBlock = new DialogBlock(null, $root);
 
     await dialogBlock.clickActionButton(title);
+  }
+
+  async setFileFromTestFiles(fieldLabel: string, fileName: string): Promise<void> {
+    const formBlock = new FormBlock(this.selectors.root);
+    const $field = await formBlock.getField(fieldLabel);
+    const $input = await $field.$('.FileInput-Input').getElement();
+    const absPath = path.join(process.cwd(), 'tests', '_files', fileName);
+    const remotePath = await browser.uploadFile(absPath);
+    await $input.setValue(remotePath);
   }
 
   async waitForNotHidden(): Promise<void> {

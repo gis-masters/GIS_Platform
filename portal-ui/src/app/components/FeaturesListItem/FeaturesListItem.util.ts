@@ -1,5 +1,5 @@
 import { type Schema } from '../../services/data/schema/schema.models';
-import { getReadablePropertyValue } from '../../services/data/schema/schema.utils';
+import { getReadablePropertyValue } from '../../services/data/schema/utils/getReadablePropertyValue';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 
 export interface FeaturesListItemTitle {

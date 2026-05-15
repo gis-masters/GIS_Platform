@@ -1,6 +1,6 @@
 import { libraryClient } from '../../../../src/app/services/data/library/library.client';
 import { type Library } from '../../../../src/app/services/data/library/library.models';
-import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/schema.utils';
+import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/utils/convertOldToNewSchema';
 import { requestAsAdmin } from '../requestAs';
 
 export async function getDocumentsLibraryByTitle(title: string): Promise<Library> {

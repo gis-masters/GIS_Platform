@@ -17,6 +17,9 @@ class DataManagementPage extends Page {
   schemasRootUrl =
     '?path_dm=%5B%22r%22,%22root%22,%22sr%22,%22schemasRoot%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22created_at%22,%22desc%22,%7B%7D%5D';
 
+  reportTemplatesRootUrl =
+    '?path_dm=%5B%22r%22,%22root%22,%22rtr%22,%22reportTemplatesRoot%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22name%22,%22asc%22,%7B%7D%5D';
+
   selectors = {
     root: '.DataManagement'
   };
@@ -41,6 +44,10 @@ class DataManagementPage extends Page {
 
   async openSchemasRootPage() {
     await browser.url(this.url + this.schemasRootUrl);
+  }
+
+  async openReportTemplatesRootPage() {
+    await browser.url(this.url + this.reportTemplatesRootUrl);
   }
 
   async openSchemaPageWithSelectedSchema(schemaName: string) {

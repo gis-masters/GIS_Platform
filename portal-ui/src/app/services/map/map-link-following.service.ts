@@ -4,7 +4,7 @@ import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { route } from '../../stores/Route.store';
 import { sidebars } from '../../stores/Sidebars.store';
-import { applyView } from '../data/schema/schema.utils';
+import { applyView } from '../data/schema/utils/applyView';
 import {
   extractFeatureId,
   extractFeatureTypeNameFromComplexName,

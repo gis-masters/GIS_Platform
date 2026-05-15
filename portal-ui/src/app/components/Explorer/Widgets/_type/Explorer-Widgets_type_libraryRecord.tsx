@@ -10,7 +10,7 @@ import { libraryClient } from '../../../../services/data/library/library.client'
 import { type LibraryRecord } from '../../../../services/data/library/library.models';
 import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
 import { type Schema } from '../../../../services/data/schema/schema.models';
-import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../../services/data/schema/utils/applyContentType';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { DocumentRole } from '../../../DocumentRole/DocumentRole';

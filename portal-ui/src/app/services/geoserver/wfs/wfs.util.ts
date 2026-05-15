@@ -1,3 +1,4 @@
+import type { MultiPolygon as GeoMultiPolygon, Polygon as GeoPolygon } from 'geojson';
 import { isEqual } from 'lodash';
 import { type Feature } from 'ol';
 import { type Coordinate } from 'ol/coordinate';
@@ -7,7 +8,14 @@ import { type SimpleGeometry } from 'ol/geom';
 import { type PageOptions, SortOrder } from '../../models';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
 import { isArray } from '../../util/typeGuards/isArray';
-import { GeometryType, type WfsFeature, type WfsGeometry, type WfsPointGeometry } from './wfs.models';
+import {
+  GeometryType,
+  type WfsFeature,
+  type WfsGeometry,
+  type WfsMultiPolygonGeometry,
+  type WfsPointGeometry,
+  type WfsPolygonGeometry
+} from './wfs.models';
 
 export function getEmptyGeometry(type: GeometryType): WfsGeometry {
   if (type === GeometryType.POINT) {
@@ -65,6 +73,20 @@ export function isPolygonal(...geometryTypes: (GeometryType | undefined)[]): boo
   return geometryTypes.every(
     geometryType => geometryType === GeometryType.POLYGON || geometryType === GeometryType.MULTI_POLYGON
   );
+}
+
+export function isArealWfsGeometry(
+  geom: WfsGeometry | undefined
+): geom is WfsPolygonGeometry | WfsMultiPolygonGeometry {
+  return geom != null && isPolygonal(geom.type);
+}
+
+export function explodePolygons(g: GeoPolygon | GeoMultiPolygon): GeoPolygon[] {
+  if (g.type === 'Polygon') {
+    return [g];
+  }
+
+  return g.coordinates.map(coords => ({ type: 'Polygon', coordinates: coords }));
 }
 
 export function isPoint(...geometryTypes: (GeometryType | undefined)[]): boolean {

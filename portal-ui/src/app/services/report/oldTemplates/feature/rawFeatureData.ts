@@ -1,5 +1,6 @@
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
-import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
+import { applyView } from '../../../data/schema/utils/applyView';
+import { getReadablePropertyValue } from '../../../data/schema/utils/getReadablePropertyValue';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';

@@ -3,8 +3,8 @@ import { Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { convertOldToNewProperty } from '../../services/data/schema/schema.utils';
 import { type EditedField, type OldPropertySchema } from '../../services/data/schema/schemaOld.models';
+import { convertOldToNewProperty } from '../../services/data/schema/utils/convertOldToNewProperty';
 import { type EditFeatureFormControl } from '../EditFeature/hooks/useEditFeatureState';
 import { FormDescription } from '../Form/Description/Form-Description';
 import FormControlWrapper from '../FormControl/FormControlWrapper';

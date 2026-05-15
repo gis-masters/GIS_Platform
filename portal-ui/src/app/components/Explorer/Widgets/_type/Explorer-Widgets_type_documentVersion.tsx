@@ -7,7 +7,7 @@ import { communicationService } from '../../../../services/communication.service
 import { type DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
 import { type Schema } from '../../../../services/data/schema/schema.models';
-import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../../services/data/schema/utils/applyContentType';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeDocumentVersion } from '../../Adapter/_type/Explorer-Adapter_type_documentVersion';
 import { ExplorerItemType } from '../../Explorer.models';

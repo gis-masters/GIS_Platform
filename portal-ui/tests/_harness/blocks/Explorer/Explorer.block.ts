@@ -185,4 +185,27 @@ export class ExplorerBlock extends Block {
     const $searchSubmit = await this.findBySelector('searchSubmit');
     await $searchSubmit.click();
   }
+
+  async selectExplorerItemWithSecondaryContaining(fragment: string): Promise<void> {
+    await this.waitForVisible();
+    await this.waitForLoading();
+
+    const $$explorerItems = await this.findAllBySelector('item');
+    for (const $explorerItem of $$explorerItems) {
+      const secondary = await $explorerItem.$('.MuiListItemText-secondary').getText();
+      if (secondary.includes(fragment)) {
+        await $explorerItem.click();
+
+        return;
+      }
+    }
+
+    throw new Error(`Не найден элемент explorer с подписью, содержащей "${fragment}"`);
+  }
+
+  async explorerListTitlesExclude(title: string): Promise<boolean> {
+    const titles = await this.getListTitles();
+
+    return !titles.includes(title);
+  }
 }

@@ -5,7 +5,8 @@ import { ArrowForward } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { type Schema } from '../../services/data/schema/schema.models';
-import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
+import { applyView } from '../../services/data/schema/utils/applyView';
+import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/utils/changeSchemaNamesCaseByFeature';
 import {
   extractFeatureId,
   extractResourceIdFromFeatureId

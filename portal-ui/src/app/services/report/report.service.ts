@@ -1,5 +1,5 @@
 import { type LibraryRecord } from '../data/library/library.models';
-import { applyView } from '../data/schema/schema.utils';
+import { applyView } from '../data/schema/utils/applyView';
 import { type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
@@ -7,13 +7,21 @@ import { type TemplateInfo } from '../reportTemplate/reportTemplate.models';
 import { getTemplate } from '../reportTemplate/reportTemplate.service';
 import { FeaturePrintTemplate } from './baseTemplates/FeaturePrintTemplate';
 import { FeatureExtractPrintTemplate } from './customTemplates/feature/FeatureExtractPrintTemplate';
+import { PlotAttributesPrintTemplate } from './customTemplates/feature/PlotAttributesPrintTemplate';
+import { PlotConclusionPrintTemplate } from './customTemplates/feature/PlotConclusionPrintTemplate';
+import { PlotEgrnOksPrintTemplate } from './customTemplates/feature/PlotEgrnOksPrintTemplate';
+import { PlotEgrnZouitPrintTemplate } from './customTemplates/feature/PlotEgrnZouitPrintTemplate';
 import { rawDocumentData } from './oldTemplates/document/rawDocumentData';
 import { situationalPlan } from './oldTemplates/featuresCollection/situationalPlan';
 import { type PrintTemplateOld } from './oldTemplates/PrintTemplateOld';
 import { defaultFeaturePrintTemplateNames } from './report.models';
 
 const featurePrintCustomTemplateClasses: Record<string, new (info: TemplateInfo) => FeaturePrintTemplate> = {
-  feature_extract: FeatureExtractPrintTemplate
+  sys_feature_extract: FeatureExtractPrintTemplate,
+  sys_plot_conclusion: PlotConclusionPrintTemplate,
+  sys_plot_attributes: PlotAttributesPrintTemplate,
+  sys_plot_egrn_oks: PlotEgrnOksPrintTemplate,
+  sys_plot_egrn_zouit: PlotEgrnZouitPrintTemplate
 };
 
 export const documentPrintTemplates: PrintTemplateOld<LibraryRecord>[] = [rawDocumentData];

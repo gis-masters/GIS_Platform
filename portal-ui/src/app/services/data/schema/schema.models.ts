@@ -328,6 +328,8 @@ export type PropertiesAfterValidation = {
   invalidProperties: unknown[];
 };
 
+export type SchemaValidator = (schema: Schema) => Promise<string[]>;
+
 export function isPropertySchema(obj: unknown): obj is PropertySchema {
   return (
     isObject(obj) &&

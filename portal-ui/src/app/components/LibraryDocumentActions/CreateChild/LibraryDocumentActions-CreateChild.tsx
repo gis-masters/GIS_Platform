@@ -10,7 +10,7 @@ import { communicationService, type DataChangeEventDetail } from '../../../servi
 import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { createLibraryRecord, getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
 import { type Schema } from '../../../services/data/schema/schema.models';
-import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../services/data/schema/utils/applyContentType';
 import { sleep } from '../../../services/util/sleep';
 import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';

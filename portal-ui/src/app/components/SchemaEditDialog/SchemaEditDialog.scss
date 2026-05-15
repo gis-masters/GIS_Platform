@@ -1,0 +1,39 @@
+.SchemaEditDialog-InJsonForm {
+  min-height: 551px;
+
+  & .Form-Content {
+    height: 100%;
+    min-height: 521px;
+
+    & textarea.MuiInput-input {
+      overflow: scroll !important;
+
+      height: 496px !important;
+    }
+  }
+}
+
+.SchemaEditDialog-Messages {
+  padding: 0 20px 12px;
+
+  font-size: 13px;
+}
+
+.SchemaEditDialog-Warning {
+  margin-bottom: 8px;
+
+  color: var(--warning);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.SchemaEditDialog-Error {
+  color: var(--danger);
+}
+
+.SchemaEditDialog-ConfirmWarningList {
+  margin: 8px 0 0;
+  padding-left: 1.25rem;
+}

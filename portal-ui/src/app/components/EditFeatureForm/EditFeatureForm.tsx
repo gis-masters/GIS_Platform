@@ -4,8 +4,8 @@ import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type WfsFeature } from 'src/app/services/geoserver/wfs/wfs.models';
 
-import { convertOldToNewProperty } from '../../services/data/schema/schema.utils';
 import { type EditedField, type OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
+import { convertOldToNewProperty } from '../../services/data/schema/utils/convertOldToNewProperty';
 import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { formatDate } from '../../services/util/date.util';

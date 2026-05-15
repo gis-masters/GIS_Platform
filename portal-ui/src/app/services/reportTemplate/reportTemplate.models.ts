@@ -9,3 +9,9 @@ export type TemplateInfo = TemplateFullInfo;
 export type TemplateCreatePayload = Omit<TemplateCreateDto, 'printFormSchemaOverrides'> & {
   printFormSchemaOverrides: JsonNode | null;
 };
+
+export type TemplateUpdatePatch = Partial<
+  Pick<TemplateCreatePayload, 'name' | 'title' | 'printFormSchemaOverrides'>
+> & {
+  file?: File;
+};

@@ -111,6 +111,26 @@ Then('в списке элементов explorer присутствует {stri
   );
 });
 
+Then('в списке элементов explorer отсутствует {string}', async (itemTitle: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await browser.waitUntil(
+    async () => {
+      await explorerBlock.waitForLoading();
+      const titles = await explorerBlock.getListTitles();
+
+      return !titles.includes(itemTitle);
+    },
+    {
+      timeoutMsg: `Элемент "${itemTitle}" всё ещё отображается в explorer`
+    }
+  );
+});
+
+When('в списке элементов explorer я выбираю элемент с подписью содержащей {string}', async (fragment: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.selectExplorerItemWithSecondaryContaining(fragment);
+});
+
 Then(
   'в библиотеке {string} в папке {string} существует документ {string}',
   async (library: string, folder: string, doc: string) => {

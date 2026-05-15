@@ -1,6 +1,6 @@
 import { schemaClient } from '../../../../src/app/services/data/schema/schema.client';
 import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
-import { convertNewToOldSchema } from '../../../../src/app/services/data/schema/schema.utils';
+import { convertNewToOldSchema } from '../../../../src/app/services/data/schema/utils/convertNewToOldSchema';
 import { requestAsAdmin } from '../requestAs';
 import { getSchema } from './getSchema';
 

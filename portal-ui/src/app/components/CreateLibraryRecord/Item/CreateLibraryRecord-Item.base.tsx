@@ -16,7 +16,7 @@ import { boundMethod } from 'autobind-decorator';
 import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { createLibraryRecord } from '../../../services/data/library/library.service';
 import { type ContentType, type Schema } from '../../../services/data/schema/schema.models';
-import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../services/data/schema/utils/applyContentType';
 import { cleanCalculatedValues } from '../../../services/util/form/formValidation.utils';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';

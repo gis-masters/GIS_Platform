@@ -7,7 +7,7 @@ import { isEqual } from 'lodash';
 import { communicationService } from '../../../../services/communication.service';
 import { type Schema } from '../../../../services/data/schema/schema.models';
 import { schemaService } from '../../../../services/data/schema/schema.service';
-import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../../services/data/schema/utils/applyContentType';
 import { ConnectionsFeaturesToProjectsWidget } from '../../../ConnectionsFeaturesToProjectsWidget/ConnectionsFeaturesToProjectsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeSearchItem } from '../../Adapter/_type/Explorer-Adapter_type_searchItem';

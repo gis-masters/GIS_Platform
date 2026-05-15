@@ -6,7 +6,8 @@ import { PrintMapImageControl } from '../../../../components/PrintMapImageContro
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 import { doFormPrompt } from '../../../answer-modals.service';
 import { type PropertySchema, PropertyType } from '../../../data/schema/schema.models';
-import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
+import { applyView } from '../../../data/schema/utils/applyView';
+import { getReadablePropertyValue } from '../../../data/schema/utils/getReadablePropertyValue';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';

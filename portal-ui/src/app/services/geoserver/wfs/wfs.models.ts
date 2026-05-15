@@ -119,3 +119,15 @@ export interface WfsFeatureCollection extends GeoJSONObject {
   timeStamp: string;
   bbox: [number, number, number, number];
 }
+
+export type WfsLayerIntersectionItem = {
+  feature: WfsFeature;
+  geometryType: string;
+  intersectionArea?: number;
+  intersectionAreaPercent?: number;
+};
+
+export type GetWfsIntersectionsOptions = {
+  skipMaxFeaturesLimit?: boolean;
+  skipAreaComputation?: boolean;
+};

@@ -24,7 +24,8 @@ import {
   PropertyType,
   type Schema
 } from '../../services/data/schema/schema.models';
-import { applyContentType, applyView } from '../../services/data/schema/schema.utils';
+import { applyContentType } from '../../services/data/schema/utils/applyContentType';
+import { applyView } from '../../services/data/schema/utils/applyView';
 import {
   GeometryType,
   type SupportedGeometryType,

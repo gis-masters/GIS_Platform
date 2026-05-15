@@ -1,6 +1,7 @@
 import { type LibraryRecord } from '../../../data/library/library.models';
 import { getLibrary } from '../../../data/library/library.service';
-import { applyContentType, getReadablePropertyValue } from '../../../data/schema/schema.utils';
+import { applyContentType } from '../../../data/schema/utils/applyContentType';
+import { getReadablePropertyValue } from '../../../data/schema/utils/getReadablePropertyValue';
 import { PrintTemplateOld } from '../PrintTemplateOld';
 
 export const rawDocumentData: PrintTemplateOld<LibraryRecord> = new PrintTemplateOld({

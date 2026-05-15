@@ -30,7 +30,7 @@ import { type Basemap, SourceType } from '../data/basemaps/basemaps.models';
 import { defaultOlProjectionCode, type Projection } from '../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../data/projections/projections.service';
 import { type Schema } from '../data/schema/schema.models';
-import { applyView } from '../data/schema/schema.utils';
+import { applyView } from '../data/schema/utils/applyView';
 import { GeometryType, type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
 import { wmsClient } from '../geoserver/wms/wms.client';

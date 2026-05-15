@@ -5,8 +5,7 @@ export const keys: (keyof FlagsList)[] = [
   'openFileDownloadInSameTab',
   'featureExtractPrintAutoMap',
   'selectingFeaturesLimit',
-  'showDocumentRoles',
-  'reportTemplatesInDataManagement'
+  'showDocumentRoles'
 ];
 
 export interface FlagsList {
@@ -17,6 +16,4 @@ export interface FlagsList {
   featureExtractPrintAutoMap: ParsedFeatureFlagValue; // boolean
   selectingFeaturesLimit: ParsedFeatureFlagValue; // number
   showDocumentRoles: ParsedFeatureFlagValue; // boolean
-  /** Раздел "Шаблоны отчётов" в управлении данными (только вместе с правами админа организации) */
-  reportTemplatesInDataManagement: ParsedFeatureFlagValue; // boolean
 }

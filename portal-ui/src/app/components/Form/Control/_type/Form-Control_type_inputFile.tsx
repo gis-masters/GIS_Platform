@@ -6,7 +6,7 @@ import { FileInput } from '../../../FileInput/FileInput';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
 
-const FormControlTypeInputFile: FC<FormControlProps> = ({ className, property, fieldValue, errors, onChange }) => {
+const FormControlTypeInputFile: FC<FormControlProps> = ({ className, property, errors, onChange }) => {
   const { accept } = property as PropertySchemaInputFile;
 
   const handleChange = useCallback(
@@ -19,11 +19,9 @@ const FormControlTypeInputFile: FC<FormControlProps> = ({ className, property, f
     [onChange, property.name]
   );
 
-  const file = fieldValue instanceof File ? fieldValue : null;
-
   return (
     <div className={cnFormControl(null, [className])}>
-      <FileInput accept={accept} buttonCaption={file ? file.name : 'Выбрать файл'} onChange={handleChange} fullWidth />
+      <FileInput accept={accept} buttonCaption={'Выбрать файл'} onChange={handleChange} fullWidth />
       <FormErrors errors={errors} />
     </div>
   );

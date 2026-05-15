@@ -11,7 +11,7 @@ import {
   type Schema,
   type SimpleSchema
 } from '../../../services/data/schema/schema.models';
-import { getFieldRelations } from '../../../services/data/schema/schema.utils';
+import { getFieldRelations } from '../../../services/data/schema/utils/getFieldRelations';
 import { type FieldErrors } from '../../../services/util/form/formValidation.utils';
 import { generateRandomId } from '../../../services/util/randomId';
 import { isRecordStringUnknown } from '../../../services/util/typeGuards/isRecordStringUnknown';

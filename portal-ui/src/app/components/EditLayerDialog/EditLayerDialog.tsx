@@ -15,7 +15,7 @@ import {
   type Schema,
   type SimpleSchema
 } from '../../services/data/schema/schema.models';
-import { applyView } from '../../services/data/schema/schema.utils';
+import { applyView } from '../../services/data/schema/utils/applyView';
 import { buildComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';

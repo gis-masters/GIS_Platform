@@ -8,7 +8,8 @@ import { cloneDeep } from 'lodash';
 
 import { communicationService } from '../../services/communication.service';
 import { type Schema } from '../../services/data/schema/schema.models';
-import { applyContentType, mergeContentTypes } from '../../services/data/schema/schema.utils';
+import { applyContentType } from '../../services/data/schema/utils/applyContentType';
+import { mergeContentTypes } from '../../services/data/schema/utils/mergeContentTypes';
 import { type Task } from '../../services/data/task/task.models';
 import { getTasks, getTaskSchema } from '../../services/data/task/task.service';
 import { type PageOptions, type ValueOf } from '../../services/models';

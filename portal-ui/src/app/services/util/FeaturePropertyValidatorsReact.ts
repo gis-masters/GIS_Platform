@@ -3,7 +3,6 @@ import { isEmpty } from 'validate.js';
 import { Toast } from '../../components/Toast/Toast';
 import { type FiasValue } from '../data/fias/fias.models';
 import { type PropertyOption } from '../data/schema/schema.models';
-import { convertOldToNewProperties } from '../data/schema/schema.utils';
 import {
   type OldPropertySchema,
   type OldPropertySchemaChoice,
@@ -14,6 +13,7 @@ import {
   type PropertyEnumeration,
   ValueType
 } from '../data/schema/schemaOld.models';
+import { convertOldToNewProperties } from '../data/schema/utils/convertOldToNewProperties';
 import { services } from '../services';
 import { validateFieldValue } from './form/formValidation.utils';
 

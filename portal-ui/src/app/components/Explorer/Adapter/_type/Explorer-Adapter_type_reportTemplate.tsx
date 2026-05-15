@@ -52,6 +52,6 @@ export class ExplorerAdapterTypeReportTemplate {
   static getActions(item: ExplorerItemData): ReactNode {
     assertExplorerItemDataTypeReportTemplate(item);
 
-    return <ReportTemplateActions template={item.payload} />;
+    return <ReportTemplateActions key={item.payload.name} template={item.payload} />;
   }
 }

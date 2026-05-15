@@ -17,7 +17,6 @@ class Flags implements FlagsList {
   featureExtractPrintAutoMap: ParsedFeatureFlagValue = '';
   selectingFeaturesLimit: ParsedFeatureFlagValue = '';
   showDocumentRoles: ParsedFeatureFlagValue = '';
-  reportTemplatesInDataManagement: ParsedFeatureFlagValue = '';
 
   private constructor() {
     this.init();

@@ -7,7 +7,7 @@ import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
 import { type Schema } from '../../services/data/schema/schema.models';
-import { applyContentType } from '../../services/data/schema/schema.utils';
+import { applyContentType } from '../../services/data/schema/utils/applyContentType';
 import { type Task } from '../../services/data/task/task.models';
 import { getTask, getTaskSchema } from '../../services/data/task/task.service';
 import { services } from '../../services/services';

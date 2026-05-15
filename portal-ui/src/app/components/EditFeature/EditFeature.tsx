@@ -8,12 +8,10 @@ import { isEqual } from 'lodash';
 
 import { doConfirm } from '../../services/answer-modals.service';
 import { communicationService, type DataChangeEventDetail } from '../../services/communication.service';
-import {
-  applyView,
-  applyViewOld,
-  changeSchemaNamesCaseByFeature,
-  convertNewToOldSchema
-} from '../../services/data/schema/schema.utils';
+import { applyView } from '../../services/data/schema/utils/applyView';
+import { applyViewOld } from '../../services/data/schema/utils/applyViewOld';
+import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/utils/changeSchemaNamesCaseByFeature';
+import { convertNewToOldSchema } from '../../services/data/schema/utils/convertNewToOldSchema';
 import { deleteFeaturesAndEmitEvent } from '../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { GEOMETRY_COORDINATES_FLAT_DEPTH, getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';

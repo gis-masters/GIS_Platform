@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { type Schema } from '../../../services/data/schema/schema.models';
-import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../services/data/schema/utils/applyContentType';
 import { type Task } from '../../../services/data/task/task.models';
 import { updateTask } from '../../../services/data/task/task.service';
 import { getPatch } from '../../../services/util/patch';

@@ -1,6 +1,6 @@
 import { schemaClient } from '../../../../src/app/services/data/schema/schema.client';
 import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
-import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/schema.utils';
+import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/utils/convertOldToNewSchema';
 import { requestAsAdmin } from '../requestAs';
 
 export async function getSchema(schemaName: string): Promise<Schema> {

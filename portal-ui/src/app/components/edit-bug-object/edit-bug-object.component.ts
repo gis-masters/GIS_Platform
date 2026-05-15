@@ -14,8 +14,8 @@ import { debounceTime } from 'rxjs/operators';
 
 import { communicationService } from '../../services/communication.service';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { convertNewToOldSchema } from '../../services/data/schema/schema.utils';
 import { ValueType } from '../../services/data/schema/schemaOld.models';
+import { convertNewToOldSchema } from '../../services/data/schema/utils/convertNewToOldSchema';
 import { initValidation } from '../../services/data/validation/validation.service';
 import { transformFeatureService } from '../../services/geoserver/wfs/transform-feature.service';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';

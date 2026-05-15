@@ -9,7 +9,7 @@ import { isEqual } from 'lodash';
 import { type LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
 import { PropertyType, type Schema } from '../../services/data/schema/schema.models';
-import { applyContentType } from '../../services/data/schema/schema.utils';
+import { applyContentType } from '../../services/data/schema/utils/applyContentType';
 import { Role } from '../../services/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';

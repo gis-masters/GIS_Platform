@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 
 import { type Schema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
+import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/utils/changeSchemaNamesCaseByFeature';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
 

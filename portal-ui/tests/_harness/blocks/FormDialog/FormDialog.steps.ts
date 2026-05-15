@@ -9,6 +9,13 @@ When(
   }
 );
 
+When(
+  'в диалоговом окне формы в поле файла {string} я указываю тестовый файл {string}',
+  async (fieldLabel: string, fileName: string) => {
+    await formDialogBlock.setFileFromTestFiles(fieldLabel, fileName);
+  }
+);
+
 When('в диалоговом окне формы я нажимаю на кнопку {string}', async (title: string) => {
   await formDialogBlock.clickActionButton(title);
 });

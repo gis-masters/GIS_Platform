@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { type Schema } from '../../../services/data/schema/schema.models';
-import { applyView } from '../../../services/data/schema/schema.utils';
+import { applyView } from '../../../services/data/schema/utils/applyView';
 import { extractFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';

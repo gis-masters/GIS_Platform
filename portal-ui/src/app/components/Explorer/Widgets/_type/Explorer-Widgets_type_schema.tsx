@@ -12,7 +12,8 @@ import { CardRowTitle } from '../../../../components/Card/RowTitle/Card-RowTitle
 import { CardValue } from '../../../../components/Card/Value/Card-Value';
 import { Select } from '../../../../components/Select/Select';
 import { type ContentType, type PropertyOption, type Schema } from '../../../../services/data/schema/schema.models';
-import { applyContentType, applyView } from '../../../../services/data/schema/schema.utils';
+import { applyContentType } from '../../../../services/data/schema/utils/applyContentType';
+import { applyView } from '../../../../services/data/schema/utils/applyView';
 import { isLinear, isPoint, isPolygonal } from '../../../../services/geoserver/wfs/wfs.util';
 import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
 import { SchemaProperties } from '../../../SchemaProperties/SchemaProperties';

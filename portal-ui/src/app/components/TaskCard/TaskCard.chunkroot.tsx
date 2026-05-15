@@ -8,7 +8,7 @@ import { type AxiosError } from 'axios';
 
 import { type Schema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { applyContentType } from '../../services/data/schema/schema.utils';
+import { applyContentType } from '../../services/data/schema/utils/applyContentType';
 import { type Task } from '../../services/data/task/task.models';
 import { services } from '../../services/services';
 import { formatDate } from '../../services/util/date.util';

@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { type FC, Fragment } from 'react';
 import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -69,12 +69,12 @@ export const SearchResultList: FC<SearchResultListProps> = observer(
           <List dense>
             {Boolean(features.length) &&
               getNspdFeatureGroups(features).map(({ categoryName, items }) => (
-                <React.Fragment key={categoryName}>
+                <Fragment key={categoryName}>
                   <div className={cnSearch('ListTitle')}>{categoryName}:</div>
                   {items.map((item, i) => (
                     <SearchResultKadListItem key={`${item.id}_${i}`} feature={item} />
                   ))}
-                </React.Fragment>
+                </Fragment>
               ))}
             {addressData &&
               addressData.featureMember &&
