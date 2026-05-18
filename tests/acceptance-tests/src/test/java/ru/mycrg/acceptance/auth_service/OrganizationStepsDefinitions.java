@@ -26,7 +26,6 @@ import ru.mycrg.common_contracts.generated.gis_service.project.ProjectDto;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
@@ -327,6 +326,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             System.out.println("---OrgExistInPool--- " + eMail);
 
             makeExactOrgAsCurrent(eMail);
+            userPool.put(413, orgDto.getOwner());
         } else if (!orgPool.isEmpty() && isPassedEmailRandom) {
             System.out.println("---makeFirstAvailableOrgAsCurrent---");
 
@@ -674,7 +674,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         List<Integer> availableOrgIds = organizationIds.stream()
                                                        .filter(id -> id > 0)
                                                        .filter(id -> !id.equals(orgId))
-                                                       .collect(Collectors.toList());
+                                                       .toList();
 
         if (!availableOrgIds.isEmpty()) {
             Integer anotherOrgId = availableOrgIds.getFirst();

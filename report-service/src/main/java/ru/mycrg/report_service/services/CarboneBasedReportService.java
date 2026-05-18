@@ -62,7 +62,7 @@ public class CarboneBasedReportService implements IReportService {
     public UUID makeReport(ReportMainDto dto) {
         try {
             // 1 - Убедиться что шаблон есть у этого сервиса
-            Template currentTemplate = templateService.getTemplateByName(dto.getTemplateName());
+            Template currentTemplate = templateService.getTemplateEntityByNameInOrg(dto.getTemplateName());
             log.debug("Запрошен отчёт по шаблону {} ->  {}", currentTemplate.getName(), currentTemplate.getName());
             File defaultTemplate = fileService.throwIfNotExist(currentTemplate.getPath());
 

@@ -1,31 +1,32 @@
 package ru.mycrg.report_service.services.dao.migrations;
 
- 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.report_service.TemplateCreateDto;
-import ru.mycrg.report_service.entity.Template;
 import ru.mycrg.report_service.services.FileService;
 import ru.mycrg.report_service.services.TemplateService;
 import tools.jackson.databind.JsonNode;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static java.time.LocalDateTime.now;
 import static ru.mycrg.http_client.JsonConverter.fromJson;
 import static ru.mycrg.http_client.JsonConverter.readTreeFromFile;
 
 @Service
 public class ReportMigrationHandler {
 
-    private final Logger log = LoggerFactory.getLogger(ReportMigrationHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ReportMigrationHandler.class);
 
-    private final String DEFAULT_SYSTEM_TEMPLATES_PATH = "report-service/src/main/resources/system_templates";
+    private static final String DEFAULT_SYSTEM_TEMPLATES_PATH = "report-service/src/main/resources/system_templates";
 
     private final FileService fileService;
     private final TemplateService templateService;
@@ -72,13 +73,12 @@ public class ReportMigrationHandler {
                     log.debug("Прочитан шаблон: {}", templateName);
                 } catch (Exception e) {
                     log.error("Ошибка чтения файла {}: {}", file.getName(), e.getMessage());
+
+                    throw e;
                 }
             });
 
-            Set<String> existNamesSet = templateService.getSystemTemplates()
-                                                       .stream()
-                                                       .map(Template::getName)
-                                                       .collect(Collectors.toSet());
+            Set<String> existNamesSet = templateService.getSystemTemplateNames();
 
             divideAndConquer(systemSchemas, existNamesSet);
 
@@ -154,10 +154,7 @@ public class ReportMigrationHandler {
                 : templateCreateDto.getTitle();
         templateCreateDto.setTitle(title);
 
-        Template template = new Template(templateCreateDto, path, "SYSTEM", now(), true);
-        template.setHidden(hidden);
-
-        templateService.save(template);
+        templateService.createSystemTemplate(templateCreateDto, path, hidden);
 
         log.debug("Вставлена запись в БД для шаблона: {}", templateCreateDto.getName());
     }

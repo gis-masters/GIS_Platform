@@ -45,11 +45,15 @@ public class Template {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "organization_id")
+    private Long organizationId;
+
     public Template() {
     }
 
     public Template(Long id, String title, String name, String path, JsonNode printFormSchemaOverrides,
-                    String createdBy, LocalDateTime createdAt, Boolean isSystem, Boolean hidden, String type) {
+                    String createdBy, LocalDateTime createdAt, Boolean isSystem, Boolean hidden, String type,
+                    Long organizationId) {
         this.id = id;
         this.title = title;
         this.name = name;
@@ -60,6 +64,7 @@ public class Template {
         this.isSystem = isSystem;
         this.hidden = hidden;
         this.type = type;
+        this.organizationId = organizationId;
     }
 
     public Template(TemplateCreateDto dto, String path, String createdBy, LocalDateTime createdAt, boolean isSystem) {
@@ -158,5 +163,13 @@ public class Template {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 }

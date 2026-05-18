@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.common_contracts.generated.report_service.TemplateCreateDto;
 import ru.mycrg.common_contracts.generated.report_service.TemplateFullInfo;
 import ru.mycrg.common_contracts.generated.report_service.TemplateShortInfo;
-import ru.mycrg.common_contracts.generated.report_service.TemplateShortProjection;
-import ru.mycrg.report_service.entity.Template;
-import ru.mycrg.report_service.exceptions.BadRequestException;
-import ru.mycrg.report_service.services.FileService;
+import ru.mycrg.report_service.dto.TemplateFileInfo;
 import ru.mycrg.report_service.services.TemplateService;
 
 import java.io.IOException;
@@ -25,93 +22,72 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
-import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
-import static ru.mycrg.report_service.mappers.TemplateMapper.mapToTemplateFullInfo;
 import static ru.mycrg.report_service.services.DataServiceSpeaker.FILE_MEDIA_TYPE;
 
 @RestController
 @RequestMapping(value = "/templates")
 public class TemplateCrudController {
 
-    private final Logger log = LoggerFactory.getLogger(TemplateCrudController.class);
+    private static final Logger log = LoggerFactory.getLogger(TemplateCrudController.class);
 
     private final TemplateService templateService;
-    private final FileService fileService;
 
-    public TemplateCrudController(TemplateService templateService, FileService fileService) {
+    public TemplateCrudController(TemplateService templateService) {
         this.templateService = templateService;
-        this.fileService = fileService;
     }
 
     @GetMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<TemplateFullInfo>> getAllTemplatesFullInfo() {
         log.debug("Попросили вернуть все шаблоны печати");
-        List<TemplateFullInfo> subAnswer = templateService.getAll();
+        List<TemplateFullInfo> templates = templateService.getAllFullInfoByOrgId();
 
-        log.debug("Шаблонов нашли: {}", subAnswer.size());
+        log.debug("Шаблонов нашли: {}", templates.size());
 
-        return ResponseEntity.ok(subAnswer);
-    }
-
-    @GetMapping("/short")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<TemplateShortProjection>> getAllTemplatesShortData() {
-        List<TemplateShortProjection> subAnswer = templateService.getAllShort();
-
-        return ResponseEntity.ok(subAnswer);
+        return ResponseEntity.ok(templates);
     }
 
     @GetMapping("/{name}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<TemplateFullInfo> getTemplateByName(@PathVariable String name) {
-        Template template = templateService.getTemplateByName(name);
+        TemplateFullInfo template = templateService.getFullInfoByName(name);
 
-        return ResponseEntity.ok(mapToTemplateFullInfo(template));
+        return ResponseEntity.ok(template);
     }
 
     @GetMapping("/{name}/download")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Resource> downloadTemplate(@PathVariable String name,
                                                      HttpServletRequest request) {
-        Template template = templateService.getTemplateByName(name);
+        TemplateFileInfo templateFile = templateService.getTemplateFileByName(name);
+        Resource resource = templateFile.resource();
 
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
-                                                                  .filename(template.getName(), UTF_8)
+                                                                  .filename(templateFile.name(), UTF_8)
                                                                   .build();
-
-        Resource resource;
-        String size;
-        try {
-            resource = fileService.loadFileByPath(template.getPath());
-
-            size = String.valueOf(resource.contentLength());
-        } catch (Exception e) {
-            throw new BadRequestException("При скачивании шаблона печати возникла ошибка: " + e.getMessage());
-        }
 
         return ResponseEntity.ok()
                              .contentType(MediaType.parseMediaType(defineFileContentType(request, resource)))
                              .header(CONTENT_DISPOSITION, contentDisposition.toString())
-                             .header(CONTENT_LENGTH, size)
+                             .contentLength(templateFile.contentLength())
                              .body(resource);
     }
 
-    @PostMapping()
+    @PostMapping
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<TemplateShortInfo> createNewTemplate(@Valid @RequestPart("dto") TemplateCreateDto dto,
                                                                @RequestPart("file") MultipartFile file) {
         log.debug("Попытка сохранения шаблона {}", dto);
-        TemplateShortInfo createdTemplateId = templateService.createTemplate(dto, file);
+        TemplateShortInfo createdTemplate = templateService.createTemplate(dto, file);
 
-        return ResponseEntity.ok(createdTemplateId);
+        return ResponseEntity.ok(createdTemplate);
     }
 
     @DeleteMapping("/{name}")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> deleteTemplateById(@PathVariable String name) {
+    public ResponseEntity<Void> deleteTemplateByName(@PathVariable String name) {
         log.debug("Попросили удалить шаблон по имени = {}", name);
 
         templateService.deleteTemplate(name);
