@@ -12,10 +12,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.controller.BaseController;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -48,8 +45,6 @@ public class FileDownloadController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(FileDownloadController.class);
 
-    private static final String FILENAME_HEADER = "filename";
-
     private final FileRepository fileRepository;
     private final OrgSettingsKeeper orgSettingsKeeper;
     private final FileStorageService fileStorageService;
@@ -68,12 +63,13 @@ public class FileDownloadController extends BaseController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> downloadFile(@PathVariable UUID id,
+                                                 @RequestParam(required = false) String filename,
                                                  HttpServletRequest request) {
         File file = getFileOrThrow(id);
 
         try {
-            String downloadFilename = defineDownloadFilename(request.getHeader(FILENAME_HEADER),
-                                                             file);
+            String downloadFilename = defineDownloadFilename(filename, file);
+
             ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
                                                                       .filename(downloadFilename, UTF_8)
                                                                       .build();
