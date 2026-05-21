@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { runInAction } from 'mobx';
+import { observer, useLocalObservable } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import {
   CancelOutlined,
@@ -10,7 +10,6 @@ import {
   SaveOutlined
 } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
 import { type CrgLayer, type CrgLayersGroup } from '../../../services/gis/layers/layers.models';
@@ -47,218 +46,226 @@ interface LayersSidebarToolbarProps {
   onSave(): void;
 }
 
-@observer
-export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
-  @observable private createGroupDialogOpen = false;
-  @observable private addLayerDialogOpen = false;
-  @observable private isLayersFilterActive = false;
+type LayersSidebarToolbarState = {
+  createGroupDialogOpen: boolean;
+  addLayerDialogOpen: boolean;
+  layersFilterActive: boolean;
+  openCreateGroupDialog(): void;
+  closeCreateGroupDialog(): void;
+  openAddLayerDialog(): void;
+  closeAddLayerDialog(): void;
+  turnOnLayersFilter(): void;
+  turnOffLayersFilter(): void;
+};
 
-  constructor(props: LayersSidebarToolbarProps) {
-    super(props);
-    makeObservable(this);
+function getHasChangedLayersIgnoringEnabledAndExpanded(): boolean {
+  const { groupsToCreate, groupsToDelete, groupsToPatch, layersToCreate, layersToDelete, layersToPatch } =
+    currentProject.queriesQueue;
+
+  if (groupsToCreate.length || groupsToDelete.length || layersToCreate.length || layersToDelete.length) {
+    return true;
   }
 
-  componentDidMount(): void {
-    currentProject.setFilter('');
-  }
+  return (
+    groupsToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled' && key !== 'expanded')) ||
+    layersToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled'))
+  );
+}
 
-  render() {
-    const { editMode, above } = this.props;
-    const hasChangedLayers: boolean = currentProject.canBeEdited
-      ? Boolean(currentProject.queriesQueueLength)
-      : this.hasChangedLayersIgnoringEnabledAndExpanded;
+export const LayersSidebarToolbar = observer(function LayersSidebarToolbar({
+  above,
+  editMode,
+  onChangeMode,
+  onSave
+}: LayersSidebarToolbarProps) {
+  const onChangeModeRef = useRef(onChangeMode);
+  onChangeModeRef.current = onChangeMode;
 
-    return (
-      <>
-        <div className={cnLayersSidebarToolbar({ above })}>
-          {hasChangedLayers && !this.isLayersFilterActive && (
-            <LayersSidebarToolbarLeft>
-              <Tooltip
-                title={
-                  'Сохранить список слоёв для всех пользователей' +
-                  (currentProject.canBeEdited ? '' : ' (недостаточно прав)')
-                }
-              >
-                <span>
-                  <IconButton
-                    className={cnLayersSidebarSaveBtn()}
-                    onClick={this.save}
-                    disabled={
-                      !currentProject.canBeEdited ||
-                      !mapStore.allowedActions.includes(MapAction.LAYER_SIDEBAR_LEFT_TOOLS)
-                    }
-                    color='primary'
-                  >
-                    <SaveOutlined />
-                  </IconButton>
-                </span>
-              </Tooltip>
+  const state = useLocalObservable<LayersSidebarToolbarState>(() => ({
+    createGroupDialogOpen: false,
+    addLayerDialogOpen: false,
+    layersFilterActive: false,
 
-              <Tooltip title='Отменить изменения'>
-                <span>
-                  <IconButton
-                    className={cnLayersSidebarCancelBtn()}
-                    onClick={this.cancel}
-                    color='secondary'
-                    disabled={!mapStore.allowedActions.includes(MapAction.LAYER_SIDEBAR_LEFT_TOOLS)}
-                  >
-                    <CancelOutlined />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </LayersSidebarToolbarLeft>
-          )}
+    openCreateGroupDialog() {
+      this.createGroupDialogOpen = true;
+    },
 
-          {this.isLayersFilterActive && <LayersFilter turnOffLayersFilter={this.turnOffLayersFilter} />}
+    closeCreateGroupDialog() {
+      this.createGroupDialogOpen = false;
+    },
 
-          {!this.isLayersFilterActive && (
-            <LayersSidebarToolbarRight>
-              <Tooltip title='Фильтрация слоёв'>
-                <IconButton
-                  className={cnLayersSidebarFilterBtn()}
-                  onClick={this.turnOnLayersFilter}
-                  disabled={!mapStore.allowedActions.includes(MapAction.LAYER_FILTRATION)}
-                >
-                  <FilterAltOutlined />
-                </IconButton>
-              </Tooltip>
+    openAddLayerDialog() {
+      this.addLayerDialogOpen = true;
+    },
 
-              {editMode && (
-                <Tooltip title='Создать группу'>
-                  <IconButton
-                    onClick={this.openCreateGroupDialog}
-                    disabled={!mapStore.allowedActions.includes(MapAction.CREATE_LAYER_GROUP)}
-                  >
-                    {this.createGroupDialogOpen ? <CreateNewFolder /> : <CreateNewFolderOutlined />}
-                  </IconButton>
-                </Tooltip>
-              )}
+    closeAddLayerDialog() {
+      this.addLayerDialogOpen = false;
+    },
 
-              <Tooltip title='Подключить слой'>
-                <IconButton
-                  className={cnLayersSidebarAddLayerBtn()}
-                  onClick={this.openAddLayerDialog}
-                  disabled={!mapStore.allowedActions.includes(MapAction.ADD_LAYER)}
-                >
-                  {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
-                </IconButton>
-              </Tooltip>
+    turnOnLayersFilter() {
+      this.layersFilterActive = true;
+      onChangeModeRef.current(false);
+    },
 
-              {organizationSettings.editProjectLayer && (
-                <Tooltip title='Настроить слои проекта'>
-                  <IconButton
-                    className={cnLayersSidebarEditBtn()}
-                    onClick={this.handleEditModeClick}
-                    disabled={!mapStore.allowedActions.includes(MapAction.EDIT_PROJECT_LAYER)}
-                  >
-                    {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
-                  </IconButton>
-                </Tooltip>
-              )}
-            </LayersSidebarToolbarRight>
-          )}
-        </div>
-
-        <LayersGroupEditDialog
-          open={this.createGroupDialogOpen}
-          onClose={this.closeCreateGroupDialog}
-          onEdit={this.createGroup}
-          create
-        />
-
-        <AddLayerDialog open={this.addLayerDialogOpen} onClose={this.closeAddLayerDialog} onAdd={this.addLayer} />
-      </>
-    );
-  }
-
-  @computed
-  private get hasChangedLayersIgnoringEnabledAndExpanded(): boolean {
-    const { groupsToCreate, groupsToDelete, groupsToPatch, layersToCreate, layersToDelete, layersToPatch } =
-      currentProject.queriesQueue;
-
-    if (groupsToCreate.length || groupsToDelete.length || layersToCreate.length || layersToDelete.length) {
-      return true;
+    turnOffLayersFilter() {
+      this.layersFilterActive = false;
+      currentProject.setFilter('');
     }
+  }));
 
-    return (
-      groupsToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled' && key !== 'expanded')) ||
-      layersToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled'))
-    );
-  }
+  const handleEditModeClick = useCallback(() => {
+    onChangeMode(!editMode);
+  }, [editMode, onChangeMode]);
 
-  @action.bound
-  private turnOnLayersFilter() {
-    this.isLayersFilterActive = true;
-    this.props.onChangeMode(false);
-  }
+  const save = useCallback(() => {
+    onSave();
+  }, [onSave]);
 
-  @action.bound
-  private turnOffLayersFilter() {
-    this.isLayersFilterActive = false;
-    currentProject.setFilter('');
-  }
+  const cancel = useCallback(() => {
+    runInAction(() => {
+      if (currentProject.queriesQueueLength) {
+        currentProject.groups = cloneDeep(currentProject.primalGroups);
+        currentProject.layers = cloneDeep(currentProject.primalLayers);
+      }
 
-  @action.bound
-  private openCreateGroupDialog() {
-    this.createGroupDialogOpen = true;
-  }
+      onChangeMode(false);
+    });
+  }, [onChangeMode]);
 
-  @action.bound
-  private closeCreateGroupDialog() {
-    this.createGroupDialogOpen = false;
-  }
-
-  @action.bound
-  private openAddLayerDialog() {
-    this.addLayerDialogOpen = true;
-  }
-
-  @action.bound
-  private closeAddLayerDialog() {
-    this.addLayerDialogOpen = false;
-  }
-
-  @action.bound
-  private async addLayer(layer: CrgLayer) {
-    currentProject.layers.splice(0, 0, layer);
+  const addLayer = useCallback(async (layer: CrgLayer) => {
+    runInAction(() => {
+      currentProject.layers.splice(0, 0, layer);
+    });
 
     await focusToLayer(layer);
-  }
+  }, []);
 
-  @action.bound
-  private createGroup(title: string) {
-    const newGroup: CrgLayersGroup = {
-      id: projectsService.generateNextGroupId(),
-      title: title,
-      enabled: true,
-      expanded: true,
-      transparency: 100,
-      position: -1
-    };
+  const createGroup = useCallback(
+    (title: string) => {
+      runInAction(() => {
+        const newGroup: CrgLayersGroup = {
+          id: projectsService.generateNextGroupId(),
+          title,
+          enabled: true,
+          expanded: true,
+          transparency: 100,
+          position: -1
+        };
 
-    currentProject.groups.splice(0, 0, newGroup);
+        currentProject.groups.splice(0, 0, newGroup);
+      });
 
-    this.closeCreateGroupDialog();
-  }
+      state.closeCreateGroupDialog();
+    },
+    [state]
+  );
 
-  @boundMethod
-  private handleEditModeClick() {
-    const { editMode, onChangeMode } = this.props;
-    onChangeMode(!editMode);
-  }
+  useEffect(() => {
+    currentProject.setFilter('');
+  }, []);
 
-  @boundMethod
-  private save() {
-    this.props.onSave();
-  }
+  const hasChangedLayers: boolean = currentProject.canBeEdited
+    ? Boolean(currentProject.queriesQueueLength)
+    : getHasChangedLayersIgnoringEnabledAndExpanded();
 
-  @action.bound
-  private cancel() {
-    if (currentProject.queriesQueueLength) {
-      currentProject.groups = cloneDeep(currentProject.primalGroups);
-      currentProject.layers = cloneDeep(currentProject.primalLayers);
-    }
+  return (
+    <>
+      <div className={cnLayersSidebarToolbar({ above })}>
+        {hasChangedLayers && !state.layersFilterActive && (
+          <LayersSidebarToolbarLeft>
+            <Tooltip
+              title={
+                'Сохранить список слоёв для всех пользователей' +
+                (currentProject.canBeEdited ? '' : ' (недостаточно прав)')
+              }
+            >
+              <span>
+                <IconButton
+                  className={cnLayersSidebarSaveBtn()}
+                  onClick={save}
+                  disabled={
+                    !currentProject.canBeEdited || !mapStore.allowedActions.includes(MapAction.LAYER_SIDEBAR_LEFT_TOOLS)
+                  }
+                  color='primary'
+                >
+                  <SaveOutlined />
+                </IconButton>
+              </span>
+            </Tooltip>
 
-    this.props.onChangeMode(false);
-  }
-}
+            <Tooltip title='Отменить изменения'>
+              <span>
+                <IconButton
+                  className={cnLayersSidebarCancelBtn()}
+                  onClick={cancel}
+                  color='secondary'
+                  disabled={!mapStore.allowedActions.includes(MapAction.LAYER_SIDEBAR_LEFT_TOOLS)}
+                >
+                  <CancelOutlined />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </LayersSidebarToolbarLeft>
+        )}
+
+        {state.layersFilterActive && <LayersFilter turnOffLayersFilter={state.turnOffLayersFilter} />}
+
+        {!state.layersFilterActive && (
+          <LayersSidebarToolbarRight>
+            <Tooltip title='Фильтрация слоёв'>
+              <IconButton
+                className={cnLayersSidebarFilterBtn()}
+                onClick={state.turnOnLayersFilter}
+                disabled={!mapStore.allowedActions.includes(MapAction.LAYER_FILTRATION)}
+              >
+                <FilterAltOutlined />
+              </IconButton>
+            </Tooltip>
+
+            {editMode && (
+              <Tooltip title='Создать группу'>
+                <IconButton
+                  onClick={state.openCreateGroupDialog}
+                  disabled={!mapStore.allowedActions.includes(MapAction.CREATE_LAYER_GROUP)}
+                >
+                  {state.createGroupDialogOpen ? <CreateNewFolder /> : <CreateNewFolderOutlined />}
+                </IconButton>
+              </Tooltip>
+            )}
+
+            <Tooltip title='Подключить слой'>
+              <IconButton
+                className={cnLayersSidebarAddLayerBtn()}
+                onClick={state.openAddLayerDialog}
+                disabled={!mapStore.allowedActions.includes(MapAction.ADD_LAYER)}
+              >
+                {state.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
+              </IconButton>
+            </Tooltip>
+
+            {organizationSettings.editProjectLayer && (
+              <Tooltip title='Настроить слои проекта'>
+                <IconButton
+                  className={cnLayersSidebarEditBtn()}
+                  onClick={handleEditModeClick}
+                  disabled={!mapStore.allowedActions.includes(MapAction.EDIT_PROJECT_LAYER)}
+                >
+                  {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
+                </IconButton>
+              </Tooltip>
+            )}
+          </LayersSidebarToolbarRight>
+        )}
+      </div>
+
+      <LayersGroupEditDialog
+        open={state.createGroupDialogOpen}
+        onClose={state.closeCreateGroupDialog}
+        onEdit={createGroup}
+        create
+      />
+
+      <AddLayerDialog open={state.addLayerDialogOpen} onClose={state.closeAddLayerDialog} onAdd={addLayer} />
+    </>
+  );
+});

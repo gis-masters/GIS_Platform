@@ -47,7 +47,7 @@ export abstract class PrintTemplate<T> {
     });
 
     if (fileName) {
-      await downloadByUrl(getFileDownloadUrl(fileId), fileName);
+      await downloadByUrl(getFileDownloadUrl(fileId, fileName), fileName);
     }
 
     return fileId;

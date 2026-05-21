@@ -8,24 +8,26 @@ import { PropertyType } from '../../../data/schema/schema.models';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../../gis/layers/layers.models';
 import { FeaturePrintTemplate } from '../../baseTemplates/FeaturePrintTemplate';
-import { getOksIntersectionsForPlotPrint } from '../../helpers/getOksIntersectionsForPlotPrint';
+import { enrichFzIntersectionsWithReadableCodes } from '../../helpers/enrichFzIntersectionsWithReadableCodes';
+import { getFunctionalZonesIntersectionsForPlotPrint } from '../../helpers/getFunctionalZonesIntersectionsForPlotPrint';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
 import {
   type CreateReportRequest,
-  type IntersectionPrintItem,
+  type FzIntersectionPrintItem,
   isOutputFormat,
   type PrintPreparedData
 } from '../../report.models';
 
-type PlotEgrnOksPrintTemplateData = {
+type PlotFzPrintTemplateData = {
   title: string;
   map: string;
   dataDate: string;
   feature: WfsFeature;
-  oks: IntersectionPrintItem[];
+  fz: FzIntersectionPrintItem[];
 };
 
-export class PlotEgrnOksPrintTemplate extends FeaturePrintTemplate {
+/** Печать по участку: пересечения с функциональными зонами (`sys_plot_fz`). */
+export class PlotFzPrintTemplate extends FeaturePrintTemplate {
   override async getData(feature: WfsFeature): Promise<PrintPreparedData | void> {
     const schemaWithAppliedView = await this.getLayerSchemaWithAppliedView(feature);
     const { title: featureTitle } = getFeaturesListItemTitle(feature, schemaWithAppliedView);
@@ -42,15 +44,15 @@ export class PlotEgrnOksPrintTemplate extends FeaturePrintTemplate {
       return;
     }
 
-    const oksResult = await getOksIntersectionsForPlotPrint(feature, sourceLayer);
+    const fzResult = await getFunctionalZonesIntersectionsForPlotPrint(feature, sourceLayer);
 
-    if (!oksResult.ok) {
-      Toast.warn(oksResult.message);
+    if (!fzResult.ok) {
+      Toast.warn(fzResult.message);
 
       return;
     }
 
-    const oks = oksResult.items;
+    const fzEnriched: FzIntersectionPrintItem[] = await enrichFzIntersectionsWithReadableCodes(fzResult.items);
 
     const { formValue: mapDialogResult, extra } = await doFormPrompt<{
       map: string;
@@ -85,13 +87,15 @@ export class PlotEgrnOksPrintTemplate extends FeaturePrintTemplate {
 
     const dataDate = await resolvePlotDataDateFromSourceDoc(feature);
 
-    const templateData: PlotEgrnOksPrintTemplateData = {
+    const templateData: PlotFzPrintTemplateData = {
       title: featureTitle,
       map: mapDialogResult.map,
       dataDate,
       feature,
-      oks
+      fz: fzEnriched
     };
+
+    console.log('templateData', templateData); // eslint-disable-line no-console -- не забыть удалить
 
     return {
       outputFormat,

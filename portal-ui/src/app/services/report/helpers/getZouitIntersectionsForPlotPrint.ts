@@ -1,24 +1,19 @@
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getWfsIntersectionsForFeature } from '../../geoserver/wfs/wfs.service';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
-import { type OksIntersectionPrintItem } from './oksIntersectionPrint.models';
+import { type IntersectionPrintItem } from '../report.models';
 import { resolveZouitVectorLayerInProject } from './resolveZouitVectorLayerInProject';
 
 export type GetZouitIntersectionsForPlotPrintResult =
-  | { ok: true; items: OksIntersectionPrintItem[] }
+  | { ok: true; items: IntersectionPrintItem[] }
   | { ok: false; message: string };
-
-export type GetZouitIntersectionsForPlotPrintOptions = {
-  skipAreaComputation?: boolean;
-};
 
 /**
  * Пересечения объекта участка со слоем ЗОУИТ из проекта (слой может быть выключен в легенде).
  */
 export async function getZouitIntersectionsForPlotPrint(
   feature: WfsFeature,
-  sourceLayer: CrgVectorLayer,
-  options?: GetZouitIntersectionsForPlotPrintOptions
+  sourceLayer: CrgVectorLayer
 ): Promise<GetZouitIntersectionsForPlotPrintResult> {
   const zouitResolve = resolveZouitVectorLayerInProject();
 
@@ -28,11 +23,10 @@ export async function getZouitIntersectionsForPlotPrint(
 
   try {
     const wfsItems = await getWfsIntersectionsForFeature(feature, sourceLayer, zouitResolve.layer, {
-      skipMaxFeaturesLimit: true,
-      skipAreaComputation: options?.skipAreaComputation ?? false
+      skipMaxFeaturesLimit: true
     });
 
-    const items: OksIntersectionPrintItem[] = wfsItems.map(item => ({
+    const items: IntersectionPrintItem[] = wfsItems.map(item => ({
       layer: zouitResolve.layer,
       type: item.geometryType,
       feature: item.feature,

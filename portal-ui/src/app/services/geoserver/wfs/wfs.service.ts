@@ -402,13 +402,16 @@ export async function getWfsIntersectionsForFeature(
     const geometryType = f.geometry?.type ?? 'unknown';
     const base: WfsLayerIntersectionItem = { feature: f, geometryType };
 
-    if (!options?.skipAreaComputation && sourceIsArealFeature && isArealWfsGeometry(f.geometry)) {
+    if (sourceIsArealFeature && isArealWfsGeometry(f.geometry)) {
       const { intersectionArea, intersectionAreaPercent } = await computeArealOverlap(
         sourceFeature,
         sourceLayer,
         f,
         targetLayer
       );
+      if (intersectionArea === 0) {
+        continue;
+      }
       base.intersectionArea = intersectionArea;
       base.intersectionAreaPercent = intersectionAreaPercent;
     }

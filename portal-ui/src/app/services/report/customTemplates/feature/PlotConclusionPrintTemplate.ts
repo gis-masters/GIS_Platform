@@ -9,11 +9,18 @@ import { PropertyType } from '../../../data/schema/schema.models';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../../gis/layers/layers.models';
 import { FeaturePrintTemplate } from '../../baseTemplates/FeaturePrintTemplate';
+import { enrichFzIntersectionsWithReadableCodes } from '../../helpers/enrichFzIntersectionsWithReadableCodes';
+import { getFunctionalZonesIntersectionsForPlotPrint } from '../../helpers/getFunctionalZonesIntersectionsForPlotPrint';
 import { getOksIntersectionsForPlotPrint } from '../../helpers/getOksIntersectionsForPlotPrint';
 import { getZouitIntersectionsForPlotPrint } from '../../helpers/getZouitIntersectionsForPlotPrint';
-import { type OksIntersectionPrintItem } from '../../helpers/oksIntersectionPrint.models';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
-import { type CreateReportRequest, isOutputFormat, type PrintPreparedData } from '../../report.models';
+import {
+  type CreateReportRequest,
+  type FzIntersectionPrintItem,
+  type IntersectionPrintItem,
+  isOutputFormat,
+  type PrintPreparedData
+} from '../../report.models';
 import { buildCoordinatesList, type PrintableCoordinatesChunk } from '../../utils/buildCoordinatesList';
 import { getCadastralQuarter } from '../../utils/getCadastralQuarter';
 
@@ -24,8 +31,9 @@ type PlotConclusionPrintTemplateData = {
   dataDate: string;
   cadastralQuarter?: string | null;
   feature: WfsFeature;
-  oks: OksIntersectionPrintItem[];
-  zouit: OksIntersectionPrintItem[];
+  oks: IntersectionPrintItem[];
+  zouit: IntersectionPrintItem[];
+  fz: FzIntersectionPrintItem[];
   showCoordinates: boolean;
   coordinatesList?: PrintableCoordinatesChunk[];
 };
@@ -49,9 +57,10 @@ export class PlotConclusionPrintTemplate extends FeaturePrintTemplate {
       return;
     }
 
-    const [oksResult, zouitResult] = await Promise.all([
-      getOksIntersectionsForPlotPrint(feature, sourceLayer, { skipAreaComputation: true }),
-      getZouitIntersectionsForPlotPrint(feature, sourceLayer)
+    const [oksResult, zouitResult, fzResult] = await Promise.all([
+      getOksIntersectionsForPlotPrint(feature, sourceLayer),
+      getZouitIntersectionsForPlotPrint(feature, sourceLayer),
+      getFunctionalZonesIntersectionsForPlotPrint(feature, sourceLayer)
     ]);
 
     if (!oksResult.ok) {
@@ -66,8 +75,15 @@ export class PlotConclusionPrintTemplate extends FeaturePrintTemplate {
       return;
     }
 
+    if (!fzResult.ok) {
+      Toast.warn(fzResult.message);
+
+      return;
+    }
+
     const oks = oksResult.items;
     const zouit = zouitResult.items;
+    const fz = await enrichFzIntersectionsWithReadableCodes(fzResult.items);
 
     const { formValue: mapDialogResult, extra } = await doFormPrompt<{
       map: string;
@@ -124,6 +140,7 @@ export class PlotConclusionPrintTemplate extends FeaturePrintTemplate {
       feature,
       oks,
       zouit,
+      fz,
       showCoordinates: mapDialogResult.showCoordinates,
       ...(mapDialogResult.showCoordinates ? { coordinatesList: buildCoordinatesList(feature.geometry) } : {})
     };

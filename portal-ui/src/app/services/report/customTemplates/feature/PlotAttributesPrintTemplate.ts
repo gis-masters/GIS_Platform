@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
 import { PrintFormatSubmitButton } from '../../../../components/PrintFormatSubmitButton/PrintFormatSubmitButton';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
@@ -14,10 +12,11 @@ import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../../gis/layers/layers.models';
 import { FeaturePrintTemplate } from '../../baseTemplates/FeaturePrintTemplate';
 import { getOksIntersectionsForPlotPrint } from '../../helpers/getOksIntersectionsForPlotPrint';
-import { type OksIntersectionPrintItem } from '../../helpers/oksIntersectionPrint.models';
+import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
 import {
   type CreateReportRequest,
   type FeatureTemplateData,
+  type IntersectionPrintItem,
   isOutputFormat,
   type PrintPreparedData
 } from '../../report.models';
@@ -25,8 +24,9 @@ import { buildCoordinatesList } from '../../utils/buildCoordinatesList';
 import { getCadastralQuarter } from '../../utils/getCadastralQuarter';
 import { getFeatureSize } from '../../utils/getFeatureSize';
 
-type PlotAttributesPrintTemplateData = FeatureTemplateData & {
-  oks: OksIntersectionPrintItem[];
+type PlotAttributesPrintTemplateData = Omit<FeatureTemplateData, 'currentDate'> & {
+  dataDate: string;
+  oks: IntersectionPrintItem[];
   cadastralQuarter?: string | null;
   showCoordinates: boolean;
 };
@@ -50,9 +50,7 @@ export class PlotAttributesPrintTemplate extends FeaturePrintTemplate {
       return;
     }
 
-    const oksResult = await getOksIntersectionsForPlotPrint(feature, sourceLayer, {
-      skipAreaComputation: true
-    });
+    const oksResult = await getOksIntersectionsForPlotPrint(feature, sourceLayer);
 
     if (!oksResult.ok) {
       Toast.warn(oksResult.message);
@@ -126,10 +124,12 @@ export class PlotAttributesPrintTemplate extends FeaturePrintTemplate {
         units: projection ? getProjectionUnit(projection.srtext) : undefined
       });
 
+    const dataDate = await resolvePlotDataDateFromSourceDoc(feature);
+
     const templateData: PlotAttributesPrintTemplateData = {
       title: featureTitle,
       map: mapDialogResult.map,
-      currentDate: moment().format('LL'),
+      dataDate,
       crs: projection?.title || layer.nativeCRS,
       size,
       attributes,

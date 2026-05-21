@@ -48,8 +48,14 @@ class FilesClient extends Client {
     return `${this.getProjectsUrl()}/find-related-to-file-layers`;
   }
 
-  getFileDownloadUrl(id: string): string {
-    return `${this.getFileUrl(id)}/download`;
+  getFileDownloadUrl(id: string, filenameHint?: string): string {
+    const base = `${this.getFileUrl(id)}/download`;
+
+    if (!filenameHint) {
+      return base;
+    }
+
+    return `${base}?filename=${encodeURIComponent(filenameHint)}`;
   }
 
   getZipDownloadUrl(id: string): string {

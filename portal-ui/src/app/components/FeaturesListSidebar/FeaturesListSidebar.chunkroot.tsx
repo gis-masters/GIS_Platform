@@ -1,4 +1,4 @@
-import React, { Component, type PointerEvent, type SyntheticEvent } from 'react';
+import React, { Component, type SyntheticEvent } from 'react';
 import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tab, Tabs } from '@mui/material';
@@ -84,6 +84,7 @@ export default class FeaturesListSidebar extends Component {
                   <TabInner>
                     <TabTitle selected={i === this.activeTab}>{label}</TabTitle>
                     <IconButton
+                      component='span'
                       edge='end'
                       size='small'
                       color='inherit'
@@ -112,7 +113,7 @@ export default class FeaturesListSidebar extends Component {
     );
   }
 
-  private handleClosePointerDown(e: PointerEvent<HTMLButtonElement>) {
+  private handleClosePointerDown(e: SyntheticEvent<HTMLElement>) {
     e.stopPropagation();
   }
 

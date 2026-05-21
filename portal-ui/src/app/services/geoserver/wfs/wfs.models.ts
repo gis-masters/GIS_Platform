@@ -129,5 +129,4 @@ export type WfsLayerIntersectionItem = {
 
 export type GetWfsIntersectionsOptions = {
   skipMaxFeaturesLimit?: boolean;
-  skipAreaComputation?: boolean;
 };

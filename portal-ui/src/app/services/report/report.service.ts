@@ -11,6 +11,8 @@ import { PlotAttributesPrintTemplate } from './customTemplates/feature/PlotAttri
 import { PlotConclusionPrintTemplate } from './customTemplates/feature/PlotConclusionPrintTemplate';
 import { PlotEgrnOksPrintTemplate } from './customTemplates/feature/PlotEgrnOksPrintTemplate';
 import { PlotEgrnZouitPrintTemplate } from './customTemplates/feature/PlotEgrnZouitPrintTemplate';
+import { PlotFzPrintTemplate } from './customTemplates/feature/PlotFzPrintTemplate';
+import { PlotNpPrintTemplate } from './customTemplates/feature/PlotNpPrintTemplate';
 import { rawDocumentData } from './oldTemplates/document/rawDocumentData';
 import { situationalPlan } from './oldTemplates/featuresCollection/situationalPlan';
 import { type PrintTemplateOld } from './oldTemplates/PrintTemplateOld';
@@ -21,7 +23,9 @@ const featurePrintCustomTemplateClasses: Record<string, new (info: TemplateInfo)
   sys_plot_conclusion: PlotConclusionPrintTemplate,
   sys_plot_attributes: PlotAttributesPrintTemplate,
   sys_plot_egrn_oks: PlotEgrnOksPrintTemplate,
-  sys_plot_egrn_zouit: PlotEgrnZouitPrintTemplate
+  sys_plot_egrn_zouit: PlotEgrnZouitPrintTemplate,
+  sys_plot_fz: PlotFzPrintTemplate,
+  sys_plot_np: PlotNpPrintTemplate
 };
 
 export const documentPrintTemplates: PrintTemplateOld<LibraryRecord>[] = [rawDocumentData];

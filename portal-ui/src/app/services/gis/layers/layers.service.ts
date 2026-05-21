@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { ListItemIcon, Tooltip } from '@mui/material';
 import { FilterAltOutlined } from '@mui/icons-material';
-import { type AxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { currentProject } from '../../../stores/CurrentProject.store';
@@ -84,13 +84,33 @@ export async function deleteLayer(layerId: number, project: CrgProject = current
   await layersClient.deleteLayer(layerId, project.id);
 }
 
+function readApiMessageFromResponseData(data: unknown): string | undefined {
+  if (typeof data !== 'object' || data === null || !('message' in data)) {
+    return undefined;
+  }
+
+  const candidate: unknown = data.message;
+
+  return typeof candidate === 'string' ? candidate : undefined;
+}
+
 export function alertLayerOperationError(
-  e: AxiosError<{ errors: Record<string, unknown>[]; message?: string }>,
+  e: unknown,
   payload: Record<string, unknown> | CrgLayersGroup,
   actionText: string,
   actionName: string
 ): void {
   const payloadDetails = JSON.stringify(payload, null, 2);
+  const message = `Не удалось ${actionText} "${actionName}"`;
+
+  if (!isAxiosError(e)) {
+    const details = e instanceof Error ? `${e.message}\n\nДанные: \n${payloadDetails}` : `Данные: \n${payloadDetails}`;
+    Toast.error({ message, details });
+    services.logger.error(message, e);
+
+    return;
+  }
+
   let responseDetails = '-';
   if (e.response) {
     const responseData = JSON.stringify(
@@ -106,9 +126,8 @@ export function alertLayerOperationError(
     responseDetails = `${e.response.config?.url} \n${responseData}`;
   }
 
-  const message = `Не удалось ${actionText} "${actionName}"`;
-
-  const details = e.response?.data?.message || `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}`;
+  const apiMessage = readApiMessageFromResponseData(e.response?.data);
+  const details = apiMessage ?? `Запрос: \n${responseDetails} \n\nДанные: \n${payloadDetails}`;
 
   Toast.error({ message, details });
   services.logger.error(message, e);

@@ -43,6 +43,6 @@ export async function getFile(fileId: string): Promise<string> {
   return await filesClient.getFile(fileId);
 }
 
-export function getFileDownloadUrl(fileId: string): string {
-  return filesClient.getFileDownloadUrl(fileId);
+export function getFileDownloadUrl(fileId: string, filenameHint?: string): string {
+  return filesClient.getFileDownloadUrl(fileId, filenameHint);
 }

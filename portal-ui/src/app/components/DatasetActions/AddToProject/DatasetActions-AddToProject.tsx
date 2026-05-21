@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { type AxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import { pluralize } from 'numeralize-ru';
 
 import { type Dataset, type VectorTable } from '../../../services/data/vectorData/vectorData.models';
@@ -141,11 +141,10 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
         await createLayer(layer, project.id);
         this.setAddedLayers(this.addedLayers + 1);
       } catch (error) {
-        const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
-        if (err?.response?.status === 409) {
+        if (isAxiosError(error) && error.response?.status === 409) {
           Toast.warn({ message: `Слой ${layer.title} уже существует в проекте` });
         } else {
-          alertLayerOperationError(err, layer, 'создать слой', layer.title);
+          alertLayerOperationError(error, layer, 'создать слой', layer.title);
         }
       }
     }

@@ -1,25 +1,19 @@
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getWfsIntersectionsForFeature } from '../../geoserver/wfs/wfs.service';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
-import { type OksIntersectionPrintItem } from './oksIntersectionPrint.models';
+import { type IntersectionPrintItem } from '../report.models';
 import { resolveVisibleOksLayers } from './resolveVisibleOksLayers';
 
 export type GetOksIntersectionsForPlotPrintResult =
-  | { ok: true; items: OksIntersectionPrintItem[] }
+  | { ok: true; items: IntersectionPrintItem[] }
   | { ok: false; message: string };
-
-export type GetOksIntersectionsForPlotPrintOptions = {
-  /** Не считать площадь пересечения (turf), только объекты из WFS */
-  skipAreaComputation?: boolean;
-};
 
 /**
  * Пересечения объекта участка со всеми видимыми слоями ОКС (areal / linear / point).
  */
 export async function getOksIntersectionsForPlotPrint(
   feature: WfsFeature,
-  sourceLayer: CrgVectorLayer,
-  options?: GetOksIntersectionsForPlotPrintOptions
+  sourceLayer: CrgVectorLayer
 ): Promise<GetOksIntersectionsForPlotPrintResult> {
   const oksResolve = await resolveVisibleOksLayers();
 
@@ -27,13 +21,12 @@ export async function getOksIntersectionsForPlotPrint(
     return { ok: false, message: oksResolve.message };
   }
 
-  const items: OksIntersectionPrintItem[] = [];
+  const items: IntersectionPrintItem[] = [];
 
   try {
     for (const targetLayer of Object.values(oksResolve.layers)) {
       const wfsItems = await getWfsIntersectionsForFeature(feature, sourceLayer, targetLayer, {
-        skipMaxFeaturesLimit: true,
-        skipAreaComputation: options?.skipAreaComputation ?? false
+        skipMaxFeaturesLimit: true
       });
 
       for (const item of wfsItems) {
