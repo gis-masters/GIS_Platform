@@ -1,7 +1,4 @@
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink"
-                       xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
-                       version="1.1.0" xmlns:se="http://www.opengis.net/se">
+<<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:se="http://www.opengis.net/se" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0">
   <NamedLayer>
     <se:Name>zouit_pro</se:Name>
     <UserStyle>
@@ -29,8 +26,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
-
         <se:Rule>
           <se:Name>Район падения отделяющихся частей ракет</se:Name>
           <se:Description>
@@ -53,7 +48,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Прочие зоны с особыми условиями использования территории</se:Name>
           <se:Description>
@@ -76,7 +70,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зона публичного сервитута</se:Name>
           <se:Description>
@@ -99,7 +92,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зона резервирования земель</se:Name>
           <se:Description>
@@ -122,7 +114,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Особая экономическая зона</se:Name>
           <se:Description>
@@ -145,7 +136,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Иные зоны с особыми условиями использования территории</se:Name>
           <se:Description>
@@ -168,7 +158,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Иная зона с особыми условиями использования территории</se:Name>
           <se:Description>
@@ -191,7 +180,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зоны охраны природных объектов</se:Name>
           <se:Description>
@@ -214,7 +202,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Водоохранная зона</se:Name>
           <se:Description>
@@ -237,7 +224,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Прибрежная защитная полоса</se:Name>
           <se:Description>
@@ -260,7 +246,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зона санитарной охраны источников водоснабжения и водопроводов питьевого назначения</se:Name>
           <se:Description>
@@ -283,7 +268,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Особо ценные земли</se:Name>
           <se:Description>
@@ -306,7 +290,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Загрязненные земли</se:Name>
           <se:Description>
@@ -329,7 +312,28 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
+        <se:Rule>
+          <se:Name>Зона охраняемого объекта</se:Name>
+          <se:Description>
+            <se:Title>Зона охраняемого объекта</se:Title>
+          </se:Description>
+          <ogc:Filter>
+            <ogc:PropertyIsEqualTo>
+              <ogc:PropertyName>zonetype</ogc:PropertyName>
+              <ogc:Literal>Зона охраняемого объекта</ogc:Literal>
+            </ogc:PropertyIsEqualTo>
+          </ogc:Filter>
+          <se:PolygonSymbolizer>
+            <se:Fill>
+              <se:SvgParameter name="fill">#00BFFF</se:SvgParameter>
+              <se:SvgParameter name="fill-opacity">0.4</se:SvgParameter>
+            </se:Fill>
+            <se:Stroke>
+              <se:SvgParameter name="stroke">#a37676</se:SvgParameter>
+              <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
+            </se:Stroke>
+          </se:PolygonSymbolizer>
+        </se:Rule>
         <se:Rule>
           <se:Name>Охранная зона загрязненных земель</se:Name>
           <se:Description>
@@ -352,7 +356,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Горный отвод</se:Name>
           <se:Description>
@@ -375,7 +378,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зеленая зона</se:Name>
           <se:Description>
@@ -398,7 +400,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Территория традиционного природопользования</se:Name>
           <se:Description>
@@ -421,7 +422,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Охранная зона геодезического пункта</se:Name>
           <se:Description>
@@ -444,7 +444,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Охранная зона стационарного пункта наблюдений за состоянием окружающей природной среды</se:Name>
           <se:Description>
@@ -467,7 +466,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Охранная зона транспорта</se:Name>
           <se:Description>
@@ -490,7 +488,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Охранная зона инженерных коммуникаций</se:Name>
           <se:Description>
@@ -513,7 +510,28 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
+        <se:Rule>
+          <se:Name>Приаэродромная территория</se:Name>
+          <se:Description>
+            <se:Title>Приаэродромная территория</se:Title>
+          </se:Description>
+          <ogc:Filter>
+            <ogc:PropertyIsEqualTo>
+              <ogc:PropertyName>zonetype</ogc:PropertyName>
+              <ogc:Literal>Приаэродромная территория</ogc:Literal>
+            </ogc:PropertyIsEqualTo>
+          </ogc:Filter>
+          <se:PolygonSymbolizer>
+            <se:Fill>
+              <se:SvgParameter name="fill">#B0E0E6</se:SvgParameter>
+              <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
+            </se:Fill>
+            <se:Stroke>
+              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+              <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
+            </se:Stroke>
+          </se:PolygonSymbolizer>
+        </se:Rule>
         <se:Rule>
           <se:Name>Охранная зона линий и сооружений связи и линий и сооружений радиофикации</se:Name>
           <se:Description>
@@ -536,7 +554,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Придорожная полоса</se:Name>
           <se:Description>
@@ -559,7 +576,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зоны защиты населения</se:Name>
           <se:Description>
@@ -582,7 +598,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зона ограничения от передающего радиотехнического объекта</se:Name>
           <se:Description>
@@ -605,7 +620,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зоны охраны искусственных объектов</se:Name>
           <se:Description>
@@ -628,7 +642,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Запретная зона при военном складе</se:Name>
           <se:Description>
@@ -651,7 +664,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Запретный район при военном складе</se:Name>
           <se:Description>
@@ -674,7 +686,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Санитарно-защитная зона предприятий сооружений и иных объектов</se:Name>
           <se:Description>
@@ -698,7 +709,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Санитарный разрыв (санитарная полоса отчуждения)</se:Name>
           <se:Description>
@@ -721,7 +731,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Пригородная зона</se:Name>
           <se:Description>
@@ -744,7 +753,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Пограничная зона</se:Name>
           <se:Description>
@@ -767,7 +775,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Территория особо охраняемого природного объекта</se:Name>
           <se:Description>
@@ -790,7 +797,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Охранная зона особо охраняемого природного объекта</se:Name>
           <se:Description>
@@ -813,7 +819,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Территория объекта культурного наследия</se:Name>
           <se:Description>
@@ -836,7 +841,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
         <se:Rule>
           <se:Name>Зона охраны объекта культурного наследия</se:Name>
           <se:Description>
@@ -859,7 +863,6 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-        
         <se:Rule>
           <se:Name>Придорожные полосы автомобильных дорог</se:Name>
           <se:Description>
@@ -901,24 +904,6 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Граница особо охраняемой природной территории</se:Name>
-          <se:Description>
-            <se:Title>Граница особо охраняемой природной территории</se:Title>
-          </se:Description>
-          <ogc:Filter>
-            <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>boundary_1</ogc:PropertyName>
-              <ogc:Literal>Граница особо охраняемой природной территории</ogc:Literal>
-            </ogc:PropertyIsEqualTo>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#CC5500</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
           <se:Name>Граница территории объекта культурного наследия</se:Name>
           <se:Description>
             <se:Title>Граница территории объекта культурного наследия</se:Title>
@@ -953,7 +938,7 @@
                 </ogc:PropertyIsNull>
                 <ogc:PropertyIsEqualTo>
                   <ogc:PropertyName>zonetype</ogc:PropertyName>
-                  <ogc:Literal></ogc:Literal>
+                  <ogc:Literal/>
                 </ogc:PropertyIsEqualTo>
               </ogc:Or>
             </ogc:And>
@@ -966,72 +951,6 @@
             <se:Stroke>
               <se:SvgParameter name="stroke">#C2185B</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>Лесничество</se:Name>
-          <se:Description>
-            <se:Title>Лесничество</se:Title>
-          </se:Description>
-          <ogc:Filter>
-            <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>boundary_1</ogc:PropertyName>
-              <ogc:Literal>Лесничество</ogc:Literal>
-            </ogc:PropertyIsEqualTo>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#ceeae4</se:SvgParameter>
-              <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#0c9777</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.4</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>Лесопарковый зеленый пояс</se:Name>
-          <se:Description>
-            <se:Title>Лесопарковый зеленый пояс</se:Title>
-          </se:Description>
-          <ogc:Filter>
-            <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>boundary_1</ogc:PropertyName>
-              <ogc:Literal>Лесопарковый зеленый пояс</ogc:Literal>
-            </ogc:PropertyIsEqualTo>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#44CC44</se:SvgParameter>
-              <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#1A331A</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>Особо охраняемая природная территория</se:Name>
-          <se:Description>
-            <se:Title>Особо охраняемая природная территория</se:Title>
-          </se:Description>
-          <ogc:Filter>
-            <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>boundary_1</ogc:PropertyName>
-              <ogc:Literal>Особо охраняемая природная территория</ogc:Literal>
-            </ogc:PropertyIsEqualTo>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#e7dae2</se:SvgParameter>
-              <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#925f88</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.4</se:SvgParameter>
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
@@ -1057,7 +976,7 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-       <se:Rule>
+        <se:Rule>
           <se:Name>Зона санитарной охраны источников питьевого и хозяйственно-бытового водоснабжения</se:Name>
           <se:Description>
             <se:Title>Зона санитарной охраны источников питьевого и хозяйственно-бытового водоснабжения</se:Title>
@@ -1145,7 +1064,7 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-         <se:Rule>
+        <se:Rule>
           <se:Name>Зоны охраны объектов культурного наследия</se:Name>
           <se:Description>
             <se:Title>Зоны охраны объектов культурного наследия</se:Title>
@@ -1321,7 +1240,7 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-         <se:Rule>
+        <se:Rule>
           <se:Name>Охранная зона</se:Name>
           <se:Description>
             <se:Title>Охранная зона</se:Title>
@@ -1360,10 +1279,7 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>
-
-
-
       </se:FeatureTypeStyle>
     </UserStyle>
   </NamedLayer>
-</StyledLayerDescriptor>
+</StyledLayerDescriptor>>

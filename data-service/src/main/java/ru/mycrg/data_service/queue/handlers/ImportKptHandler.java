@@ -12,13 +12,12 @@ import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.kpt_import.model.KptSourceDocumentMetadata;
-import ru.mycrg.data_service.kpt_import.reader.KptSourceDocumentMetadataReader;
 import ru.mycrg.data_service.kpt_import.TmpTablesService;
 import ru.mycrg.data_service.kpt_import.model.*;
 import ru.mycrg.data_service.kpt_import.model.oks.OksBuildingElement;
 import ru.mycrg.data_service.kpt_import.model.oks.OksConstructionElement;
 import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionElement;
+import ru.mycrg.data_service.kpt_import.reader.KptSourceDocumentMetadataReader;
 import ru.mycrg.data_service.kpt_import.reader.KptXmlElementReader;
 import ru.mycrg.data_service.kpt_import.reader.kvartal.KvartalPartialDataReader;
 import ru.mycrg.data_service.kpt_import.validation.KptImportValidationResult;
@@ -62,6 +61,7 @@ import static ru.mycrg.data_service.kpt_import.writer.BorderWaterObjectPolygonWr
 import static ru.mycrg.data_service.kpt_import.writer.BorderWaterObjectPolylineWriter.BORDERWATEROBJ_POLILYNE_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.KvartalWriter.KVARTAL_KPT_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.MunicipalityBoundaryWriter.MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.NaturalAreaWriter.NATURAL_AREAS_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.OksConstructionPointWriter.OKS_CONSTRUCTIONS_POINTS_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.OksPolylineProWriter.OKS_POLYLINE_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.OksProWriter.OKS_PRO_SCHEMA;
@@ -103,21 +103,22 @@ public class ImportKptHandler implements IEventHandler {
     /**
      * Соответствие названия схем таблиц БД с тэгами xml
      */
-    private final Map<String, Set<String>> schemaNameTags = Map.of(
-            ZU_PRO_SCHEMA, Set.of(ZuElement.XML_TAG),
-            ZOUIT_PRO_SCHEMA, Set.of(ZouitElement.XML_TAG),
-            TER_ZONE_PRO_SCHEMA, Set.of(TerZoneElement.XML_TAG),
-            BORDERWATEROBJ_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG),
-            BORDERWATEROBJ_POLILYNE_PRO_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG),
-            KVARTAL_KPT_SCHEMA, Set.of("cadastral_number", "area_quarter", "spatial_data"),
-            MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA, Set.of(MunicipalityBoundaryElement.XML_TAG),
-            OKS_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
-                                   OksBuildingElement.XML_TAG,
-                                   OksUnderConstructionElement.XML_TAG),
-            OKS_POLYLINE_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
-                                            OksUnderConstructionElement.XML_TAG),
-            OKS_CONSTRUCTIONS_POINTS_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
-                                                    OksUnderConstructionElement.XML_TAG));
+    private final Map<String, Set<String>> schemaNameTags = Map.ofEntries(
+            Map.entry(ZU_PRO_SCHEMA, Set.of(ZuElement.XML_TAG)),
+            Map.entry(ZOUIT_PRO_SCHEMA, Set.of(ZouitElement.XML_TAG)),
+            Map.entry(NATURAL_AREAS_PRO_SCHEMA, Set.of(NaturalAreaElement.XML_TAG)),
+            Map.entry(TER_ZONE_PRO_SCHEMA, Set.of(TerZoneElement.XML_TAG)),
+            Map.entry(BORDERWATEROBJ_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG)),
+            Map.entry(BORDERWATEROBJ_POLILYNE_PRO_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG)),
+            Map.entry(KVARTAL_KPT_SCHEMA, Set.of("cadastral_number", "area_quarter", "spatial_data")),
+            Map.entry(MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA, Set.of(MunicipalityBoundaryElement.XML_TAG)),
+            Map.entry(OKS_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                             OksBuildingElement.XML_TAG,
+                                             OksUnderConstructionElement.XML_TAG)),
+            Map.entry(OKS_POLYLINE_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                                      OksUnderConstructionElement.XML_TAG)),
+            Map.entry(OKS_CONSTRUCTIONS_POINTS_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                                              OksUnderConstructionElement.XML_TAG)));
 
     /**
      * Флаг выполнения импорта для обеспечения возможности отмены операции

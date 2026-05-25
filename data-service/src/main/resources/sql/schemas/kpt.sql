@@ -1,62 +1,55 @@
 -- Схемы: 'КПТ' захардкожены в коде. При внесении любых изменений, не забудьте найти и поправить.
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'dl_data_kpt',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_kpt');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_kpt');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'borderwaterobj_polilyne_pro',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'borderwaterobj_polilyne_pro');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'borderwaterobj_polilyne_pro');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'zu_pro',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zu_pro');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zu_pro');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'oks_pro',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_pro');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_pro');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'oks_polyline_pro',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_polyline_pro');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_polyline_pro');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'borderwaterobj',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'borderwaterobj');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'borderwaterobj');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'kvartal_kpt',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'kvartal_kpt');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'kvartal_kpt');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'zouit_pro',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zouit_pro');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zouit_pro');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'natural_areas_pro',
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natural_areas_pro');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'oks_constructions_points',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_constructions_points');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_constructions_points');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'municipality_boundaries_egrn',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'municipality_boundaries_egrn');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'municipality_boundaries_egrn');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'ter_zone_pro',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'ter_zone_pro');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'ter_zone_pro');
 
 --Необходимо поддерживать схему dl_data_kpt в соответствии с миграцией M18__kptTableAlwaysLikeInCode.sql
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "name": "dl_data_kpt",
@@ -174,7 +167,7 @@ WHERE name = 'dl_data_kpt';
 
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -300,7 +293,7 @@ SET is_system = true,
 WHERE name = 'borderwaterobj_polilyne_pro';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -526,7 +519,7 @@ SET is_system = true,
 WHERE name = 'zu_pro';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -702,7 +695,7 @@ SET is_system = true,
 WHERE name = 'oks_pro';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -896,7 +889,7 @@ SET is_system = true,
 WHERE name = 'oks_polyline_pro';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -1022,7 +1015,7 @@ SET is_system = true,
 WHERE name = 'borderwaterobj';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -1130,7 +1123,7 @@ SET is_system = true,
 WHERE name = 'kvartal_kpt';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -1198,6 +1191,10 @@ SET is_system = true,
                   "value": "Охранная зона транспорта"
                 },
                 {
+                  "title": "Приаэродромная территория",
+                  "value": "Приаэродромная территория"
+                },
+                {
                   "title": "Охранная зона инженерных коммуникаций",
                   "value": "Охранная зона инженерных коммуникаций"
                 },
@@ -1224,6 +1221,10 @@ SET is_system = true,
                 {
                   "title": "Загрязненные земли",
                   "value": "Загрязненные земли"
+                },
+                {
+                  "title": "Зона охраняемого объекта",
+                  "value": "Зона охраняемого объекта"
                 },
                 {
                   "title": "Охранная зона загрязненных земель",
@@ -1394,12 +1395,129 @@ SET is_system = true,
                   "value": "Граница зоны с особыми условиями использования территории"
                 },
                 {
-                  "title": "Особо охраняемая природная территория",
-                  "value": "Особо охраняемая природная территория"
-                },
-                {
                   "title": "Граница территории объекта культурного наследия",
                   "value": "Граница территории объекта культурного наследия"
+                }
+              ]
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "description": "Дата импорта XML в слой",
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "shape",
+              "hidden": true,
+              "title": "Геометрия",
+              "valueType": "GEOMETRY",
+              "allowedValues": [
+                "Polygon"
+              ]
+            },
+            {
+              "name": "ruleid",
+              "title": "Идентификатор стиля",
+              "hidden": true,
+              "valueType": "INT"
+            },
+            {
+              "name": "acsept_at",
+              "title": "Дата",
+              "hidden": true,
+              "valueType": "DATETIME",
+              "description": "Дата приёма данных из  АИС УМС"
+            },
+            {
+              "name": "source_doc",
+              "title": "Документ источник",
+              "multiple": true,
+              "libraries": [
+                "dl_data_kpt"
+              ],
+              "valueType": "DOCUMENT",
+              "description": "Отсылка к документу из которого получен объект",
+              "maxDocuments": 5
+            }
+          ],
+          "description": "Зоны с особыми условиями использования территорий",
+          "geometryType": "MultiPolygon"
+        }'
+WHERE name = 'zouit_pro';
+
+UPDATE data.schemas
+SET is_system  = true,
+    class_rule =
+        '{
+          "tags": [
+            "system",
+            "КПТ"
+          ],
+          "name": "natural_areas_pro",
+          "title": "Природные территории",
+          "styleName": "natural_areas_pro",
+          "tableName": "natural_areas_pro",
+          "properties": [
+            {
+              "name": "number",
+              "title": "Номер",
+              "valueType": "STRING"
+            },
+            {
+              "name": "zonetype",
+              "title": "Вид зоны",
+              "hidden": true,
+              "valueType": "STRING"
+            },
+            {
+              "name": "name_by_doc",
+              "title": "Название зоны",
+              "valueType": "TEXT"
+            },
+            {
+              "name": "regnumbord",
+              "title": "Реестровый номер границы",
+              "asTitle": true,
+              "valueType": "STRING"
+            },
+            {
+              "name": "registrati",
+              "title": "Дата постановки на учет",
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "boundary_1",
+              "title": "Вид объекта реестра границ",
+              "required": true,
+              "valueType": "CHOICE",
+              "enumerations": [
+                {
+                  "title": "Особо охраняемая природная территория",
+                  "value": "Особо охраняемая природная территория"
                 },
                 {
                   "title": "Лесничество",
@@ -1479,13 +1597,13 @@ SET is_system = true,
               "maxDocuments": 5
             }
           ],
-          "description": "Зоны с особыми условиями использования территорий",
+          "description": "Природные территории",
           "geometryType": "MultiPolygon"
         }'
-WHERE name = 'zouit_pro';
+WHERE name = 'natural_areas_pro';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -1819,7 +1937,7 @@ SET is_system = true,
 WHERE name = 'oks_constructions_points';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [
@@ -1918,7 +2036,7 @@ SET is_system = true,
 WHERE name = 'municipality_boundaries_egrn';
 
 UPDATE data.schemas
-SET is_system = true,
+SET is_system  = true,
     class_rule =
         '{
           "tags": [

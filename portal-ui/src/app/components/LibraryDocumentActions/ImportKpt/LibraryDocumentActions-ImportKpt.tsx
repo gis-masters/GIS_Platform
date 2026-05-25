@@ -224,6 +224,21 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
       },
       {
         propertyType: PropertyType.CUSTOM,
+        name: 'natural_areas_pro',
+        title: 'Природные территории',
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%natural_areas_pro%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
+      },
+      {
+        propertyType: PropertyType.CUSTOM,
         name: 'ter_zone_pro',
         title: 'Территориальные зоны',
         startPath: this.lastPath,

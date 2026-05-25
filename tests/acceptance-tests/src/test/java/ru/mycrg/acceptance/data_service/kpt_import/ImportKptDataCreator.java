@@ -44,6 +44,7 @@ public class ImportKptDataCreator extends BaseStepsDefinitions {
             "borderwaterobj",
             "kvartal_kpt",
             "zouit_pro",
+            "natural_areas_pro",
             "ter_zone_pro",
             "oks_constructions_points",
             "municipality_boundaries_egrn"
@@ -94,7 +95,7 @@ public class ImportKptDataCreator extends BaseStepsDefinitions {
                         body(gson.toJson(importKptRequest())).
                         contentType(ContentType.JSON)
                 .when().log().all().
-                        post("/import/kpt");
+                       post("/import/kpt");
 
         currentTaskId = response.jsonPath().getInt("content.id");
     }
@@ -132,10 +133,10 @@ public class ImportKptDataCreator extends BaseStepsDefinitions {
 
     private void createKptTables() {
         KPT_SCHEMA_IDS.forEach(schemaId -> tablesSteps.createTable(new TableCreateDto(schemaId,
-                                                                                     schemaId,
-                                                                                     schemaId,
-                                                                                     KPT_TABLE_CRS,
-                                                                                     schemaId)));
+                                                                                      schemaId,
+                                                                                      schemaId,
+                                                                                      KPT_TABLE_CRS,
+                                                                                      schemaId)));
     }
 
     private ImportKptRequest importKptRequest() {
@@ -157,8 +158,8 @@ public class ImportKptDataCreator extends BaseStepsDefinitions {
 
     private List<DatasetResourceQualifierDto> importTables() {
         return KPT_SCHEMA_IDS.stream()
-                            .map(this::importTable)
-                            .toList();
+                             .map(this::importTable)
+                             .toList();
     }
 
     private DatasetResourceQualifierDto importTable(String schemaId) {
