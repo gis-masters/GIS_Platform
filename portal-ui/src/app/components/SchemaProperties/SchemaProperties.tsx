@@ -13,6 +13,8 @@ export interface SchemaPropertiesListProps {
   editing?: boolean;
   propertiesSchemaWithoutContentType?: PropertySchema[];
   onPropertyChange?(newPropertySchema: PropertySchema, oldName?: string): void;
+  onPropertyDelete?(propertyName: string): void;
+  onPropertyCreate?(): void;
 }
 
 export const SchemaProperties: FC<SchemaPropertiesListProps> = ({
@@ -20,7 +22,8 @@ export const SchemaProperties: FC<SchemaPropertiesListProps> = ({
   readonly,
   editing,
   propertiesSchemaWithoutContentType,
-  onPropertyChange
+  onPropertyChange,
+  onPropertyDelete
 }) => (
   <List className={cnSchemaProperties()} dense>
     {schema.properties.map((el, idx) => (
@@ -36,6 +39,7 @@ export const SchemaProperties: FC<SchemaPropertiesListProps> = ({
             : undefined
         }
         onPropertyChange={onPropertyChange}
+        onPropertyDelete={onPropertyDelete}
       />
     ))}
   </List>

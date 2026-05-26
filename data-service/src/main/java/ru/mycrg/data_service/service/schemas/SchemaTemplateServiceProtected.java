@@ -111,7 +111,7 @@ public class SchemaTemplateServiceProtected implements ISchemaTemplateService {
     }
 
     public static void throwIfSchemaSystem(String schemaName, Boolean isSystem) {
-        if (Boolean.TRUE.equals(isSystem) || isSystem == null) {
+        if (Boolean.TRUE.equals(isSystem)) {
             throw new ForbiddenException("Шаблон схемы является системным!!!",
                                          List.of(new ErrorInfo("system",
                                                                String.format(

@@ -55,57 +55,61 @@ function getDefaultValuePropertyType(selectedPropertyType?: PropertyType): Avail
   return selectedPropertyType;
 }
 
-function createDefaultValueFieldSchema(selectedPropertyType?: PropertyType): PropertySchema {
-  return {
-    name: 'defaultValue',
-    title: 'Значение по умолчанию',
-    propertyType: getDefaultValuePropertyType(selectedPropertyType)
-  };
-}
-
-function getPropertyFieldsSchema(propertyType?: PropertyType, editing = false): SimpleSchema {
+export function getPropertyFieldsSchema(propertyType?: PropertyType, editing = false): SimpleSchema {
   return {
     properties: [
       {
         name: 'name',
-        title: 'Наименование',
+        title: 'Идентификатор',
+        required: true,
+        description: 'Техническое наименование поля в базе данных (пишется латиницей без пробелов)',
         readOnly: !editing,
         propertyType: PropertyType.STRING
       },
       {
         name: 'propertyType',
         title: 'Тип поля',
+        description: 'Определяет, какие данные можно будет хранить в этом поле',
         options: propertyTypeOptions,
         readOnly: !editing,
         propertyType: PropertyType.CHOICE
       },
       {
         name: 'title',
-        title: 'Название',
+        title: 'Наименование',
+        description: 'Название поля, отображаемое пользователю',
         required: true,
         propertyType: PropertyType.STRING
       },
       {
         name: 'description',
         title: 'Описание',
+        description: 'Краткое описание назначения поля',
         propertyType: PropertyType.STRING
       },
       {
         name: 'required',
         title: 'Обязательное',
+        description: 'Требует обязательного заполнения',
         propertyType: PropertyType.BOOL
       },
       {
         name: 'hidden',
         title: 'Скрытое',
+        description: 'Скрывает поле от пользователя',
         propertyType: PropertyType.BOOL
       },
       {
         name: 'readOnly',
         title: 'Только для чтения',
+        description: 'Запрещает редактирование значения',
         propertyType: PropertyType.BOOL
       },
-      createDefaultValueFieldSchema(propertyType)
+      {
+        name: 'defaultValue',
+        title: 'Значение по умолчанию',
+        propertyType: getDefaultValuePropertyType(propertyType)
+      }
     ]
   };
 }

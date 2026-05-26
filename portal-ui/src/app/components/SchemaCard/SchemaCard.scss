@@ -20,4 +20,23 @@ body .SchemaCard {
       display: none;
     }
   }
+
+  &-TagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  &-CreatePropertyActions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-bottom: 8px;
+  }
+
+  &-GeometryTypeValue {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 }

@@ -1,0 +1,17 @@
+.SchemaProperties-Item {
+  .SchemaProperties-OpenEditButton {
+    transition: opacity 0.3s ease;
+
+    opacity: 0.2;
+
+    &:focus {
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    .SchemaProperties-OpenEditButton {
+      opacity: 1;
+    }
+  }
+}

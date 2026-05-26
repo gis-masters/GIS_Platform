@@ -18,6 +18,7 @@ import {
   CalendarMonthOutlined,
   Check,
   ContactMailOutlined,
+  DeleteOutlined,
   Edit,
   EditOffOutlined,
   EditOutlined,
@@ -45,8 +46,9 @@ import { SchemaPropertiesItemIcons } from '../ItemIcons/SchemaProperties-ItemIco
 import '../ItemIcon/SchemaProperties-ItemIcon.scss';
 import '../PrimaryText/SchemaProperties-PrimaryText.scss';
 import '../ItemAccordion/SchemaProperties-ItemAccordion.scss';
+import './SchemaProperties-Item.scss';
 
-const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
+export const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
   const icons: Partial<Record<PropertyType, [SvgIconComponent, string]>> = {
     [PropertyType.BOOL]: [Check, 'Логическое'],
     [PropertyType.CHOICE]: [FormatListBulletedOutlined, 'Выбор'],
@@ -76,6 +78,7 @@ interface SchemaPropertiesItemProps {
   editing?: boolean;
   propertySchemaWithoutContentType?: PropertySchema;
   onPropertyChange?(newPropertySchema: PropertySchema, oldName?: string): void;
+  onPropertyDelete?(propertyName: string): void;
 }
 
 const cnSchemaPropertiesItem = cn('SchemaProperties', 'Item');
@@ -150,22 +153,38 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
             </>
 
             {!readonly && (
-              <Tooltip title='Редактировать'>
-                <IconButton
-                  size='small'
-                  className={cnSchemaPropertiesOpenEditButton()}
-                  onClick={this.onPropertyChange}
-                  name={name}
-                  ref={this.ref}
-                  color='primary'
-                >
-                  {this.selectedId === propertyId ? (
-                    <Edit fontSize='small' color='primary' />
-                  ) : (
-                    <EditOutlined fontSize='small' color='primary' />
-                  )}
-                </IconButton>
-              </Tooltip>
+              <>
+                <Tooltip title='Редактировать'>
+                  <IconButton
+                    size='small'
+                    className={cnSchemaPropertiesOpenEditButton()}
+                    onClick={this.onPropertyChange}
+                    name={name}
+                    ref={this.ref}
+                    color='primary'
+                  >
+                    {this.selectedId === propertyId ? (
+                      <Edit fontSize='small' color='primary' />
+                    ) : (
+                      <EditOutlined fontSize='small' color='primary' />
+                    )}
+                  </IconButton>
+                </Tooltip>
+
+                {editing && (
+                  <Tooltip title='Удалить'>
+                    <IconButton
+                      size='small'
+                      className={cnSchemaPropertiesOpenEditButton({ type: 'delete' })}
+                      onClick={this.handlePropertyDelete}
+                      name={name}
+                      color='error'
+                    >
+                      <DeleteOutlined fontSize='small' />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </>
             )}
           </SchemaPropertiesItemIcons>
         </ListItem>
@@ -204,5 +223,14 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
     const oldName = propertySchema.name;
 
     onPropertyChange?.(newPropertySchema, oldName);
+  }
+
+  @action.bound
+  private handlePropertyDelete(event: React.MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+
+    const { propertySchema, onPropertyDelete } = this.props;
+
+    onPropertyDelete?.(propertySchema.name);
   }
 }

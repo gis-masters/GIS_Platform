@@ -12,6 +12,7 @@ import {
   type SelectChangeEvent,
   Tooltip
 } from '@mui/material';
+import { AddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -40,6 +41,8 @@ import { CardRow } from '../Card/Row/Card-Row';
 import { CardRowTitle } from '../Card/RowTitle/Card-RowTitle';
 import { CardValue } from '../Card/Value/Card-Value';
 import { GeometryIcon } from '../GeometryIcon/GeometryIcon';
+import { IconButton } from '../IconButton/IconButton';
+import { SchemaPropertiesCreateItem } from '../SchemaProperties/createItem/SchemaProperties-CreateItem';
 import { SchemaProperties } from '../SchemaProperties/SchemaProperties';
 import { Select } from '../Select/Select';
 
@@ -65,6 +68,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
   @observable private selectedContentTypeId: string = EMPTY;
   @observable open: boolean = false;
   @observable private initialSchemaTags: string[] = [];
+  @observable private createPropertyDialogOpen: boolean = false;
 
   constructor(props: SchemaCardProps) {
     super(props);
@@ -182,7 +186,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
                 {readonly && (
                   <CardValue>
                     {this.selectedTags.length ? (
-                      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                      <Box className={cnSchemaCard('TagsContainer')}>
                         {this.selectedTags.map(tag => (
                           <Chip key={tag} label={tag} size='small' />
                         ))}
@@ -237,7 +241,20 @@ export class SchemaCard extends Component<SchemaCardProps> {
 
             {this.schemaWithAppliedType && (
               <CardRow alignBlock>
-                <CardRowTitle>Свойства:</CardRowTitle>
+                <div>
+                  <CardRowTitle>Свойства:</CardRowTitle>
+
+                  {editing && !readonly && (
+                    <Box className={cnSchemaCard('CreatePropertyActions')}>
+                      <Tooltip title='Добавить свойство'>
+                        <IconButton size='small' color='primary' onClick={this.openCreatePropertyDialog}>
+                          <AddOutlined fontSize='small' color='primary' />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  )}
+                </div>
+
                 <CardValue block>
                   <SchemaProperties
                     readonly={readonly}
@@ -247,26 +264,21 @@ export class SchemaCard extends Component<SchemaCardProps> {
                       this.selectedViewId || this.selectedContentTypeId ? this.props.schema.properties : undefined
                     }
                     onPropertyChange={this.editSchemaProperty}
+                    onPropertyDelete={this.deleteSchemaProperty}
                   />
                 </CardValue>
               </CardRow>
             )}
           </Card>
+
+          <SchemaPropertiesCreateItem
+            open={this.createPropertyDialogOpen}
+            onClose={this.closeCreatePropertyDialog}
+            onCreate={this.createSchemaProperty}
+          />
         </>
       )
     );
-  }
-
-  @computed
-  private get schemaForProperties(): Schema {
-    const schema = this.schemaWithAppliedType;
-
-    return {
-      ...schema,
-      properties: schema.properties.map(property =>
-        property.name === 'shape' ? { ...property, hidden: true } : property
-      )
-    };
   }
 
   @computed
@@ -410,7 +422,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
     }
 
     return (
-      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+      <Box className={cnSchemaCard('TagsContainer')}>
         {tags.map(tag => (
           <Chip key={tag} label={tag} size='small' />
         ))}
@@ -442,7 +454,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
     const option = this.geometryTypeOptions.find(item => item.value === geometryType);
 
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box className={cnSchemaCard('GeometryTypeValue')}>
         {geometryType !== NO_GEOMETRY && (
           <GeometryIcon colorized size='small' geometryType={geometryType as SupportedGeometryType} />
         )}
@@ -705,5 +717,138 @@ export class SchemaCard extends Component<SchemaCardProps> {
     };
 
     return [...propertiesWithoutShape, shapeProperty];
+  }
+
+  @action.bound
+  private openCreatePropertyDialog() {
+    this.createPropertyDialogOpen = true;
+  }
+
+  @action.bound
+  private closeCreatePropertyDialog() {
+    this.createPropertyDialogOpen = false;
+  }
+
+  @action.bound
+  private createSchemaProperty(newProperty: PropertySchema): boolean {
+    this.props.onError('');
+
+    const { schema } = this.props;
+    const newSchema = cloneDeep(schema);
+
+    const addProperty = <T extends Partial<PropertySchema>>(properties: T[] = []): Array<T | PropertySchema> => {
+      if (properties.some(property => property.name === newProperty.name)) {
+        this.props.onError(`Свойство "${newProperty.name}" уже существует`);
+
+        return properties;
+      }
+
+      return [...properties, newProperty];
+    };
+
+    if (this.selectedViewId === EMPTY && this.selectedContentTypeId === EMPTY) {
+      const properties = addProperty(newSchema.properties);
+
+      if (properties === newSchema.properties) {
+        return false;
+      }
+
+      newSchema.properties = properties;
+      this.props.onSchemaChange(newSchema);
+
+      return true;
+    }
+
+    if (this.selectedViewId && this.selectedViewId !== EMPTY) {
+      let created = true;
+
+      newSchema.views = newSchema.views?.map(view => {
+        if (view.id !== this.selectedViewId) {
+          return view;
+        }
+
+        const properties = addProperty(view.properties);
+
+        if (properties === view.properties) {
+          created = false;
+        }
+
+        return { ...view, properties };
+      });
+
+      if (!created) {
+        return false;
+      }
+
+      this.props.onSchemaChange(newSchema);
+
+      return true;
+    }
+
+    if (this.selectedContentTypeId && this.selectedContentTypeId !== EMPTY) {
+      let created = true;
+
+      newSchema.contentTypes = newSchema.contentTypes?.map(contentType => {
+        if (contentType.id !== this.selectedContentTypeId) {
+          return contentType;
+        }
+
+        const properties = addProperty(contentType.properties);
+
+        if (properties === contentType.properties) {
+          created = false;
+        }
+
+        return { ...contentType, properties };
+      });
+
+      if (!created) {
+        return false;
+      }
+
+      this.props.onSchemaChange(newSchema);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  @action.bound
+  private deleteSchemaProperty(propertyName: string) {
+    this.props.onError('');
+
+    const { schema } = this.props;
+    const newSchema = cloneDeep(schema);
+
+    const removeProperty = <T extends Partial<PropertySchema>>(properties: T[] = []): T[] =>
+      properties.filter(property => property.name !== propertyName);
+
+    if (this.selectedViewId === EMPTY && this.selectedContentTypeId === EMPTY) {
+      newSchema.properties = removeProperty(newSchema.properties);
+      this.props.onSchemaChange(newSchema);
+
+      return;
+    }
+
+    if (this.selectedViewId && this.selectedViewId !== EMPTY) {
+      newSchema.views = newSchema.views?.map(view =>
+        view.id === this.selectedViewId ? { ...view, properties: removeProperty(view.properties) } : view
+      );
+
+      this.props.onSchemaChange(newSchema);
+
+      return;
+    }
+
+    if (this.selectedContentTypeId && this.selectedContentTypeId !== EMPTY) {
+      newSchema.contentTypes = newSchema.contentTypes?.map(contentType =>
+        contentType.id === this.selectedContentTypeId
+          ? { ...contentType, properties: removeProperty(contentType.properties) }
+          : contentType
+      );
+
+      this.props.onSchemaChange(newSchema);
+    }
   }
 }
