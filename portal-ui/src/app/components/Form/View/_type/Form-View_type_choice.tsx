@@ -6,7 +6,8 @@ import { type PropertySchemaChoice, PropertyType } from '../../../../services/da
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
 import { type FormControlProps } from '../../Control/Form-Control';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 import './Form-View_type_choice.scss';
@@ -27,6 +28,7 @@ class FormViewTypeChoice extends Component<FormControlProps> {
         <>
           {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
           <TextOverflow>{title || (valueCanBeDisplayed ? fieldValue : '—')}</TextOverflow>
+          <FormViewWarnings warnings={this.props.warnings} />
           <FormViewErrors errors={errors} />
         </>
       </div>

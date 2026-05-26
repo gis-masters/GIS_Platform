@@ -15,12 +15,8 @@ import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
-import {
-  type CreateReportRequest,
-  type FeatureTemplateData,
-  isOutputFormat,
-  type PrintPreparedData
-} from '../report.models';
+import { type CreateReportRequest, type FeatureTemplateData, type PrintPreparedData } from '../report.models';
+import { isOutputFormat } from '../report.typeguards';
 import { buildCoordinatesList } from '../utils/buildCoordinatesList';
 import { getFeatureSize } from '../utils/getFeatureSize';
 import { PrintTemplate } from './PrintTemplate';

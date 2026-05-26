@@ -33,7 +33,7 @@ class FormControlTypeUserId extends Component<FormControlProps> {
   }
 
   render() {
-    const { className, inSet, errors, fullWidthForOldForm, property } = this.props;
+    const { className, inSet, errors, warnings, fullWidthForOldForm, property } = this.props;
     const { onlySubordinates } = property as PropertySchemaUser;
 
     return (
@@ -44,7 +44,7 @@ class FormControlTypeUserId extends Component<FormControlProps> {
           editable
           onChange={this.handleChange}
         />
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }

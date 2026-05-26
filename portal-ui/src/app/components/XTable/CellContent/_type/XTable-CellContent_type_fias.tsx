@@ -1,7 +1,7 @@
 import React, { type FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { isFiasValue } from '../../../../services/data/fias/fias.models';
+import { isFiasValue } from '../../../../services/data/fias/fias.typeguards';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue } from '../../../../services/util/filters/filters';
 import { FiasView } from '../../../FiasView/FiasView';

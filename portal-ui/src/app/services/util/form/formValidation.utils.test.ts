@@ -1,7 +1,11 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { type PropertySchemaChoice, PropertyType } from '../../data/schema/schema.models';
-import { validateFieldValue } from './formValidation.utils';
+import { type PropertySchemaChoice, type PropertySchemaString, PropertyType } from '../../data/schema/schema.models';
+import { type FieldValidator, validateFieldValue, validateFieldWarnings } from './formValidation.utils';
+
+const emptyWarningsFormula: FieldValidator = (): undefined => {
+  return;
+};
 
 describe('валидация значения поля validateFieldValue', () => {
   describe('поле choice', () => {
@@ -110,6 +114,55 @@ describe('валидация значения поля validateFieldValue', () =
       test("значение `['b', 3]` содержится в опциях и проходит проверку", () => {
         expect(validateFieldValue(['b', 3], choicePropertyRequiredMultiple, { a: ['b', 3] })).toEqual(aNoError);
       });
+    });
+  });
+});
+
+describe('предупреждения поля validateFieldWarnings', () => {
+  const stringProperty: PropertySchemaString = {
+    name: 'title',
+    title: 'Название',
+    propertyType: PropertyType.STRING
+  };
+
+  const noWarning = { field: 'title', hidden: undefined, messages: undefined, title: 'Название' };
+
+  test('без warningFormula предупреждений нет', () => {
+    expect(validateFieldWarnings('test', stringProperty, { title: 'test' })).toEqual(noWarning);
+  });
+
+  test('warningFormula возвращает undefined — предупреждений нет', () => {
+    const property: PropertySchemaString = {
+      ...stringProperty,
+      warningFormula: emptyWarningsFormula
+    };
+
+    expect(validateFieldWarnings('test', property, { title: 'test' })).toEqual(noWarning);
+  });
+
+  test('warningFormula возвращает пустой массив — предупреждений нет', () => {
+    const property: PropertySchemaString = {
+      ...stringProperty,
+      warningFormula: () => []
+    };
+
+    expect(validateFieldWarnings('test', property, { title: 'test' })).toEqual({
+      ...noWarning,
+      messages: []
+    });
+  });
+
+  test('warningFormula возвращает сообщения', () => {
+    const property: PropertySchemaString = {
+      ...stringProperty,
+      warningFormula: value => (String(value).includes('test') ? ['Подозрительное значение'] : undefined)
+    };
+
+    expect(validateFieldWarnings('test123', property, { title: 'test123' })).toEqual({
+      field: 'title',
+      hidden: undefined,
+      messages: ['Подозрительное значение'],
+      title: 'Название'
     });
   });
 });

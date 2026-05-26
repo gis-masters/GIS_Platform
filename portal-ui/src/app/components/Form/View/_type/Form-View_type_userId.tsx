@@ -8,8 +8,9 @@ import { usersService } from '../../../../services/auth/users/users.service';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Users } from '../../../Users/Users';
 import { type FormControlProps } from '../../Control/Form-Control';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 @observer
@@ -38,6 +39,7 @@ class FormViewTypeUserId extends Component<FormControlProps> {
     return (
       <div className={cnFormView({ inSet }, [className])}>
         {this.minimizedUser ? <Users value={[this.minimizedUser]} /> : <FormViewValue>—</FormViewValue>}
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

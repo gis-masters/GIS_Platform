@@ -18,6 +18,7 @@ class FormDialogBlock extends Block {
   async setStringValue(fieldName: string, fieldValue: string): Promise<void> {
     const formBlock = new FormBlock(this.selectors.root);
     await formBlock.replaceStringValue(fieldName, fieldValue);
+    await formBlock.blurStringField(fieldName);
   }
 
   async clickActionButton(title: string): Promise<void> {

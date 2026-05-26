@@ -10,12 +10,8 @@ import { type CrgVectorLayer } from '../../../gis/layers/layers.models';
 import { FeaturePrintTemplate } from '../../baseTemplates/FeaturePrintTemplate';
 import { getZouitIntersectionsForPlotPrint } from '../../helpers/getZouitIntersectionsForPlotPrint';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
-import {
-  type CreateReportRequest,
-  type IntersectionPrintItem,
-  isOutputFormat,
-  type PrintPreparedData
-} from '../../report.models';
+import { type CreateReportRequest, type IntersectionPrintItem, type PrintPreparedData } from '../../report.models';
+import { isOutputFormat } from '../../report.typeguards';
 
 type PlotEgrnZouitPrintTemplateData = {
   title: string;
@@ -25,6 +21,7 @@ type PlotEgrnZouitPrintTemplateData = {
   zouit: IntersectionPrintItem[];
 };
 
+/** Печать по участку: пересечения с ЗОУИТ, схема zouit_pro (`sys_plot_egrn_zouit`). */
 export class PlotEgrnZouitPrintTemplate extends FeaturePrintTemplate {
   override async getData(feature: WfsFeature): Promise<PrintPreparedData | void> {
     const schemaWithAppliedView = await this.getLayerSchemaWithAppliedView(feature);

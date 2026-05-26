@@ -1,15 +1,8 @@
-import { type ReportMainDto, type ReportOutputFormat } from '../../../server-types/common-contracts';
+import { type ReportMainDto } from '../../../server-types/common-contracts';
 import { type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { type CrgLayer } from '../gis/layers/layers.models';
 import { type PrintableCoordinatesChunk } from './utils/buildCoordinatesList';
 import { type FeatureSize } from './utils/getFeatureSize';
-
-const OUTPUT_FORMATS = new Set<ReportOutputFormat>(['PDF', 'DOCX', 'ODT', 'JPEG']);
-
-export function isOutputFormat(value: unknown): value is ReportOutputFormat {
-  // as нужен, потому что Set.has() ожидает ReportOutputFormat; это безопасно, потому что .has() сам проверяет наличие
-  return typeof value === 'string' && OUTPUT_FORMATS.has(value as ReportOutputFormat);
-}
 
 export interface CreateReportRequest extends ReportMainDto {
   data: Record<string, unknown>;

@@ -1,7 +1,8 @@
 import React, { type FC, useCallback, useRef } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { type CreateReportRequest, isOutputFormat } from '../../services/report/report.models';
+import { type CreateReportRequest } from '../../services/report/report.models';
+import { isOutputFormat } from '../../services/report/report.typeguards';
 import { type SubmitComponentProps } from '../../stores/AnswerModals.store';
 import { SplitButton } from '../SplitButton/SplitButton';
 import { PrintFormatSubmitButtonFormat } from './Format/PrintFormatSubmitButton-Format';

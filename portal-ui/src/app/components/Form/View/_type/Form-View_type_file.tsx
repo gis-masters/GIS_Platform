@@ -7,8 +7,9 @@ import { type LibraryRecord } from '../../../../services/data/library/library.mo
 import { type PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Files } from '../../../Files/Files';
 import { type FormControlProps } from '../../Control/Form-Control';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 @observer
@@ -37,6 +38,7 @@ class FormViewTypeFile extends Component<FormControlProps> {
         ) : (
           <FormViewValue>—</FormViewValue>
         )}
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

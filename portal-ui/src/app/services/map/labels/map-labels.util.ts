@@ -24,7 +24,6 @@ import {
   type FeatureFontStringData,
   type FeatureLengthData,
   type FontProperties,
-  isTextAlignTypes,
   type LabelPosition,
   type LabelStyleOffsets,
   type PointOnBisectorData,
@@ -32,6 +31,7 @@ import {
   type TextAlignTypes,
   type TextProperties
 } from './map-labels.models';
+import { isTextAlignTypes } from './map-labels.typeguards';
 
 function calculateLengthCustom(coordinates: number[][]): number {
   let totalLength = 0;

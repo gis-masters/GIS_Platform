@@ -16,7 +16,7 @@ import './Form-Control_type_set.scss';
 @observer
 class FormControlTypeSet extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, property, fieldValue = {}, errors, variant = 'standard' } = this.props;
+    const { htmlId, className, property, fieldValue = {}, errors, warnings, variant = 'standard' } = this.props;
     const { properties } = property as PropertySchemaSet;
 
     const value: Record<string, unknown> = isRecordStringUnknown(fieldValue) ? fieldValue : {};
@@ -51,7 +51,7 @@ class FormControlTypeSet extends Component<FormControlProps> {
             )}
           </RegistryConsumer>
         </div>
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }

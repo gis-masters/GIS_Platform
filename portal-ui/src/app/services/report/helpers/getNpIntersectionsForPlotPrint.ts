@@ -2,7 +2,7 @@ import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getWfsIntersectionsForFeature } from '../../geoserver/wfs/wfs.service';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { type IntersectionPrintItem } from '../report.models';
-import { resolveLayersBySchema } from './resolveLayersBySchema';
+import { resolveSingleLayerBySchema } from './resolveLayersBySchema';
 
 /** Имя схемы векторной таблицы границ населённых пунктов (Schema.name). */
 export const NP_LAYER_SCHEMA_NAME = 'admenp_fgis';
@@ -18,30 +18,13 @@ export async function getNpIntersectionsForPlotPrint(
   feature: WfsFeature,
   sourceLayer: CrgVectorLayer
 ): Promise<GetNpIntersectionsForPlotPrintResult> {
-  const matchedLayers = await resolveLayersBySchema(NP_LAYER_SCHEMA_NAME);
+  const npResolve = await resolveSingleLayerBySchema(NP_LAYER_SCHEMA_NAME);
 
-  if (!matchedLayers.length) {
-    return {
-      ok: false,
-      message: `В проекте нет векторного слоя по схеме "${NP_LAYER_SCHEMA_NAME}". Добавьте слой в проект.`
-    };
+  if (!npResolve.ok) {
+    return { ok: false, message: npResolve.message };
   }
 
-  if (matchedLayers.length > 1) {
-    return {
-      ok: false,
-      message: `В проекте несколько слоев по схеме "${NP_LAYER_SCHEMA_NAME}". Оставьте один такой слой в проекте.`
-    };
-  }
-
-  const npLayer = matchedLayers[0];
-
-  if (!npLayer.complexName) {
-    return {
-      ok: false,
-      message: `У слоя по схеме "${NP_LAYER_SCHEMA_NAME}" (id ${npLayer.id}) не задан complexName.`
-    };
-  }
+  const npLayer = npResolve.layer;
 
   try {
     const wfsItems = await getWfsIntersectionsForFeature(feature, sourceLayer, npLayer, {

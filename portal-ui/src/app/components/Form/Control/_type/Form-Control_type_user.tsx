@@ -13,7 +13,7 @@ import { cnFormControl, type FormControlProps } from '../Form-Control';
 @observer
 class FormControlTypeUser extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, fieldValue, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, errors, warnings, fieldValue, fullWidthForOldForm } = this.props;
 
     let value: MinimizedCrgUser[];
 
@@ -34,7 +34,7 @@ class FormControlTypeUser extends Component<FormControlProps> {
           editable
           onChange={this.handleChange}
         />
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }

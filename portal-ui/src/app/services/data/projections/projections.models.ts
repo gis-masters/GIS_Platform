@@ -1,8 +1,5 @@
-import { isObject } from 'lodash';
-
 import { type SpatialReferenceSystem } from '../../../../server-types/common-contracts';
 import { type XTableColumn, XTableExtraColumnType } from '../../../components/XTable/XTable.models';
-import { isArray } from '../../util/typeGuards/isArray';
 import { PropertyType } from '../schema/schema.models';
 
 export const DEFAULT_OL_PROJECTION = {
@@ -23,38 +20,6 @@ export interface Projection extends SpatialReferenceSystem {
 export interface EditProjectionModel {
   srtext: string;
   proj4Text: string;
-}
-
-export function isArrayOfProjections(values: unknown): values is Projection[] {
-  if (!isArray(values)) {
-    return false;
-  }
-
-  for (const value of values) {
-    if (!isProjection(value)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-export function isProjection(obj: unknown): obj is Projection {
-  return (
-    isObject(obj) &&
-    'authName' in obj &&
-    typeof obj.authName === 'string' &&
-    'authSrid' in obj &&
-    typeof obj.authSrid === 'number' &&
-    'srtext' in obj &&
-    typeof obj.srtext === 'string' &&
-    'proj4Text' in obj &&
-    typeof obj.proj4Text === 'string' &&
-    'title' in obj &&
-    typeof obj.title === 'string' &&
-    'auth_srid' in obj &&
-    typeof obj.auth_srid === 'number'
-  );
 }
 
 export const projectionXTableCols: XTableColumn<Projection>[] = [

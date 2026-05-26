@@ -8,15 +8,13 @@ import { cloneDeep } from 'lodash';
 
 import { organizationsClient } from '../../services/auth/organizations/organizations.client';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
-import {
-  isArrayOfProjections,
-  isProjection,
-  type Projection
-} from '../../services/data/projections/projections.models';
+import { type Projection } from '../../services/data/projections/projections.models';
+import { isProjection } from '../../services/data/projections/projections.typeguards';
 import { type PropertySchemaChoice, PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { isArray } from '../../services/util/typeGuards/isArray';
+import { isArrayOf } from '../../services/util/typeGuards/isArrayOf';
 import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import {
   type CompositeSettings,
@@ -150,7 +148,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
 
   @boundMethod
   private handleFieldChange(value: unknown, propertyName: string, prevValue: unknown, formValue: OrgSettings) {
-    if (formValue.favorites_epsg && isArrayOfProjections(formValue.favorites_epsg)) {
+    if (formValue.favorites_epsg && isArrayOf(formValue.favorites_epsg, isProjection)) {
       this.setFavoritesProjection(formValue.favorites_epsg);
       this.updateOptions();
     }

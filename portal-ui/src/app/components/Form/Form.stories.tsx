@@ -1,6 +1,5 @@
 import React from 'react';
 import { action, observable } from 'mobx';
-import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
 import { type StoryFn } from '@storybook/react';
 import { cloneDeep } from 'lodash';
@@ -14,9 +13,8 @@ import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordSt
 import { Button } from '../Button/Button';
 import { cnFormStoryActions, FormStoryActions } from '../FormStoryActions/FormStoryActions';
 import { Toast } from '../Toast/Toast';
-import { FormActions } from './Actions/Form-Actions';
-import { cnFormControl } from './Control/Form-Control';
-import { Form, FormField, FormLabel } from './Form';
+import { Form } from './Form';
+import { schemaWithDefaultValue, schemaWithDynamicProperties } from './Form.stories.fixtures';
 import { getDefaultValues } from './Form.utils';
 
 export default {
@@ -323,29 +321,6 @@ const storyActions = (
 
 const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
-export const ContentOnly = Template.bind({});
-ContentOnly.args = {
-  children: (
-    <>
-      <FormField>
-        <FormLabel htmlFor='someTitle'>Название</FormLabel>
-        <div className={cnFormControl()}>
-          <TextField id='someTitle' value={'Some title'} fullWidth variant='standard' />
-        </div>
-      </FormField>
-      <FormField>
-        <FormLabel htmlFor='someDescription'>Описание</FormLabel>
-        <div className={cnFormControl()}>
-          <TextField id='someDescription' value={'Some description'} fullWidth variant='standard' />
-        </div>
-      </FormField>
-      <FormActions>
-        <Button color='primary'>Отправить</Button>
-      </FormActions>
-    </>
-  )
-};
-
 export const OutsideControl = Template.bind({});
 OutsideControl.args = {
   schema: { properties: testFields },
@@ -387,66 +362,11 @@ Auto.args = {
   )
 };
 
-export const schemaWithDefaultValue: SimpleSchema = {
-  properties: [
-    {
-      name: 'name',
-      title: 'Имя',
-      propertyType: PropertyType.STRING,
-      defaultValue: 'John'
-    },
-    {
-      name: 'surname',
-      title: 'Фамилия',
-      propertyType: PropertyType.STRING,
-      defaultValueWellKnownFormula: 'inherit'
-    },
-    {
-      name: 'initials',
-      title: 'Инициалы',
-      propertyType: PropertyType.STRING,
-      defaultValueFormula: 'return obj.name.slice(0,1) + ". " + parent.surname.slice(0,1) + "."'
-    }
-  ]
-};
-
 export const DefaultValue = Template.bind({});
 DefaultValue.args = {
   id: 'defaultValue',
   schema: schemaWithDefaultValue,
   value: getDefaultValues(schemaWithDefaultValue.properties, { surname: 'Doe' })
-};
-
-export const schemaWithDynamicProperties: SimpleSchema = {
-  properties: [
-    {
-      name: 'name',
-      title: 'Название',
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'caption',
-      title: 'Надпись',
-      description:
-        'Тут формула динамического свойства указана строкой. Изменяется title в зависимости от значения поля "Название".',
-      propertyType: PropertyType.STRING,
-      dynamicPropertyFormula: 'return { title: "Надпись" + (obj?.name ? " на " + obj?.name : "") }'
-    },
-    {
-      name: 'hasDescription',
-      title: 'Есть описание',
-      description: 'Если включить, то станет видимым ещё одно поле.',
-      propertyType: PropertyType.BOOL
-    },
-    {
-      name: 'description',
-      title: 'Описание',
-      description:
-        'Тут формула динамического свойства указана функцией. Изменяется hidden в зависимости от значения поля "Есть описание".',
-      propertyType: PropertyType.STRING,
-      dynamicPropertyFormula: obj => ({ hidden: !(isRecordStringUnknown(obj) && obj.hasDescription) })
-    }
-  ]
 };
 
 const currentSchemaWithDynamicProperties: SimpleSchema = cloneDeep(schemaWithDynamicProperties);
@@ -474,5 +394,6 @@ DynamicProperties.args = {
   actions: dynamicPropertiesStoryActions,
   actionFunction,
   errors,
+  auto: true,
   value: getDefaultValues(schemaWithDynamicProperties.properties)
 };

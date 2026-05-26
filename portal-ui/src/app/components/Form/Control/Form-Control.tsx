@@ -19,6 +19,7 @@ export interface FormControlProps extends IClassNameProps, ChildrenProps {
   formRole?: FormRole;
   inSet?: boolean;
   errors?: string[];
+  warnings?: string[];
   variant?: 'standard' | 'outlined';
   fullWidthForOldForm?: boolean;
   labelInField?: boolean;

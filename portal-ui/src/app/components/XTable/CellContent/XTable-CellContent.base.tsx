@@ -11,7 +11,8 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 
-import { isPropertyType, PropertyType } from '../../../services/data/schema/schema.models';
+import { PropertyType } from '../../../services/data/schema/schema.models';
+import { isPropertyType } from '../../../services/data/schema/schema.typeguards';
 import { type ChildrenProps } from '../../../services/models';
 import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { cssVars } from '../../../utils/cssVars';

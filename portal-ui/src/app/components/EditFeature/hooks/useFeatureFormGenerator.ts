@@ -18,11 +18,8 @@ import { convertOldToNewProperties } from '../../../services/data/schema/utils/c
 import { convertOldToNewSchema } from '../../../services/data/schema/utils/convertOldToNewSchema';
 import { getFieldRelations } from '../../../services/data/schema/utils/getFieldRelations';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import {
-  type CrgVectorableLayer,
-  type CrgVectorLayer,
-  isVectorLayer
-} from '../../../services/gis/layers/layers.models';
+import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { isVectorLayer } from '../../../services/gis/layers/layers.typeguards';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { formatDate, systemFormat } from '../../../services/util/date.util';
 import { validateCustomRules } from '../../../services/util/FeaturePropertyValidatorsReact';

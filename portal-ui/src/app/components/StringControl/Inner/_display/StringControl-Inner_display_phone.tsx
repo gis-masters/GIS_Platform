@@ -11,12 +11,14 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import InputMask from 'react-input-mask';
 
+import { FormErrors } from '../../../Form/Errors/Form-Errors';
+import { getFieldInputColor } from '../../../Form/Form.utils';
 import { cnStringControlInner, type StringControlInnerProps } from '../StringControl-Inner.base';
 
 @observer
 class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> {
   render() {
-    const { fieldValue, errors, htmlId, property, variant, labelInField, inSet } = this.props;
+    const { fieldValue, errors, warnings, htmlId, property, variant, labelInField, inSet } = this.props;
 
     return (
       <InputMask
@@ -40,7 +42,8 @@ class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> 
               name={property.name}
               fullWidth={!inSet}
               error={!!errors?.length}
-              helperText={errors}
+              color={getFieldInputColor(errors, warnings)}
+              helperText={<FormErrors errors={errors} warnings={warnings} inHelperText />}
               label={inSet || labelInField ? property.title : undefined}
               variant={variant}
             />

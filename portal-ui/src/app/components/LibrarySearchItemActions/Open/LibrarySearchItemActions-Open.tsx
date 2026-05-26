@@ -4,7 +4,8 @@ import { observer } from 'mobx-react';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { isLibraryRecord, type LibraryRecord } from '../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { isLibraryRecord } from '../../../services/data/library/library.typeguards';
 import { type SearchItemData, type SearchItemDataTypeFeature } from '../../../services/data/search/search.model';
 import { type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';

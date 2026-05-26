@@ -1,7 +1,5 @@
 import { type Coordinate } from 'ol/coordinate';
 
-import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
-
 export enum GeometryType {
   POINT = 'Point',
   LINE_STRING = 'LineString',
@@ -86,28 +84,6 @@ export interface WfsFeature extends GeoJSONObject {
   geometry?: WfsGeometry;
   geometry_name: string;
   properties: Record<string, unknown>;
-}
-
-export function isWfsFeature(value: unknown): value is WfsFeature {
-  if (!isRecordStringUnknown(value)) {
-    return false;
-  }
-
-  if (value.type !== 'Feature') {
-    return false;
-  }
-
-  if (typeof value.id !== 'string') {
-    return false;
-  }
-
-  if (typeof value.geometry_name !== 'string') {
-    return false;
-  }
-
-  const props = value.properties;
-
-  return props !== null && typeof props === 'object';
 }
 
 export interface WfsFeatureCollection extends GeoJSONObject {

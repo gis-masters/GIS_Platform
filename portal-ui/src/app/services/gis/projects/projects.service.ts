@@ -8,8 +8,8 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { route } from '../../../stores/Route.store';
 import { usersService } from '../../auth/users/users.service';
 import { communicationService } from '../../communication.service';
-import { isArrayOfProjections } from '../../data/projections/projections.models';
 import { getProjectionByCode, registerProjectionArrayInProj4 } from '../../data/projections/projections.service';
+import { isProjection } from '../../data/projections/projections.typeguards';
 import { schemaService } from '../../data/schema/schema.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
@@ -17,6 +17,7 @@ import { type PageOptions } from '../../models';
 import { isLayerReadAllowed } from '../../permissions/permissions.service';
 import { services } from '../../services';
 import { sleep } from '../../util/sleep';
+import { isArrayOf } from '../../util/typeGuards/isArrayOf';
 import { type CrgLayer, type CrgLayersGroup } from '../layers/layers.models';
 import { getLayers } from '../layers/layers.service';
 import { projectsClient } from './projects.client';
@@ -195,7 +196,7 @@ class ProjectsService {
       .filter((value, index, self) => index === self.findIndex(item => item?.authSrid === value?.authSrid))
       .filter(Boolean);
 
-    if (uniqueProjection.length && isArrayOfProjections(uniqueProjection)) {
+    if (uniqueProjection.length && isArrayOf(uniqueProjection, isProjection)) {
       registerProjectionArrayInProj4(uniqueProjection);
     }
   }

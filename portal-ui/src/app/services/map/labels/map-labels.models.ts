@@ -4,8 +4,6 @@ import { type SimpleGeometry } from 'ol/geom';
 import { type Projection } from '../../data/projections/projections.models';
 import { type UnitsOfAreaMeasurement } from '../../util/open-layers.util';
 
-const textAlignTypes = new Set(['left', 'center', 'right', 'justify']);
-
 export type LabelType = 'label' | 'line' | 'turningPoints';
 
 export type Distance = {
@@ -90,10 +88,6 @@ export type AnnotationsFontProperties = {
   distances: FontProperties;
   annotations: FontProperties;
 };
-
-export function isTextAlignTypes(value: unknown): value is TextAlignTypes {
-  return typeof value === 'string' && textAlignTypes.has(value);
-}
 
 export type CircleProperties = {
   fillColor: string;

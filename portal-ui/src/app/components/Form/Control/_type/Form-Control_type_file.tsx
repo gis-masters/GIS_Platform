@@ -4,10 +4,12 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { type FileInfo, isFileInfoArray } from '../../../../services/data/files/files.models';
+import { type FileInfo } from '../../../../services/data/files/files.models';
 import { checkFileEcp, verifyEcp } from '../../../../services/data/files/files.service';
+import { isFileInfo } from '../../../../services/data/files/files.typeguards';
 import { type LibraryRecord } from '../../../../services/data/library/library.models';
 import { type PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
+import { isArrayOf } from '../../../../services/util/typeGuards/isArrayOf';
 import { Files } from '../../../Files/Files';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
@@ -32,7 +34,7 @@ class FormControlTypeFile extends Component<FormControlProps> {
       const files = fieldValue;
       const prevFiles = prevProps.fieldValue;
 
-      if (isFileInfoArray(files) && isFileInfoArray(prevFiles)) {
+      if (isArrayOf(files, isFileInfo) && isArrayOf(prevFiles, isFileInfo)) {
         const ecpFiles = files
           .filter(file => {
             return !prevFiles.some(({ id }) => file.id === id);
@@ -45,14 +47,15 @@ class FormControlTypeFile extends Component<FormControlProps> {
   }
 
   render() {
-    const { className, inSet, property, formRole, errors, fieldValue, formValue, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, formRole, errors, warnings, fieldValue, formValue, fullWidthForOldForm } =
+      this.props;
     let value: FileInfo[] = [];
 
     try {
       if (fieldValue && typeof fieldValue === 'string') {
         const parsedValue = JSON.parse(fieldValue) as unknown;
-        value = isFileInfoArray(parsedValue) ? parsedValue : [];
-      } else if (isFileInfoArray(fieldValue)) {
+        value = isArrayOf(parsedValue, isFileInfo) ? parsedValue : [];
+      } else if (isArrayOf(fieldValue, isFileInfo)) {
         value = fieldValue;
       }
     } catch {
@@ -74,7 +77,7 @@ class FormControlTypeFile extends Component<FormControlProps> {
           editable
           onChange={this.handleChange}
         />
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }
@@ -105,7 +108,7 @@ class FormControlTypeFile extends Component<FormControlProps> {
 
     let files: FileInfo[] = [];
 
-    if (isFileInfoArray(fieldValue)) {
+    if (isArrayOf(fieldValue, isFileInfo)) {
       files = fieldValue;
     }
 

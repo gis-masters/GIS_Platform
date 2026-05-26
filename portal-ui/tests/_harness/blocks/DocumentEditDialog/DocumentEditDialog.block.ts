@@ -39,9 +39,8 @@ class DocumentEditDialogBlock extends Block {
       throw new Error(`Не найдено поле "${field}"`);
     }
 
-    const $errorMessage = await $currentField.$('.MuiFormHelperText-root').getElement();
-    await $errorMessage.waitForDisplayed();
-    expect(await $errorMessage.getText()).toContain(message);
+    const $error = $currentField.$(`.Form-Error*=${message}`);
+    await $error.waitForDisplayed({ timeoutMsg: `В поле "${field}" не отображается ошибка "${message}"` });
   }
 
   async waitForClose(): Promise<void> {

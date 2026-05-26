@@ -15,7 +15,7 @@ export async function getZouitIntersectionsForPlotPrint(
   feature: WfsFeature,
   sourceLayer: CrgVectorLayer
 ): Promise<GetZouitIntersectionsForPlotPrintResult> {
-  const zouitResolve = resolveZouitVectorLayerInProject();
+  const zouitResolve = await resolveZouitVectorLayerInProject();
 
   if (!zouitResolve.ok) {
     return { ok: false, message: zouitResolve.message };

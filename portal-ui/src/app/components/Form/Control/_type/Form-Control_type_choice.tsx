@@ -25,6 +25,7 @@ import { getMultipleChoiceValue } from '../../../../services/util/form/choiceMul
 import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { isStringArray } from '../../../../services/util/typeGuards/isStringArray';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { getFieldInputColor } from '../../Form.utils';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 import './Form-Control_type_choice.scss';
@@ -43,7 +44,16 @@ const emptyTitle = 'Не выбрано';
 @observer
 class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, property, errors, fullWidthForOldForm, labelInField, variant = 'standard' } = this.props;
+    const {
+      htmlId,
+      className,
+      property,
+      errors,
+      warnings,
+      fullWidthForOldForm,
+      labelInField,
+      variant = 'standard'
+    } = this.props;
 
     if (property.propertyType !== PropertyType.CHOICE) {
       throw new Error('Ошибка типа свойства');
@@ -78,6 +88,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               multiple={multiple}
               onChange={this.handleSelectChange}
               error={!!errors?.length}
+              color={getFieldInputColor(errors, warnings)}
               inputProps={{ id: htmlId }}
               // eslint-disable-next-line react/jsx-no-bind -- FIXME #3792
               renderValue={selected => {
@@ -150,7 +161,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
                   ))}
             </Select>
 
-            <FormErrors errors={errors} />
+            <FormErrors warnings={warnings} errors={errors} />
           </>
         )}
 

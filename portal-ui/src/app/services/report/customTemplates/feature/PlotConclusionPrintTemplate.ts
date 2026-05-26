@@ -13,14 +13,16 @@ import { enrichFzIntersectionsWithReadableCodes } from '../../helpers/enrichFzIn
 import { getFunctionalZonesIntersectionsForPlotPrint } from '../../helpers/getFunctionalZonesIntersectionsForPlotPrint';
 import { getOksIntersectionsForPlotPrint } from '../../helpers/getOksIntersectionsForPlotPrint';
 import { getZouitIntersectionsForPlotPrint } from '../../helpers/getZouitIntersectionsForPlotPrint';
+import { resolveFunctionalZonesVectorLayerInProject } from '../../helpers/resolveFunctionalZonesVectorLayerInProject';
+import { resolveOksLayersBySchema } from '../../helpers/resolveOksLayersBySchema';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
 import {
   type CreateReportRequest,
   type FzIntersectionPrintItem,
   type IntersectionPrintItem,
-  isOutputFormat,
   type PrintPreparedData
 } from '../../report.models';
+import { isOutputFormat } from '../../report.typeguards';
 import { buildCoordinatesList, type PrintableCoordinatesChunk } from '../../utils/buildCoordinatesList';
 import { getCadastralQuarter } from '../../utils/getCadastralQuarter';
 
@@ -85,6 +87,16 @@ export class PlotConclusionPrintTemplate extends FeaturePrintTemplate {
     const zouit = zouitResult.items;
     const fz = await enrichFzIntersectionsWithReadableCodes(fzResult.items);
 
+    const [oksLayersResult, fzLayerResult] = await Promise.all([
+      resolveOksLayersBySchema(),
+      resolveFunctionalZonesVectorLayerInProject()
+    ]);
+
+    const ensureVisibleLayers: CrgVectorLayer[] = [
+      ...(oksLayersResult.ok ? Object.values(oksLayersResult.layers) : []),
+      ...(fzLayerResult.ok ? [fzLayerResult.layer] : [])
+    ];
+
     const { formValue: mapDialogResult, extra } = await doFormPrompt<{
       map: string;
       showCoordinates: boolean;
@@ -103,7 +115,8 @@ export class PlotConclusionPrintTemplate extends FeaturePrintTemplate {
             focusFeature: feature,
             autoGenerate: Boolean(flags.featureExtractPrintAutoMap),
             showSelectionInPrintByDefault: true,
-            hideLegendInPrintByDefault: true
+            hideLegendInPrintByDefault: true,
+            ensureVisibleLayers
           },
           {
             name: 'showCoordinates',

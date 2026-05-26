@@ -6,8 +6,13 @@ import { type ChildrenProps } from '../../../services/models';
 
 import './Form-Error.scss';
 
-const cnForm = cn('Form-Error');
+const cnFormError = cn('Form', 'Error');
 
-export const FormError: FC<IClassNameProps & ChildrenProps> = ({ children }) => (
-  <div className={cnForm()}>{children}</div>
+interface FormErrorProps extends IClassNameProps, ChildrenProps {
+  warning?: boolean;
+  contents?: boolean;
+}
+
+export const FormError: FC<FormErrorProps> = ({ children, warning, contents }) => (
+  <div className={cnFormError({ warning, contents })}>{children}</div>
 );

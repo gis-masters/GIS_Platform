@@ -12,7 +12,7 @@ import { cnFormControl, type FormControlProps } from '../Form-Control';
 @observer
 class FormControlTypeDocument extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, fieldValue, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, errors, warnings, fieldValue, fullWidthForOldForm } = this.props;
 
     let value: DocumentInfo[];
 
@@ -28,7 +28,7 @@ class FormControlTypeDocument extends Component<FormControlProps> {
     return (
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <Documents property={property as PropertySchemaDocument} value={value} editable onChange={this.handleChange} />
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }

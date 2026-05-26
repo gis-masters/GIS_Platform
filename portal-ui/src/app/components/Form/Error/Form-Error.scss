@@ -10,4 +10,25 @@
   &:first-child {
     margin-top: 3px;
   }
+
+  &_warning {
+    color: var(--warning);
+  }
+
+  &_contents {
+    display: contents;
+
+    margin: 0;
+
+    letter-spacing: inherit;
+
+    color: inherit;
+
+    font-size: inherit;
+    line-height: inherit;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 }

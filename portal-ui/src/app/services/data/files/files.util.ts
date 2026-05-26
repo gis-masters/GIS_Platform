@@ -9,13 +9,13 @@ import {
   allTabFilesTypes,
   type CompoundFileTypes,
   type FileInfo,
-  isFileInfo,
   midMifRequiredFilesTypes,
   optionalShapeFilesTypes,
   optionalTabFilesTypes,
   shapeRequiredFilesTypes,
   tabRequiredFilesTypes
 } from './files.models';
+import { isFileInfo } from './files.typeguards';
 
 export function getFileExtension(name = ''): string {
   const pos = name.lastIndexOf('.');

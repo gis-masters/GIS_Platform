@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { type MinimizedCrgUser } from '../../../services/auth/users/users.models';
 import { usersService } from '../../../services/auth/users/users.service';
 import { type PageOptions } from '../../../services/models';
-import { isFilterQuery } from '../../../services/util/filters/filters.models';
+import { isFilterQuery } from '../../../services/util/filters/filters.typeguards';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { replaceObjectKeys } from '../../../services/util/object';
 import { currentUser } from '../../../stores/CurrentUser.store';

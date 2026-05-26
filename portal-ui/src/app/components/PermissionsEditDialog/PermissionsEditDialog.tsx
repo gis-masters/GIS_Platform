@@ -10,13 +10,9 @@ import { groupsService } from '../../services/auth/groups/groups.service';
 import { type CrgUser } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
 import { communicationService } from '../../services/communication.service';
-import {
-  isPrincipalType,
-  PrincipalType,
-  type Role,
-  type RoleAssignmentBody
-} from '../../services/permissions/permissions.models';
+import { PrincipalType, type Role, type RoleAssignmentBody } from '../../services/permissions/permissions.models';
 import { addEntityPermission, removeEntityPermission } from '../../services/permissions/permissions.service';
+import { isPrincipalType } from '../../services/permissions/permissions.typeguards';
 import { filterByPrincipal, filterOutPrincipal } from '../../services/permissions/permissions.utils';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';

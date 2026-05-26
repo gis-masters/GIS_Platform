@@ -11,12 +11,8 @@ import { FeaturePrintTemplate } from '../../baseTemplates/FeaturePrintTemplate';
 import { enrichNpIntersectionsWithReadableCodes } from '../../helpers/enrichNpIntersectionsWithReadableCodes';
 import { getNpIntersectionsForPlotPrint } from '../../helpers/getNpIntersectionsForPlotPrint';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
-import {
-  type CreateReportRequest,
-  isOutputFormat,
-  type NpIntersectionPrintItem,
-  type PrintPreparedData
-} from '../../report.models';
+import { type CreateReportRequest, type NpIntersectionPrintItem, type PrintPreparedData } from '../../report.models';
+import { isOutputFormat } from '../../report.typeguards';
 
 type PlotNpPrintTemplateData = {
   title: string;

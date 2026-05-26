@@ -15,12 +15,8 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
-import {
-  type ExplorerItemData,
-  ExplorerItemType,
-  isCustomFilters,
-  isExplorerItemData
-} from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { isCustomFilters, isExplorerItemData } from '../Explorer/Explorer.typeguards';
 import { type FormControlProps } from '../Form/Control/Form-Control';
 
 import './SelectVectorTableControl.scss';

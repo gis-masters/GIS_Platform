@@ -6,8 +6,9 @@ import { type PropertySchemaDatetime, PropertyType } from '../../../../services/
 import { formatDate } from '../../../../services/util/date.util';
 import { type FormControlProps } from '../../Control/Form-Control';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 @observer
@@ -25,6 +26,7 @@ class FormViewTypeDatetime extends Component<FormControlProps> {
       <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
         <FormViewValue>{date}</FormViewValue>
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

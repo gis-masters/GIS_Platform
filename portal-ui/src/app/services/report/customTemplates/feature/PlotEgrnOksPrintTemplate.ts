@@ -9,13 +9,10 @@ import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../../gis/layers/layers.models';
 import { FeaturePrintTemplate } from '../../baseTemplates/FeaturePrintTemplate';
 import { getOksIntersectionsForPlotPrint } from '../../helpers/getOksIntersectionsForPlotPrint';
+import { resolveOksLayersBySchema } from '../../helpers/resolveOksLayersBySchema';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
-import {
-  type CreateReportRequest,
-  type IntersectionPrintItem,
-  isOutputFormat,
-  type PrintPreparedData
-} from '../../report.models';
+import { type CreateReportRequest, type IntersectionPrintItem, type PrintPreparedData } from '../../report.models';
+import { isOutputFormat } from '../../report.typeguards';
 
 type PlotEgrnOksPrintTemplateData = {
   title: string;
@@ -25,6 +22,7 @@ type PlotEgrnOksPrintTemplateData = {
   oks: IntersectionPrintItem[];
 };
 
+/** Печать по участку: пересечения с ОКС (oks_pro, oks_polyline_pro, oks_constructions_points) (`sys_plot_egrn_oks`). */
 export class PlotEgrnOksPrintTemplate extends FeaturePrintTemplate {
   override async getData(feature: WfsFeature): Promise<PrintPreparedData | void> {
     const schemaWithAppliedView = await this.getLayerSchemaWithAppliedView(feature);
@@ -52,6 +50,9 @@ export class PlotEgrnOksPrintTemplate extends FeaturePrintTemplate {
 
     const oks = oksResult.items;
 
+    const oksLayersResult = await resolveOksLayersBySchema();
+    const ensureVisibleLayers = oksLayersResult.ok ? Object.values(oksLayersResult.layers) : [];
+
     const { formValue: mapDialogResult, extra } = await doFormPrompt<{
       map: string;
     }>({
@@ -69,7 +70,8 @@ export class PlotEgrnOksPrintTemplate extends FeaturePrintTemplate {
             focusFeature: feature,
             autoGenerate: Boolean(flags.featureExtractPrintAutoMap),
             showSelectionInPrintByDefault: true,
-            hideLegendInPrintByDefault: true
+            hideLegendInPrintByDefault: true,
+            ensureVisibleLayers
           }
         ]
       }

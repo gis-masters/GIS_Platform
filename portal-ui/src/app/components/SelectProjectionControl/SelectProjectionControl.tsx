@@ -1,7 +1,8 @@
 import React, { type FC, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { isProjection, type Projection } from '../../services/data/projections/projections.models';
+import { type Projection } from '../../services/data/projections/projections.models';
+import { isProjection } from '../../services/data/projections/projections.typeguards';
 import { type FormControlProps } from '../Form/Control/Form-Control';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
 

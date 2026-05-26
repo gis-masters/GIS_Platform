@@ -9,6 +9,8 @@ import {
   PropertyType
 } from '../../../services/data/schema/schema.models';
 import { type FormControlProps } from '../../Form/Control/Form-Control';
+import { FormErrors } from '../../Form/Errors/Form-Errors';
+import { getFieldInputColor } from '../../Form/Form.utils';
 
 export const cnStringControlInner = cn('StringControl', 'Inner');
 
@@ -22,8 +24,19 @@ export interface StringControlInnerProps extends Omit<FormControlProps, 'onChang
 
 export class StringControlInnerBase extends Component<StringControlInnerProps> {
   render() {
-    const { htmlId, inSet, labelInField, fieldValue, errors, property, variant, textFieldProps, className, onBlur } =
-      this.props;
+    const {
+      htmlId,
+      inSet,
+      labelInField,
+      fieldValue,
+      errors,
+      warnings,
+      property,
+      variant,
+      textFieldProps,
+      className,
+      onBlur
+    } = this.props;
     const { title, name } = property;
 
     return (
@@ -34,7 +47,8 @@ export class StringControlInnerBase extends Component<StringControlInnerProps> {
         fullWidth={labelInField || !inSet}
         value={fieldValue || ''}
         error={!!errors?.length}
-        helperText={errors}
+        color={getFieldInputColor(errors, warnings)}
+        helperText={<FormErrors errors={errors} warnings={warnings} inHelperText />}
         multiline={property.propertyType === PropertyType.TEXT}
         label={labelInField || inSet ? title : undefined}
         onChange={this.handleChange}

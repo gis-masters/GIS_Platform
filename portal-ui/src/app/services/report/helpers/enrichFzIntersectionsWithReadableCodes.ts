@@ -1,6 +1,6 @@
 import { applyView } from '../../data/schema/utils/applyView';
-import { isVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
+import { isVectorLayer } from '../../gis/layers/layers.typeguards';
 import { type FzIntersectionPrintItem, type IntersectionPrintItem } from '../report.models';
 import { readableIntersectionField } from './intersectionPrintReadableField';
 

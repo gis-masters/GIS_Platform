@@ -15,7 +15,8 @@ import { convertNewToOldSchema } from '../../services/data/schema/utils/convertN
 import { deleteFeaturesAndEmitEvent } from '../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { GEOMETRY_COORDINATES_FLAT_DEPTH, getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
-import { type CrgLayer, type CrgVectorLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { isVectorLayer } from '../../services/gis/layers/layers.typeguards';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';

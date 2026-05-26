@@ -23,18 +23,15 @@ export async function doAlert({
   await doDialog({ id: uuid(), type: 'alert', title, message, okText, dialogProps });
 }
 
-// диалог с подтверждением, аналог confirm
-export async function doConfirm({
-  title,
-  message,
-  okText,
-  cancelText
-}: {
+export interface DoConfirmOptions {
   title?: ReactNode;
   message?: ReactNode;
   okText?: string;
   cancelText?: string;
-}): Promise<boolean> {
+}
+
+// диалог с подтверждением, аналог confirm
+export async function doConfirm({ title, message, okText, cancelText }: DoConfirmOptions): Promise<boolean> {
   const { answer } = await doDialog({ id: uuid(), type: 'confirm', title, message, okText, cancelText });
 
   return Boolean(answer);

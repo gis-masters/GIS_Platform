@@ -17,6 +17,12 @@ export class FormBlock extends Block {
     await inputBlock.setValue(value);
   }
 
+  async blurStringField(title: string): Promise<void> {
+    const $tableFieldValueRoot = await this.getFieldInputRoot(title);
+    const inputBlock = new MuiInputBlock($tableFieldValueRoot);
+    await inputBlock.blur();
+  }
+
   async setStringValue(title: string, value: string): Promise<void> {
     const $tableFieldValueRoot = await this.getFieldInputRoot(title);
     const tableFieldValue = new MuiInputBlock($tableFieldValueRoot);

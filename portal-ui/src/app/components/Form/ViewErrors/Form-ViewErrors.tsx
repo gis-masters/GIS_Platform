@@ -3,7 +3,7 @@ import { Tooltip } from '@mui/material';
 import { ErrorOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import './ViewErrors-ViewErrors.scss';
+import './Form-ViewErrors.scss';
 
 const cnFormViewErrors = cn('Form', 'ViewErrors');
 

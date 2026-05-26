@@ -14,7 +14,8 @@ import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { isArray } from '../../../services/util/typeGuards/isArray';
 import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { type ExplorerItemData, ExplorerItemType, isExplorerItemData } from '../../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { isExplorerItemData } from '../../Explorer/Explorer.typeguards';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import {

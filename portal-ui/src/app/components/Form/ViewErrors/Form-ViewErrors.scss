@@ -3,3 +3,7 @@ body .Form-ViewErrors {
   top: 0;
   right: 0;
 }
+
+body .Form-ViewWarnings + .Form-ViewErrors {
+  right: 24px;
+}

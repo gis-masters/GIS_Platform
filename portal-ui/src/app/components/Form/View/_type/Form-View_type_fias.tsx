@@ -6,7 +6,8 @@ import { type FiasValue } from '../../../../services/data/fias/fias.models';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { FiasView } from '../../../FiasView/FiasView';
 import { type FormControlProps } from '../../Control/Form-Control';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 @observer
@@ -17,6 +18,7 @@ class FormViewTypeFias extends Component<FormControlProps> {
     return (
       <div className={cnFormView({ inSet }, [className])}>
         <FiasView value={fieldValue as FiasValue} />
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

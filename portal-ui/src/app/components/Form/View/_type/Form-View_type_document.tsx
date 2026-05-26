@@ -6,8 +6,9 @@ import { type PropertySchemaDocument, PropertyType } from '../../../../services/
 import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { type DocumentInfo, Documents } from '../../../Documents/Documents';
 import { type FormControlProps } from '../../Control/Form-Control';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 @observer
@@ -33,6 +34,7 @@ class FormViewTypeDocument extends Component<FormControlProps> {
         ) : (
           <FormViewValue>—</FormViewValue>
         )}
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

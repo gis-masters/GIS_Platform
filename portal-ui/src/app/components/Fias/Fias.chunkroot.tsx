@@ -9,6 +9,8 @@ import { debounce, type DebouncedFunc } from 'lodash';
 
 import { type FiasValue } from '../../services/data/fias/fias.models';
 import { getFiasAddressItems, getFiasOktmoItems } from '../../services/data/fias/fias.service';
+import { FormErrors } from '../Form/Errors/Form-Errors';
+import { getFieldInputColor } from '../Form/Form.utils';
 import { FiasCode } from './Code/Fias-Code';
 
 const cnFias = cn('Fias');
@@ -20,6 +22,7 @@ export interface FiasProps extends IClassNameProps {
   searchMode?: 'address' | 'oktmo';
   fullWidth?: boolean;
   errors?: string[];
+  warnings?: string[];
   variant?: 'outlined' | 'standard';
   readonly?: boolean;
   onChange?(value: FiasValue | undefined): void;
@@ -114,7 +117,7 @@ export default class Fias extends Component<FiasProps> {
 
   @boundMethod
   private renderInput(params: AutocompleteRenderInputParams) {
-    const { name, value, errors, variant = 'standard' } = this.props;
+    const { name, value, errors, warnings, variant = 'standard' } = this.props;
 
     return (
       <TextField
@@ -127,7 +130,8 @@ export default class Fias extends Component<FiasProps> {
         minRows={1}
         maxRows={3}
         error={!!errors?.length}
-        helperText={errors}
+        color={getFieldInputColor(errors, warnings)}
+        helperText={<FormErrors errors={errors} warnings={warnings} inHelperText />}
         size={variant === 'outlined' ? 'small' : 'medium'}
       />
     );

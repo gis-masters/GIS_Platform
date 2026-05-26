@@ -17,8 +17,8 @@ import {
   isTifFile
 } from '../../services/data/files/files.util';
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { isPlaceFileProcess } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
+import { isPlaceFileProcess } from '../../services/data/processes/processes.typeguards';
 import { type Projection } from '../../services/data/projections/projections.models';
 import { getProjectionCode } from '../../services/data/projections/projections.util';
 import {

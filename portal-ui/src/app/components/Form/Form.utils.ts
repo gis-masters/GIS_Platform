@@ -68,6 +68,9 @@ export function convertToComplexField<T>(field: PropertySchema, formValue: Parti
   return formValue[field.name as keyof T];
 }
 
+export const getFieldInputColor = (errors?: string[], warnings?: string[]): 'warning' | undefined =>
+  !errors?.length && warnings?.length ? 'warning' : undefined;
+
 export function isEqualExceptCalculated<T>(
   a: Partial<T> = {},
   b: Partial<T> = {},

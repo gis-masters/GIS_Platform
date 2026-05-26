@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { type PropertySchemaNumber } from '../../../../services/data/schema/schema.models';
 import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { getFieldInputColor } from '../../Form.utils';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 import './Form-Control_type_number.scss';
@@ -20,6 +21,7 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
       property,
       inSet,
       errors,
+      warnings,
       variant = 'standard',
       fullWidthForOldForm
     } = this.props;
@@ -41,7 +43,8 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
             label={inSet ? title : undefined}
             onChange={this.handleNumberChange}
             error={!!errors?.length}
-            helperText={errors}
+            color={getFieldInputColor(errors, warnings)}
+            helperText={<FormErrors errors={errors} warnings={warnings} inHelperText />}
             onBlur={this.handleNeedValidate}
             variant={variant}
           />
@@ -57,7 +60,7 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
               step={step}
               onChange={this.handleSliderChange}
             />
-            <FormErrors errors={errors} />
+            <FormErrors warnings={warnings} errors={errors} />
           </>
         )}
       </div>

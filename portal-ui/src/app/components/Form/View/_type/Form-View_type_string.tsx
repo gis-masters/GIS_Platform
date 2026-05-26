@@ -7,8 +7,9 @@ import { type PropertySchemaString, PropertyType } from '../../../../services/da
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
 import { type FormControlProps } from '../../Control/Form-Control';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 import './Form-View_type_string.scss';
@@ -42,6 +43,7 @@ class FormViewTypeString extends Component<FormControlProps> {
         <FormViewValue code={code}>
           <TextOverflow>{code ? fieldValue : nl2br(fieldValue)}</TextOverflow>
         </FormViewValue>
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

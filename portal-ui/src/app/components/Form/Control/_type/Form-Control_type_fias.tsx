@@ -9,7 +9,17 @@ import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 class FormControlTypeFias extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue = {}, inSet, fullWidthForOldForm, errors, property, variant } = this.props;
+    const {
+      htmlId,
+      className,
+      fieldValue = {},
+      inSet,
+      fullWidthForOldForm,
+      errors,
+      warnings,
+      property,
+      variant
+    } = this.props;
     const { name, searchMode } = property as PropertySchemaFias;
     const value = (fieldValue as FiasValue) || undefined;
 
@@ -23,6 +33,7 @@ class FormControlTypeFias extends Component<FormControlProps> {
           fullWidth={fullWidthForOldForm}
           variant={variant}
           errors={errors}
+          warnings={warnings}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
         />

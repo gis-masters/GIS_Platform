@@ -31,10 +31,17 @@ import '../Relations/Form-Relations.scss';
 const cnFormContent = cn('Form', 'Content');
 const cnFormRelations = cn('Form', 'Relations');
 
+function getPropertyMessages(items: FieldErrors[], fieldName: string): string[] | undefined {
+  const messages = items.filter(({ field }) => field === fieldName).flatMap(({ messages }) => messages);
+
+  return isStringArray(messages) ? messages : undefined;
+}
+
 interface FormContentProps<T> extends IClassNameProps {
   schema: Schema | SimpleSchema;
   formValue: Partial<T>;
   errors?: FieldErrors[];
+  warnings?: FieldErrors[];
   formRole?: FormRole;
   readonly?: boolean;
   labelInField?: boolean;
@@ -46,7 +53,7 @@ interface FormContentProps<T> extends IClassNameProps {
 @observer
 export class FormContent<T> extends Component<FormContentProps<T>> {
   render() {
-    const { schema, formValue, className, formRole, errors = [], readonly, labelInField } = this.props;
+    const { schema, formValue, className, formRole, errors = [], warnings = [], readonly, labelInField } = this.props;
 
     return (
       <div className={cnFormContent(null, [className, 'scroll'])}>
@@ -68,9 +75,8 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
           }
 
           const propertyReadonly = Boolean(readonly || propertySchema.readOnly);
-          const propertyErrors = errors
-            .filter(({ field }) => field === propertySchema.name)
-            .flatMap(({ messages }) => messages);
+          const propertyErrors = getPropertyMessages(errors, propertySchema.name);
+          const propertyWarnings = getPropertyMessages(warnings, propertySchema.name);
 
           return (
             <FormField key={i} withRelations={!!relations.length}>
@@ -93,7 +99,8 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   formValue={formValue}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   labelInField={labelInField}
-                  errors={isStringArray(propertyErrors) ? propertyErrors : undefined}
+                  errors={propertyErrors}
+                  warnings={propertyWarnings}
                 />
               ) : (
                 <FormControl
@@ -106,7 +113,8 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   formValue={formValue}
                   labelInField={labelInField}
-                  errors={isStringArray(propertyErrors) ? propertyErrors : undefined}
+                  errors={propertyErrors}
+                  warnings={propertyWarnings}
                 >
                   {String(isRecordStringUnknown(formValueRetyped) ? formValueRetyped[propertySchema.name] : undefined)}
                 </FormControl>

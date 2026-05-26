@@ -3,8 +3,13 @@ import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { type PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
-import { isWfsFeature, type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { isWfsFeature } from '../../services/geoserver/wfs/wfs.typeguards';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
+import { isCrgLayer } from '../../services/gis/layers/layers.typeguards';
 import { applyPrintFocusForFeatureExtract, exportMap, loadAllLayersStyles } from '../../services/map/map-print.service';
+import { isArrayOf } from '../../services/util/typeGuards/isArrayOf';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
 import { type FormControlProps } from '../Form/Control/Form-Control';
@@ -23,6 +28,7 @@ type PrintMapSchemaOptions = {
   focusFeature?: WfsFeature;
   showSelectionInPrintByDefault: boolean;
   hideLegendInPrintByDefault: boolean;
+  ensureVisibleLayers?: CrgLayer[];
 };
 
 function readPrintMapSchemaProperty(property: PropertySchema): PrintMapSchemaOptions {
@@ -30,19 +36,27 @@ function readPrintMapSchemaProperty(property: PropertySchema): PrintMapSchemaOpt
     throw new Error('PrintMapImageControl: ожидается propertyType CUSTOM');
   }
 
-  const { format, autoGenerate, focusFeature: focusRaw, showSelectionInPrintByDefault } = property;
+  const {
+    format,
+    autoGenerate,
+    focusFeature: focusRaw,
+    showSelectionInPrintByDefault,
+    ensureVisibleLayers: ensureVisibleLayersRaw
+  } = property;
   const pageFormatId = typeof format === 'string' ? format : 'square';
   const focusFeature = focusRaw !== undefined && isWfsFeature(focusRaw) ? focusRaw : undefined;
   const autoGenerateEnabled = autoGenerate === true;
   const selectionDefault = showSelectionInPrintByDefault === true;
   const hideLegendInPrintByDefault = property.hideLegendInPrintByDefault === true;
+  const ensureVisibleLayers = isArrayOf(ensureVisibleLayersRaw, isCrgLayer) ? ensureVisibleLayersRaw : undefined;
 
   return {
     pageFormatId,
     autoGenerate: autoGenerateEnabled,
     focusFeature,
     showSelectionInPrintByDefault: selectionDefault,
-    hideLegendInPrintByDefault
+    hideLegendInPrintByDefault,
+    ensureVisibleLayers
   };
 }
 
@@ -71,8 +85,14 @@ type PrintMapImageControlState = {
 
 const PrintMapImageControl = observer((props: FormControlProps) => {
   const { fieldValue, property, onChange } = props;
-  const { pageFormatId, focusFeature, autoGenerate, showSelectionInPrintByDefault, hideLegendInPrintByDefault } =
-    readPrintMapSchemaProperty(property);
+  const {
+    pageFormatId,
+    focusFeature,
+    autoGenerate,
+    showSelectionInPrintByDefault,
+    hideLegendInPrintByDefault,
+    ensureVisibleLayers
+  } = readPrintMapSchemaProperty(property);
 
   const state = useLocalObservable<PrintMapImageControlState>(() => ({
     printDialogOpen: false,
@@ -88,13 +108,19 @@ const PrintMapImageControl = observer((props: FormControlProps) => {
   }));
 
   useEffect(() => {
-    if (!autoGenerate) {
-      return;
-    }
-
     let cancelled = false;
+    let temporaryLayerIds: number[] = [];
 
-    async function runAutoGenerate() {
+    async function init() {
+      if (ensureVisibleLayers?.length) {
+        temporaryLayerIds = ensureVisibleLayers.map(layer => layer.id);
+        currentProject.addTemporaryVisibleLayers(temporaryLayerIds);
+      }
+
+      if (!autoGenerate || cancelled) {
+        return;
+      }
+
       state.setMapLoading(true);
       try {
         printSettings.setPageFormatId(pageFormatId);
@@ -103,6 +129,10 @@ const PrintMapImageControl = observer((props: FormControlProps) => {
 
         if (focusFeature) {
           await applyPrintFocusForFeatureExtract(focusFeature, { pageFormatId });
+        }
+
+        if (cancelled) {
+          return;
         }
 
         await loadAllLayersStyles();
@@ -118,13 +148,18 @@ const PrintMapImageControl = observer((props: FormControlProps) => {
       }
     }
 
-    void runAutoGenerate();
+    void init();
 
     return () => {
       cancelled = true;
+
+      if (temporaryLayerIds.length) {
+        currentProject.removeTemporaryVisibleLayers(temporaryLayerIds);
+      }
     };
   }, [
     autoGenerate,
+    ensureVisibleLayers,
     focusFeature,
     onChange,
     pageFormatId,

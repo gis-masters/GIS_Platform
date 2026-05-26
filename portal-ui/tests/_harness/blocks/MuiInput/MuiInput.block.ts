@@ -37,6 +37,12 @@ export class MuiInputBlock extends Block {
     return assertString(await $input.getValue(), 'MuiInput.getValue');
   }
 
+  async blur(): Promise<void> {
+    const $input = await this.findBySelector('input');
+    await $input.click();
+    await browser.keys([Key.Tab]);
+  }
+
   async hasWarningIcon(): Promise<boolean> {
     const $root = await this.findBySelector('root');
     const $warning = await $root.$(this.selectors.icon).getElement();

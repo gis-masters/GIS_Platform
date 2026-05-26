@@ -1,7 +1,8 @@
 import { cloneDeep } from 'lodash';
 import moment from 'moment';
 
-import { type FileInfo, isFileInfo } from '../../data/files/files.models';
+import { type FileInfo } from '../../data/files/files.models';
+import { isFileInfo } from '../../data/files/files.typeguards';
 import { type PropertySchema, PropertyType, type ValueFormula } from '../../data/schema/schema.models';
 import { validationWellKnownFormulas } from '../../data/schema/validationWellKnownFormulas';
 import { valueWellKnownFormulas } from '../../data/schema/valueWellKnownFormulas';
@@ -89,6 +90,27 @@ export function validateFormValue(formValue: unknown, fields: PropertySchema[]):
 
   return fields
     .map(field => validateFieldValue(formValue[field.name], field, formValue))
+    .filter(({ messages }) => messages?.length);
+}
+
+export function validateFieldWarnings(value: unknown, property: PropertySchema, formValue: unknown): FieldErrors {
+  const messages = property.warningFormula?.(value, property, formValue)?.filter(notFalsyFilter);
+
+  return {
+    field: property.name,
+    hidden: property.hidden,
+    title: property.title,
+    messages
+  };
+}
+
+export function validateFormWarnings(formValue: unknown, fields: PropertySchema[]): FieldErrors[] {
+  if (!isRecordStringUnknown(formValue)) {
+    throw new Error('Нет значения формы');
+  }
+
+  return fields
+    .map(field => validateFieldWarnings(formValue[field.name], field, formValue))
     .filter(({ messages }) => messages?.length);
 }
 

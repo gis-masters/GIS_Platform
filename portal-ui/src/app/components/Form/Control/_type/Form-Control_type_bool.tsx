@@ -14,7 +14,15 @@ import './Form-Control_type_bool.scss';
 @observer
 class FormControlTypeBool extends Component<FormControlProps> {
   render() {
-    const { htmlId = 'formField_' + generateRandomId(), className, fieldValue, inSet, property, errors } = this.props;
+    const {
+      htmlId = 'formField_' + generateRandomId(),
+      className,
+      fieldValue,
+      inSet,
+      property,
+      errors,
+      warnings
+    } = this.props;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -26,7 +34,7 @@ class FormControlTypeBool extends Component<FormControlProps> {
           color='primary'
         />
         {inSet && property.title && <label htmlFor={htmlId}>{property.title}</label>}
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }

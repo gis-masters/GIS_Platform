@@ -5,12 +5,11 @@ import { cn } from '@bem-react/classname';
 import { isObject } from 'lodash';
 
 import {
-  isPropertySchema,
-  isPropertySchemaArray,
   type PropertiesAfterValidation,
   type PropertySchema,
   PropertyType
 } from '../../services/data/schema/schema.models';
+import { isPropertySchema, isPropertySchemaArray } from '../../services/data/schema/schema.typeguards';
 import { isArray } from '../../services/util/typeGuards/isArray';
 import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';

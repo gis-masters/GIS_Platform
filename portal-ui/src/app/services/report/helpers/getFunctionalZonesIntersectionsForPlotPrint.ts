@@ -15,7 +15,7 @@ export async function getFunctionalZonesIntersectionsForPlotPrint(
   feature: WfsFeature,
   sourceLayer: CrgVectorLayer
 ): Promise<GetFunctionalZonesIntersectionsForPlotPrintResult> {
-  const fzResolve = resolveFunctionalZonesVectorLayerInProject();
+  const fzResolve = await resolveFunctionalZonesVectorLayerInProject();
 
   if (!fzResolve.ok) {
     return { ok: false, message: fzResolve.message };

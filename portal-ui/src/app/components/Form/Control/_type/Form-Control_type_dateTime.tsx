@@ -8,6 +8,7 @@ import moment from 'moment';
 import { type PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema/schema.models';
 import { systemFormat } from '../../../../services/util/date.util';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { getFieldInputColor } from '../../Form.utils';
 import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 @observer
@@ -20,6 +21,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
       inSet,
       property,
       errors,
+      warnings,
       variant = 'standard',
       fullWidthForOldForm
     } = this.props;
@@ -39,9 +41,11 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           InputLabelProps={{
             shrink: true
           }}
+          error={!!errors?.length}
+          color={getFieldInputColor(errors, warnings)}
           variant={variant}
         />
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }

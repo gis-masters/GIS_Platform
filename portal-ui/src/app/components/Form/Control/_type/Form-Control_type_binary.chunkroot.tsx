@@ -10,13 +10,13 @@ import { cnFormControl, type FormControlProps } from '../Form-Control';
 @observer
 export default class FormControlTypeBinary extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, errors, property, fieldValue } = this.props;
+    const { htmlId, className, errors, warnings, property, fieldValue } = this.props;
     const { accept, name } = property as PropertySchemaBinary;
 
     return (
       <div className={cnFormControl(null, [className])}>
         <FileInput accept={accept} id={htmlId} onChange={this.handleChange} value={fieldValue as string} name={name} />
-        <FormErrors errors={errors} />
+        <FormErrors warnings={warnings} errors={errors} />
       </div>
     );
   }

@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 import { cloneDeep } from 'lodash';
 
+import { doConfirm, type DoConfirmOptions } from '../../services/answer-modals.service';
 import { type Schema, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { services } from '../../services/services';
 import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
@@ -16,7 +17,9 @@ import {
   isFieldErrors,
   normalizeServerErrors,
   validateFieldValue,
-  validateFormValue
+  validateFieldWarnings,
+  validateFormValue,
+  validateFormWarnings
 } from '../../services/util/form/formValidation.utils';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { isArrayOf } from '../../services/util/typeGuards/isArrayOf';
@@ -52,6 +55,9 @@ export interface FormProps<T>
   labelInField?: boolean;
   auto?: boolean;
   actionFunction?(value: T | Partial<T>): Promise<void> | void;
+  confirmOnWarnings?: boolean;
+  warningsConfirmOptions?: DoConfirmOptions;
+  onActionAborted?(): void;
   invoke?: {
     setValue?(value: T): void;
     validate?(): void;
@@ -64,8 +70,10 @@ export default class Form<T> extends Component<FormProps<T>> {
   private initialValue: Partial<T> = {};
   @observable private value?: Partial<T>;
   @observable private errors?: FieldErrors[];
+  @observable private warnings?: FieldErrors[];
   @observable private serverErrors?: FieldErrors[];
   @observable private hiddenFieldsErrors: string[] = [];
+  @observable private hiddenFieldsWarnings: string[] = [];
   @observable private generalServerErrors: string[] = [];
   private valueReactionDisposer?: IReactionDisposer;
 
@@ -146,11 +154,15 @@ export default class Form<T> extends Component<FormProps<T>> {
             onFieldChange={this.fieldChanged}
             onFieldNeedValidate={this.fieldValidate}
             errors={[...(errors || []), ...(this.serverErrors || []), ...(this.errors || [])]}
+            warnings={this.warnings}
             readonly={readonly}
             labelInField={labelInField}
           />
         )}
-        <FormErrors errors={[...this.hiddenFieldsErrors, ...this.generalServerErrors]} />
+        <FormErrors
+          warnings={this.hiddenFieldsWarnings}
+          errors={[...this.hiddenFieldsErrors, ...this.generalServerErrors]}
+        />
         {actions && <FormActions>{actions}</FormActions>}
       </form>
     );
@@ -196,37 +208,100 @@ export default class Form<T> extends Component<FormProps<T>> {
 
     if (auto && actionFunction) {
       const errors = this.validate();
-      const hiddenErrors = errors
-        .map(error => {
-          if (error.hidden) {
-            return `Поле ${error.title}: ${error.messages?.join(error.messages.length > 1 ? ', ' : '')}`;
-          }
-        })
-        .filter(notFalsyFilter);
+      this.processHiddenFieldErrors(errors);
+      this.processHiddenFieldWarnings(this.warnings || []);
 
-      if (hiddenErrors.length) {
-        hiddenErrors.forEach(hiddenError => {
-          services.logger.error('Ошибка в скрытом поле: ' + hiddenError);
-        });
-
-        this.setHiddenFieldsErrors([
-          hiddenErrors.length > 1 ? 'Ошибка в полях формы.' : 'Ошибка в поле формы.',
-          ...hiddenErrors
-        ]);
-      }
-
-      if (errors.length && onActionError) {
-        onActionError({ errors });
-
+      if (this.shouldStopOnValidationErrors(errors, onActionError)) {
         return;
       }
 
-      if (errors.length) {
+      if (!(await this.confirmWarningsBeforeAction())) {
         return;
       }
 
       await this.doAction();
     }
+  }
+
+  private processHiddenFieldErrors(errors: FieldErrors[]): void {
+    const hiddenErrors = errors
+      .map(error => {
+        if (error.hidden) {
+          return `Поле ${error.title}: ${error.messages?.join(error.messages.length > 1 ? ', ' : '')}`;
+        }
+      })
+      .filter(notFalsyFilter);
+
+    if (!hiddenErrors.length) {
+      return;
+    }
+
+    hiddenErrors.forEach(hiddenError => {
+      services.logger.error('Ошибка в скрытом поле: ' + hiddenError);
+    });
+
+    this.setHiddenFieldsErrors([
+      hiddenErrors.length > 1 ? 'Ошибка в полях формы.' : 'Ошибка в поле формы.',
+      ...hiddenErrors
+    ]);
+  }
+
+  private processHiddenFieldWarnings(warnings: FieldErrors[]): void {
+    const hiddenWarnings = warnings
+      .map(warning => {
+        if (warning.hidden) {
+          return `Поле ${warning.title}: ${warning.messages?.join(warning.messages.length > 1 ? ', ' : '')}`;
+        }
+      })
+      .filter(notFalsyFilter);
+
+    if (!hiddenWarnings.length) {
+      return;
+    }
+
+    hiddenWarnings.forEach(hiddenWarning => {
+      services.logger.warn('Предупреждение в скрытом поле: ' + hiddenWarning);
+    });
+
+    this.setHiddenFieldsWarnings([
+      hiddenWarnings.length > 1 ? 'Предупреждения в полях формы.' : 'Предупреждение в поле формы.',
+      ...hiddenWarnings
+    ]);
+  }
+
+  private shouldStopOnValidationErrors(errors: FieldErrors[], onActionError?: FormProps<T>['onActionError']): boolean {
+    if (errors.length && onActionError) {
+      onActionError({ errors });
+
+      return true;
+    }
+
+    return errors.length > 0;
+  }
+
+  @boundMethod
+  private async confirmWarningsBeforeAction(): Promise<boolean> {
+    const { confirmOnWarnings, warningsConfirmOptions, onActionAborted } = this.props;
+    const warnings = this.validateWarnings();
+
+    if (!warnings.length || !confirmOnWarnings) {
+      return true;
+    }
+
+    const confirmed = await doConfirm({
+      message: 'Есть предупреждения. Продолжить?',
+      okText: 'Продолжить',
+      cancelText: 'Отмена',
+      ...warningsConfirmOptions
+    });
+
+    if (!confirmed) {
+      onActionAborted?.();
+
+      return false;
+    }
+
+    return true;
   }
 
   @boundMethod
@@ -239,8 +314,23 @@ export default class Form<T> extends Component<FormProps<T>> {
 
     const errors = validateFormValue(this.value, this.schema?.properties || schema.properties);
     this.setErrors(errors);
+    this.setWarnings(validateFormWarnings(this.value, this.schema?.properties || schema.properties));
 
     return errors;
+  }
+
+  @boundMethod
+  private validateWarnings(): FieldErrors[] {
+    const { schema } = this.props;
+
+    if (!schema) {
+      return [];
+    }
+
+    const warnings = validateFormWarnings(this.value, this.schema?.properties || schema.properties);
+    this.setWarnings(warnings);
+
+    return warnings;
   }
 
   private async doAction() {
@@ -335,6 +425,11 @@ export default class Form<T> extends Component<FormProps<T>> {
   }
 
   @action
+  private setWarnings(warnings: FieldErrors[] = []) {
+    this.warnings = warnings.filter(({ messages }) => messages?.length);
+  }
+
+  @action
   private setServerErrors(errors?: FieldErrors[]) {
     this.serverErrors = errors;
   }
@@ -342,6 +437,11 @@ export default class Form<T> extends Component<FormProps<T>> {
   @action
   private setHiddenFieldsErrors(errors?: string[]) {
     this.hiddenFieldsErrors = errors || [];
+  }
+
+  @action
+  private setHiddenFieldsWarnings(warnings?: string[]) {
+    this.hiddenFieldsWarnings = warnings || [];
   }
 
   @action
@@ -356,6 +456,7 @@ export default class Form<T> extends Component<FormProps<T>> {
     if (auto) {
       this.setGeneralServerErrors();
       this.filterFieldErrors(fieldName);
+      this.filterFieldWarnings(fieldName);
     }
 
     if (onFieldChange && this.value) {
@@ -378,7 +479,9 @@ export default class Form<T> extends Component<FormProps<T>> {
 
     if (auto) {
       this.filterFieldErrors(fieldName);
+      this.filterFieldWarnings(fieldName);
       this.setErrors([...(this.errors || []), validateFieldValue(value, field, this.value)]);
+      this.setWarnings([...(this.warnings || []), validateFieldWarnings(value, field, this.value)]);
     }
 
     if (onFieldNeedValidate) {
@@ -391,9 +494,14 @@ export default class Form<T> extends Component<FormProps<T>> {
     this.setServerErrors(this.serverErrors?.filter(({ field }) => field !== fieldName));
   }
 
+  private filterFieldWarnings(fieldName: string) {
+    this.setWarnings(this.warnings?.filter(({ field }) => field !== fieldName));
+  }
+
   @boundMethod
   private reset() {
     this.setErrors();
+    this.setWarnings();
     this.setServerErrors();
     this.setGeneralServerErrors();
     this.setValue(cloneDeep(this.props.value || {}));

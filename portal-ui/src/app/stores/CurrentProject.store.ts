@@ -64,6 +64,7 @@ class CurrentProject implements CrgProjectData {
   @observable filter: string = '';
 
   @observable viewZoom: number = 0;
+  @observable temporaryVisibleLayers: number[] = [];
 
   private constructor() {
     makeObservable(this);
@@ -158,12 +159,19 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   private get visibleOnMapAndHiddenByZoomLayers(): TreeItem<CrgLayer>[] {
-    return this.tree.filter(item => !item.isGroup && item.visible) as TreeItem<CrgLayer>[];
+    return this.tree.filter(
+      (item): item is TreeItem<CrgLayer> =>
+        !item.isGroup &&
+        !item.errors?.length &&
+        (Boolean(item.visible) || this.temporaryVisibleLayers.includes(item.id))
+    );
   }
 
   @computed
   get visibleOnMapLayers(): TreeItem<CrgLayer>[] {
-    return this.visibleOnMapAndHiddenByZoomLayers.filter(item => !item.hiddenByZoom);
+    return this.visibleOnMapAndHiddenByZoomLayers.filter(
+      item => !item.hiddenByZoom || this.temporaryVisibleLayers.includes(item.id)
+    );
   }
 
   @computed
@@ -349,6 +357,30 @@ class CurrentProject implements CrgProjectData {
       layersErrors,
       rawLayersFromApi
     });
+    this.clearTemporaryVisibleLayers();
+  }
+
+  @action
+  addTemporaryVisibleLayers(layerIds: number[]) {
+    for (const layerId of layerIds) {
+      this.temporaryVisibleLayers.push(layerId);
+    }
+  }
+
+  @action
+  removeTemporaryVisibleLayers(layerIds: number[]) {
+    for (const layerId of layerIds) {
+      const index = this.temporaryVisibleLayers.indexOf(layerId);
+
+      if (index !== -1) {
+        this.temporaryVisibleLayers.splice(index, 1);
+      }
+    }
+  }
+
+  @action
+  clearTemporaryVisibleLayers() {
+    this.temporaryVisibleLayers.length = 0;
   }
 
   @action
@@ -370,6 +402,7 @@ class CurrentProject implements CrgProjectData {
   @action
   clearProject() {
     Object.assign(this, emptyProject);
+    this.clearTemporaryVisibleLayers();
   }
 
   @action

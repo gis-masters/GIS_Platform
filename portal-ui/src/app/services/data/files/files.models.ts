@@ -1,8 +1,6 @@
 import { type FileResponse } from '../../../../server-types/common-contracts';
 import { type CrgLayer } from '../../gis/layers/layers.models';
 import { type CrgProject } from '../../gis/projects/projects.models';
-import { isArray } from '../../util/typeGuards/isArray';
-import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
 
 type RequiredFileInfoFields = 'id' | 'title' | 'size';
 type FileResponseWithoutAny = Omit<FileResponse, 'resourceQualifier'>;
@@ -129,29 +127,3 @@ export const compoundFileFullType: Record<string, string> = {
   tab: 'MapInfo TAB',
   mid: 'MapInfo MID'
 };
-
-export function isFileInfo(obj: unknown): obj is FileInfo {
-  return Boolean(
-    isRecordStringUnknown(obj) &&
-      obj.id &&
-      typeof obj.id === 'string' &&
-      obj.size &&
-      typeof obj.size === 'number' &&
-      obj.title &&
-      typeof obj.title === 'string'
-  );
-}
-
-export function isFileInfoArray(values: unknown): values is FileInfo[] {
-  if (!isArray(values)) {
-    return false;
-  }
-
-  for (const value of values) {
-    if (!isFileInfo(value)) {
-      return false;
-    }
-  }
-
-  return true;
-}

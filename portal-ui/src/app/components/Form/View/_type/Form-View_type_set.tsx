@@ -6,12 +6,13 @@ import { RegistryConsumer } from '@bem-react/di';
 import { type PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
 import { type CommonDiRegistry } from '../../../../services/di-registry';
 import { type FormControlProps } from '../../Control/Form-Control';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 import './Form-View_type_set.scss';
 
-const FormViewTypeSet: FC<FormControlProps> = observer(({ className, property, fieldValue = '', errors }) => {
+const FormViewTypeSet: FC<FormControlProps> = observer(({ className, property, fieldValue = '', errors, warnings }) => {
   const { properties } = property as PropertySchemaSet;
   const valueTyped = fieldValue as Record<string, unknown>;
 
@@ -28,6 +29,7 @@ const FormViewTypeSet: FC<FormControlProps> = observer(({ className, property, f
               inSet
             />
           ))}
+          <FormViewWarnings warnings={warnings} />
           <FormViewErrors errors={errors} />
         </div>
       )}

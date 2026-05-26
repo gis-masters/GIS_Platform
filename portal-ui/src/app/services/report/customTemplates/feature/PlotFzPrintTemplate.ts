@@ -10,13 +10,10 @@ import { type CrgVectorLayer } from '../../../gis/layers/layers.models';
 import { FeaturePrintTemplate } from '../../baseTemplates/FeaturePrintTemplate';
 import { enrichFzIntersectionsWithReadableCodes } from '../../helpers/enrichFzIntersectionsWithReadableCodes';
 import { getFunctionalZonesIntersectionsForPlotPrint } from '../../helpers/getFunctionalZonesIntersectionsForPlotPrint';
+import { resolveFunctionalZonesVectorLayerInProject } from '../../helpers/resolveFunctionalZonesVectorLayerInProject';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
-import {
-  type CreateReportRequest,
-  type FzIntersectionPrintItem,
-  isOutputFormat,
-  type PrintPreparedData
-} from '../../report.models';
+import { type CreateReportRequest, type FzIntersectionPrintItem, type PrintPreparedData } from '../../report.models';
+import { isOutputFormat } from '../../report.typeguards';
 
 type PlotFzPrintTemplateData = {
   title: string;
@@ -26,7 +23,7 @@ type PlotFzPrintTemplateData = {
   fz: FzIntersectionPrintItem[];
 };
 
-/** Печать по участку: пересечения с функциональными зонами (`sys_plot_fz`). */
+/** Печать по участку: пересечения с функциональными зонами, схема functionalzone_fgis (`sys_plot_fz`). */
 export class PlotFzPrintTemplate extends FeaturePrintTemplate {
   override async getData(feature: WfsFeature): Promise<PrintPreparedData | void> {
     const schemaWithAppliedView = await this.getLayerSchemaWithAppliedView(feature);
@@ -54,6 +51,9 @@ export class PlotFzPrintTemplate extends FeaturePrintTemplate {
 
     const fzEnriched: FzIntersectionPrintItem[] = await enrichFzIntersectionsWithReadableCodes(fzResult.items);
 
+    const fzLayerResult = await resolveFunctionalZonesVectorLayerInProject();
+    const ensureVisibleLayers = fzLayerResult.ok ? [fzLayerResult.layer] : [];
+
     const { formValue: mapDialogResult, extra } = await doFormPrompt<{
       map: string;
     }>({
@@ -71,7 +71,8 @@ export class PlotFzPrintTemplate extends FeaturePrintTemplate {
             focusFeature: feature,
             autoGenerate: Boolean(flags.featureExtractPrintAutoMap),
             showSelectionInPrintByDefault: true,
-            hideLegendInPrintByDefault: true
+            hideLegendInPrintByDefault: true,
+            ensureVisibleLayers
           }
         ]
       }

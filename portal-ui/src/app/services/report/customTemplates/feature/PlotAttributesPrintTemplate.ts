@@ -17,9 +17,9 @@ import {
   type CreateReportRequest,
   type FeatureTemplateData,
   type IntersectionPrintItem,
-  isOutputFormat,
   type PrintPreparedData
 } from '../../report.models';
+import { isOutputFormat } from '../../report.typeguards';
 import { buildCoordinatesList } from '../../utils/buildCoordinatesList';
 import { getCadastralQuarter } from '../../utils/getCadastralQuarter';
 import { getFeatureSize } from '../../utils/getFeatureSize';

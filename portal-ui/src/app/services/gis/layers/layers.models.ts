@@ -66,10 +66,6 @@ export interface CrgVectorLayer extends CrgBaseLayer {
   photoMode?: string;
 }
 
-export function isVectorLayer(layer?: CrgLayer): layer is CrgVectorLayer {
-  return layer?.type === CrgLayerType.VECTOR;
-}
-
 export interface CrgVectorableLayer extends CrgBaseLayer {
   type: CrgLayerType.VECTOR | CrgLayerType.DXF | CrgLayerType.MID | CrgLayerType.SHP | CrgLayerType.TAB;
   dataStoreName?: string;

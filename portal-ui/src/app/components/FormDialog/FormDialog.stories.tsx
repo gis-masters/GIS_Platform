@@ -6,7 +6,7 @@ import { type PropertySchema, PropertyType } from '../../services/data/schema/sc
 import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
 import { validateFormValue } from '../../services/util/form/formValidation.utils';
 import { sleep } from '../../services/util/sleep';
-import { schemaWithDefaultValue, schemaWithDynamicProperties } from '../Form/Form.stories';
+import { schemaWithDefaultValue, schemaWithDynamicProperties } from '../Form/Form.stories.fixtures';
 import { getDefaultValues } from '../Form/Form.utils';
 import { Toast } from '../Toast/Toast';
 import { FormDialog } from './FormDialog';
@@ -44,9 +44,38 @@ const testFields: PropertySchema[] = [
   }
 ];
 
+const warningTestFields: PropertySchema[] = [
+  {
+    propertyType: PropertyType.STRING,
+    name: 'title',
+    title: 'Название',
+    required: true,
+    minLength: 3,
+    warningFormula: (value: unknown): string[] | undefined =>
+      String(value).includes('test') ? ['Значение содержит test'] : undefined
+  },
+  {
+    propertyType: PropertyType.STRING,
+    display: 'multiline',
+    name: 'description',
+    title: 'Описание'
+  }
+];
+
+const warningSaved = 'Сохранено с предупреждениями!';
+
 const actionFunction = async (formValue: unknown) => {
   await sleep(2000 * Math.random());
   const errors = validateFormValue(formValue, testFields);
+
+  if (errors.length) {
+    throw new FormFieldErrorsError(errors);
+  }
+};
+
+const warningActionFunction = async (formValue: unknown) => {
+  await sleep(500);
+  const errors = validateFormValue(formValue, warningTestFields);
 
   if (errors.length) {
     throw new FormFieldErrorsError(errors);
@@ -107,5 +136,22 @@ WithDefaultValues.args = {
   actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' },
   actionFunction,
   onSuccess: () => Toast.success(saved),
+  onError: () => Toast.error('Error!')
+};
+
+export const WithWarnings = Template.bind({});
+WithWarnings.args = {
+  title: 'С предупреждениями',
+  schema: { properties: warningTestFields },
+  value: { title: 'abc', description: '' },
+  confirmOnWarnings: true,
+  warningsConfirmOptions: {
+    message: 'Есть предупреждения в форме. Сохранить?',
+    okText: 'Да, сохранить',
+    cancelText: 'Нет'
+  },
+  actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' },
+  actionFunction: warningActionFunction,
+  onSuccess: () => Toast.success(warningSaved),
   onError: () => Toast.error('Error!')
 };

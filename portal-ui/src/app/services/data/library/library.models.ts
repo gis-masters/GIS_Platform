@@ -1,5 +1,3 @@
-import { isObject } from 'lodash';
-
 import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
 import { type Role } from '../../permissions/permissions.models';
 import { PropertyType, type Schema, type SimpleSchema } from '../schema/schema.models';
@@ -91,15 +89,3 @@ export interface DocumentVersionExtended extends DocumentVersion {
 }
 
 export type LibraryRecordNew = Omit<LibraryRecord, 'id' | 'role'>;
-
-export function isLibraryRecord(obj: unknown): obj is LibraryRecord {
-  return (
-    isObject(obj) &&
-    'id' in obj &&
-    typeof obj.id === 'number' &&
-    'path' in obj &&
-    typeof obj.path === 'string' &&
-    'libraryTableName' in obj &&
-    typeof obj.libraryTableName === 'string'
-  );
-}

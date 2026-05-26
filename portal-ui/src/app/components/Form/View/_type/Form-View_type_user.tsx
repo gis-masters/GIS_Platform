@@ -7,8 +7,9 @@ import { type PropertySchemaUser, PropertyType } from '../../../../services/data
 import { isArray } from '../../../../services/util/typeGuards/isArray';
 import { Users } from '../../../Users/Users';
 import { type FormControlProps } from '../../Control/Form-Control';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 @observer
@@ -34,6 +35,7 @@ class FormViewTypeUser extends Component<FormControlProps> {
         ) : (
           <FormViewValue>—</FormViewValue>
         )}
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

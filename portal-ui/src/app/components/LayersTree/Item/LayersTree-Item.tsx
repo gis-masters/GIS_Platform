@@ -4,7 +4,8 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { extractResourceIdFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
-import { type CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../../services/gis/layers/layers.models';
+import { isVectorLayer } from '../../../services/gis/layers/layers.typeguards';
 import { type TreeItem } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';

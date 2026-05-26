@@ -8,7 +8,7 @@ import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isEqual } from 'lodash';
 
-import { doConfirm } from '../../services/answer-modals.service';
+import { doConfirm, type DoConfirmOptions } from '../../services/answer-modals.service';
 import { type Schema, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { type CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
@@ -39,6 +39,8 @@ export interface FormDialogProps<T> extends IClassNameProps {
   afterForm?: ReactNode;
   formRole?: FormRole;
   closeWithConfirm?: boolean;
+  confirmOnWarnings?: boolean;
+  warningsConfirmOptions?: DoConfirmOptions;
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
@@ -95,7 +97,9 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       actionButtonProps = {},
       closeButtonProps,
       actionFunction,
-      onFieldChange
+      onFieldChange,
+      confirmOnWarnings,
+      warningsConfirmOptions
     } = this.props;
     const htmlId = generateRandomId();
 
@@ -126,6 +130,9 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
                 onActionError={this.handleError}
                 onFieldChange={onFieldChange}
                 actionFunction={actionFunction}
+                confirmOnWarnings={confirmOnWarnings}
+                warningsConfirmOptions={warningsConfirmOptions}
+                onActionAborted={this.handleActionAborted}
                 invoke={this.formInvoke}
               />
             )}
@@ -154,6 +161,11 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
         </DialogActions>
       </Dialog>
     );
+  }
+
+  @boundMethod
+  private handleActionAborted() {
+    this.setBusy(false);
   }
 
   @boundMethod

@@ -5,7 +5,8 @@ import { withBemMod } from '@bem-react/core';
 import { type PropertySchemaUrl, PropertyType } from '../../../../services/data/schema/schema.models';
 import { UrlsList } from '../../../UrlsList/UrlsList';
 import { type FormControlProps } from '../../Control/Form-Control';
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewErrors } from '../../ViewErrors/Form-ViewErrors';
+import { FormViewWarnings } from '../../ViewWarnings/Form-ViewWarnings';
 import { cnFormView } from '../Form-View.base';
 
 import './Form-View_type_url.scss';
@@ -18,6 +19,7 @@ class FormViewTypeUrl extends Component<FormControlProps> {
     return (
       <div className={cnFormView({ inSet }, [className])}>
         <UrlsList value={fieldValue as string} property={property as PropertySchemaUrl} editable={false} />
+        <FormViewWarnings warnings={this.props.warnings} />
         <FormViewErrors errors={errors} />
       </div>
     );

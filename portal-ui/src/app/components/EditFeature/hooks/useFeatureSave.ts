@@ -11,12 +11,8 @@ import { extractFeatureId } from '../../../services/geoserver/featureType/featur
 import { transformFeatureService } from '../../../services/geoserver/wfs/transform-feature.service';
 import { type WfsFeature, type WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
-import {
-  CrgLayerType,
-  type CrgVectorableLayer,
-  type CrgVectorLayer,
-  isVectorLayer
-} from '../../../services/gis/layers/layers.models';
+import { CrgLayerType, type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { isVectorLayer } from '../../../services/gis/layers/layers.typeguards';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';

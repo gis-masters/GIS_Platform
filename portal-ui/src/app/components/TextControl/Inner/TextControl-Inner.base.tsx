@@ -5,6 +5,8 @@ import { boundMethod } from 'autobind-decorator';
 
 import { type PropertySchemaText } from '../../../services/data/schema/schema.models';
 import { type FormControlProps } from '../../Form/Control/Form-Control';
+import { FormErrors } from '../../Form/Errors/Form-Errors';
+import { getFieldInputColor } from '../../Form/Form.utils';
 
 export const cnTextControlInner = cn('TextControl', 'Inner');
 
@@ -16,7 +18,8 @@ export interface TextControlInnerProps extends Omit<FormControlProps, 'onChange'
 
 export class TextControlInnerBase extends Component<TextControlInnerProps> {
   render() {
-    const { htmlId, inSet, labelInField, fieldValue, errors, property, variant, className, onBlur } = this.props;
+    const { htmlId, inSet, labelInField, fieldValue, errors, warnings, property, variant, className, onBlur } =
+      this.props;
     const { title, name } = property;
 
     return (
@@ -27,7 +30,8 @@ export class TextControlInnerBase extends Component<TextControlInnerProps> {
         fullWidth={labelInField || !inSet}
         value={fieldValue || ''}
         error={!!errors?.length}
-        helperText={errors}
+        color={getFieldInputColor(errors, warnings)}
+        helperText={<FormErrors errors={errors} warnings={warnings} inHelperText />}
         label={labelInField || inSet ? title : undefined}
         onChange={this.handleChange}
         onBlur={onBlur}

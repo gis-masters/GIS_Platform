@@ -38,16 +38,6 @@ export enum DataTypes {
 export const roles: Role[] = [Role.VIEWER, Role.CONTRIBUTOR, Role.OWNER];
 export const gisRoles: Role[] = [Role.VIEWER, Role.OWNER];
 
-export function isRole(role: unknown): role is Role {
-  for (const r of roles) {
-    if (r === role) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 export const tableRolesPermissionPoints = new Map<Role, TablePermissionPoint[]>([
   [
     Role.OWNER,
@@ -91,10 +81,6 @@ export const rolesTitles: { [key in Role]: string } = {
 export enum PrincipalType {
   USER = 'user',
   GROUP = 'group'
-}
-
-export function isPrincipalType(value: unknown): value is PrincipalType {
-  return value === PrincipalType.USER || value === PrincipalType.GROUP;
 }
 
 export interface RoleAssignmentBody {
