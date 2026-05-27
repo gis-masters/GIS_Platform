@@ -725,6 +725,11 @@ SELECT 'wildlifeprotection_point',
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection_point');
 
 INSERT INTO data.schemas (name, class_rule)
+SELECT 'territorialzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'territorialzone');
+
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'mp',
 '{}'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mp');
@@ -46152,6 +46157,249 @@ custom_rule = 'var errors = [];
 
       return errors;'
 WHERE name = 'wildlifeprotection_point';
+
+UPDATE data.schemas 
+SET is_system = true,
+    class_rule =
+       '{
+  "name": "territorialzone",
+  "title": "Территориальные зоны",
+  "styleName": "territorialzone_65",
+  "tableName": "territorialzone",
+  "originName": "TerritorialZone",
+  "tags": ["system", "Приказ 10","Тер.планирование","ГИСОГД"],
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Территориальные зоны",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Зона застройки индивидуальными жилыми домами",
+          "value": "100050101"
+        },
+        {
+          "title": "Зона застройки индивидуальными жилыми домами и домами блокированной застройки",
+          "value": "100050102"
+        },
+        {
+          "title": "Зона застройки среднеэтажными многоквартирными домами",
+          "value": "100050103"
+        },
+        {
+          "title": "Зона застройки многоэтажными многоквартирными домами",
+          "value": "100050104"
+        },
+        {
+          "title": "Общественно-деловая зона",
+          "value": "100050200"
+        },
+        {
+          "title": "Зона делового, общественного и коммерческого назначения",
+          "value": "100050201"
+        },
+        {
+          "title": "Зона размещения объектов социального и коммунально-бытового назначения",
+          "value": "100050202"
+        },
+        {
+          "title": "Зона обслуживания объектов, необходимых для осуществления производственной и предпринимательской деятельности",
+          "value": "100050203"
+        },
+        {
+          "title": "Производственная зона, зона инженерной и транспортной инфраструктур",
+          "value": "100050300"
+        },
+        {
+          "title": "Коммунальная зона",
+          "value": "100050301"
+        },
+        {
+          "title": "Производственная зона",
+          "value": "100050302"
+        },
+        {
+          "title": "Зоны сельскохозяйственного использования",
+          "value": "100050400"
+        },
+        {
+          "title": "Зона сельскохозяйственных угодий; зона, занятая объектами сельскохозяйственного назначения и предназначенная для ведения сельского хозяйства,садоводства и огородничества,личного подсобного хозяйства,развития объектов сельскохозяйственного назначения",
+          "value": "100050401"
+        },
+        {
+          "title": "Зона рекреационного назначения",
+          "value": "100050500"
+        },
+        {
+          "title": "Зона размещения военных объектов",
+          "value": "100050600"
+        },
+        {
+          "title": "Зона специального назначения",
+          "value": "100050700"
+        },
+        {
+          "title": "Зона особо охраняемых территорий",
+          "value": "100050800"
+        },
+        {
+          "title": "Иные зоны, выделяемые с учетом функциональ ных зон",
+          "value": "100050900"
+        },
+        {
+          "title": "Территория, в границах которой предусматриваются требования к архитектурно-градостроительному облику объектов капитального строительства",
+          "value": "100051000"
+        },
+        {
+          "title": "Территория комплексного развития",
+          "value": "100052000"
+        }
+      ]
+    },
+    {
+      "name": "area",
+      "title": "Площадь, га",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "info_obj",
+      "title": "Сведения о планируемых объектах федерального значения, объектах регионального значения, объектах местного значения",
+      "valueType": "STRING"
+    },
+    {
+      "name": "constr_den",
+      "title": "Коэффициент застройки, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "bld_height",
+      "title": "Этажность застройки",
+      "valueType": "INT"
+    },
+    {
+      "name": "pop_den",
+      "title": "Плотность населения, чел/га",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "population",
+      "title": "Численность населения, чел.",
+      "valueType": "INT"
+    },
+    {
+      "name": "other",
+      "title": "Иной параметр и его единицы измерения",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер территориальной зоны",
+      "valueType": "INT"
+    },
+    {
+      "name": "numbertrz",
+      "title": "Учетный номер территориальной зоны, внесенный в ЕГРН",
+      "valueType": "STRING"
+    },
+    {
+      "name": "reestrtrz",
+      "title": "Реестровый номер территориальной зоны, внесенный в ЕГРН",
+      "valueType": "STRING"
+    },
+    {
+      "name": "dateetrz",
+      "title": "Дата внесения территориальной зоны в ЕГРН",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": [
+        "Polygon"
+      ]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ],
+  "description": "Приказ 10, версия 8 изм. от 21 марта 2025 № 65",
+  "geometryType": "MultiPolygon"
+}'
+WHERE name = 'territorialzone';
 
 
 UPDATE data.schemas 
