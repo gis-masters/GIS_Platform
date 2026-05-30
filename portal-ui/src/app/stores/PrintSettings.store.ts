@@ -21,7 +21,7 @@ export const orientations: { title: string; value: Orientation }[] = [
 
 export const resolutions = [72, 150, 300];
 
-export const scales = [500_000, 200_000, 100_000, 50_000, 25_000, 10_000, 5000, 2000, 1000, 500];
+export const scales = [500_000, 200_000, 100_000, 50_000, 25_000, 10_000, 5000, 2000, 1000, 500, 200, 100];
 
 export const pageFormats: PrintFormat[] = [
   {

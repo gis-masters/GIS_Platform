@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.kpt_import.reader;
 
+import jakarta.xml.bind.JAXBException;
 import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,6 @@ import ru.mycrg.data_service.kpt_import.geometry_parsers.BoundGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.MunicipalityBoundaryElement;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLStreamReader;
 import java.util.*;

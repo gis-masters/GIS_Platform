@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>integration-service</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>integration-service</name>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>messagebus-starter</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -123,7 +123,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>common-utils</artifactId>
-            <version>2.4-SNAPSHOT</version>
+            <version>2.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -148,8 +148,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>resource-analyzer-contract</artifactId>
-            <version>1.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -171,7 +170,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>data-service-client</artifactId>
-            <version>2.2-SNAPSHOT</version>
+            <version>2.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -204,7 +203,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.10.0</version>
                 <executions>
                     <execution>
                         <id>copy-apm-agent</id>

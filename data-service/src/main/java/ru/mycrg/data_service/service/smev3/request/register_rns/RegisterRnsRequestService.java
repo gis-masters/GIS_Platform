@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.smev3.request.register_rns;
 
+import jakarta.xml.bind.JAXBException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,6 @@ import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.SmevFakeXmlBuilder;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
-import javax.xml.bind.JAXBException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

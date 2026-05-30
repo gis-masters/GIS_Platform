@@ -1,10 +1,10 @@
 package ru.mycrg.data_service.kpt_import.reader.kvartal;
 
+import jakarta.xml.bind.JAXBException;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.model.generated.AreaQuarter;
 import ru.mycrg.data_service.kpt_import.model.kvartal.KvartalAreaElement;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
 import java.util.List;

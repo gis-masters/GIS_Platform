@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.smev3.request;
 
 import io.minio.Result;
 import io.minio.messages.Item;
+import jakarta.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
@@ -43,7 +44,6 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.JsonNode;
 
-import javax.xml.bind.JAXBException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

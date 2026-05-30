@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.kpt_import.reader;
 
+import jakarta.xml.bind.JAXBException;
 import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,6 @@ import ru.mycrg.data_service.kpt_import.model.KptElement;
 import ru.mycrg.data_service.kpt_import.model.ZouitElement;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLStreamReader;
 import java.util.*;
@@ -101,8 +101,8 @@ public class ZonesAndTerritoriesReader extends CommonKptXmlElementReader<KptElem
 
     private String extractBoundary_1(ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord r) {
         return extractTypeBoundary(r)
-                       .map(Dict::getValue)
-                       .orElse(null);
+                .map(Dict::getValue)
+                .orElse(null);
     }
 
     private Object extractNameByDoc(ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord r) {

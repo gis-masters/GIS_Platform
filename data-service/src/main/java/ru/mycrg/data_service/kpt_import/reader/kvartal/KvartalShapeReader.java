@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.kpt_import.reader.kvartal;
 
+import jakarta.xml.bind.JAXBException;
 import org.postgis.Polygon;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.geometry_parsers.BoundGeometryParser;
@@ -9,7 +10,6 @@ import ru.mycrg.data_service.kpt_import.model.generated.SpatialElementBound;
 import ru.mycrg.data_service.kpt_import.model.generated.SpatialsElementsBound;
 import ru.mycrg.data_service.kpt_import.model.kvartal.KvartalShapeElement;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.List;
 import java.util.Map;

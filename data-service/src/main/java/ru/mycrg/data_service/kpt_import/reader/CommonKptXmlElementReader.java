@@ -1,13 +1,14 @@
 package ru.mycrg.data_service.kpt_import.reader;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import ru.mycrg.data_service.kpt_import.model.KptElement;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamReader;
 
 public abstract class CommonKptXmlElementReader<T extends KptElement, X> implements KptXmlElementReader<T> {
+
     private final JAXBContext jaxbContext;
     private ThreadLocal<Unmarshaller> unmarshaller;
     private final Class<X> xmlClass;

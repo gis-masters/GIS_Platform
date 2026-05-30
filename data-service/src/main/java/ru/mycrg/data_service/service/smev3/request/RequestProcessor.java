@@ -1,12 +1,12 @@
 package ru.mycrg.data_service.service.smev3.request;
 
+import jakarta.xml.bind.JAXBException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -17,12 +17,12 @@ import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.model.XmlValidationResult;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -141,7 +141,7 @@ public abstract class RequestProcessor {
 
         try {
             xmlBytes = XmlMarshaller.marshall(request, tClass, mnemonic.getPrefixMapper())
-                                      .getBytes(StandardCharsets.UTF_8);
+                                    .getBytes(StandardCharsets.UTF_8);
             schema.newValidator().validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
         } catch (SAXParseException e) {
             String base64str = new String(base64Encoder.encode(xmlBytes));

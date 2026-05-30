@@ -1,13 +1,13 @@
 package ru.mycrg.data_service.kpt_import.reader;
 
+import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.model.oks.parsers.OksUnderConstructionElementParser;
 import ru.mycrg.data_service.kpt_import.model.generated.ObjectUnderConstructionRecord;
 import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionElement;
+import ru.mycrg.data_service.kpt_import.model.oks.parsers.OksUnderConstructionElementParser;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
 import java.util.List;

@@ -1,12 +1,12 @@
 package ru.mycrg.data_service.kpt_import.reader;
 
+import jakarta.xml.bind.JAXBException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.mycrg.data_service.kpt_import.model.BorderWaterObjectElementFactory;
 import ru.mycrg.data_service.kpt_import.model.generated.CoastlineBoundariesType;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -50,7 +50,7 @@ public class BorderWaterObjectReaderTest {
         URL xmlRes = getClass().getResource("./object_zones_and_territories.xml");
         assertNotNull(xmlRes);
 
-        try(InputStream xmlStream = xmlRes.openStream()) {
+        try (InputStream xmlStream = xmlRes.openStream()) {
             XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(xmlStream);
             reader.read(xmlStreamReader);
         }
@@ -59,7 +59,6 @@ public class BorderWaterObjectReaderTest {
         assertNotNull(xmlRecord.getBObjectZonesAndTerritories());
     }
 
-
     @Test
     public void readB_object_coastlineXml() throws JAXBException, IOException, XMLStreamException {
         BorderWaterObjectReader reader = new BorderWaterObjectReader(factory);
@@ -67,7 +66,7 @@ public class BorderWaterObjectReaderTest {
         URL xmlRes = getClass().getResource("./b_object_coastline.xml");
         assertNotNull(xmlRes);
 
-        try(InputStream xmlStream = xmlRes.openStream()) {
+        try (InputStream xmlStream = xmlRes.openStream()) {
             XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(xmlStream);
             reader.read(xmlStreamReader);
         }

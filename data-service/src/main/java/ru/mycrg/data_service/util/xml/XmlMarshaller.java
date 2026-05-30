@@ -1,10 +1,10 @@
 package ru.mycrg.data_service.util.xml;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -14,14 +14,14 @@ public class XmlMarshaller {
         throw new IllegalStateException("Utility class");
     }
 
-    public static  <T> String marshall(T object, Class<T> tClass, NamespacePrefixMapper namespacePrefixMapper)
+    public static <T> String marshall(T object, Class<T> tClass, NamespacePrefixMapper namespacePrefixMapper)
             throws JAXBException {
         var marshaller = JAXBContext
                 .newInstance(tClass)
                 .createMarshaller();
 
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
+        marshaller.setProperty("org.glassfish.jaxb.namespacePrefixMapper", namespacePrefixMapper);
 
         StringWriter sw = new StringWriter();
         marshaller.marshal(object, sw);

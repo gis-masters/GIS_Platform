@@ -1,10 +1,10 @@
 package ru.mycrg.data_service.kpt_import.reader.kvartal;
 
+import jakarta.xml.bind.JAXBException;
 import ru.mycrg.data_service.kpt_import.model.KvartalElement;
 import ru.mycrg.data_service.kpt_import.model.kvartal.KvartalPartialDataElement;
 import ru.mycrg.data_service.kpt_import.reader.CommonKptXmlElementReader;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.smev3.request.accept_rns;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

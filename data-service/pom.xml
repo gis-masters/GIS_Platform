@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>data-service</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>data-service</name>
@@ -26,8 +26,6 @@
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <flyway.version>11.20.0</flyway.version>
         <geotools.version>22.0</geotools.version>
-        <jaxb-api.version>2.3.1</jaxb-api.version>
-        <javax-activasion.version>1.2.0</javax-activasion.version>
     </properties>
 
     <dependencies>
@@ -139,19 +137,6 @@
             <version>9.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-core -->
-        <dependency>
-            <groupId>org.apache.johnzon</groupId>
-            <artifactId>johnzon-core</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1.3</version>
-        </dependency>
-
-
         <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -252,19 +237,12 @@
 
         <!-- JAXB -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>${jaxb-api.version}</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>2.3.0</version>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
         </dependency>
 
         <dependency>
@@ -290,7 +268,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>messagebus-starter</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -307,7 +285,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>common-utils</artifactId>
-            <version>2.4-SNAPSHOT</version>
+            <version>2.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -329,7 +307,6 @@
             <groupId>ru.mycrg</groupId>
             <artifactId>resource-analyzer-contract</artifactId>
             <version>2.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -409,7 +386,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.10.0</version>
                 <executions>
                     <execution>
                         <id>copy-apm-agent</id>
@@ -453,7 +430,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>2.5.0</version>
+                <version>4.1.0</version>
 
                 <executions>
                     <execution>

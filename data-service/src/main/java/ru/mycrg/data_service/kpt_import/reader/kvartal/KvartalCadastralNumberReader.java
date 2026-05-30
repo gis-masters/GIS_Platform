@@ -1,9 +1,9 @@
 package ru.mycrg.data_service.kpt_import.reader.kvartal;
 
+import jakarta.xml.bind.JAXBException;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.model.kvartal.KvartalCadNumElement;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,7 @@ public class KvartalCadastralNumberReader extends KvartalPartialDataReader<Kvart
     @Override
     public List<KvartalCadNumElement> read(XMLStreamReader reader) {
         try {
-            String cadNum =  unmarshall(reader);
+            String cadNum = unmarshall(reader);
             return Collections.singletonList(new KvartalCadNumElement(Map.of(CADASTRALNUM, cadNum)));
         } catch (JAXBException e) {
             return Collections.emptyList();

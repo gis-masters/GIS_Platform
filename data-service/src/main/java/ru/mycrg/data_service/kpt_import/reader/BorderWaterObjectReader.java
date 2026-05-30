@@ -1,5 +1,9 @@
 package ru.mycrg.data_service.kpt_import.reader;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,10 +14,6 @@ import ru.mycrg.data_service.kpt_import.model.generated.BoundContoursLocationOut
 import ru.mycrg.data_service.kpt_import.model.generated.CoastlineBoundariesType;
 import ru.mycrg.data_service.kpt_import.model.generated.RecordInfoDate;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
 import java.util.List;
@@ -73,14 +73,14 @@ public class BorderWaterObjectReader extends CommonKptXmlElementReader<BorderWat
         @XmlElement(name = "b_contours_location")
         protected BoundContoursLocationOut bContoursLocation;
 
-        CoastlineBoundariesType.CoastlineRecord toCoastlineRecord(){
+        CoastlineBoundariesType.CoastlineRecord toCoastlineRecord() {
             CoastlineBoundariesType.CoastlineRecord record = new CoastlineBoundariesType.CoastlineRecord();
             record.setRecordInfo(recordInfo);
             record.setBContoursLocation(bContoursLocation);
-            record.setBObjectZonesAndTerritories(bObjectZonesAndTerritories != null ? bObjectZonesAndTerritories : bObjectCoastline);
+            record.setBObjectZonesAndTerritories(
+                    bObjectZonesAndTerritories != null ? bObjectZonesAndTerritories : bObjectCoastline);
 
-            return  record;
+            return record;
         }
     }
-
 }

@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.service.smev3;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.service.reestrs.Systems;
@@ -20,6 +20,7 @@ public enum Mnemonic {
                     if ("urn://x-artefacts-rosreestr-gov-ru/virtual-services/egrn-statement/1.1.2".equals(urn)) {
                         return "req";
                     }
+
                     return "typ";
                 }
             }),
