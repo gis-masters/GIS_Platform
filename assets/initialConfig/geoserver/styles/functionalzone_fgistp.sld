@@ -109,7 +109,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -141,7 +141,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -190,7 +190,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -224,7 +224,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -273,7 +273,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -307,7 +307,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -514,7 +514,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -546,7 +546,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -831,7 +831,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -865,7 +865,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -912,7 +912,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -944,7 +944,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1149,7 +1149,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1181,7 +1181,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1228,7 +1228,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1260,7 +1260,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1285,6 +1285,87 @@
                                         </se:Stroke>
                                     </se:Mark>
                                     <se:Size>5</se:Size>
+                                </se:Graphic>
+                            </se:GraphicFill>
+                        </se:Fill>
+                    </se:PolygonSymbolizer>
+                </se:Rule>
+                <se:Rule>
+                    <se:Name>70101040601</se:Name>
+                    <se:Description>
+                        <se:Title>Зона добычи полезных ископаемых существующая</se:Title>
+                    </se:Description>
+                    <ogc:Filter>
+                        <ogc:And>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>ruleid</ogc:PropertyName>
+                            <ogc:Literal>70101040601</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                            <ogc:PropertyIsGreaterThan>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>100</ogc:Literal>
+                            </ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyIsLessThanOrEqualTo>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>9000000</ogc:Literal>
+                            </ogc:PropertyIsLessThanOrEqualTo>
+                        </ogc:And>
+                    </ogc:Filter>
+                    <se:MaxScaleDenominator>200000</se:MaxScaleDenominator>
+                    <se:PolygonSymbolizer>
+                        <se:Fill>
+                            <se:SvgParameter name="fill">#A17B19</se:SvgParameter>
+                        </se:Fill>
+                        <se:Stroke>
+                            <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                            <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                            <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
+                        </se:Stroke>
+                    </se:PolygonSymbolizer>
+                </se:Rule>
+                <se:Rule>
+                    <se:Name>70101040602</se:Name>
+                    <se:Description>
+                        <se:Title>Зона добычи полезных ископаемых планируемая к размещению</se:Title>
+                    </se:Description>
+                    <ogc:Filter>
+                        <ogc:And>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>ruleid</ogc:PropertyName>
+                            <ogc:Literal>70101040602</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                            <ogc:PropertyIsGreaterThan>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>100</ogc:Literal>
+                            </ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyIsLessThanOrEqualTo>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>9000000</ogc:Literal>
+                            </ogc:PropertyIsLessThanOrEqualTo>
+                        </ogc:And>
+                    </ogc:Filter>
+                    <se:MaxScaleDenominator>200000</se:MaxScaleDenominator>
+                    <se:PolygonSymbolizer>
+                        <se:Fill>
+                            <se:SvgParameter name="fill">#A17B19</se:SvgParameter>
+                        </se:Fill>
+                        <se:Stroke>
+                            <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                            <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                            <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
+                        </se:Stroke>
+                    </se:PolygonSymbolizer>
+                    <se:PolygonSymbolizer>
+                        <se:Fill>
+                            <se:GraphicFill>
+                                <se:Graphic>
+                                    <se:Mark>
+                                        <se:WellKnownName>shape://slash</se:WellKnownName>
+                                        <se:Stroke>
+                                            <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                                        </se:Stroke>
+                                    </se:Mark>
+                                    <se:Size>3.8</se:Size>
                                 </se:Graphic>
                             </se:GraphicFill>
                         </se:Fill>
@@ -1386,6 +1467,7 @@
                     <se:PolygonSymbolizer>
                         <se:Fill>
                             <se:SvgParameter name="fill">#ffffb6</se:SvgParameter>
+                            <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
                         </se:Fill>
                         <se:Stroke>
                             <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
@@ -1408,6 +1490,7 @@
                     <se:PolygonSymbolizer>
                         <se:Fill>
                             <se:SvgParameter name="fill">#ffffb6</se:SvgParameter>
+                            <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
                         </se:Fill>
                         <se:Stroke>
                             <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
@@ -1445,6 +1528,7 @@
                     <se:PolygonSymbolizer>
                         <se:Fill>
                             <se:SvgParameter name="fill">#d0e0b0</se:SvgParameter>
+                             <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
                         </se:Fill>
                         <se:Stroke>
                             <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
@@ -1466,7 +1550,8 @@
                     </ogc:Filter>
                     <se:PolygonSymbolizer>
                         <se:Fill>
-                            <se:SvgParameter name="fill">#d0e0b0</se:SvgParameter>
+                            <se:SvgParameter name="fill">#d0e0b0</se:SvgParameter> 
+                            <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
                         </se:Fill>
                         <se:Stroke>
                             <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
@@ -1508,7 +1593,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1543,7 +1628,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1591,7 +1676,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1624,7 +1709,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1671,7 +1756,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1703,7 +1788,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1750,7 +1835,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1782,7 +1867,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1816,7 +1901,7 @@
                     <se:Name>70101060101</se:Name>
                     <se:Description>
                         <se:Title>Зона озелененных территорий общего пользования (парки, сады, скверы,
-                            бульвары) существующая
+                            бульвары, городские леса) существующая
                         </se:Title>
                     </se:Description>
                     <ogc:Filter>
@@ -1831,7 +1916,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1850,7 +1935,7 @@
                     <se:Name>70101060102</se:Name>
                     <se:Description>
                         <se:Title>Зона озелененных территорий общего пользования (парки, сады, скверы,
-                            бульвары) планируемая к размещению
+                            бульвары, городские леса) планируемая к размещению
                         </se:Title>
                     </se:Description>
                     <ogc:Filter>
@@ -1865,7 +1950,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1912,7 +1997,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1944,7 +2029,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2147,6 +2232,7 @@
                     <se:PolygonSymbolizer>
                         <se:Fill>
                             <se:SvgParameter name="fill">#1c8f69</se:SvgParameter>
+                             <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
                         </se:Fill>
                         <se:Stroke>
                             <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
@@ -2169,6 +2255,7 @@
                     <se:PolygonSymbolizer>
                         <se:Fill>
                             <se:SvgParameter name="fill">#1c8f69</se:SvgParameter>
+                             <se:SvgParameter name="fill-opacity">0.6</se:SvgParameter>
                         </se:Fill>
                         <se:Stroke>
                             <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
@@ -2208,7 +2295,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2240,7 +2327,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2592,7 +2679,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2625,7 +2712,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2810,7 +2897,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2842,7 +2929,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>900000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2873,6 +2960,87 @@
                     </se:PolygonSymbolizer>
                 </se:Rule>
                 <se:Rule>
+                    <se:Name>70101200001</se:Name>
+                    <se:Description>
+                        <se:Title>Зона виноградников существующая</se:Title>
+                    </se:Description>
+                    <ogc:Filter>
+                        <ogc:And>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>ruleid</ogc:PropertyName>
+                            <ogc:Literal>70101200001</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                            <ogc:PropertyIsGreaterThan>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>100</ogc:Literal>
+                            </ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyIsLessThanOrEqualTo>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>90000000</ogc:Literal>
+                            </ogc:PropertyIsLessThanOrEqualTo>
+                        </ogc:And>
+                    </ogc:Filter>
+                    <se:MaxScaleDenominator>200000</se:MaxScaleDenominator>
+                    <se:PolygonSymbolizer>
+                        <se:Fill>
+                            <se:SvgParameter name="fill">#EDF858</se:SvgParameter>
+                        </se:Fill>
+                        <se:Stroke>
+                            <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                            <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                            <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
+                        </se:Stroke>
+                    </se:PolygonSymbolizer>
+                </se:Rule>
+                <se:Rule>
+                    <se:Name>70101200002</se:Name>
+                    <se:Description>
+                        <se:Title>Зона виноградников планируемая к размещению</se:Title>
+                    </se:Description>
+                    <ogc:Filter>
+                        <ogc:And>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>ruleid</ogc:PropertyName>
+                            <ogc:Literal>70101200002</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                            <ogc:PropertyIsGreaterThan>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>100</ogc:Literal>
+                            </ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyIsLessThanOrEqualTo>
+                                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                                <ogc:Literal>90000000</ogc:Literal>
+                            </ogc:PropertyIsLessThanOrEqualTo>
+                        </ogc:And>
+                    </ogc:Filter>
+                    <se:MaxScaleDenominator>200000</se:MaxScaleDenominator>
+                    <se:PolygonSymbolizer>
+                        <se:Fill>
+                            <se:SvgParameter name="fill">#EDF858</se:SvgParameter>
+                        </se:Fill>
+                        <se:Stroke>
+                            <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                            <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                            <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
+                        </se:Stroke>
+                    </se:PolygonSymbolizer>
+                    <se:PolygonSymbolizer>
+                        <se:Fill>
+                            <se:GraphicFill>
+                                <se:Graphic>
+                                    <se:Mark>
+                                        <se:WellKnownName>shape://slash</se:WellKnownName>
+                                        <se:Stroke>
+                                            <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                                        </se:Stroke>
+                                    </se:Mark>
+                                    <se:Size>3.8</se:Size>
+                                </se:Graphic>
+                            </se:GraphicFill>
+                        </se:Fill>
+                    </se:PolygonSymbolizer>
+                </se:Rule>
+                <se:Rule>
                     <se:Name>70101200101</se:Name>
                     <se:Description>
                         <se:Title>Зона виноградников существующая</se:Title>
@@ -2889,7 +3057,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -2922,7 +3090,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>90000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
