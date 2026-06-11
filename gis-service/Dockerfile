@@ -11,7 +11,7 @@ COPY ./target/gis-service.jar gis-service.jar
 HEALTHCHECK --interval=15s --timeout=3s --retries=3 --start-period=2m \
     CMD curl -f http://localhost:8082/actuator/health || exit 1
 
-ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
+ENTRYPOINT exec java -XX:MaxRAMPercentage=${XX_MAX_RAM_PERCENTAGE:-75.0} -javaagent:apm-agent.jar \
                                      -Delastic.apm.service_name=gis-service \
                                      -Delastic.apm.server_url=${APM_URL} \
                                      -Delastic.apm.enable_log_correlation=true \

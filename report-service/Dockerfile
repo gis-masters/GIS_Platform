@@ -14,7 +14,7 @@ COPY src/main/resources/system_templates report-service/src/main/resources/syste
 HEALTHCHECK --interval=30s --timeout=10s --retries=6 --start-period=10s \
     CMD curl -f http://localhost:8090/actuator/health || exit 1
 
-ENTRYPOINT exec java -Xmx${XMX_SIZE} \
+ENTRYPOINT exec java -XX:MaxRAMPercentage=${XX_MAX_RAM_PERCENTAGE:-75.0} \
                                      -javaagent:apm-agent.jar \
                                      -Delastic.apm.service_name=report-service \
                                      -Delastic.apm.server_url=${APM_URL} \

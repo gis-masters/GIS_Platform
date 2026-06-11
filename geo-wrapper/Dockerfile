@@ -16,7 +16,7 @@ RUN set -eux; \
         gdal-driver-pg \
         zip
 
-ENTRYPOINT sleep 1m && exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
+ENTRYPOINT sleep 1m && exec java -XX:MaxRAMPercentage=${XX_MAX_RAM_PERCENTAGE:-75.0} -javaagent:apm-agent.jar \
                                                  -Delastic.apm.service_name=crg-geo-wrapper \
                                                  -Delastic.apm.server_url=${APM_URL} \
                                                  -Delastic.apm.enable_log_correlation=true \

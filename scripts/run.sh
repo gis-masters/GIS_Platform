@@ -20,6 +20,32 @@ if [ -f "../.env" ]; then
     set +a  # disable auto-export
 fi
 
+# Второй параметр это процент. Геосерверу и другим важным побольше, другим по меньше в  сумме должно быть примерно 90%
+export AUDIT_MEM_LIMIT=$(./calc_mem_limit.sh 2)
+export AUTH_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+export DATA_MEM_LIMIT=$(./calc_mem_limit.sh 6)
+export GATEWAY_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+export WRAPPER_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+export GIS_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+export INTEGRATION_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+export UI_MEM_LIMIT=$(./calc_mem_limit.sh 1)
+export CRYPTOPRO_MEM_LIMIT=$(./calc_mem_limit.sh 1)
+export NOTIFICATION_MEM_LIMIT=$(./calc_mem_limit.sh 1)
+export REPORT_SERVICE_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+
+export GEOSERVER_MEM_LIMIT=$(./calc_mem_limit.sh 30)
+export GEOSERVER_XMS_SIZE=$(./calc_mem_limit.sh 15)m
+export GEOSERVER_XMX_SIZE=$(./calc_mem_limit.sh 25)m
+
+export POSTGIS_MEM_LIMIT=$(./calc_mem_limit.sh 20)
+export SHM_SIZE=$(./calc_mem_limit.sh 6)mb
+export PG_SHARED_BUFFERS=$(./calc_mem_limit.sh 5)MB
+export PG_EFFECTIVE_CACHE_SIZE=$(./calc_mem_limit.sh 15)MB
+
+export RABBITMQ_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+export REDIS_MEM_LIMIT=$(./calc_mem_limit.sh 1)
+export CARBONE_MEM_LIMIT=$(./calc_mem_limit.sh 3)
+
 # Actions
 printHeader "Run CRG GIS"
 

@@ -8,8 +8,6 @@ services:
     environment:
       APM_URL: ${APM_URL}
 
-      XMX_SIZE: ${AUDIT_XMX_SIZE:-1120m}
-
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_audit_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
@@ -28,7 +26,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${AUDIT_MEM_LIMIT:-1200}m
+    mem_limit: ${AUDIT_MEM_LIMIT:-300}m
 
   auth-service:
     container_name: crg-auth
@@ -38,8 +36,6 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
-
-      XMX_SIZE: ${AUTH_XMX_SIZE:-1120m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_auth_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -92,7 +88,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${AUTH_MEM_LIMIT:-1200}m
+    mem_limit: ${AUTH_MEM_LIMIT:-1024}m
 
   data-service:
     container_name: crg-data-service
@@ -104,7 +100,6 @@ services:
       APM_URL: ${APM_URL}
       APM_DATA_CPU: ${APM_DATA_CPU:-4}
 
-      XMX_SIZE: ${DATA_XMX_SIZE:-2000m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_data_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -177,7 +172,7 @@ services:
       - ${CRG_DATA_DIR:-/opt/crg}/specializations:/opt/crg/specializations
     ports:
       - "8084:8084"
-    mem_limit: ${DATA_MEM_LIMIT:-2100}m
+    mem_limit: ${DATA_MEM_LIMIT:-2048}m
 
   gateway:
     container_name: crg-gateway
@@ -187,8 +182,6 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
-
-      XMX_SIZE: ${GATEWAY_XMX_SIZE:-920m}
 
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
@@ -210,7 +203,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${GATEWAY_MEM_LIMIT:-20000}m
+    mem_limit: ${GATEWAY_MEM_LIMIT:-1024}m
 
   geo-wrapper:
     container_name: geo-wrapper
@@ -220,8 +213,6 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
-
-      XMX_SIZE: ${WRAPPER_XMX_SIZE:-1120m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -249,7 +240,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${WRAPPER_MEM_LIMIT:-1200}m
+    mem_limit: ${WRAPPER_MEM_LIMIT:-1024}m
 
   gis-service:
     container_name: crg-gis-service
@@ -259,8 +250,6 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
-
-      XMX_SIZE: ${GIS_XMX_SIZE:-1640m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_gis_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -299,7 +288,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${GIS_MEM_LIMIT:-1700}m
+    mem_limit: ${GIS_MEM_LIMIT:-1024}m
 
   integration-service:
     container_name: crg-integration-service
@@ -309,8 +298,6 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
-
-      XMX_SIZE: ${INTEGRATION_XMX_SIZE:-1000m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/bpmn_camunda
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -338,7 +325,7 @@ services:
       - "8338:8338"
     volumes:
       - ${CRG_DATA_DIR:-/opt/crg}/logs:/opt/logs
-    mem_limit: ${INTEGRATION_MEM_LIMIT:-1100}m
+    mem_limit: ${INTEGRATION_MEM_LIMIT:-1024}m
 
   portal-ui:
     container_name: crg-ui
@@ -382,7 +369,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    mem_limit: ${UI_MEM_LIMIT:-560}m
+    mem_limit: ${UI_MEM_LIMIT:-300}m
 
   cryptopro-service:
     container_name: crg-cryptopro-service
@@ -391,7 +378,6 @@ services:
     environment:
       APM_URL: ${APM_URL}
 
-      XMX_SIZE: ${CRYPTOPRO_XMX_SIZE:-400m}
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     volumes:
@@ -399,7 +385,7 @@ services:
       - ${CRG_DATA_DIR:-/opt/crg}/file_storage:/opt/crg/file_storage
     ports:
       - "8448:8448"
-    mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m
+    mem_limit: ${CRYPTOPRO_MEM_LIMIT:-300}m
     privileged: true
 
   notification-service:
@@ -408,8 +394,6 @@ services:
     restart: always
     environment:
       APM_URL: ${APM_URL}
-
-      XMX_SIZE: ${NOTIFICATION_XMX_SIZE:-1100m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_notification_db
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -425,7 +409,7 @@ services:
       - ${CRG_DATA_DIR:-/opt/crg}/file_storage:/opt/file_storage
     ports:
       - "8668:8668"
-    mem_limit: ${NOTIFICATION_MEM_LIMIT:-1000}m
+    mem_limit: ${NOTIFICATION_MEM_LIMIT:-300}m
     privileged: true
 
   report-service:
@@ -434,7 +418,6 @@ services:
     restart: always
     environment:
       APM_URL: ${APM_URL}
-      XMX_SIZE: ${REPORT_XMX_SIZE:-1100m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_report_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -452,5 +435,5 @@ services:
       - ${CRG_DATA_DIR:-/opt/crg}/templates:/report-service/src/main/resources/ready_to_work
     ports:
       - "8090:8090"
-    mem_limit: ${REPORT_SERVICE_MEM_LIMIT:-1000}m
+    mem_limit: ${REPORT_SERVICE_MEM_LIMIT:-1024}m
     privileged: true

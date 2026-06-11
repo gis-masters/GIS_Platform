@@ -17,18 +17,18 @@ services:
     environment:
       APM_URL: ${APM_URL}
 
-      INITIAL_MEMORY: ${GEOSERVER_XMS_SIZE:-20G}
-      MAXIMUM_MEMORY: ${GEOSERVER_XMX_SIZE:-20G}
+      INITIAL_MEMORY: ${GEOSERVER_XMS_SIZE:-5G}
+      MAXIMUM_MEMORY: ${GEOSERVER_XMX_SIZE:-7G}
 
       DISABLE_CORS: true
       USE_DEFAULT_CREDENTIALS: true
-    mem_limit: ${GEOSERVER_MEM_LIMIT:-51000}m
+    mem_limit: ${GEOSERVER_MEM_LIMIT:-9216}m
 
   postgis:
     container_name: postgis
     image: ${DOCKER_CRG_HOST}/postgis_crg:${POSTGIS_TAG}
     restart: always
-    shm_size: ${SHM_SIZE:-500mb}
+    shm_size: ${SHM_SIZE:-2048m}
     ports:
       - "5434:5432"
     volumes:
@@ -45,8 +45,10 @@ services:
       - -c
       - "max_connections=${PG_MAX_CONNECTIONS:-1000}"
       - -c
-      - "shared_buffers=${PG_SHARED_BUFFERS:-5GB}"
-    mem_limit: ${POSTGIS_MEM_LIMIT:-10100}m
+      - "shared_buffers=${PG_SHARED_BUFFERS:-2GB}"
+      - -c
+      - "effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE:-5120MB}"  
+    mem_limit: ${POSTGIS_MEM_LIMIT:-8192}m
 
   rabbitmq:
     container_name: rabbitmq
@@ -60,7 +62,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
-    mem_limit: ${RABBITMQ_MEM_LIMIT:-20000}m
+    mem_limit: ${RABBITMQ_MEM_LIMIT:-1024}m
 
   redis:
     container_name: redis
@@ -73,7 +75,7 @@ services:
     environment:
       REDIS_PASSWORD: ${REDIS_PASS}
     command: redis-server --requirepass ${REDIS_PASS}
-    mem_limit: ${REDIS_MEM_LIMIT:-500}m
+    mem_limit: ${REDIS_MEM_LIMIT:-300}m
     privileged: true
 
   carbone:
@@ -88,3 +90,4 @@ services:
       CARBONE_HTTP_PORT: "4000"
       CARBONE_LOG_LEVEL: "info"
       CARBONE_DATABASE_NAME: "database.sqlite"
+    mem_limit: ${CARBONE_MEM_LIMIT:-2048}m
