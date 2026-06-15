@@ -10,6 +10,7 @@ import {
   type PropertySchema,
   PropertyType
 } from '../../../services/data/schema/schema.models';
+import { type FieldErrors } from '../../../services/util/form/formValidation.utils';
 import { Button } from '../../Button/Button';
 import { getPropertyFieldsSchema } from '../../EditPropertySchemaForm/EditPropertySchemaForm';
 import { Form } from '../../Form/Form';
@@ -21,6 +22,7 @@ interface SchemaPropertiesCreateItemProps {
   open: boolean;
   onClose(): void;
   onCreate(property: PropertySchema): boolean;
+  existingProperties: PropertySchema[];
 }
 
 const cnSchemaPropertiesCreateItem = cn('SchemaProperties', 'CreateItem');
@@ -28,6 +30,9 @@ const cnSchemaPropertiesCreateItem = cn('SchemaProperties', 'CreateItem');
 @observer
 export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreateItemProps> {
   @observable private propertySchema: Partial<BasePropertySchema> = this.getDefaultPropertySchema();
+
+  @observable
+  private errors: FieldErrors[] = [];
 
   constructor(props: SchemaPropertiesCreateItemProps) {
     super(props);
@@ -37,7 +42,9 @@ export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreate
   render() {
     const { open } = this.props;
     const propertyType = this.propertySchema.propertyType ?? PropertyType.STRING;
-    const saveDisabled = !this.propertySchema.name?.trim() || !this.propertySchema.title?.trim() || !propertyType;
+    const hasErrors = this.errors.length > 0;
+    const saveDisabled =
+      !this.propertySchema.name?.trim() || !this.propertySchema.title?.trim() || !propertyType || hasErrors;
     const [TypeIcon, typeText] = getTypeIcon(propertyType);
 
     return (
@@ -55,6 +62,7 @@ export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreate
             value={this.propertySchema}
             onFormChange={this.handleFormChange}
             schema={getPropertyFieldsSchema(propertyType, true)}
+            errors={this.errors}
           />
         </DialogContent>
 
@@ -181,6 +189,12 @@ export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreate
 
   @action.bound
   private create() {
+    this.validateCreateForm(this.propertySchema);
+
+    if (this.errors.length) {
+      return;
+    }
+
     if (!this.propertySchema.name?.trim() || !this.propertySchema.title?.trim()) {
       return;
     }
@@ -201,5 +215,50 @@ export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreate
     }
 
     this.propertySchema = nextValue;
+
+    this.validateCreateForm(nextValue);
+  }
+
+  @action.bound
+  private validateCreateForm(value: Partial<BasePropertySchema>) {
+    this.errors = [...this.getDuplicateNameErrors(value.name), ...this.getRequiredOptionErrors(value)];
+  }
+
+  private getDuplicateNameErrors(name?: string): FieldErrors[] {
+    const normalizedName = name?.trim().toLowerCase();
+
+    if (
+      normalizedName &&
+      this.props.existingProperties.some(property => property.name.trim().toLowerCase() === normalizedName)
+    ) {
+      return [
+        {
+          field: 'name',
+          messages: ['Свойство с таким именем уже существует']
+        }
+      ];
+    }
+
+    return [];
+  }
+
+  private getRequiredOptionErrors(value: Partial<BasePropertySchema>): FieldErrors[] {
+    const errors: FieldErrors[] = [];
+
+    if (value.required && value.hidden) {
+      errors.push({
+        field: 'hidden',
+        messages: ['Обязательное поле не может быть скрытым']
+      });
+    }
+
+    if (value.required && value.readOnly) {
+      errors.push({
+        field: 'readOnly',
+        messages: ['Обязательное поле не может быть только для чтения']
+      });
+    }
+
+    return errors;
   }
 }

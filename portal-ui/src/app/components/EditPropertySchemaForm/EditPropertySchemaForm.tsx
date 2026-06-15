@@ -64,6 +64,10 @@ export function getPropertyFieldsSchema(propertyType?: PropertyType, editing = f
         required: true,
         description: 'Техническое наименование поля в базе данных (пишется латиницей без пробелов)',
         readOnly: !editing,
+        minLength: 1,
+        maxLength: 63,
+        regex: '^[a-z][a-z0-9_]*$',
+        regexErrorMessage: 'Только строчные латинские буквы, цифры и "_". Первый символ должен быть буквой.',
         propertyType: PropertyType.STRING
       },
       {
@@ -71,6 +75,7 @@ export function getPropertyFieldsSchema(propertyType?: PropertyType, editing = f
         title: 'Тип поля',
         description: 'Определяет, какие данные можно будет хранить в этом поле',
         options: propertyTypeOptions,
+        required: true,
         readOnly: !editing,
         propertyType: PropertyType.CHOICE
       },

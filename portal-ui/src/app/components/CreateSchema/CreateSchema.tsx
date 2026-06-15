@@ -5,10 +5,10 @@ import { Tooltip } from '@mui/material';
 import { PlaylistAdd } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { type Schema, schemaForSchema } from '../../services/data/schema/schema.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
+import { SchemaEditDialog } from '../SchemaEditDialog/SchemaEditDialog';
 
 @observer
 export class CreateSchema extends Component {
@@ -19,6 +19,13 @@ export class CreateSchema extends Component {
     makeObservable(this);
   }
 
+  private emptySchema: Schema = {
+    name: '',
+    title: '',
+    description: '',
+    properties: []
+  };
+
   render() {
     return (
       <>
@@ -28,13 +35,13 @@ export class CreateSchema extends Component {
           </IconButton>
         </Tooltip>
 
-        <FormDialog<{ schema: string }>
+        <SchemaEditDialog
+          title='Создание схемы'
           open={this.dialogOpen}
-          value={{}}
-          schema={schemaForSchema}
           onClose={this.closeDialog}
-          actionFunction={this.create}
-          actionButtonProps={{ children: 'Создать' }}
+          schema={this.emptySchema}
+          onSave={this.create}
+          editing
         />
       </>
     );
@@ -51,8 +58,9 @@ export class CreateSchema extends Component {
   }
 
   @boundMethod
-  private async create({ schema }: { schema: string }) {
-    const parsedSchema = JSON.parse(schema) as Schema;
-    await schemaService.createSchema(parsedSchema);
+  private async create(schema: Schema) {
+    await schemaService.createSchema(schema);
+
+    this.closeDialog();
   }
 }

@@ -74,7 +74,7 @@ export const MapLabels: FC = observer(() => {
     void (async () => {
       await restoreLabelsVisibilityState();
     })();
-  }, []);
+  }, [restoreLabelsVisibilityState]);
 
   return (
     <div className={cnMapLabels()}>

@@ -67,6 +67,8 @@ export const ProjectFolderPage: FC = observer(() => {
     return () => {
       communicationService.off(init);
     };
+    // выполняем только 1 раз, массив зависимостей не нужен
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const TypeIcon = project?.folder ? FolderOutlined : InsertDriveFileOutlined;

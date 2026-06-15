@@ -33,8 +33,8 @@ import {
   supportedGeometryTypes
 } from '../../services/geoserver/wfs/wfs.models';
 import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
+import { getSchemaTagsOptions } from '../../services/util/form/getSchemaTagsOptions';
 import { isArray } from '../../services/util/typeGuards/isArray';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Card } from '../Card/Card';
 import { CardDescription } from '../Card/Description/Card-Description';
 import { CardRow } from '../Card/Row/Card-Row';
@@ -89,6 +89,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
           <Card className={cnSchemaCard()}>
             <CardRow>
               <CardRowTitle>Наименование:</CardRowTitle>
+
               {this.schemaWithAppliedType.name}
             </CardRow>
 
@@ -121,10 +122,13 @@ export class SchemaCard extends Component<SchemaCardProps> {
 
             <CardRow>
               <CardRowTitle>Наименование таблицы:</CardRowTitle>
+
               {this.schemaWithAppliedType.tableName}
             </CardRow>
+
             <CardRow>
               <CardRowTitle>Идентификатор:</CardRowTitle>
+
               {this.schemaWithAppliedType.originName}
             </CardRow>
 
@@ -275,6 +279,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
             open={this.createPropertyDialogOpen}
             onClose={this.closeCreatePropertyDialog}
             onCreate={this.createSchemaProperty}
+            existingProperties={this.schemaWithAppliedType.properties}
           />
         </>
       )
@@ -337,18 +342,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
 
   @computed
   private get tagsOptions(): PropertyOption[] {
-    const organizationTags = isArray(organizationSettings.orgSettings?.organization?.tags)
-      ? organizationSettings.orgSettings?.organization?.tags
-      : [];
-
-    const currentSchemaTags = this.selectedTags;
-
-    const uniqueTags = [...new Set([...organizationTags, ...this.initialSchemaTags, ...currentSchemaTags])];
-
-    return uniqueTags.map(tag => ({
-      value: tag,
-      title: tag
-    }));
+    return getSchemaTagsOptions([...this.initialSchemaTags, ...this.selectedTags]);
   }
 
   @computed
@@ -480,6 +474,27 @@ export class SchemaCard extends Component<SchemaCardProps> {
     }
 
     this.setSelectedContentTypeId(event.target.value);
+  }
+
+  @boundMethod
+  private editSchemaName(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    this.editSchemaInfo({
+      name: event.target.value
+    });
+  }
+
+  @boundMethod
+  private editSchemaTableName(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    this.editSchemaInfo({
+      tableName: event.target.value
+    });
+  }
+
+  @boundMethod
+  private editSchemaOriginName(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    this.editSchemaInfo({
+      originName: event.target.value
+    });
   }
 
   @action

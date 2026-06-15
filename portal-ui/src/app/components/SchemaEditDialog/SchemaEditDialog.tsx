@@ -9,14 +9,23 @@ import { debounce, type DebouncedFunc } from 'lodash';
 import { doConfirm } from '../../services/answer-modals.service';
 import { type Library } from '../../services/data/library/library.models';
 import { updateLibrarySchema } from '../../services/data/library/library.service';
-import { type Schema, schemaForSchema } from '../../services/data/schema/schema.models';
+import {
+  type PropertySchema,
+  PropertyType,
+  type Schema,
+  schemaForSchema
+} from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { DataEntityType, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { updateVectorTableSchema } from '../../services/data/vectorData/vectorData.service';
+import { GeometryType, type SupportedGeometryType } from '../../services/geoserver/wfs/wfs.models';
+import { getSchemaTagsOptions } from '../../services/util/form/getSchemaTagsOptions';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
+import { FormDialog } from '../FormDialog/FormDialog';
 import { SchemaActionsPreview } from '../SchemaActions/Preview/SchemaActions-Preview';
 import { SchemaCard } from '../SchemaCard/SchemaCard';
+import { SchemaPropertiesControl } from '../SchemaPropertiesControl/SchemaPropertiesControl';
 
 import './SchemaEditDialog.scss';
 
@@ -31,6 +40,7 @@ export interface SchemaEditDialogProps {
   readonly?: boolean;
   editing?: boolean;
   withPreview?: boolean;
+  onSave?(schema: Schema): Promise<void>;
 }
 
 interface SchemaEditDialogState {
@@ -41,7 +51,9 @@ interface SchemaEditDialogState {
   error: string;
   warnings: string[];
   isSchemaChanged: boolean;
+  isCreateMode: boolean;
 
+  setIsCreateMode(isCreateMode: boolean): void;
   setLoading(loading: boolean): void;
   setJsonMode(jsonMode: boolean): void;
   setCurrentSchema(currentSchema: Schema | undefined): void;
@@ -51,8 +63,142 @@ interface SchemaEditDialogState {
   setIsSchemaChanged(isSchemaChanged: boolean): void;
 }
 
+type SchemaCreateFormValue = Pick<
+  Schema,
+  | 'name'
+  | 'title'
+  | 'description'
+  | 'tableName'
+  | 'originName'
+  | 'readOnly'
+  | 'properties'
+  | 'geometryType'
+  | 'styleName'
+  | 'tags'
+>;
+
+const ensureShapeProperty = (
+  properties: PropertySchema[] = [],
+  geometryType?: SupportedGeometryType
+): PropertySchema[] => {
+  const propertiesWithoutShape = properties.filter(property => property.name !== 'shape');
+
+  if (!geometryType) {
+    return propertiesWithoutShape;
+  }
+
+  return [
+    ...propertiesWithoutShape,
+    {
+      name: 'shape',
+      title: 'Геометрия',
+      hidden: true,
+      propertyType: PropertyType.GEOMETRY
+    }
+  ];
+};
+
+const createSchemaFields: PropertySchema[] = [
+  {
+    name: 'name',
+    title: 'Наименование',
+    required: true,
+    minLength: 1,
+    maxLength: 63,
+    regex: '^[a-z][a-z0-9_]*$',
+    regexErrorMessage: 'Только строчные латинские буквы, цифры и "_". Первый символ должен быть буквой.',
+    description: 'Системное наименование схемы (пишется маленькими буквами, латиницей и без пробелов)',
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'title',
+    title: 'Название',
+    required: true,
+    description: 'Русскоязычное название схемы',
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'description',
+    title: 'Описание',
+    description: 'Краткое описание назначения схемы',
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'tableName',
+    title: 'Наименование таблицы',
+    hidden: true,
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'originName',
+    title: 'Идентификатор',
+    hidden: true,
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'readOnly',
+    title: 'Только для чтения',
+    description: 'Запрещает пользовательское редактирование данных созданных по схеме',
+    propertyType: PropertyType.BOOL
+  },
+  {
+    name: 'geometryType',
+    title: 'Тип геометрии',
+    options: [
+      {
+        title: 'Без геометрии',
+        value: ''
+      },
+      {
+        value: GeometryType.MULTI_POINT,
+        title: 'Точка'
+      },
+      {
+        value: GeometryType.MULTI_LINE_STRING,
+        title: 'Линия'
+      },
+      {
+        value: GeometryType.MULTI_POLYGON,
+        title: 'Полигон'
+      }
+    ],
+    propertyType: PropertyType.CHOICE
+  },
+  {
+    name: 'styleName',
+    title: 'Стиль',
+    description: 'Наименование стиля для отображения геометрии',
+    propertyType: PropertyType.STRING
+  },
+  {
+    name: 'tags',
+    title: 'Теги',
+    description: 'Теги схемы',
+    multiple: true,
+    options: getSchemaTagsOptions(),
+    propertyType: PropertyType.CHOICE
+  },
+  {
+    name: 'properties',
+    title: 'Свойства',
+    description: 'Набор полей для хранения сведений - значимых характреристик объектов',
+    propertyType: PropertyType.CUSTOM,
+    ControlComponent: SchemaPropertiesControl
+  }
+];
+
 export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
-  const { title, open, onClose, schema, explorerItem, readonly = false, editing: editIcon, withPreview } = props;
+  const {
+    title,
+    open,
+    onClose,
+    schema,
+    explorerItem,
+    readonly = false,
+    editing: editIcon,
+    withPreview,
+    onSave
+  } = props;
 
   const state = useLocalObservable<SchemaEditDialogState>(() => ({
     loading: false,
@@ -62,7 +208,11 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
     error: '',
     warnings: [],
     isSchemaChanged: false,
+    isCreateMode: !schema.name,
 
+    setIsCreateMode(isCreateMode) {
+      this.isCreateMode = isCreateMode;
+    },
     setLoading(loading) {
       this.loading = loading;
     },
@@ -168,9 +318,19 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
       state.setCurrentSchema(schema);
       state.setSchemaString(JSON.stringify(schema, null, 2));
       state.setIsSchemaChanged(false);
+      state.setIsCreateMode(!schema.name);
     }
+
     wasDialogOpenRef.current = open;
-  }, [open, schema, state.setCurrentSchema, state.setSchemaString, state.setIsSchemaChanged, state]);
+  }, [
+    open,
+    schema,
+    state.setCurrentSchema,
+    state.setSchemaString,
+    state.setIsSchemaChanged,
+    state.setIsCreateMode,
+    state
+  ]);
 
   const toggleJsonMode = useCallback(() => {
     state.setJsonMode(!state.jsonMode);
@@ -252,7 +412,8 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
     state.setLoading(true);
 
     try {
-      await updateSchema(state.currentSchema);
+      await (onSave ? onSave(state.currentSchema) : updateSchema(state.currentSchema));
+
       state.setLoading(false);
       closeDialog();
     } catch (error) {
@@ -288,7 +449,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
       state.setError(errorsMessages.length ? errorsMessages.join('. ') : 'Ошибка сохранения схемы');
       state.setLoading(false);
     }
-  }, [closeDialog, state, updateSchema]);
+  }, [closeDialog, onSave, state, updateSchema]);
 
   const handleJsonChange = useCallback(
     ({ schema: schemaJson }: { schema: string }) => {
@@ -306,6 +467,60 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
     },
     [state]
   );
+
+  const handleCreateFormChange = useCallback(
+    (value: SchemaCreateFormValue) => {
+      const nextValue = { ...value };
+
+      if (value.name) {
+        nextValue.tableName = value.name;
+        nextValue.originName = value.name;
+      }
+
+      handleSetCurrentSchema({
+        ...state.currentSchema,
+        ...nextValue
+      } as Schema);
+    },
+    [handleSetCurrentSchema, state]
+  );
+
+  const createSchema = useCallback(
+    async (value: SchemaCreateFormValue) => {
+      const nextSchema: Schema = {
+        ...schema,
+        ...state.currentSchema,
+        ...value,
+        properties: ensureShapeProperty(
+          value.properties ?? state.currentSchema?.properties ?? schema.properties,
+          value.geometryType
+        )
+      };
+
+      state.setCurrentSchema(nextSchema);
+
+      await (onSave ? onSave(nextSchema) : updateSchema(nextSchema));
+    },
+    [schema, state, onSave, updateSchema]
+  );
+
+  // добавить флаг для создания схемы
+  if (state.isCreateMode) {
+    return (
+      <FormDialog<SchemaCreateFormValue>
+        open={open}
+        title={title}
+        schema={{ properties: createSchemaFields }}
+        value={state.currentSchema}
+        actionFunction={createSchema}
+        onFormChange={handleCreateFormChange}
+        actionButtonProps={{ children: 'Создать' }}
+        closeButtonProps={{ children: 'Отмена' }}
+        onClose={closeDialog}
+        closeWithConfirm
+      />
+    );
+  }
 
   return (
     <Dialog

@@ -59,6 +59,8 @@ export const useEditFeatureInitialization = (
     checkIsNew(data.features[0]);
 
     setSelectedTab(editFeatureStore.geometryErrorMessage ? 1 : Number(isNew));
+    // дергаем хуе дополнительно при изменении editFeaturesData
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     features,
     shouldRender,

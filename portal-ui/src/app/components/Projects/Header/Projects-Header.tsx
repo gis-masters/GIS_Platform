@@ -97,6 +97,8 @@ export const ProjectsHeader: FC<ProjectsHeaderProps> = observer(({ store }) => {
     return () => {
       mounted = false;
     };
+    // дергаем только на currentFolder а не на весь стор
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProjectFolderStore.currentFolder]);
 
   return (

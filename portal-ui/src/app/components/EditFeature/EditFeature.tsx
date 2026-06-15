@@ -247,13 +247,16 @@ export const EditFeature: FC = observer(() => {
     });
   }, [features, layerSchema, layer]);
 
-  const updateCurrentFeature = (features: WfsFeature[]) => {
-    setFormControls([]);
-    setEditFeatureData([]);
-    setFeatures(features);
+  const updateCurrentFeature = useCallback(
+    (features: WfsFeature[]) => {
+      setFormControls([]);
+      setEditFeatureData([]);
+      setFeatures(features);
 
-    editFeatureStore.setPristine(true);
-  };
+      editFeatureStore.setPristine(true);
+    },
+    [setEditFeatureData, setFeatures, setFormControls]
+  );
 
   useFeatureFormGenerator(
     currentFeatures[0],
@@ -385,7 +388,15 @@ export const EditFeature: FC = observer(() => {
     return () => {
       disposers.forEach(dispose => dispose());
     };
-  }, [features, setEditFeatureData, setFeatures, setFormControls, setIsGeometryAutoFixed, updatingAllowed]);
+  }, [
+    features,
+    setEditFeatureData,
+    setFeatures,
+    setFormControls,
+    updateCurrentFeature,
+    setIsGeometryAutoFixed,
+    updatingAllowed
+  ]);
 
   useEffect(() => {
     const eventHandler = (e: CustomEvent<DataChangeEventDetail<CrgLayer>>) => {

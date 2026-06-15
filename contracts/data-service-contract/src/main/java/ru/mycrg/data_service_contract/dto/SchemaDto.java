@@ -28,7 +28,7 @@ public class SchemaDto implements Serializable {
     private String tableName;
 
     @Valid
-    @NotEmpty
+    @NotEmpty(message = "'Свойства' для объектов в схеме не могут быть пустыми.")
     private List<SimplePropertyDto> properties = new ArrayList<>();
 
     private String description;
