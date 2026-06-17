@@ -1,52 +1,43 @@
-# Memo on the file `.env.example`
+## 🛠 Quick Start
+```bash
+wget -qO installGisMastersApp.sh https://raw.githubusercontent.com/gis-masters/GIS_Platform/master/scripts/installGisMastersApp.sh && chmod +x installGisMastersApp.sh && script -c "./installGisMastersApp.sh" installGisMastersAppLog.txt
+```
 
-This document describes all the variables of the environment necessary for the correct operation of the application. Do not add and do not remove variables without obvious need — Follow the instructions below.
+## 🛠 System Requirements
+<details open>
+<summary><strong>Recommended</strong></summary>
+
+- **OS**: Linux Ubuntu/Debian (tested on Ubuntu 22)
+- **Processor**: Intel Core i7-13700K
+- **RAM**: 64 GB
+- **NVMe SSD**: 1 TB
+</details>
+
+<details>
+<summary><strong>Minimum</strong></summary>
+
+- **OS**: Linux Ubuntu/Debian
+- **Processor**: Intel Core i5-12400F
+- **RAM**: 32 GB
+- **Disk Space**: 40 GB (excluding OS, Docker, and user files)
+
+</details>
 
 ---
 
-## 📋 The structure of the variables
+## 📋 Usage Instructions
 
-### 1. Administrative passwords
-```
-SYSTEM_ADMIN_PASSWORD
-SPRING_FLYWAY_PLACEHOLDERS_ADMIN_PASSWORD
-CRG_OPTIONS_SYSTEM_ADMIN_CRYPTED_PASSWORD
-```  
-> **Important: ** These three variables are interconnected and should change simultaneously.
+**Installation**
+1. Run the quick start script.
+2. Specify the data directory (or use the default location).
+3. Enter the administrator username.
+4. Enter the administrator password (or generate one automatically).
+5. Wait for the application to be installed.
+6. After the installation is complete, an installation report will be displayed with access details for the key components.
 
-** How to replace:**
-1. Launch the application with current settings.
-2. In an administrative interface, create a new user (with the necessary rights).
-3. Copy the received passwords received.
-4. Stop the application, clean the folder `crg` and turn it over again, replacing the old values with new hashs.
-
----
-
-### 2. Mail settings
-```
-SPRING_MAIL_USERNAME
-SPRING_MAIL_PASSWORD
-```  
-> For full work (including for passing healthcheck `auth-service`) Indicate the real accounting data of the mail account.  
-> Without them, the mail service will not pass the check, although other applications will work in normal mode (except for password restoration).
-
----
-
-### 3. Access to GeoServer
-```
-AUTH_REFRESH_USERNAME
-AUTH_REFRESH_PASSWORD
-```  
-> Parameters for checking validity refresh_token.
-
->Additionally used as accounting data to enter into Web UI GeoServer.
-
-**Two variables are interconnected and should change simultaneously **
-
-To change the password from UI Geoserver You need to update the file:
-```
-assets/initialConfig/geoserver/security/usergroup/default/users.xml
-```
-— It sets the corresponding entries for GeoServer.
+**Update**
+1. Run the quick start script.
+2. Wait for the application update to complete.
+3. After the update is complete, an installation report will be displayed with access details for the key components.
 
 ---
