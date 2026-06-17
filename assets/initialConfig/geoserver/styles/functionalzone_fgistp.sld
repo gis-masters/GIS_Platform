@@ -28,7 +28,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -61,7 +61,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -435,7 +435,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -467,7 +467,7 @@
                             </ogc:PropertyIsGreaterThan>
                             <ogc:PropertyIsLessThanOrEqualTo>
                                 <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000</ogc:Literal>
+                                <ogc:Literal>9000000000</ogc:Literal>
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
@@ -1824,22 +1824,11 @@
                         <se:Title>Зоны рекреационного назначения существующие</se:Title>
                     </se:Description>
                     <ogc:Filter>
-                        <ogc:And>
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
                             <ogc:Literal>70101060001</ogc:Literal>
                         </ogc:PropertyIsEqualTo>
-                            <ogc:PropertyIsGreaterThan>
-                                <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>100</ogc:Literal>
-                            </ogc:PropertyIsGreaterThan>
-                            <ogc:PropertyIsLessThanOrEqualTo>
-                                <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000000</ogc:Literal>
-                            </ogc:PropertyIsLessThanOrEqualTo>
-                        </ogc:And>
                     </ogc:Filter>
-                    <se:MaxScaleDenominator>200000</se:MaxScaleDenominator>
                     <se:PolygonSymbolizer>
                         <se:Fill>
                             <se:SvgParameter name="fill">#54958d</se:SvgParameter>
@@ -1856,22 +1845,11 @@
                         <se:Title>Зоны рекреационного назначения планируемые к размещению</se:Title>
                     </se:Description>
                     <ogc:Filter>
-                        <ogc:And>
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
                             <ogc:Literal>70101060002</ogc:Literal>
                         </ogc:PropertyIsEqualTo>
-                            <ogc:PropertyIsGreaterThan>
-                                <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>100</ogc:Literal>
-                            </ogc:PropertyIsGreaterThan>
-                            <ogc:PropertyIsLessThanOrEqualTo>
-                                <ogc:PropertyName>area_calc</ogc:PropertyName>
-                                <ogc:Literal>9000000000</ogc:Literal>
-                            </ogc:PropertyIsLessThanOrEqualTo>
-                        </ogc:And>
                     </ogc:Filter>
-                    <se:MaxScaleDenominator>200000</se:MaxScaleDenominator>
                     <se:PolygonSymbolizer>
                         <se:Fill>
                             <se:SvgParameter name="fill">#54958d</se:SvgParameter>
@@ -3121,6 +3099,49 @@
                         </se:Fill>
                     </se:PolygonSymbolizer>
                 </se:Rule>
+
+<se:Rule>
+    <se:Name>small_objects_points_far_scale</se:Name>
+    <se:Description>
+        <se:Title>Мелкие объекты точками на дальнем масштабе</se:Title>
+    </se:Description>
+
+    <ogc:Filter>
+        <ogc:And>
+            <ogc:PropertyIsGreaterThan>
+                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                <ogc:Literal>100</ogc:Literal>
+            </ogc:PropertyIsGreaterThan>
+
+            <ogc:PropertyIsLessThanOrEqualTo>
+                <ogc:PropertyName>area_calc</ogc:PropertyName>
+                <ogc:Literal>9000000</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+        </ogc:And>
+    </ogc:Filter>
+
+    <se:MinScaleDenominator>200000</se:MinScaleDenominator>
+    <se:MaxScaleDenominator>1500000</se:MaxScaleDenominator>
+
+    <se:PointSymbolizer>
+        <se:Graphic>
+            <se:Mark>
+                <se:WellKnownName>circle</se:WellKnownName>
+                <se:Fill>
+                    <se:SvgParameter name="fill">#555555</se:SvgParameter>
+                    <se:SvgParameter name="fill-opacity">0.65</se:SvgParameter>
+                </se:Fill>
+                <se:Stroke>
+                    <se:SvgParameter name="stroke">#ffffff</se:SvgParameter>
+                    <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                    <se:SvgParameter name="stroke-opacity">0.8</se:SvgParameter>
+                </se:Stroke>
+            </se:Mark>
+            <se:Size>5</se:Size>
+        </se:Graphic>
+    </se:PointSymbolizer>
+</se:Rule>
+
                 <se:Rule>
                     <se:Name>Default</se:Name>
                     <se:Description>
