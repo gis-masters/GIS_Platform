@@ -95,6 +95,11 @@ export default class Form<T> extends Component<FormProps<T>> {
       this.props.invoke.validate = this.validate;
       this.props.invoke.reset = this.reset;
     }
+
+    if (this.props.auto && this.props.schema?.properties.some(({ warningFormula }) => warningFormula)) {
+      this.validateWarnings();
+    }
+
     this.valueReactionDisposer = reaction(
       () => cloneDeep(this.props.value),
       value => {

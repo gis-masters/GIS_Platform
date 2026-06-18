@@ -26,6 +26,7 @@ import { ExportValidationReportButtonComponent } from './components/export-valid
 import { FeaturesListSidebarComponent } from './components/features-list-sidebar/features-list-sidebar.component';
 import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-teaser/features-sidebar-teaser.component';
 import { FooterNgComponent } from './components/footer-ng/footer-ng.component';
+import { GlobalLoadingRootComponent } from './components/global-loading-root/global-loading-root.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
 import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
@@ -126,6 +127,7 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     MessagesRegistryComponent,
     TasksJournalComponent,
     AnswerModalsRootComponent,
+    GlobalLoadingRootComponent,
     PhotoModePreviewerComponent,
     ProjectFolderComponent
   ],

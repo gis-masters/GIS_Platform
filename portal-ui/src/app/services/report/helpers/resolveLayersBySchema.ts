@@ -33,7 +33,7 @@ export async function resolveLayersBySchema(schemaName: string): Promise<CrgVect
 }
 
 /** Человекочитаемое имя схемы для сообщений: title, при недоступности — Schema.name. */
-export async function getSchemaLabelForMessage(schemaName: string): Promise<string> {
+async function getSchemaLabelForMessage(schemaName: string): Promise<string> {
   try {
     const schema = await schemaService.getSchema(schemaName);
     if (schema.title) {
@@ -58,7 +58,7 @@ export async function resolveSingleLayerBySchema(schemaName: string): Promise<Re
   if (!matchedLayers.length) {
     return {
       ok: false,
-      message: `В проекте нет векторного слоя по схеме "${schemaLabel}". Добавьте слой в проект.`
+      message: `В проекте нет слоя по схеме "${schemaLabel}". Добавьте слой в проект.`
     };
   }
 

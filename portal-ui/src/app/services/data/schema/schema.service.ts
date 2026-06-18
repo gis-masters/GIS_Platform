@@ -24,7 +24,7 @@ class SchemaService {
 
   private schemas: { [key: string]: Promise<OldSchema> } = {};
   private schemasResolvers: { [key: string]: (value: OldSchema | PromiseLike<OldSchema>) => void } = {};
-  private schemasRejecters: { [key: string]: () => void } = {};
+  private schemasRejecters: { [key: string]: (reason?: unknown) => void } = {};
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
   private fetchingNow = 0;
@@ -33,18 +33,32 @@ class SchemaService {
   private readonly schemaWarningValidators: SchemaValidator[] = [printTemplatesExist];
 
   private constructor() {
-    this.debouncedFetch = debounce(this.fetch, 20);
+    // fetch запускается из таймера debounce вне контекста вызывающего кода,
+    // поэтому его ошибку гасим здесь: ожидающим она уже доставлена через reject()
+    // в checkForsakenResolvers, а необработанный reject таймера дал бы глобальную ошибку.
+    this.debouncedFetch = debounce(async (fetchAll?: boolean) => {
+      try {
+        await this.fetch(fetchAll);
+      } catch {
+        // ошибка доставлена ожидающим промисам в checkForsakenResolvers
+      }
+    }, 20);
   }
 
   @boundMethod
   async getOldSchema(name: string): Promise<OldSchema> {
     if (!this.schemas[name]) {
-      this.schemas[name] = new Promise((resolve, reject) => {
+      const schemaPromise = new Promise<OldSchema>((resolve, reject) => {
         this.schemasResolvers[name] = resolve;
         this.schemasRejecters[name] = reject;
       });
+      this.schemas[name] = schemaPromise;
       this.fetchingPool.push(name);
-      await this.debouncedFetch();
+      // debounce возвращает управление до реального fetch, поэтому отклонять схему здесь нельзя.
+      // Резолв/реджект придёт из fetch -> checkForsakenResolvers после ответа сервера.
+      void this.debouncedFetch();
+
+      return schemaPromise;
     }
 
     return this.schemas[name];
@@ -219,9 +233,10 @@ class SchemaService {
     const response = await schemaClient.getSchema(payload);
 
     if (!response) {
+      const fetchError = new Error(`Getting schemas ${JSON.stringify(payload)} error`);
       this.fetchingNow--;
-      this.checkForsakenResolvers();
-      throw new Error(`Getting schemas ${JSON.stringify(payload)} error`);
+      this.checkForsakenResolvers(fetchError);
+      throw fetchError;
     }
 
     response.forEach(schema => {
@@ -245,15 +260,23 @@ class SchemaService {
     this.checkForsakenResolvers();
   }
 
-  private checkForsakenResolvers() {
+  private rejectForsakenSchema(schemaName: string, error: Error): void {
+    const reject = this.schemasRejecters[schemaName];
+    if (!reject) {
+      return;
+    }
+
+    reject(error);
+    delete this.schemas[schemaName];
+    delete this.schemasResolvers[schemaName];
+    delete this.schemasRejecters[schemaName];
+  }
+
+  private checkForsakenResolvers(fetchError?: Error) {
     if (!this.fetchingPool.length && !this.fetchingNow) {
-      Object.entries(this.schemasRejecters).forEach(([schemaName, reject]) => {
-        delete this.schemas[schemaName];
-        delete this.schemasResolvers[schemaName];
-        delete this.schemasRejecters[schemaName];
-        reject();
-        throw new Error('Не найдена схема ' + schemaName);
-      });
+      for (const [schemaName] of Object.entries(this.schemasRejecters)) {
+        this.rejectForsakenSchema(schemaName, fetchError ?? new Error('Не найдена схема ' + schemaName));
+      }
     }
   }
 
