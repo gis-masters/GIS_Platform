@@ -15,12 +15,16 @@ public interface TemplateRepository extends CrudRepository<Template, Long> {
 
     Optional<Template> findByName(String name);
 
+    List<Template> findByNameIn(Set<String> names);
+
+    List<Template> findByNameInAndIsSystemTrue(Set<String> names);
+
+    List<Template> findByIsSystemTrue();
+
     @Query("""
             SELECT template
             FROM Template template
             WHERE template.organizationId IS NULL OR template.organizationId = :organizationId
             """)
     List<Template> findByOrganizationIdOrCommon(@Param("organizationId") Long organizationId);
-
-    int deleteByNameInAndIsSystemTrue(Set<String> names);
 }

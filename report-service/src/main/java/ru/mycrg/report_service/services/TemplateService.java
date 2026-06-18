@@ -17,16 +17,13 @@ import ru.mycrg.report_service.exceptions.NotFoundException;
 import ru.mycrg.report_service.mappers.TemplateMapper;
 import ru.mycrg.report_service.repository.TemplateRepository;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static java.time.LocalDateTime.now;
-import static ru.mycrg.report_service.services.FileService.TEMPLATES_DIR;
 
 @Service
 public class TemplateService {
@@ -56,9 +53,21 @@ public class TemplateService {
     }
 
     public Set<String> getSystemTemplateNames() {
+        return templateRepository.findByIsSystemTrue()
+                                 .stream()
+                                 .map(Template::getName)
+                                 .collect(Collectors.toSet());
+    }
+
+    public Set<String> getTemplateNames() {
         return StreamSupport.stream(templateRepository.findAll().spliterator(), false)
                             .map(Template::getName)
                             .collect(Collectors.toSet());
+    }
+
+    public List<Template> getTemplates() {
+        return StreamSupport.stream(templateRepository.findAll().spliterator(), true)
+                            .toList();
     }
 
     public TemplateFullInfo getFullInfoByName(String name) {
@@ -165,19 +174,18 @@ public class TemplateService {
 
     @Transactional
     public void deleteTemplates(Set<String> templatesToDelete) {
-        int deleted = templateRepository.deleteByNameInAndIsSystemTrue(templatesToDelete);
+        deleteTemplates(templateRepository.findByNameIn(templatesToDelete));
+    }
 
-        log.info("Удалено шаблонов: {}", deleted);
+    private void deleteTemplates(List<Template> templates) {
+        templateRepository.deleteAll(templates);
 
-        for (String template: templatesToDelete) {
-            List<File> files = fileService.getFilesByPathWithPattern(
-                    TEMPLATES_DIR,
-                    Pattern.compile(template + "\\.(?!json$).*"));
+        log.info("Удалено шаблонов: {}", templates.size());
 
-            if (!files.isEmpty()) {
-                fileService.deleteByPath(files.getFirst().getPath());
-            }
-        }
+        templates.stream()
+                 .map(Template::getPath)
+                 .distinct()
+                 .forEach(fileService::deleteByPath);
     }
 
     private void save(Template template) {
