@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
-import { boundMethod } from 'autobind-decorator';
 
 import { communicationService, type DataChangeEventDetail } from '../../services/communication.service';
 import {
@@ -30,27 +28,138 @@ import './Attributes.scss';
 
 const cnAttributes = cn('Attributes');
 
-@observer
-export default class Attributes extends Component<IClassNameProps> {
-  @observable private causedByUserLayers: CrgVectorLayer[] = [];
-  @observable private currentLayer?: CrgVectorLayer;
-  @observable private tablePageOptions?: PageOptions;
+function getHardTabs(causedByUserLayers: CrgVectorLayer[]): CrgVectorLayer[] {
+  return causedByUserLayers.filter(layer =>
+    currentProject.vectorableLayers.some(vectorableLayer => layer.id === vectorableLayer.id)
+  );
+}
 
-  private tableInvoke: XTableInvoke = {};
+function getSoftTabs(hardTabs: CrgVectorLayer[]): CrgVectorLayer[] {
+  const layers: CrgVectorLayer[] = [];
 
-  constructor(props: IClassNameProps) {
-    super(props);
-    makeObservable(this);
+  for (const feature of selectedFeaturesStore.features) {
+    const featureTypeName = extractFeatureTypeName(feature.id);
+    const isDuplicate = [...hardTabs, ...layers].some(
+      ({ complexName }) => featureTypeName === extractFeatureTypeNameFromComplexName(complexName)
+    );
+
+    if (isDuplicate) {
+      continue;
+    }
+
+    const layer = getLayerByFeatureInCurrentProject(feature);
+
+    if (layer && !hardTabs.some(({ complexName }) => complexName === layer.complexName)) {
+      layers.push(layer);
+    }
   }
 
-  componentDidMount() {
+  return layers;
+}
+
+type AttributesState = {
+  causedByUserLayers: CrgVectorLayer[];
+  currentLayer?: CrgVectorLayer;
+  tablePageOptions?: PageOptions;
+
+  get hardTabs(): CrgVectorLayer[];
+  get softTabs(): CrgVectorLayer[];
+
+  closeTab(layer: CrgVectorLayer): void;
+  openBar(layer: CrgVectorLayer): void;
+  closeBar(): void;
+  minimizeBar(): void;
+  setPageOptions(pageOptions: PageOptions): void;
+};
+
+const Attributes = observer(function Attributes({ className }: IClassNameProps) {
+  const tableInvoke = useRef<XTableInvoke>({});
+
+  const state = useLocalObservable<AttributesState>(() => ({
+    causedByUserLayers: [],
+    currentLayer: undefined,
+    tablePageOptions: undefined,
+
+    get hardTabs() {
+      return getHardTabs(this.causedByUserLayers);
+    },
+
+    get softTabs() {
+      return getSoftTabs(this.hardTabs);
+    },
+
+    closeTab(layer) {
+      attributesTableStore.updateFilter(layer);
+
+      if (this.currentLayer?.id === layer.id) {
+        this.currentLayer = undefined;
+        this.tablePageOptions = undefined;
+      }
+      const index = this.causedByUserLayers.findIndex(({ id }) => layer.id === id);
+      if (index !== -1) {
+        this.causedByUserLayers.splice(index, 1);
+      }
+
+      const selectedFeaturesWithoutLayer = selectedFeaturesStore.features.filter(
+        ({ id }) => extractResourceIdFromFeatureId(id) !== layer.resourceId
+      );
+
+      if (selectedFeaturesWithoutLayer.length > 0) {
+        void mapModeManager.changeMode(
+          MapMode.SELECTED_FEATURES,
+          {
+            payload: { features: selectedFeaturesWithoutLayer }
+          },
+          'selectedFeaturesWithoutLayer-1'
+        );
+      } else {
+        void mapModeManager.changeMode(MapMode.NONE, undefined, 'selectedFeaturesWithoutLayer-2');
+      }
+    },
+
+    openBar(layer) {
+      if (!this.causedByUserLayers.some(({ id }) => layer.id === id)) {
+        this.causedByUserLayers.push(layer);
+      }
+      this.currentLayer = layer;
+    },
+
+    closeBar() {
+      if (this.currentLayer) {
+        this.closeTab(this.currentLayer);
+      }
+    },
+
+    minimizeBar() {
+      this.currentLayer = undefined;
+      this.tablePageOptions = undefined;
+
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 0);
+    },
+
+    setPageOptions(pageOptions) {
+      this.tablePageOptions = pageOptions;
+    }
+  }));
+
+  const handlePagination = useCallback((page: number) => {
+    if (tableInvoke.current?.paginate) {
+      tableInvoke.current.paginate(page);
+    }
+  }, []);
+
+  useEffect(() => {
+    const scope = {};
+
     communicationService.minimizeAttributesBar.on(() => {
-      this.minimizeBar();
-    }, this);
+      state.minimizeBar();
+    }, scope);
 
     communicationService.openAttributesBar.on((e: CustomEvent<CrgVectorLayer>) => {
-      this.openBar(e.detail);
-    }, this);
+      state.openBar(e.detail);
+    }, scope);
 
     communicationService.layerUpdated.on((e: CustomEvent<DataChangeEventDetail<CrgLayer>>) => {
       const modifiedLayer = e.detail.data;
@@ -62,8 +171,8 @@ export default class Attributes extends Component<IClassNameProps> {
           editFeatureStore.setLayer(modifiedLayer as CrgVectorableLayer);
 
           if (isLayerFilterExist) {
-            if (modifiedLayer.id === this.currentLayer?.id) {
-              this.tableInvoke?.reset?.();
+            if (modifiedLayer.id === state.currentLayer?.id) {
+              tableInvoke.current?.reset?.();
             } else {
               attributesTableStore.updateFilter(modifiedLayer as CrgVectorLayer);
             }
@@ -72,138 +181,43 @@ export default class Attributes extends Component<IClassNameProps> {
           break;
         }
         case 'delete': {
-          this.closeTab(modifiedLayer as CrgVectorLayer);
+          state.closeTab(modifiedLayer as CrgVectorLayer);
 
           break;
         }
       }
-    }, this);
-  }
+    }, scope);
 
-  componentWillUnmount() {
-    communicationService.off(this);
-  }
+    return () => {
+      communicationService.off(scope);
+    };
+  }, [state]);
 
-  render() {
-    const { className } = this.props;
-
-    return (
-      <div className={cnAttributes(null, [className])}>
-        {this.currentLayer && (
-          <AttributesBar
-            layer={this.currentLayer}
-            onMinimize={this.minimizeBar}
-            onClose={this.closeBar}
-            onPageOptionsChange={this.setPageOptions}
-            tableInvoke={this.tableInvoke}
-          />
+  return (
+    <div className={cnAttributes(null, [className])}>
+      {state.currentLayer && (
+        <AttributesBar
+          layer={state.currentLayer}
+          onMinimize={state.minimizeBar}
+          onClose={state.closeBar}
+          onPageOptionsChange={state.setPageOptions}
+          tableInvoke={tableInvoke.current}
+        />
+      )}
+      <AttributesFooter>
+        <AttributesTabs
+          hard={state.hardTabs}
+          soft={state.softTabs}
+          onTabClose={state.closeTab}
+          onTabMinimize={state.minimizeBar}
+          currentLayer={state.currentLayer}
+        />
+        {state.tablePageOptions?.totalPages && state.tablePageOptions?.totalPages > 1 && (
+          <AttributesPagination pageOptions={state.tablePageOptions} onChange={handlePagination} />
         )}
-        <AttributesFooter>
-          <AttributesTabs
-            hard={this.hardTabs}
-            soft={this.softTabs}
-            onTabClose={this.closeTab}
-            onTabMinimize={this.minimizeBar}
-            currentLayer={this.currentLayer}
-          />
-          {this.tablePageOptions?.totalPages && this.tablePageOptions?.totalPages > 1 && (
-            <AttributesPagination pageOptions={this.tablePageOptions} onChange={this.handlePagination} />
-          )}
-        </AttributesFooter>
-      </div>
-    );
-  }
+      </AttributesFooter>
+    </div>
+  );
+});
 
-  @computed
-  private get hardTabs(): CrgVectorLayer[] {
-    return this.causedByUserLayers.filter(layer => currentProject.vectorableLayers.some(({ id }) => layer.id === id));
-  }
-
-  @computed
-  private get softTabs(): CrgVectorLayer[] {
-    const layers: CrgVectorLayer[] = [];
-
-    for (const feature of selectedFeaturesStore.features) {
-      if (
-        ![...this.hardTabs, ...layers].some(
-          ({ complexName }) => extractFeatureTypeName(feature.id) === extractFeatureTypeNameFromComplexName(complexName)
-        )
-      ) {
-        const layer = getLayerByFeatureInCurrentProject(feature);
-
-        if (layer && !this.hardTabs.some(({ complexName }) => complexName === layer.complexName)) {
-          layers.push(layer);
-        }
-      }
-    }
-
-    return layers;
-  }
-
-  @action.bound
-  private closeTab(layer: CrgVectorLayer) {
-    attributesTableStore.updateFilter(layer);
-
-    if (this.currentLayer?.id === layer.id) {
-      this.currentLayer = undefined;
-      this.tablePageOptions = undefined;
-    }
-    const index = this.causedByUserLayers.findIndex(({ id }) => layer.id === id);
-    if (index !== -1) {
-      this.causedByUserLayers.splice(index, 1);
-    }
-
-    const selectedFeaturesWithoutLayer = selectedFeaturesStore.features.filter(
-      ({ id }) => extractResourceIdFromFeatureId(id) !== layer.resourceId
-    );
-
-    if (selectedFeaturesWithoutLayer.length > 0) {
-      void mapModeManager.changeMode(
-        MapMode.SELECTED_FEATURES,
-        {
-          payload: { features: selectedFeaturesWithoutLayer }
-        },
-        'selectedFeaturesWithoutLayer-1'
-      );
-    } else {
-      void mapModeManager.changeMode(MapMode.NONE, undefined, 'selectedFeaturesWithoutLayer-2');
-    }
-  }
-
-  @action.bound
-  private openBar(layer: CrgVectorLayer) {
-    if (!this.causedByUserLayers.some(({ id }) => layer.id === id)) {
-      this.causedByUserLayers.push(layer);
-    }
-    this.currentLayer = layer;
-  }
-
-  @boundMethod
-  private closeBar() {
-    if (this.currentLayer) {
-      this.closeTab(this.currentLayer);
-    }
-  }
-
-  @action.bound
-  private minimizeBar() {
-    this.currentLayer = undefined;
-    this.tablePageOptions = undefined;
-
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 0);
-  }
-
-  @action.bound
-  private setPageOptions(pageOptions: PageOptions) {
-    this.tablePageOptions = pageOptions;
-  }
-
-  @boundMethod
-  private handlePagination(page: number) {
-    if (this.tableInvoke?.paginate) {
-      this.tableInvoke.paginate(page);
-    }
-  }
-}
+export default Attributes;

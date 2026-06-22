@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 
@@ -50,222 +49,231 @@ export interface LayerProps extends IClassNameProps {
   onEyeClick(): void;
 }
 
-@observer
-export class Layer extends Component<LayerProps> {
-  @observable private _open = false;
-  @observable private menuOpen = false;
-  @observable private menuX = 0;
-  @observable private menuY = 0;
-  @observable private _errors: string[] = [];
-  @observable private menuAnchor?: HTMLElement | null;
+interface LayerState {
+  open: boolean;
+  menuOpen: boolean;
+  menuX: number;
+  menuY: number;
+  errors: string[];
+  menuAnchor?: HTMLElement | null;
 
-  private _isMounted = false;
+  setOpen(open: boolean): void;
+  openContextMenu(x: number, y: number): void;
+  openBurgerMenu(anchor: HTMLButtonElement): void;
+  closeMenu(): void;
+  addError(error: string): void;
+}
 
-  constructor(props: LayerProps) {
-    super(props);
-    makeObservable(this);
-  }
+export const Layer = observer((props: LayerProps) => {
+  const {
+    className,
+    data,
+    isGroup,
+    isEmptyGroup,
+    depth,
+    onEyeClick,
+    visible,
+    hiddenByZoom,
+    editMode,
+    highlighted,
+    errors: errorsProp
+  } = props;
 
-  async componentDidMount() {
-    this._isMounted = true;
-    await this.testSchema();
-  }
+  const isMountedRef = useRef(false);
+  const prevEditModeRef = useRef(editMode);
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
+  const state = useLocalObservable<LayerState>(() => ({
+    open: false,
+    menuOpen: false,
+    menuX: 0,
+    menuY: 0,
+    errors: [],
+    menuAnchor: undefined,
 
-  componentDidUpdate({ editMode: prevEditMode }: LayerProps) {
-    const { editMode } = this.props;
+    setOpen(open) {
+      this.open = open;
+    },
 
-    if (editMode && !prevEditMode) {
-      this.setOpen(false);
+    openContextMenu(x, y) {
+      this.menuAnchor = undefined;
+      this.menuX = x;
+      this.menuY = y;
+      this.menuOpen = true;
+    },
+
+    openBurgerMenu(anchor) {
+      this.menuAnchor = anchor;
+      this.menuOpen = true;
+    },
+
+    closeMenu() {
+      this.menuOpen = false;
+    },
+
+    addError(error) {
+      this.errors.push(error);
     }
-  }
+  }));
 
-  render() {
-    const { className, data, isGroup, isEmptyGroup, depth, onEyeClick, visible, hiddenByZoom, editMode, highlighted } =
-      this.props;
-    const { title, enabled, transparency } = data;
-    const { expanded } = data as CrgLayersGroup;
-    const out = currentProject.viewZoom > ((data as CrgLayer).minZoom || 0);
-    const type = (data as CrgLayer).type;
-    const isVectorLayer = type === CrgLayerType.VECTOR || type === CrgLayerType.SHP;
-    let hiddenByZoomTooltipText = '';
-    if (hiddenByZoom) {
-      const zoomVerb = out ? 'Уменьшите' : 'Увеличьте';
-      hiddenByZoomTooltipText = `${zoomVerb} карту, чтобы увидеть объекты`;
-    }
+  const open = isGroup ? Boolean((data as CrgLayersGroup).expanded) : state.open;
+  const errors = errorsProp ? [...state.errors, ...errorsProp] : state.errors;
+  const isError = Boolean(errors.length);
 
-    return (
-      <div className={cnLayer({ open: this.open, group: isGroup, visible, editMode }, [className])}>
-        <LayerCard onContextMenu={this.handleContextMenu} highlighted={highlighted}>
-          <LayerDrag />
-          {!hiddenByZoom && <LayerTransparencyIndicator value={transparency || 100} />}
-          {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
-          <LayerEye
-            enabled={!!enabled}
-            disabled={this.isError || !mapStore.allowedActions.includes(MapAction.LAYER_EYE)}
-            onClick={onEyeClick}
-            tooltipText={hiddenByZoomTooltipText}
-          />
-          <LayerGap gap={depth || 0} />
-          <LayerOpen
-            onClick={this.handleOpen}
-            open={this.open}
-            disabled={currentProject.filter ? true : editMode && !isGroup}
-          />
-          <LayerIcon isGroup={isGroup} expanded={!!expanded} data={data} isError={this.isError} />
-          <LayerTitle isError={this.isError}>
-            {currentProject.filter ? (
-              <Highlight searchWords={[currentProject.filter]} enabled>
-                {title}
-              </Highlight>
-            ) : (
-              title
-            )}
-            {isEmptyGroup && <LayerEmptiness />}
-          </LayerTitle>
-          <LayerBurger onClick={this.handleBurgerClick} />
-        </LayerCard>
-
-        <LayerInnards show={this.open && !isGroup} depth={depth || 0}>
-          {this.isError && <LayerErrors errors={this.errors} />}
-          {isVectorLayer && !this.isError && <LayerLegend layer={data as CrgVectorLayer} />}
-        </LayerInnards>
-
-        {(this.menuAnchor || !!(this.menuX && this.menuY)) && (
-          <LayerMenu
-            isGroup={isGroup}
-            entity={data}
-            open={this.menuOpen}
-            x={this.menuX}
-            y={this.menuY}
-            anchor={this.menuAnchor ?? undefined}
-            onClose={this.handleContextMenuClose}
-            layerWithError={this.isError}
-            editMode={editMode}
-          />
-        )}
-      </div>
-    );
-  }
-
-  @computed
-  private get open(): boolean {
-    const { isGroup, data } = this.props;
-
-    return isGroup ? Boolean((data as CrgLayersGroup).expanded) : this._open;
-  }
-
-  @computed
-  private get errors(): string[] {
-    if (this.props.errors) {
-      return [...this._errors, ...this.props.errors];
-    }
-
-    return this._errors;
-  }
-
-  @computed
-  private get isError(): boolean {
-    return Boolean(this.errors.length);
-  }
-
-  private async testSchema() {
-    if (!this._isMounted) {
-      return;
-    }
-
-    const { data, isGroup } = this.props;
-    if (isGroup) {
-      return;
-    }
-
-    const { type } = data as CrgVectorLayer;
-    if (type === CrgLayerType.VECTOR) {
-      try {
-        return await getLayerSchema(data);
-      } catch {
-        this.addError('Не найдена схема для слоя: ' + data.title);
-      }
-    } else if (isVectorFromFile(type)) {
-      return await getLayerSchema(data as CrgVectorLayer);
-    }
-  }
-
-  @action.bound
-  private handleOpen() {
-    const { isGroup, data, editMode } = this.props;
-
+  const handleOpen = useCallback(() => {
     if (isGroup) {
       const group = data as CrgLayersGroup;
       group.expanded = !group.expanded;
-    } else {
-      const { type } = data as CrgLayer;
 
-      if (
-        ((type !== CrgLayerType.SHP &&
-          type !== CrgLayerType.VECTOR &&
-          type !== CrgLayerType.EXTERNAL &&
-          type !== CrgLayerType.EXTERNAL_NSPD &&
-          type !== CrgLayerType.EXTERNAL_GEOSERVER) ||
-          editMode) &&
-        !this.isError
-      ) {
-        return;
-      }
-
-      this.setOpen(!this._open);
-    }
-  }
-
-  @action.bound
-  private handleContextMenu(e: React.MouseEvent<HTMLDivElement>) {
-    e.preventDefault();
-
-    if (this.isError) {
       return;
     }
 
-    if (this.menuAnchor) {
-      this.menuAnchor = null;
+    const { type } = data as CrgLayer;
+
+    if (
+      ((type !== CrgLayerType.SHP &&
+        type !== CrgLayerType.VECTOR &&
+        type !== CrgLayerType.EXTERNAL &&
+        type !== CrgLayerType.EXTERNAL_NSPD &&
+        type !== CrgLayerType.EXTERNAL_GEOSERVER) ||
+        editMode) &&
+      !isError
+    ) {
+      return;
     }
 
-    this.menuX = e.clientX - 2;
-    this.menuY = e.clientY - 4;
-    this.menuOpen = true;
-  }
+    state.setOpen(!state.open);
+  }, [state, isGroup, data, editMode, isError]);
 
-  @action.bound
-  private handleBurgerClick(e: React.MouseEvent<HTMLButtonElement>) {
-    this.menuAnchor = e.target as HTMLButtonElement;
-    this.menuOpen = true;
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.preventDefault();
 
-    const button: HTMLButtonElement | null = document.querySelector(':focus');
-    if (button) {
-      button.blur();
+      if (isError) {
+        return;
+      }
+
+      state.openContextMenu(e.clientX - 2, e.clientY - 4);
+    },
+    [state, isError]
+  );
+
+  const handleBurgerClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      state.openBurgerMenu(e.target as HTMLButtonElement);
+
+      const button: HTMLButtonElement | null = document.querySelector(':focus');
+      if (button) {
+        button.blur();
+      }
+    },
+    [state]
+  );
+
+  const handleContextMenuClose = useCallback(() => {
+    state.closeMenu();
+  }, [state]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+
+    const testSchema = async () => {
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      if (isGroup) {
+        return;
+      }
+
+      const { type } = data as CrgVectorLayer;
+      if (type === CrgLayerType.VECTOR) {
+        try {
+          return await getLayerSchema(data);
+        } catch {
+          state.addError('Не найдена схема для слоя: ' + data.title);
+
+          if (data.enabled) {
+            onEyeClick();
+          }
+        }
+      } else if (isVectorFromFile(type)) {
+        return await getLayerSchema(data as CrgVectorLayer);
+      }
+    };
+
+    void testSchema();
+
+    return () => {
+      isMountedRef.current = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- только при монтировании, как componentDidMount
+  }, []);
+
+  useEffect(() => {
+    if (editMode && !prevEditModeRef.current) {
+      state.setOpen(false);
     }
+
+    prevEditModeRef.current = editMode;
+  }, [editMode, state]);
+
+  const { title, enabled, transparency } = data;
+  const { expanded } = data as CrgLayersGroup;
+  const out = currentProject.viewZoom > ((data as CrgLayer).minZoom || 0);
+  const type = (data as CrgLayer).type;
+  const isVectorLayer = type === CrgLayerType.VECTOR || type === CrgLayerType.SHP;
+  let hiddenByZoomTooltipText = '';
+  if (hiddenByZoom) {
+    const zoomVerb = out ? 'Уменьшите' : 'Увеличьте';
+    hiddenByZoomTooltipText = `${zoomVerb} карту, чтобы увидеть объекты`;
   }
 
-  @action.bound
-  private handleContextMenuClose() {
-    this.menuOpen = false;
-  }
+  return (
+    <div className={cnLayer({ open, group: isGroup, visible, editMode }, [className])}>
+      <LayerCard onContextMenu={handleContextMenu} highlighted={highlighted}>
+        <LayerDrag />
+        {!hiddenByZoom && <LayerTransparencyIndicator value={transparency || 100} />}
+        {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
+        <LayerEye
+          enabled={!!enabled}
+          disabled={isError || !mapStore.allowedActions.includes(MapAction.LAYER_EYE)}
+          onClick={onEyeClick}
+          tooltipText={hiddenByZoomTooltipText}
+        />
+        <LayerGap gap={depth || 0} />
+        <LayerOpen onClick={handleOpen} open={open} disabled={currentProject.filter ? true : editMode && !isGroup} />
+        <LayerIcon isGroup={isGroup} expanded={!!expanded} data={data} isError={isError} />
+        <LayerTitle isError={isError}>
+          {currentProject.filter ? (
+            <Highlight searchWords={[currentProject.filter]} enabled>
+              {title}
+            </Highlight>
+          ) : (
+            title
+          )}
+          {isEmptyGroup && <LayerEmptiness />}
+        </LayerTitle>
+        <LayerBurger onClick={handleBurgerClick} />
+      </LayerCard>
 
-  @action
-  private addError(error: string) {
-    this.errors.push(error);
+      <LayerInnards show={open && !isGroup} depth={depth || 0}>
+        {isError && <LayerErrors errors={errors} />}
+        {isVectorLayer && !isError && <LayerLegend layer={data as CrgVectorLayer} />}
+      </LayerInnards>
 
-    const { data, onEyeClick } = this.props;
-
-    if (data.enabled) {
-      onEyeClick();
-    }
-  }
-
-  @action
-  private setOpen(open: boolean) {
-    this._open = open;
-  }
-}
+      {(state.menuAnchor || !!(state.menuX && state.menuY)) && (
+        <LayerMenu
+          isGroup={isGroup}
+          entity={data}
+          open={state.menuOpen}
+          x={state.menuX}
+          y={state.menuY}
+          anchor={state.menuAnchor ?? undefined}
+          onClose={handleContextMenuClose}
+          layerWithError={isError}
+          editMode={editMode}
+        />
+      )}
+    </div>
+  );
+});

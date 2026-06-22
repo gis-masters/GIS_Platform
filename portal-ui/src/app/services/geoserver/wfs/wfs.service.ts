@@ -178,7 +178,7 @@ export async function getFeatures(
 
   // при включенных фильтрах геосервер врёт насчёт totalFeatures
   if (cqlFilter || featureIds?.length) {
-    const { ...paramsForTotalCount } = params;
+    const { sortBy, ...paramsForTotalCount } = params;
     paramsForTotalCount.startindex = '0';
     paramsForTotalCount.count = '1';
     if (definitionQuery) {
