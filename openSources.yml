@@ -80,6 +80,7 @@ services:
 
   carbone:
     image: ${DOCKER_CRG_HOST}/carbone-ee-full:28.11
+    restart: unless-stopped
     container_name: carbone
     ports:
       - "4000:4000"
