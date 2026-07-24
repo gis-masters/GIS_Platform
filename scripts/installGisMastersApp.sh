@@ -498,6 +498,10 @@ download_and_prepare() {
   log "[1/4] Скачиваю данные из основного проекта..."
   fetch_to_file "$REPO_TARBALL_URL" "$TARBALL"
 
+  #Для локального тестирования скрипта
+  #git archive --format=tar.gz --prefix=GIS_Platform-master/ --output="$TARBALL" bump-geoserver
+
+
   log "[2/4] Извлекаю ресурсы..."
   mkdir -p "$BASE_DIR/assets"
   sudo tar -xzf "$TARBALL" --strip-components=2 -C "$BASE_DIR/assets" GIS_Platform-master/assets
@@ -507,11 +511,13 @@ download_and_prepare() {
   sudo tar -xzf "$TARBALL" --strip-components=1 -C "$BASE_DIR" GIS_Platform-master/coreApplication.yml
   sudo tar -xzf "$TARBALL" --strip-components=1 -C "$BASE_DIR" GIS_Platform-master/openSources.yml
   sudo tar -xzf "$TARBALL" --strip-components=2 -C "$BASE_DIR" GIS_Platform-master/scripts/calc_mem_limit.sh
+  sudo tar -xzf "$TARBALL" --strip-components=2 -C "$BASE_DIR" GIS_Platform-master/scripts/update_env_file.sh
 
 
   # Подготовка окружения
   if [[ -f "$BASE_DIR/settings.env" ]]; then
-    echo "[info] Файл settings.env уже существует — не перезаписываю."
+    echo "[info] Файл settings.env уже существует — обновляю."
+    $BASE_DIR/update_env_file.sh "$BASE_DIR/settings.env" "$BASE_DIR/.env.example" SYSTEM_ADMIN_LOGIN SYSTEM_ADMIN_PASSWORD CRG_USER DB_PASS GEOSERVER_UI_LOGIN SECURITY_JWT_SECRET RABBIT_USER RABBIT_PASS REDIS_PASS CAMUNDA_BPM_ADMIN_USER_ID CAMUNDA_BPM_ADMIN_USER_PASSWORD GEOSERVER_UI_CRYPTED_PASSWORD CRG_OPTIONS_SYSTEM_ADMIN_CRYPTED_PASSWORD SPRING_FLYWAY_PLACEHOLDERS_ADMIN_PASSWORD SPRING_MAIL_USERNAME SPRING_MAIL_PASSWORD
   else
     mv -f "$BASE_DIR/.env.example" "$BASE_DIR/settings.env"
     echo "[ok] Создан settings.env из шаблона .env.example"
