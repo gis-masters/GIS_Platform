@@ -1,5 +1,5 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { schemaService } from '../../data/schema/schema.service';
+import { schemaTemplateService } from '../../data/schemaTemplate/schemaTemplate.service';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { isVectorLayer } from '../../gis/layers/layers.typeguards';
@@ -33,17 +33,17 @@ export async function resolveLayersBySchema(schemaName: string): Promise<CrgVect
 }
 
 /** Человекочитаемое имя схемы для сообщений: title, при недоступности — Schema.name. */
-async function getSchemaLabelForMessage(schemaName: string): Promise<string> {
+async function getSchemaTemplateLabelForMessage(schemaTemplateName: string): Promise<string> {
   try {
-    const schema = await schemaService.getSchema(schemaName);
-    if (schema.title) {
-      return schema.title;
+    const template = await schemaTemplateService.getSchemaTemplate(schemaTemplateName);
+    if (template.classRule.title) {
+      return template.classRule.title;
     }
   } catch {
     // fallback на schemaName ниже
   }
 
-  return schemaName;
+  return schemaTemplateName;
 }
 
 export type ResolveSingleLayerBySchemaResult = { ok: true; layer: CrgVectorLayer } | { ok: false; message: string };
@@ -51,9 +51,11 @@ export type ResolveSingleLayerBySchemaResult = { ok: true; layer: CrgVectorLayer
 /**
  * Единственный векторный слой проекта по схеме (Schema.name === schemaName).
  */
-export async function resolveSingleLayerBySchema(schemaName: string): Promise<ResolveSingleLayerBySchemaResult> {
-  const schemaLabel = await getSchemaLabelForMessage(schemaName);
-  const matchedLayers = await resolveLayersBySchema(schemaName);
+export async function resolveSingleLayerBySchemaTemplate(
+  schemaTemplateName: string
+): Promise<ResolveSingleLayerBySchemaResult> {
+  const schemaLabel = await getSchemaTemplateLabelForMessage(schemaTemplateName);
+  const matchedLayers = await resolveLayersBySchema(schemaTemplateName);
 
   if (!matchedLayers.length) {
     return {

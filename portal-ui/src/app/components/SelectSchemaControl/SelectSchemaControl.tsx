@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { type PropertySchemaCustom, PropertyType, type Schema } from '../../services/data/schema/schema.models';
-import { schemaService } from '../../services/data/schema/schema.service';
+import { schemaTemplateService } from '../../services/data/schemaTemplate/schemaTemplate.service';
 import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { type FormControlProps } from '../Form/Control/Form-Control';
@@ -85,7 +85,8 @@ export class SelectSchemaControl extends Component<FormControlProps> {
   }
 
   async componentDidMount() {
-    this.setSchemas(await schemaService.getAllSchemas());
+    const templates = await schemaTemplateService.getSchemaTemplates();
+    this.setSchemas(templates.map(template => template.classRule));
   }
 
   render() {

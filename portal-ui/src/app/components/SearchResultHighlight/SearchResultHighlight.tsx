@@ -3,9 +3,10 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { getLibrary } from '../../services/data/library/library.service';
 import { type Schema } from '../../services/data/schema/schema.models';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { type SearchItemData } from '../../services/data/search/search.model';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { Highlight } from '../Highlight/Highlight';
 import SearchResultHighlightItem from '../SearchResultHighlightItem/SearchResultHighlightItem';
 
@@ -46,7 +47,15 @@ export class SearchResultHighlight extends Component<SearchResultHighlightProps>
   }
 
   private async loadSchema(): Promise<void> {
-    const schema = await schemaService.getSchema(this.props.item.source.schema);
+    const { item } = this.props;
+    let schema: Schema;
+
+    if (item.type === 'FEATURE') {
+      ({ schema } = await getVectorTable(item.source.dataset, item.source.table));
+    } else {
+      ({ schema } = await getLibrary(item.source.library));
+    }
+
     this.setSchema(schema);
   }
 

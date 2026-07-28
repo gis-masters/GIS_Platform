@@ -144,6 +144,9 @@ export default class Form<T> extends Component<FormProps<T>> {
       actionFunction,
       auto,
       invoke,
+      confirmOnWarnings,
+      warningsConfirmOptions,
+      onActionAborted,
       ...otherProps
     } = this.props;
 

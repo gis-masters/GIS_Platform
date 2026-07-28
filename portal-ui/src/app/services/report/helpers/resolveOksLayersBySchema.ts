@@ -1,5 +1,5 @@
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
-import { resolveSingleLayerBySchema } from './resolveLayersBySchema';
+import { resolveSingleLayerBySchemaTemplate } from './resolveLayersBySchema';
 
 export const OKS_AREAL_SCHEMA_NAME = 'oks_pro';
 export const OKS_LINEAR_SCHEMA_NAME = 'oks_polyline_pro';
@@ -16,9 +16,9 @@ type ResolveOksResult = { ok: true; layers: ResolvedOksLayers } | { ok: false; m
  */
 export async function resolveOksLayersBySchema(): Promise<ResolveOksResult> {
   const [arealResolve, linearResolve, pointResolve] = await Promise.all([
-    resolveSingleLayerBySchema(OKS_AREAL_SCHEMA_NAME),
-    resolveSingleLayerBySchema(OKS_LINEAR_SCHEMA_NAME),
-    resolveSingleLayerBySchema(OKS_POINT_SCHEMA_NAME)
+    resolveSingleLayerBySchemaTemplate(OKS_AREAL_SCHEMA_NAME),
+    resolveSingleLayerBySchemaTemplate(OKS_LINEAR_SCHEMA_NAME),
+    resolveSingleLayerBySchemaTemplate(OKS_POINT_SCHEMA_NAME)
   ]);
 
   if (!arealResolve.ok) {

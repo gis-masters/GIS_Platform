@@ -7,8 +7,8 @@ import { type IClassNameProps } from '@bem-react/core';
 import { type AxiosError } from 'axios';
 
 import { type Schema } from '../../services/data/schema/schema.models';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { applyContentType } from '../../services/data/schema/utils/applyContentType';
+import { schemaTemplateService } from '../../services/data/schemaTemplate/schemaTemplate.service';
 import { type Task } from '../../services/data/task/task.models';
 import { services } from '../../services/services';
 import { formatDate } from '../../services/util/date.util';
@@ -57,10 +57,10 @@ export default observer(({ task, className }: TaskCardProps) => {
   useEffect(() => {
     async function fetchSchema(): Promise<void> {
       try {
-        const schema = await schemaService.getSchema('tasks_schema_v1');
+        const template = await schemaTemplateService.getSchemaTemplate('tasks_schema_v1');
 
         runInAction(() => {
-          setPrimalSchema(schema);
+          setPrimalSchema(template.classRule);
         });
       } catch (error) {
         const err = error as AxiosError;

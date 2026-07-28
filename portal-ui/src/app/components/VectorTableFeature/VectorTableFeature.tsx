@@ -6,8 +6,8 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { type Schema } from '../../services/data/schema/schema.models';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { type SearchSourceForFeature } from '../../services/data/search/search.model';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { formatDate } from '../../services/util/date.util';
 import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
@@ -68,8 +68,8 @@ export class VectorTableFeature extends Component<VectorTableFeatureProps> {
   }
 
   private async fetchSchema(): Promise<void> {
-    if (this.props.source?.schema) {
-      const schema = await schemaService.getSchema(this.props.source.schema);
+    if (this.props.source) {
+      const { schema } = await getVectorTable(this.props.source.dataset, this.props.source.table);
 
       this.setSchema(schema);
     }

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { schemaService } from '../../services/data/schema/schema.service';
+import { schemaTemplateService } from '../../services/data/schemaTemplate/schemaTemplate.service';
 import {
   checkImportStatus,
   fetchCurrentImport,
@@ -63,7 +63,7 @@ export default class DataImport extends Component {
     }
 
     // прогреем схемы, понадобятся на следующем шаге
-    void schemaService.getAllOldSchemas();
+    void schemaTemplateService.getSchemaTemplatesWithOldSchema();
     const urlImportId = route.params.importId;
 
     if (urlImportId) {

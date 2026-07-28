@@ -15,18 +15,16 @@ class SchemaClient extends Client {
     return this.getDataUrl() + '/schemas';
   }
 
+  private getSchemaWithNameUrl(schemaName: string): string {
+    return this.getDataUrl() + '/schemas' + `/${schemaName}`;
+  }
+
   private getTablesSchemasUrl(): string {
     return this.getDataUrl() + '/tablesSchemas';
   }
 
   async getSchemaAtUrl(url: string): Promise<OldSchema> {
     return http.get<OldSchema>(url);
-  }
-
-  async getSchema(schemaIds: string[]): Promise<(OldSchema | null)[]> {
-    const params = { schemaIds: schemaIds.join(',') };
-
-    return await http.get<(OldSchema | null)[]>(this.getSchemaUrl(), { params });
   }
 
   async getTableSchemas(tableIdentifiers: string[]): Promise<Map<string, OldSchema>> {
@@ -41,6 +39,10 @@ class SchemaClient extends Client {
 
   async updateSchema(schema: OldSchema): Promise<OldSchema> {
     return http.put<OldSchema>(this.getSchemaUrl(), schema);
+  }
+
+  async deleteSchema(schemaName: string): Promise<void> {
+    await http.delete<OldSchema>(this.getSchemaWithNameUrl(schemaName));
   }
 }
 

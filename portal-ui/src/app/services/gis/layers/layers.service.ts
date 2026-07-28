@@ -9,10 +9,10 @@ import { getFileInfo } from '../../data/files/files.service';
 import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.util';
 import { getLibraryRecord } from '../../data/library/library.service';
 import { type PropertyOption, type Schema } from '../../data/schema/schema.models';
-import { schemaService } from '../../data/schema/schema.service';
 import { tablesSchemasCache } from '../../data/schema/tablesSchemasCache';
 import { convertGeoserverPropertiesToSchemaProperties } from '../../data/schema/utils/convertGeoserverPropertiesToSchemaProperties';
 import { getGeometryTypeFromGeoserverAttributes } from '../../data/schema/utils/getGeometryTypeFromGeoserverAttributes';
+import { schemaTemplateService } from '../../data/schemaTemplate/schemaTemplate.service';
 import { getVectorTable } from '../../data/vectorData/vectorData.service';
 import { type FeatureType } from '../../geoserver/featureType/featureType.model';
 import { getFeatureType } from '../../geoserver/featureType/featureType.service';
@@ -160,7 +160,9 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
 
     return await vectorTableSchemaPromise;
   } else if (layer.type === CrgLayerType.DXF) {
-    return await schemaService.getSchema('dxf_schema_v1');
+    const template = await schemaTemplateService.getSchemaTemplate('dxf_schema_v1');
+
+    return template.classRule;
   } else if (layer.type && isVectorFromFile(layer.type)) {
     const featureType: FeatureType = await getFeatureType(layer);
 

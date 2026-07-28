@@ -476,27 +476,6 @@ export class SchemaCard extends Component<SchemaCardProps> {
     this.setSelectedContentTypeId(event.target.value);
   }
 
-  @boundMethod
-  private editSchemaName(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    this.editSchemaInfo({
-      name: event.target.value
-    });
-  }
-
-  @boundMethod
-  private editSchemaTableName(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    this.editSchemaInfo({
-      tableName: event.target.value
-    });
-  }
-
-  @boundMethod
-  private editSchemaOriginName(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    this.editSchemaInfo({
-      originName: event.target.value
-    });
-  }
-
   @action
   private setSelectedViewId(viewId: string): void {
     this.selectedViewId = viewId;

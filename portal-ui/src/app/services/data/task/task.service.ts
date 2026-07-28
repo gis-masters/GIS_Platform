@@ -1,7 +1,7 @@
 import { communicationService } from '../../communication.service';
 import { type PageOptions } from '../../models';
 import { type Schema } from '../schema/schema.models';
-import { schemaService } from '../schema/schema.service';
+import { schemaTemplateService } from '../schemaTemplate/schemaTemplate.service';
 import { taskClient } from './task.client';
 import { type Task, type TaskHistory, type TaskStatus } from './task.models';
 
@@ -15,7 +15,9 @@ export async function getTask(id: number): Promise<Task> {
 }
 
 export async function getTaskSchema(): Promise<Schema> {
-  return await schemaService.getSchema('tasks_schema_v1');
+  const template = await schemaTemplateService.getSchemaTemplate('tasks_schema_v1');
+
+  return template.classRule;
 }
 
 export async function getTaskHistory(id: number): Promise<TaskHistory[]> {

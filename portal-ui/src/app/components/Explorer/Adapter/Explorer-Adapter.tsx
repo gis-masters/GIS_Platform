@@ -36,8 +36,8 @@ import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_p
 import { ExplorerAdapterTypeReportTemplate } from './_type/Explorer-Adapter_type_reportTemplate';
 import { ExplorerAdapterTypeReportTemplatesRoot } from './_type/Explorer-Adapter_type_reportTemplatesRoot';
 import { ExplorerAdapterTypeRoot } from './_type/Explorer-Adapter_type_root';
-import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema';
-import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_schemasRoot';
+import { ExplorerAdapterTypeSchemaTemplate } from './_type/Explorer-Adapter_type_schemaTemplate';
+import { ExplorerAdapterTypeSchemaTemplatesRoot } from './_type/Explorer-Adapter_type_schemaTemplatesRoot';
 import { ExplorerAdapterTypeSearchItem } from './_type/Explorer-Adapter_type_searchItem';
 import { ExplorerAdapterTypeSearchResultRoot } from './_type/Explorer-Adapter_type_searchResultRoot';
 import { ExplorerAdapterTypeTable } from './_type/Explorer-Adapter_type_table';
@@ -63,8 +63,8 @@ const adapters: Record<keyof ExplorerItemDataAllTypes, Adapter> = {
   [ExplorerItemType.BASEMAPS_ROOT]: ExplorerAdapterTypeBasemapsRoot,
   [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: ExplorerAdapterTypeMessagesRegistriesRoot,
   [ExplorerItemType.MESSAGES_REGISTRY]: ExplorerAdapterTypeMessagesRegistry,
-  [ExplorerItemType.SCHEMA]: ExplorerAdapterTypeSchema,
-  [ExplorerItemType.SCHEMAS_ROOT]: ExplorerAdapterTypeSchemasRoot,
+  [ExplorerItemType.SCHEMA_TEMPLATES_ROOT]: ExplorerAdapterTypeSchemaTemplatesRoot,
+  [ExplorerItemType.SCHEMA_TEMPLATE]: ExplorerAdapterTypeSchemaTemplate,
   [ExplorerItemType.REPORT_TEMPLATE]: ExplorerAdapterTypeReportTemplate,
   [ExplorerItemType.REPORT_TEMPLATES_ROOT]: ExplorerAdapterTypeReportTemplatesRoot,
   [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: ExplorerAdapterTypeDocumentVersionsRoot,

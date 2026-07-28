@@ -1,12 +1,9 @@
-import { boundMethod } from 'autobind-decorator';
-import { debounce, type DebouncedFunc } from 'lodash';
-
-import { Toast } from '../../../components/Toast/Toast';
 import { communicationService } from '../../communication.service';
 import { type ImportLayerItem } from '../../geoserver/import/import.models';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
+import { schemaTemplateService } from '../schemaTemplate/schemaTemplate.service';
 import { type BugObject } from '../validation/validation.models';
 import { schemaClient } from './schema.client';
 import { type PropertySchemaChoice, PropertyType, type Schema, type SchemaValidator } from './schema.models';
@@ -22,74 +19,13 @@ class SchemaService {
     return this._instance || (this._instance = new this());
   }
 
-  private schemas: { [key: string]: Promise<OldSchema> } = {};
-  private schemasResolvers: { [key: string]: (value: OldSchema | PromiseLike<OldSchema>) => void } = {};
-  private schemasRejecters: { [key: string]: (reason?: unknown) => void } = {};
-  private fetchingPool: string[] = [];
-  private fetchingAllSchemas?: Promise<void>;
-  private fetchingNow = 0;
-  private readonly debouncedFetch: DebouncedFunc<(fetchAll?: boolean) => Promise<void>>;
-
   private readonly schemaWarningValidators: SchemaValidator[] = [printTemplatesExist];
-
-  private constructor() {
-    // fetch запускается из таймера debounce вне контекста вызывающего кода,
-    // поэтому его ошибку гасим здесь: ожидающим она уже доставлена через reject()
-    // в checkForsakenResolvers, а необработанный reject таймера дал бы глобальную ошибку.
-    this.debouncedFetch = debounce(async (fetchAll?: boolean) => {
-      try {
-        await this.fetch(fetchAll);
-      } catch {
-        // ошибка доставлена ожидающим промисам в checkForsakenResolvers
-      }
-    }, 20);
-  }
-
-  @boundMethod
-  async getOldSchema(name: string): Promise<OldSchema> {
-    if (!this.schemas[name]) {
-      const schemaPromise = new Promise<OldSchema>((resolve, reject) => {
-        this.schemasResolvers[name] = resolve;
-        this.schemasRejecters[name] = reject;
-      });
-      this.schemas[name] = schemaPromise;
-      this.fetchingPool.push(name);
-      // debounce возвращает управление до реального fetch, поэтому отклонять схему здесь нельзя.
-      // Резолв/реджект придёт из fetch -> checkForsakenResolvers после ответа сервера.
-      void this.debouncedFetch();
-
-      return schemaPromise;
-    }
-
-    return this.schemas[name];
-  }
-
-  @boundMethod
-  async getSchema(name: string): Promise<Schema> {
-    return convertOldToNewSchema(await this.getOldSchema(name));
-  }
-
-  async getAllOldSchemas(): Promise<OldSchema[]> {
-    if (!this.fetchingAllSchemas) {
-      this.fetchingAllSchemas = this.fetch(true);
-    }
-
-    await this.fetchingAllSchemas;
-
-    return Promise.all(Object.values(this.schemas));
-  }
 
   async fetchAndCacheTablesSchemas(tableIdentifiers: string[]): Promise<void> {
     const schemas = await schemaClient.getTableSchemas(tableIdentifiers);
     schemas.forEach((schemaDto, identifier) => {
       tablesSchemasCache.add(identifier, Promise.resolve(convertOldToNewSchema(schemaDto)));
     });
-  }
-
-  async getAllSchemas(): Promise<Schema[]> {
-    const oldSchemas = await this.getAllOldSchemas();
-
-    return oldSchemas.map(convertOldToNewSchema);
   }
 
   async getSchemaAtUrl(url: string): Promise<Schema> {
@@ -104,7 +40,8 @@ class SchemaService {
       return;
     }
 
-    const schemas = await this.getAllOldSchemas();
+    const templates = await schemaTemplateService.getSchemaTemplatesWithOldSchema();
+    const schemas = templates.map(template => template.classRule);
 
     return (
       schemas.find(schema => schema.name.toLowerCase() === schemaId.toLowerCase()) ||
@@ -227,71 +164,22 @@ class SchemaService {
     });
   }
 
-  private async fetch(fetchAll?: boolean): Promise<void> {
-    this.fetchingNow++;
-    const payload = fetchAll ? [] : this.fetchingPool.splice(0);
-    const response = await schemaClient.getSchema(payload);
-
-    if (!response) {
-      const fetchError = new Error(`Getting schemas ${JSON.stringify(payload)} error`);
-      this.fetchingNow--;
-      this.checkForsakenResolvers(fetchError);
-      throw fetchError;
-    }
-
-    response.forEach(schema => {
-      if (!schema) {
-        Toast.error('Возникла ошибка при загрузке схемы');
-
-        return;
-      }
-
-      const { name } = schema;
-      if (this.schemasResolvers[name]) {
-        this.schemasResolvers[name](schema);
-        delete this.schemasResolvers[name];
-        delete this.schemasRejecters[name];
-      } else if (!this.schemas[name]) {
-        this.schemas[name] = Promise.resolve(schema);
-      }
-    });
-
-    this.fetchingNow--;
-    this.checkForsakenResolvers();
-  }
-
-  private rejectForsakenSchema(schemaName: string, error: Error): void {
-    const reject = this.schemasRejecters[schemaName];
-    if (!reject) {
-      return;
-    }
-
-    reject(error);
-    delete this.schemas[schemaName];
-    delete this.schemasResolvers[schemaName];
-    delete this.schemasRejecters[schemaName];
-  }
-
-  private checkForsakenResolvers(fetchError?: Error) {
-    if (!this.fetchingPool.length && !this.fetchingNow) {
-      for (const [schemaName] of Object.entries(this.schemasRejecters)) {
-        this.rejectForsakenSchema(schemaName, fetchError ?? new Error('Не найдена схема ' + schemaName));
-      }
-    }
-  }
-
   async createSchema(schema: Schema) {
-    this.schemas = {};
-    this.fetchingAllSchemas = undefined;
+    schemaTemplateService.clearCache();
     await schemaClient.createSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'create', data: schema });
   }
 
   async updateSchema(schema: Schema) {
-    this.schemas = {};
-    this.fetchingAllSchemas = undefined;
+    schemaTemplateService.clearCache();
     await schemaClient.updateSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'update', data: schema });
+  }
+
+  async deleteSchema(schema: Schema) {
+    schemaTemplateService.clearCache();
+    await schemaClient.deleteSchema(schema.name);
+    communicationService.schemaUpdated.emit({ type: 'delete', data: schema });
   }
 
   async getSchemaWarnings(schema: Schema): Promise<string[]> {

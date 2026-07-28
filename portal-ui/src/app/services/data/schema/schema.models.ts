@@ -56,6 +56,10 @@ export interface Schema {
   description?: string;
   properties: PropertySchema[];
 
+  is_system?: boolean | null;
+  created_by?: string;
+  modified_by?: string;
+
   tableName?: string;
   originName?: string;
   styleName?: string;

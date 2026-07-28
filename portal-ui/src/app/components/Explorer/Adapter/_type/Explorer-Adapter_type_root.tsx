@@ -46,7 +46,7 @@ function getChildren(): ExplorerItemData[] {
 
   baseChildren.push(
     {
-      type: ExplorerItemType.SCHEMAS_ROOT,
+      type: ExplorerItemType.SCHEMA_TEMPLATES_ROOT,
       payload: null
     },
     {
@@ -109,9 +109,9 @@ export class ExplorerAdapterTypeRoot {
         payload: null
       };
     }
-    if (id === 'schemasRoot') {
+    if (id === 'schemaTemplatesRoot') {
       return {
-        type: ExplorerItemType.SCHEMAS_ROOT,
+        type: ExplorerItemType.SCHEMA_TEMPLATES_ROOT,
         payload: null
       };
     }

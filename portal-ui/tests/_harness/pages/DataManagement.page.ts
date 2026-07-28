@@ -15,7 +15,7 @@ class DataManagementPage extends Page {
     '?path_dm=%5B%22r%22,%22root%22,%22pr%22,%22projectsRoot%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22created_at%22,%22desc%22,%7B%7D%5D';
 
   schemasRootUrl =
-    '?path_dm=%5B%22r%22,%22root%22,%22sr%22,%22schemasRoot%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22created_at%22,%22desc%22,%7B%7D%5D';
+    '?path_dm=%5B%22r%22,%22root%22,%22str%22,%22schemaTemplatesRoot%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22created_at%22,%22desc%22,%7B%7D%5D';
 
   reportTemplatesRootUrl =
     '?path_dm=%5B%22r%22,%22root%22,%22rtr%22,%22reportTemplatesRoot%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22name%22,%22asc%22,%7B%7D%5D';
@@ -51,7 +51,7 @@ class DataManagementPage extends Page {
   }
 
   async openSchemaPageWithSelectedSchema(schemaName: string) {
-    const schemaUrl = `?path_dm=%5B%22r%22,%22root%22,%22sr%22,%22schemasRoot%22,%22schema%22,%22${schemaName}%22%5D&opts_dm=%5B0,10,%22created_at%22,%22desc%22,%7B%7D%5D`;
+    const schemaUrl = `?path_dm=%5B%22r%22,%22root%22,%22str%22,%22schemaTemplatesRoot%22,%22st%22,%22${schemaName}%22%5D&opts_dm=%5B0,10,%22created_at%22,%22desc%22,%7B%7D%5D`;
     await browser.url(this.url + schemaUrl);
   }
 

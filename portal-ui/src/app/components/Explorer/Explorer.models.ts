@@ -11,7 +11,7 @@ import {
   type LibraryRecord
 } from '../../services/data/library/library.models';
 import { type MessagesRegistry } from '../../services/data/messagesRegistries/messagesRegistries.models';
-import { type Schema } from '../../services/data/schema/schema.models';
+import { type SchemaTemplate } from '../../services/data/schemaTemplate/schemaTemplate.models';
 import { type SearchItemData, type SearchItemDataSource } from '../../services/data/search/search.model';
 import { type Task, type TaskHistory } from '../../services/data/task/task.models';
 import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
@@ -72,8 +72,8 @@ export enum ExplorerItemType {
   MESSAGES_REGISTRIES_ROOT = 'mrr',
   MESSAGES_REGISTRY = 'msg',
 
-  SCHEMAS_ROOT = 'sr',
-  SCHEMA = 'schema',
+  SCHEMA_TEMPLATES_ROOT = 'str',
+  SCHEMA_TEMPLATE = 'st',
 
   REPORT_TEMPLATES_ROOT = 'rtr',
   REPORT_TEMPLATE = 'rt'
@@ -113,8 +113,8 @@ export interface ExplorerItemDataAllTypes {
   [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: { type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT; payload: null };
   [ExplorerItemType.MESSAGES_REGISTRY]: { type: ExplorerItemType.MESSAGES_REGISTRY; payload: MessagesRegistry };
 
-  [ExplorerItemType.SCHEMAS_ROOT]: { type: ExplorerItemType.SCHEMAS_ROOT; payload: null };
-  [ExplorerItemType.SCHEMA]: { type: ExplorerItemType.SCHEMA; payload: Schema };
+  [ExplorerItemType.SCHEMA_TEMPLATES_ROOT]: { type: ExplorerItemType.SCHEMA_TEMPLATES_ROOT; payload: null };
+  [ExplorerItemType.SCHEMA_TEMPLATE]: { type: ExplorerItemType.SCHEMA_TEMPLATE; payload: SchemaTemplate };
 
   [ExplorerItemType.REPORT_TEMPLATES_ROOT]: { type: ExplorerItemType.REPORT_TEMPLATES_ROOT; payload: null };
   [ExplorerItemType.REPORT_TEMPLATE]: { type: ExplorerItemType.REPORT_TEMPLATE; payload: TemplateInfo };

@@ -4,18 +4,66 @@ import { SchemaOutlined } from '@mui/icons-material';
 import { type Emitter } from '../../../../services/common/Emitter';
 import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
 import { type Schema } from '../../../../services/data/schema/schema.models';
-import { schemaService } from '../../../../services/data/schema/schema.service';
+import { type SchemaTemplate } from '../../../../services/data/schemaTemplate/schemaTemplate.models';
+import { schemaTemplateService } from '../../../../services/data/schemaTemplate/schemaTemplate.service';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { filterObjects } from '../../../../services/util/filters/filterObjects';
-import { sortObjects } from '../../../../services/util/sortObjects';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { CreateSchema } from '../../../CreateSchema/CreateSchema';
 import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
 
+function sortSchemaTemplates(templates: SchemaTemplate[], sort: string | undefined, asc: boolean): SchemaTemplate[] {
+  const fallBack = 'name';
+
+  return [...templates].toSorted((a, b) => {
+    const compare = (field: string): number => {
+      const valueA = field === 'title' ? a.classRule.title : a.name;
+      const valueB = field === 'title' ? b.classRule.title : b.name;
+      const normalizedA = typeof valueA === 'string' ? valueA.toLowerCase() : valueA;
+      const normalizedB = typeof valueB === 'string' ? valueB.toLowerCase() : valueB;
+
+      if (normalizedA > normalizedB) {
+        return asc ? 1 : -1;
+      }
+
+      if (normalizedA < normalizedB) {
+        return asc ? -1 : 1;
+      }
+
+      return 0;
+    };
+
+    return compare(sort || fallBack) || (sort === fallBack ? 0 : compare(fallBack));
+  });
+}
+
+function filterSchemaTemplates(templates: SchemaTemplate[], filterText: string): SchemaTemplate[] {
+  if (!filterText) {
+    return templates;
+  }
+
+  return filterObjects(templates, {
+    $or: [
+      { name: { $ilike: `%${filterText}%` } },
+      { 'classRule.name': { $ilike: `%${filterText}%` } },
+      { 'classRule.title': { $ilike: `%${filterText}%` } },
+      { 'classRule.tags': { $elemMatch: { $ilike: `%${filterText}%` } } }
+    ]
+  });
+}
+
+function wrapTemplates(templates: SchemaTemplate[]): ExplorerItemData[] {
+  return templates.map(payload => ({ type: ExplorerItemType.SCHEMA_TEMPLATE, payload }));
+}
+
+function getTotalPages(length: number, pageSize: number): number {
+  return Math.floor(length / pageSize) + Number(Boolean(length / pageSize));
+}
+
 @staticImplements<Adapter>()
-export class ExplorerAdapterTypeSchemasRoot {
+export class ExplorerAdapterTypeSchemaTemplatesRoot {
   static getId(): string {
-    return 'schemasRoot';
+    return 'schemaTemplatesRoot';
   }
 
   static getTitle(): string {
@@ -46,22 +94,13 @@ export class ExplorerAdapterTypeSchemasRoot {
     item: ExplorerItemData,
     { page, pageSize, sort, sortOrder, filter }: PageOptions
   ): Promise<[ExplorerItemData[], number]> {
-    const all = await schemaService.getAllSchemas();
+    const templates = await schemaTemplateService.getSchemaTemplates();
     const filterText = typeof filter?.text === 'string' ? filter.text : '';
-    const filtered = filterText
-      ? filterObjects(all, {
-          $or: [
-            { name: { $ilike: `%${filterText}%` } },
-            { title: { $ilike: `%${filterText}%` } },
-            { tags: { $elemMatch: { $ilike: `%${filterText}%` } } }
-          ]
-        })
-      : all;
-    const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
+    const filtered = filterSchemaTemplates(templates, filterText);
+    const sorted = sortSchemaTemplates(filtered, sort, sortOrder === SortOrder.ASC);
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
-    const wrapped: ExplorerItemData[] = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
 
-    return [wrapped, Math.floor(sorted.length / pageSize) + Number(Boolean(sorted.length / pageSize))];
+    return [wrapTemplates(paged), getTotalPages(sorted.length, pageSize)];
   }
 
   static async getChildrenWithParticularOne(
@@ -69,9 +108,10 @@ export class ExplorerAdapterTypeSchemasRoot {
     { pageSize, sort, sortOrder, filter }: PageOptions,
     id: string
   ): Promise<[ExplorerItemData[], number, number] | undefined> {
-    const all = await schemaService.getAllSchemas();
-    const filtered = filterObjects(all, filter || {});
-    const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
+    const templates = await schemaTemplateService.getSchemaTemplates();
+    const filterText = typeof filter?.text === 'string' ? filter.text : '';
+    const filtered = filterText ? filterSchemaTemplates(templates, filterText) : filterObjects(templates, filter || {});
+    const sorted = sortSchemaTemplates(filtered, sort, sortOrder === SortOrder.ASC);
     const index = sorted.findIndex(({ name }) => name === id);
 
     if (index === -1) {
@@ -80,15 +120,16 @@ export class ExplorerAdapterTypeSchemasRoot {
 
     const page = Math.floor(index / pageSize);
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
-    const wrapped: ExplorerItemData[] = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
 
-    return [wrapped, Math.floor(sorted.length / pageSize) + Number(Boolean(sorted.length / pageSize)), page];
+    return [wrapTemplates(paged), getTotalPages(sorted.length, pageSize), page];
   }
 
   static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData> {
+    const template = await schemaTemplateService.getSchemaTemplate(id);
+
     return {
-      type: ExplorerItemType.SCHEMA,
-      payload: await schemaService.getSchema(id)
+      type: ExplorerItemType.SCHEMA_TEMPLATE,
+      payload: template
     };
   }
 

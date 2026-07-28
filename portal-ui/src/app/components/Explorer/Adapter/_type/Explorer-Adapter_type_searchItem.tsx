@@ -7,7 +7,7 @@ import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { FeatureIcon } from '../../../FeatureIcon/FeatureIcon';
 import { LibrarySearchItemActions } from '../../../LibrarySearchItemActions/LibrarySearchItemActions';
-import { FeatureTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
+import { SearchFeatureItemTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
 import { SearchResultHighlight } from '../../../SearchResultHighlight/SearchResultHighlight';
 import {
   type Adapter,
@@ -52,7 +52,13 @@ export class ExplorerAdapterTypeSearchItem {
     }
 
     if (item.payload.type === 'FEATURE') {
-      return <FeatureTitle feature={item.payload.payload} schemaId={item.payload.source.schema} />;
+      return (
+        <SearchFeatureItemTitle
+          feature={item.payload.payload}
+          dataset={item.payload.source.dataset}
+          table={item.payload.source.table}
+        />
+      );
     }
 
     return '';

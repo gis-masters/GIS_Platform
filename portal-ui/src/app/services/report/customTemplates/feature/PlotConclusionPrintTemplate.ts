@@ -18,7 +18,7 @@ import { getNpIntersectionsForPlotPrint, NP_LAYER_SCHEMA_NAME } from '../../help
 import { getOksIntersectionsForPlotPrint } from '../../helpers/getOksIntersectionsForPlotPrint';
 import { getZouitIntersectionsForPlotPrint } from '../../helpers/getZouitIntersectionsForPlotPrint';
 import { resolveFunctionalZonesVectorLayerInProject } from '../../helpers/resolveFunctionalZonesVectorLayerInProject';
-import { resolveSingleLayerBySchema } from '../../helpers/resolveLayersBySchema';
+import { resolveSingleLayerBySchemaTemplate } from '../../helpers/resolveLayersBySchema';
 import { resolveOksLayersBySchema } from '../../helpers/resolveOksLayersBySchema';
 import { resolvePlotDataDateFromSourceDoc } from '../../helpers/resolvePlotDataDateFromSourceDoc';
 import { resolveZouitVectorLayerInProject } from '../../helpers/resolveZouitVectorLayerInProject';
@@ -46,7 +46,7 @@ type PlotConclusionSectionLayers = {
   oksLayersResult: Awaited<ReturnType<typeof resolveOksLayersBySchema>>;
   zouitLayerResult: Awaited<ReturnType<typeof resolveZouitVectorLayerInProject>>;
   fzLayerResult: Awaited<ReturnType<typeof resolveFunctionalZonesVectorLayerInProject>>;
-  npLayerResult: Awaited<ReturnType<typeof resolveSingleLayerBySchema>>;
+  npLayerResult: Awaited<ReturnType<typeof resolveSingleLayerBySchemaTemplate>>;
 };
 
 type PlotConclusionPrintTemplateData = {
@@ -203,7 +203,7 @@ export class PlotConclusionPrintTemplate extends FeaturePrintTemplate {
       resolveOksLayersBySchema(),
       resolveZouitVectorLayerInProject(),
       resolveFunctionalZonesVectorLayerInProject(),
-      resolveSingleLayerBySchema(NP_LAYER_SCHEMA_NAME)
+      resolveSingleLayerBySchemaTemplate(NP_LAYER_SCHEMA_NAME)
     ]);
 
     const sectionLayers: PlotConclusionSectionLayers = {

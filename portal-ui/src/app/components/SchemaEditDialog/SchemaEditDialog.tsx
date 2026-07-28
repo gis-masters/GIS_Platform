@@ -20,6 +20,7 @@ import { DataEntityType, type VectorTable } from '../../services/data/vectorData
 import { updateVectorTableSchema } from '../../services/data/vectorData/vectorData.service';
 import { GeometryType, type SupportedGeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { getSchemaTagsOptions } from '../../services/util/form/getSchemaTagsOptions';
+import { isArray } from '../../services/util/typeGuards/isArray';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 import { FormDialog } from '../FormDialog/FormDialog';
@@ -30,6 +31,24 @@ import { SchemaPropertiesControl } from '../SchemaPropertiesControl/SchemaProper
 import './SchemaEditDialog.scss';
 
 const cnSchemaEditDialog = cn('SchemaEditDialog');
+
+function parseTags(tags: unknown): string[] {
+  if (isArray(tags)) {
+    return tags.filter((tag): tag is string => typeof tag === 'string');
+  }
+
+  if (typeof tags !== 'string') {
+    return [];
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(tags);
+
+    return isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === 'string') : [];
+  } catch {
+    return [];
+  }
+}
 
 export interface SchemaEditDialogProps {
   title: string;
@@ -491,6 +510,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
         ...schema,
         ...state.currentSchema,
         ...value,
+        tags: parseTags(value.tags),
         properties: ensureShapeProperty(
           value.properties ?? state.currentSchema?.properties ?? schema.properties,
           value.geometryType

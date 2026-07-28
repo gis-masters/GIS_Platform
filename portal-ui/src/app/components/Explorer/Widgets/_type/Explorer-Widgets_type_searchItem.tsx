@@ -5,9 +5,10 @@ import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
 import { communicationService } from '../../../../services/communication.service';
+import { getLibrary } from '../../../../services/data/library/library.service';
 import { type Schema } from '../../../../services/data/schema/schema.models';
-import { schemaService } from '../../../../services/data/schema/schema.service';
 import { applyContentType } from '../../../../services/data/schema/utils/applyContentType';
+import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
 import { ConnectionsFeaturesToProjectsWidget } from '../../../ConnectionsFeaturesToProjectsWidget/ConnectionsFeaturesToProjectsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeSearchItem } from '../../Adapter/_type/Explorer-Adapter_type_searchItem';
@@ -71,16 +72,23 @@ class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
 
     this.operationId = operationId;
-    if (item.payload.type === 'DOCUMENT' || item.payload.type === 'FEATURE') {
-      let schema = await schemaService.getSchema(item.payload.source.schema);
 
-      if (this.operationId === operationId) {
-        if (item.payload.type === 'DOCUMENT' && item.payload.payload.content_type_id) {
-          schema = applyContentType(schema, item.payload.payload.content_type_id);
-        }
+    let schema: Schema;
 
-        this.setSchema(schema);
+    if (item.payload.type === 'FEATURE') {
+      ({ schema } = await getVectorTable(item.payload.source.dataset, item.payload.source.table));
+    } else if (item.payload.type === 'DOCUMENT') {
+      ({ schema } = await getLibrary(item.payload.source.library));
+
+      if (item.payload.payload.content_type_id) {
+        schema = applyContentType(schema, item.payload.payload.content_type_id);
       }
+    } else {
+      return;
+    }
+
+    if (this.operationId === operationId) {
+      this.setSchema(schema);
     }
   }
 

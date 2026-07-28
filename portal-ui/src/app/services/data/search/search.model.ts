@@ -11,13 +11,11 @@ export interface SearchRequest extends Partial<FtsRequestDto> {
 interface SearchSourceForDocument {
   library: string;
   title: string;
-  schema: string;
 }
 
 export interface SearchSourceForFeature {
   dataset: string;
   datasetTitle: string;
-  schema: string;
   table: string;
   tableTitle: string;
   geometryType: GeometryType;

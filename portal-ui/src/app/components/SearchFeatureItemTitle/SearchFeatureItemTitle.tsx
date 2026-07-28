@@ -3,23 +3,24 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { type Schema } from '../../services/data/schema/schema.models';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/utils/changeSchemaNamesCaseByFeature';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
 
-interface FeatureTitleProps {
+interface SearchFeatureItemTitleProps {
   feature: WfsFeature;
-  schemaId: string;
+  dataset: string;
+  table: string;
 }
 
 @observer
-export class FeatureTitle extends Component<FeatureTitleProps> {
+export class SearchFeatureItemTitle extends Component<SearchFeatureItemTitleProps> {
   @observable private schema?: Schema;
 
   private operationId?: symbol;
 
-  constructor(props: FeatureTitleProps) {
+  constructor(props: SearchFeatureItemTitleProps) {
     super(props);
     makeObservable(this);
   }
@@ -47,11 +48,11 @@ export class FeatureTitle extends Component<FeatureTitleProps> {
   }
 
   private async fetchData() {
-    const { schemaId } = this.props;
+    const { dataset, table } = this.props;
     const operationId = Symbol();
 
     this.operationId = operationId;
-    const schema = await schemaService.getSchema(schemaId);
+    const { schema } = await getVectorTable(dataset, table);
 
     if (this.operationId === operationId) {
       this.setSchema(schema);

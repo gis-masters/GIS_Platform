@@ -221,7 +221,11 @@ export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreate
 
   @action.bound
   private validateCreateForm(value: Partial<BasePropertySchema>) {
-    this.errors = [...this.getDuplicateNameErrors(value.name), ...this.getRequiredOptionErrors(value)];
+    this.errors = [
+      ...this.getNameValidationErrors(value.name),
+      ...this.getDuplicateNameErrors(value.name),
+      ...this.getRequiredOptionErrors(value)
+    ];
   }
 
   private getDuplicateNameErrors(name?: string): FieldErrors[] {
@@ -260,5 +264,18 @@ export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreate
     }
 
     return errors;
+  }
+
+  private getNameValidationErrors(name?: string): FieldErrors[] {
+    if (name && !/^[a-z]\w*$/i.test(name)) {
+      return [
+        {
+          field: 'name',
+          messages: ['Только строчные латинские буквы, цифры и "_". Первый символ должен быть буквой.']
+        }
+      ];
+    }
+
+    return [];
   }
 }

@@ -8,8 +8,8 @@ import { Toast } from '../../components/Toast/Toast';
 import { doAlert } from '../../services/answer-modals.service';
 import { type Process, ProcessStatus } from '../../services/data/processes/processes.models';
 import { getProcess } from '../../services/data/processes/processes.service';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { type OldSchema } from '../../services/data/schema/schemaOld.models';
+import { schemaTemplateService } from '../../services/data/schemaTemplate/schemaTemplate.service';
 import { type Dataset } from '../../services/data/vectorData/vectorData.models';
 import { type ImportLayer, type ImportLayerItem } from '../../services/geoserver/import/import.models';
 import { doWorkImport, getAllImportLayers } from '../../services/geoserver/import/import.service';
@@ -48,7 +48,8 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.schemas = await schemaService.getAllOldSchemas();
+    const templates = await schemaTemplateService.getSchemaTemplatesWithOldSchema();
+    this.schemas = templates.map(template => template.classRule);
 
     const { projectId, importId } = this.route.snapshot.params as Record<string, string>;
     this.prevLink = `/projects/${projectId}/import/${importId}`;
