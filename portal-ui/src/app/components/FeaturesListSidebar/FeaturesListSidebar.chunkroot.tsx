@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import FeaturesListSidebarFeatures from '../FeaturesListSidebarFeatures/FeaturesListSidebarFeatures';
 import { IconButton } from '../IconButton/IconButton';

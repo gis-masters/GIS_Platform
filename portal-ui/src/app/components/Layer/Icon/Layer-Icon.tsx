@@ -56,6 +56,11 @@ export const LayerIcon: FC<LayerIconProps> = ({ data, isGroup, isError, expanded
 
         break;
       }
+      case CrgLayerType.EXTERNAL_NSPD: {
+        iconType = 'nspd';
+
+        break;
+      }
       default: {
         iconType = 'unknown';
       }

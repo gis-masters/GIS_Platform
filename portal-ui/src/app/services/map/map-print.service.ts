@@ -40,6 +40,17 @@ function rejectWithErrorInstance(reject: (reason?: unknown) => void, caught: unk
   }
 }
 
+/** Canvas с cross-origin тайлами без CORS нельзя экспортировать — drawImage отравит итоговый canvas. */
+function isCanvasTainted(canvas: HTMLCanvasElement): boolean {
+  try {
+    canvas.getContext('2d')?.getImageData(0, 0, 1, 1);
+
+    return false;
+  } catch {
+    return true;
+  }
+}
+
 const BASE_SCALE_LINE_DPI = 150;
 
 export const BORDER_WIDTH_MM = 0.4;
@@ -48,6 +59,9 @@ export enum ImageMime {
   PNG = 'image/png',
   JPG = 'image/jpeg'
 }
+
+/** Качество JPEG для печати: с тайлами НСПД без сжатия media легко раздувается до OOM/500. */
+const PRINT_JPEG_QUALITY = 0.82;
 
 //  Функция печати карты в PDF
 export async function printMap(directly: boolean): Promise<Blob> {
@@ -187,6 +201,8 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
     throw new Error('Карта не инициализирована');
   }
 
+  mapService.ensureExternalTilesSafeForPrint();
+
   const size = map.getSize();
   const viewResolution = view.getResolution();
 
@@ -231,6 +247,10 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
             }
 
             if (canvas.width > 0) {
+              if (isCanvasTainted(canvas)) {
+                return;
+              }
+
               const parent = canvas.parentElement;
               if (!parent) {
                 return;
@@ -264,7 +284,8 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
             await drawDesignations(mapContext, resolution, designationsResize, hideScaleDigits);
           }
 
-          const result = mapCanvas.toDataURL(mime);
+          const result =
+            mime === ImageMime.JPG ? mapCanvas.toDataURL(mime, PRINT_JPEG_QUALITY) : mapCanvas.toDataURL(mime);
 
           // Восстановление оригинальных настроек карты
           mapService.showSystemLayer('draft');

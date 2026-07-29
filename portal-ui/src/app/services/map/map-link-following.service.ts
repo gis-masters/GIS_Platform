@@ -3,6 +3,7 @@ import { action } from 'mobx';
 import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { route } from '../../stores/Route.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { applyView } from '../data/schema/utils/applyView';
 import {
@@ -18,11 +19,10 @@ import { projectsService } from '../gis/projects/projects.service';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
-import { EditFeatureMode } from './a-map-mode/edit-feature/EditFeature.models';
-import { mapModeManager } from './a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from './a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from './map.models';
 import { mapService } from './map.service';
+import { EditFeatureMode } from './mode/map-mode.models';
+import { mapModeService } from './mode/map-mode.service';
 
 export interface FeatureError {
   id: string;
@@ -223,11 +223,12 @@ async function restoreRecentOpenedFeatures() {
 
       if (currentLayer?.complexName) {
         const schema = await getLayerSchema(currentLayer);
-        const featuresIds = featuresCutIds.map(
+        const persistedCutIds = featuresCutIds.filter(id => id !== 0);
+        const featuresIds = persistedCutIds.map(
           id => `${extractFeatureTypeNameFromComplexName(currentLayer.complexName)}.${id}`
         );
         let layerFeatures: WfsFeature[] = [];
-        if (schema) {
+        if (schema && featuresIds.length) {
           const schemaWithAppliedView = applyView(schema, currentLayer.view);
           layerFeatures = await getFeaturesById(
             featuresIds,
@@ -249,35 +250,37 @@ async function restoreRecentOpenedFeatures() {
         features.push(...layerFeatures);
       } else {
         featuresWithNoAccess.push(
-          ...featuresCutIds.map(cutId => ({
-            id: String(cutId),
-            layerTitle: 'Слой недоступен',
-            message: 'Слой недоступен'
-          }))
+          ...featuresCutIds
+            .filter(cutId => cutId !== 0)
+            .map(cutId => ({
+              id: String(cutId),
+              layerTitle: 'Слой недоступен',
+              message: 'Слой недоступен'
+            }))
         );
       }
     }
   }
 
-  sidebars.setDeletedFeatures(deletedFeatures);
-  sidebars.setNoAccessFeatures(featuresWithNoAccess);
-  sidebars.setDeletedLayers(deletedLayers);
-
   // TODO: надо бы найти кейсы, восстановить логику, добавить e2e тестов.
   // const hasErrors = Boolean(deletedFeatures.length + featuresWithNoAccess.length + deletedLayers.length);
 
   await selectFeatures(features);
+
+  sidebars.setDeletedFeatures(deletedFeatures);
+  sidebars.setNoAccessFeatures(featuresWithNoAccess);
+  sidebars.setDeletedLayers(deletedLayers);
 }
 
 async function selectFeatures(features: WfsFeature[]) {
   if (!features || features.length === 0) {
-    await mapModeManager.changeMode(MapMode.NONE, undefined, 'RROF selectFeatures === 0');
+    await mapModeService.changeMode(MapMode.NONE, undefined, 'RROF selectFeatures === 0');
   }
 
-  await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, { payload: { features } }, 'RROF selectFeatures 1.1');
+  await mapModeService.changeMode(MapMode.SELECTED_FEATURES, { payload: { features } }, 'RROF selectFeatures 1.1');
 
   if (features.length === 1) {
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.EDIT_FEATURE,
       {
         payload: {

@@ -16,9 +16,9 @@ import {
   type WfsPointGeometry
 } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
+import { editFeatureHistoryStore } from '../../../stores/EditFeatureHistory.store';
 import { Button } from '../../Button/Button';
 import { IconButton } from '../../IconButton/IconButton';
 

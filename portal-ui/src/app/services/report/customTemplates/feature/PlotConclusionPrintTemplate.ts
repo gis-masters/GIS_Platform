@@ -192,7 +192,7 @@ export class PlotConclusionPrintTemplate extends FeaturePrintTemplate {
     let sourceLayer: CrgVectorLayer;
 
     try {
-      sourceLayer = this.getLayerByFeature(feature);
+      sourceLayer = this.getVectorLayerByFeature(feature);
     } catch (error) {
       Toast.warn(error instanceof Error ? error.message : 'Не удалось определить слой объекта');
 

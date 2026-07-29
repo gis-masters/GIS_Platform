@@ -15,11 +15,11 @@ import { createFeatureId } from '../../services/geoserver/featureType/featureTyp
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { type CrgLayer, CrgLayerType, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
+import { editFeatureStore } from '../../stores/EditFeature.store';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
@@ -139,7 +139,12 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
         throw new Error(`Не найдена проекция "${layer.nativeCRS}" для слоя "${layer.title}"`);
       }
 
-      if (layer.type && (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type))) {
+      if (
+        layer.type &&
+        (layer.type === CrgLayerType.VECTOR ||
+          isVectorFromFile(layer.type) ||
+          layer.type === CrgLayerType.EXTERNAL_NSPD)
+      ) {
         for (const feature of features) {
           if (layer.nativeCRS && layer.nativeCRS !== selectedLayer.nativeCRS && feature.geometry) {
             feature.geometry = transformGeometry(feature.geometry, currentProjection, selectedProjection);
@@ -195,7 +200,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
 
   @boundMethod
   private async positionToCopiedFeatures() {
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.SELECTED_FEATURES,
       {
         payload: {

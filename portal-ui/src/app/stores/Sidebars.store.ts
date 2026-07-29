@@ -2,11 +2,11 @@ import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { type SearchInfo } from '../components/SearchField/SearchField';
 import { type WfsFeature } from '../services/geoserver/wfs/wfs.models';
-import { type CrgVectorableLayer } from '../services/gis/layers/layers.models';
-import { selectedFeaturesStore } from '../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { type CrgExternalLayer, type CrgVectorableLayer } from '../services/gis/layers/layers.models';
 import { type FeatureError } from '../services/map/map-link-following.service';
 import { services } from '../services/services';
 import { Pages, route } from './Route.store';
+import { selectedFeaturesStore } from './SelectedFeatures.store';
 
 const defaultValues: Partial<Sidebars> = {
   layerSidebarOpen: true,
@@ -40,7 +40,7 @@ class Sidebars {
   @observable deletedFeatures?: FeatureError[];
   @observable featuresWithNoAccess?: FeatureError[];
   @observable deletedLayers?: FeatureError[];
-  @observable layerOfEditedFeature?: CrgVectorableLayer;
+  @observable layerOfEditedFeature?: CrgVectorableLayer | CrgExternalLayer;
   @observable featuresWithErrors?: number;
   @observable foundBySearchFeatureEdited?: boolean;
   @observable selectedFeaturesEdited?: boolean;
@@ -91,7 +91,7 @@ class Sidebars {
   }
 
   @action.bound
-  setLayerOfEditedFeature(layerOfEditedFeature: CrgVectorableLayer) {
+  setLayerOfEditedFeature(layerOfEditedFeature: CrgVectorableLayer | CrgExternalLayer) {
     this.layerOfEditedFeature = layerOfEditedFeature;
   }
 

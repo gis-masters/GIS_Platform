@@ -23,6 +23,10 @@ Feature: Поле string: внешний вид
     Given я на странице "form-field-string--view-empty" библиотеки блоков
     Then блок FormViewTypeString вариант "view-empty" выглядит как положено
 
+  Scenario: Внешний вид поля в режиме чтения с числовым значением
+    Given я на странице "form-field-string--view-number" библиотеки блоков
+    Then блок FormViewTypeString вариант "view-number" выглядит как положено
+
   Scenario: Внешний вид заполненного большим значением и раскрытого поля в режиме чтения
     Given я на странице "form-field-string--long-value-view" библиотеки блоков
     When я нажимаю кнопку `Показать всё`

@@ -18,9 +18,13 @@ import { convertOldToNewProperties } from '../../../services/data/schema/utils/c
 import { convertOldToNewSchema } from '../../../services/data/schema/utils/convertOldToNewSchema';
 import { getFieldRelations } from '../../../services/data/schema/utils/getFieldRelations';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import {
+  type CrgExternalLayer,
+  type CrgVectorableLayer,
+  type CrgVectorLayer
+} from '../../../services/gis/layers/layers.models';
 import { isVectorLayer } from '../../../services/gis/layers/layers.typeguards';
-import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { EditFeatureMode } from '../../../services/map/mode/map-mode.models';
 import { formatDate, systemFormat } from '../../../services/util/date.util';
 import { validateCustomRules } from '../../../services/util/FeaturePropertyValidatorsReact';
 import { convertToComplexField } from '../../Form/Form.utils';
@@ -46,7 +50,7 @@ export const useFeatureFormGenerator = (
   setFeatureDescription: (featureDescription: OldSchema | undefined) => void,
   layerSchema?: Schema,
   featureDescription?: OldSchema,
-  layer?: CrgVectorableLayer | CrgVectorLayer
+  layer?: CrgVectorableLayer | CrgVectorLayer | CrgExternalLayer
 ): void => {
   const currentDepsRef = useRef<EditFeatureFormControl[]>();
 

@@ -3,13 +3,13 @@ import { type Feature } from 'ol';
 import { type Coordinate } from 'ol/coordinate';
 import { type Geometry } from 'ol/geom';
 
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { GeometryType, type WfsFeature, type WfsGeometry } from '../../geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../../geoserver/wfs/wfs.util';
 import { services } from '../../services';
 import { transformGeometry } from '../../util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
-import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../draw/map-draw.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
 

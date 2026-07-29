@@ -49,6 +49,7 @@ public class CrgMigrationHandler {
     private final ApplicationContext ctx;
     private final DatasourceFactory datasourceFactory;
     private final DdlTriggersDetached ddlTriggers;
+    private final SchemaSystemMigrationHandler schemaSystemMigrationHandler;
 
     @Value("${crg-options.initFullTextSearch:false}")
     private boolean initFullTextSearch;
@@ -58,10 +59,12 @@ public class CrgMigrationHandler {
 
     public CrgMigrationHandler(ApplicationContext ctx,
                                DatasourceFactory datasourceFactory,
-                               DdlTriggersDetached ddlTriggers) {
+                               DdlTriggersDetached ddlTriggers,
+                               SchemaSystemMigrationHandler schemaSystemMigrationHandler) {
         this.ctx = ctx;
         this.datasourceFactory = datasourceFactory;
         this.ddlTriggers = ddlTriggers;
+        this.schemaSystemMigrationHandler = schemaSystemMigrationHandler;
     }
 
     public void handle() {
@@ -124,6 +127,8 @@ public class CrgMigrationHandler {
                 Arrays.stream(ctx.getResources("classpath:sql/schemas/**"))
                       .filter(resource -> isFile(resource.getFilename()))
                       .forEach(resource -> executeMigration(connection, resource));
+
+                schemaSystemMigrationHandler.sync(connection);
 
                 log.debug("====== Выполняем временные миграции ======");
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/temp.sql"));

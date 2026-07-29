@@ -1,54 +1,35 @@
-import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { type FC, useCallback } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
 import { FilePlacementMode } from '../../services/data/file-placement/file-placement.models';
 import { placeFileWithProjection } from '../../services/data/file-placement/file-placement.service';
 import { getFileInfo } from '../../services/data/files/files.service';
-import {
-  getFileBaseName,
-  isDxfFile,
-  isMidMifFile,
-  isShpFile,
-  isTabFile,
-  isTifFile
-} from '../../services/data/files/files.util';
+import { getFileBaseName } from '../../services/data/files/files.util';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { awaitProcess } from '../../services/data/processes/processes.service';
 import { isPlaceFileProcess } from '../../services/data/processes/processes.typeguards';
-import { type Projection } from '../../services/data/projections/projections.models';
 import { getProjectionCode } from '../../services/data/projections/projections.util';
-import {
-  type ContentType,
-  type PropertySchema,
-  PropertyType,
-  type Schema,
-  type ValueFormula
-} from '../../services/data/schema/schema.models';
+import { type ContentType, type PropertySchema, type Schema } from '../../services/data/schema/schema.models';
 import { buildComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { type CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
-import { createLayer, getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import { createLayer } from '../../services/gis/layers/layers.service';
 import {
   externalLayerDefaults,
   generateNextLayerId,
   vectorLayerDefaults
 } from '../../services/gis/layers/layers.utils';
+import { getNspdKnownLayer } from '../../services/nspd/feature-info/nspd-feature-info.models';
 import { services } from '../../services/services';
-import { type FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
+import { validateFormValue } from '../../services/util/form/formValidation.utils';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { projectionsStore } from '../../stores/Projections.store';
 import { getDefaultValues } from '../Form/Form.utils';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { SelectFileInLibraryRecordControl } from '../SelectFileInLibraryRecordControl/SelectFileInLibraryRecordControl';
-import { SelectProjectionControl } from '../SelectProjectionControl/SelectProjectionControl';
-import { SelectVectorTableControl } from '../SelectVectorTableControl/SelectVectorTableControl';
 import { Toast } from '../Toast/Toast';
-import { type Datasource } from './AddLayerDialog.models';
-
+import { type LayerFormValue } from './AddLayerDialog.models';
+import { buildFields, buildFileCrgLayer } from './AddLayerDialog.utils';
 const cnAddLayerDialog = cn('AddLayerDialog');
 
 interface AddLayerDialogProps {
@@ -57,392 +38,188 @@ interface AddLayerDialogProps {
   onAdd(layer: CrgLayer): void;
 }
 
-interface LayerFormValue extends CrgLayer {
-  datasource?: Datasource;
-  projection?: Projection;
-  layerType?: string;
+interface AddLayerDialogState {
+  formValue: Partial<LayerFormValue>;
+  readonly valid: boolean;
+  readonly schema: Schema | undefined;
+  readonly views: ContentType[];
+  readonly fields: PropertySchema[];
+  handleFormChange(formValue: LayerFormValue): void;
+  clearForm(): void;
 }
 
-const layerTypeOptions = [
-  { title: 'Векторный слой', value: 'vector' },
-  { title: 'Файловый слой', value: 'raster' },
-  { title: 'Внешний слой (веб-сервис ArcGis)', value: 'external' }
-];
+async function createVectorLayer(
+  formValue: Partial<LayerFormValue>,
+  views: ContentType[],
+  schema?: Schema
+): Promise<CrgLayer> {
+  const { datasource = {}, title = '', minZoom, projection, view } = formValue;
+  const { dataset, vectorTable } = datasource;
 
-const validateLayer: FieldValidator = value => {
-  if (!value) {
-    return ['Некорректное значение'];
-  }
-};
-
-const minZoomTitle = 'Уровень масштабной детализации';
-
-@observer
-export class AddLayerDialog extends Component<AddLayerDialogProps> {
-  @observable private formValue: Partial<LayerFormValue> = getDefaultValues(this.fields);
-
-  constructor(props: AddLayerDialogProps) {
-    super(props);
-    makeObservable(this);
+  if (!dataset || !vectorTable) {
+    throw new Error('Не указаны обязательные параметры');
   }
 
-  render() {
-    const { open } = this.props;
+  const workspace = currentUser.workspaceName;
+  const crs = projection ? getProjectionCode(projection) : '';
+  const styleName = views.find(({ id }) => id === view)?.styleName;
 
-    return (
-      <FormDialog
-        className={cnAddLayerDialog()}
-        open={open}
-        schema={{ properties: this.fields }}
-        actionFunction={this.add}
-        onFormChange={this.handleFormChange}
-        actionButtonProps={{ children: 'Добавить' }}
-        onClose={this.close}
-        value={this.formValue}
-        title='Добавить слой'
-      />
-    );
+  const newCrgLayer: CrgLayer = {
+    ...vectorLayerDefaults(),
+    id: generateNextLayerId(),
+    dataset: dataset.identifier,
+    resourceId: vectorTable.identifier,
+    complexName: buildComplexName(workspace, vectorTable.identifier, crs),
+    title,
+    nativeCRS: crs,
+    minZoom,
+    styleName: styleName || schema?.styleName || schema?.name,
+    view,
+    mode: FilePlacementMode.GEOSERVER
+  };
+
+  await createLayer(newCrgLayer, currentProject.id);
+  newCrgLayer.mode = FilePlacementMode.FULL;
+
+  return newCrgLayer;
+}
+
+async function createFileLayer(formValue: Partial<LayerFormValue>): Promise<CrgLayer> {
+  const { datasource = {}, title = '', projection } = formValue;
+  const { libraryRecord, file, library } = datasource;
+
+  if (!libraryRecord || !file || !library) {
+    throw new Error('Не указаны обязательные параметры');
   }
 
-  @computed
-  private get valid(): boolean {
-    return !validateFormValue(this.formValue, this.fields).length;
+  const workspace = currentUser.workspaceName;
+  const crs = projection ? getProjectionCode(projection) : '';
+  const record = await getLibraryRecord(library.table_name, libraryRecord.id);
+  const { path } = await getFileInfo(file.id);
+
+  if (!path) {
+    throw new Error('Не указаны обязательные параметры');
   }
 
-  @computed
-  private get schema(): Schema | undefined {
-    return this.formValue?.datasource?.vectorTable?.schema;
+  const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
+
+  const generalCrgLayerProps = {
+    title: title || getFileBaseName(file.title),
+    resourceId: fileTableName,
+    sourceId: record.libraryTableName,
+    sourceRecordId: record.id,
+    dataStoreName: workspace,
+    complexName: buildComplexName(workspace, fileTableName, crs),
+    id: generateNextLayerId(),
+    enabled: true,
+    nativeCRS: crs,
+    mode: FilePlacementMode.GIS
+  };
+
+  let crgLayer = buildFileCrgLayer(file, path, generalCrgLayerProps);
+
+  if (!crgLayer) {
+    throw new Error('Не удалось подключить слой');
   }
 
-  @computed
-  private get views(): ContentType[] {
-    return this.schema?.views || [];
+  const process = await placeFileWithProjection(file, currentProject.id, crs, FilePlacementMode.GEOSERVER);
+  const processResult = await awaitProcess(Number(process._links.process.href.split('/').at(-1)));
+
+  if (processResult && isPlaceFileProcess(processResult.details)) {
+    const details = processResult.details;
+
+    crgLayer = {
+      ...crgLayer,
+      dataset: details.geoserverPublicationData.storeName,
+      nativeName: details.geoserverPublicationData.nativeName
+    };
   }
 
-  @action.bound
-  private close() {
-    this.clearForm();
-    this.props.onClose();
+  return crgLayer;
+}
+
+function createExternalLayer(formValue: Partial<LayerFormValue>): CrgLayer {
+  const { title = '', minZoom, dataSourceUri, resourceId, errorText } = formValue;
+
+  return {
+    ...externalLayerDefaults(dataSourceUri),
+    id: generateNextLayerId(),
+    title,
+    dataSourceUri,
+    minZoom,
+    resourceId,
+    errorText
+  };
+}
+
+function createNspdLayer(formValue: Partial<LayerFormValue>): CrgLayer {
+  const option = getNspdKnownLayer(formValue.nspdLayer);
+
+  if (!option) {
+    throw new Error('Не указан слой НСПД');
   }
 
-  @action.bound
-  private handleFormChange(formValue: LayerFormValue) {
-    this.formValue = formValue;
-  }
+  const { title = option.title, minZoom } = formValue;
 
-  @action.bound
-  private clearForm() {
-    this.formValue = getDefaultValues(this.fields);
-  }
+  return {
+    ...externalLayerDefaults(option.url),
+    id: generateNextLayerId(),
+    title,
+    minZoom,
+    resourceId: option.resourceId,
+    dataSourceUri: option.url,
+    type: CrgLayerType.EXTERNAL_NSPD
+  };
+}
 
-  private getDescription() {
-    return (
-      <>
-        Скрывает слой при отдалении карты, начиная указанного уровня:
-        <br />
-        10 — 1:250 000
-        <br />
-        12 — 1:100 000
-        <br />
-        15 — 1:10 000
-        <br />
-        20 — 1:500
-        <br />
-        25 — 1:10
-      </>
-    );
-  }
+export const AddLayerDialog: FC<AddLayerDialogProps> = observer(({ open, onClose, onAdd }) => {
+  const state = useLocalObservable<AddLayerDialogState>(() => ({
+    formValue: getDefaultValues(buildFields({})),
 
-  @computed
-  private get fields(): PropertySchema[] {
-    if (!this.formValue?.layerType || this.formValue?.layerType === CrgLayerType.VECTOR) {
-      const options = this.schema ? getViewChoiceOptions(this.schema) : [];
+    get valid() {
+      return !validateFormValue(this.formValue, this.fields).length;
+    },
 
-      return [
-        {
-          name: 'layerType',
-          title: 'Тип слоя',
-          display: 'buttongroup',
-          defaultValue: 'vector',
-          options: layerTypeOptions,
-          propertyType: PropertyType.CHOICE
-        },
-        {
-          name: 'title',
-          title: 'Имя слоя',
-          required: true,
-          minLength: 2,
-          calculatedValueFormula: this.calculateTitle,
-          propertyType: PropertyType.STRING
-        },
-        {
-          name: 'minZoom',
-          title: minZoomTitle,
-          propertyType: PropertyType.FLOAT,
-          display: 'slider',
-          description: this.getDescription(),
-          defaultValue: 10,
-          step: 1,
-          minValue: 0,
-          maxValue: 25
-        },
-        {
-          propertyType: PropertyType.CUSTOM,
-          name: 'datasource',
-          title: 'Источник данных',
-          defaultValue: true,
-          ControlComponent: props => <SelectVectorTableControl {...props} />,
-          validationFormula: validateLayer
-        },
-        {
-          propertyType: PropertyType.CUSTOM,
-          name: 'projection',
-          title: 'Система координат',
-          defaultValue: projectionsStore.defaultProjection,
-          ControlComponent: SelectProjectionControl
-        },
-        {
-          name: 'view',
-          title: 'Представление',
-          hidden: !this.formValue?.datasource || options.length <= 1,
-          options,
-          defaultValue: '',
-          propertyType: PropertyType.CHOICE
-        }
-      ];
-    } else if (this.formValue?.layerType === CrgLayerType.RASTER) {
-      return [
-        {
-          name: 'layerType',
-          title: 'Тип слоя',
-          display: 'buttongroup',
-          defaultValue: 'vector',
-          options: layerTypeOptions,
-          propertyType: PropertyType.CHOICE
-        },
-        {
-          name: 'title',
-          title: 'Имя слоя',
-          required: true,
-          minLength: 2,
-          calculatedValueFormula: this.calculateTitle,
-          propertyType: PropertyType.STRING
-        },
-        {
-          name: 'minZoom',
-          title: minZoomTitle,
-          propertyType: PropertyType.FLOAT,
-          display: 'slider',
-          description: this.getDescription(),
-          defaultValue: 10,
-          step: 1,
-          minValue: 0,
-          maxValue: 25
-        },
-        {
-          propertyType: PropertyType.CUSTOM,
-          name: 'datasource',
-          title: 'Документ',
-          defaultValue: true,
-          ControlComponent: SelectFileInLibraryRecordControl,
-          validationFormula: validateLayer
-        },
-        {
-          propertyType: PropertyType.CUSTOM,
-          name: 'projection',
-          title: 'Система координат',
-          defaultValue: projectionsStore.defaultProjection,
-          ControlComponent: SelectProjectionControl
-        }
-      ];
-    } else if (this.formValue?.layerType === CrgLayerType.EXTERNAL) {
-      return [
-        {
-          name: 'layerType',
-          title: 'Тип слоя',
-          display: 'buttongroup',
-          defaultValue: 'vector',
-          options: layerTypeOptions,
-          propertyType: PropertyType.CHOICE
-        },
-        {
-          name: 'title',
-          title: 'Имя слоя',
-          required: true,
-          minLength: 2,
-          propertyType: PropertyType.STRING
-        },
-        {
-          name: 'resourceId',
-          title: 'Системное название слоя',
-          required: true,
-          propertyType: PropertyType.STRING
-        },
-        {
-          name: 'minZoom',
-          title: minZoomTitle,
-          propertyType: PropertyType.FLOAT,
-          display: 'slider',
-          description: this.getDescription(),
-          defaultValue: 10,
-          step: 1,
-          minValue: 0,
-          maxValue: 25
-        },
-        {
-          name: 'dataSourceUri',
-          title: 'URL-адрес',
-          required: true,
-          wellKnownRegex: 'url',
-          propertyType: PropertyType.STRING
-        },
-        {
-          name: 'errorText',
-          title: 'Сообщение об ошибке',
-          description: 'Сообщение, которое отображается, когда внешний слой не работает',
-          propertyType: PropertyType.STRING
-        }
-      ];
+    get schema() {
+      return this.formValue?.datasource?.vectorTable?.schema;
+    },
+
+    get views() {
+      return this.schema?.views || [];
+    },
+
+    get fields() {
+      return buildFields(this.formValue);
+    },
+
+    handleFormChange(formValue) {
+      this.formValue = formValue;
+    },
+
+    clearForm() {
+      this.formValue = getDefaultValues(this.fields);
+    }
+  }));
+
+  const close = useCallback(() => {
+    state.clearForm();
+    onClose();
+  }, [onClose, state]);
+
+  const add = useCallback(async () => {
+    const { layerType } = state.formValue;
+
+    if (state.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
+      const newCrgLayer = await createVectorLayer(state.formValue, state.views, state.schema);
+
+      onAdd(newCrgLayer);
+      state.clearForm();
+      close();
     }
 
-    throw new Error('Неизвестный тип слоя');
-  }
-
-  @boundMethod
-  private async add() {
-    const {
-      datasource = {},
-      title = '',
-      minZoom,
-      dataSourceUri,
-      resourceId,
-      projection,
-      layerType,
-      view,
-      errorText
-    } = this.formValue;
-
-    const { dataset, vectorTable, library } = datasource;
-    const workspace = currentUser.workspaceName;
-    const crs = projection ? getProjectionCode(projection) : '';
-
-    if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
-      if (!dataset || !vectorTable) {
-        throw new Error('Не указаны обязательные параметры');
-      }
-
-      const styleName = this.views.find(({ id }) => id === view)?.styleName;
-
-      const newCrgLayer: CrgLayer = {
-        ...vectorLayerDefaults(),
-        id: generateNextLayerId(),
-        dataset: dataset?.identifier,
-        resourceId: vectorTable?.identifier,
-        complexName: buildComplexName(workspace, vectorTable?.identifier, crs),
-        title,
-        nativeCRS: crs,
-        minZoom,
-        styleName: styleName || this.schema?.styleName || this.schema?.name,
-        view,
-        mode: FilePlacementMode.GEOSERVER
-      };
-
-      await createLayer(newCrgLayer, currentProject.id);
-
-      newCrgLayer.mode = FilePlacementMode.FULL;
-      this.props.onAdd(newCrgLayer);
-
-      this.clearForm();
-      this.close();
-    }
-
-    const externalDefaults = externalLayerDefaults(dataSourceUri);
-
-    if (this.valid && layerType === CrgLayerType.RASTER && this.formValue.datasource) {
-      const { libraryRecord, file } = this.formValue.datasource;
-
+    if (state.valid && layerType === CrgLayerType.RASTER && state.formValue.datasource) {
       try {
-        if (!libraryRecord || !file || !library) {
-          throw new Error('Не указаны обязательные параметры');
-        }
-
-        const record = await getLibraryRecord(library.table_name, libraryRecord.id);
-        const { path } = await getFileInfo(file.id);
-        const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
-
-        let crgLayer: CrgLayer | undefined;
-
-        const generalCrgLayerProps = {
-          title: title || getFileBaseName(file.title),
-          resourceId: fileTableName,
-          sourceId: record.libraryTableName,
-          sourceRecordId: record.id,
-          dataStoreName: workspace,
-          complexName: buildComplexName(workspace, fileTableName, crs),
-          id: generateNextLayerId(),
-          enabled: true,
-          nativeCRS: crs,
-          mode: FilePlacementMode.GIS
-        };
-
-        if (isMidMifFile(file)) {
-          crgLayer = {
-            ...generalCrgLayerProps,
-            type: CrgLayerType.MID,
-            styleName: 'generic'
-          };
-        }
-
-        if (isDxfFile(file)) {
-          crgLayer = {
-            ...generalCrgLayerProps,
-            type: CrgLayerType.DXF,
-            styleName: 'dxf_style'
-          };
-        }
-
-        if (isShpFile(file)) {
-          crgLayer = {
-            ...generalCrgLayerProps,
-            type: CrgLayerType.SHP,
-            styleName: 'generic'
-          };
-        }
-
-        if (isTabFile(file)) {
-          crgLayer = {
-            ...generalCrgLayerProps,
-            type: CrgLayerType.TAB,
-            styleName: 'generic'
-          };
-        }
-
-        if (isTifFile(file)) {
-          crgLayer = {
-            ...generalCrgLayerProps,
-            type: CrgLayerType.RASTER,
-            dataSourceUri: `file://${path}`
-          };
-        }
-
-        if (!crgLayer) {
-          throw new Error('Не удалось подключить слой');
-        }
-
-        const process = await placeFileWithProjection(file, currentProject.id, crs, FilePlacementMode.GEOSERVER);
-        const processResult = await awaitProcess(Number(process._links.process.href.split('/').at(-1)));
-
-        if (processResult && isPlaceFileProcess(processResult.details)) {
-          const details = processResult.details;
-
-          crgLayer = {
-            ...crgLayer,
-            dataset: details.geoserverPublicationData.storeName,
-            nativeName: details.geoserverPublicationData.nativeName
-          };
-        }
-
-        this.props.onAdd(crgLayer);
+        onAdd(await createFileLayer(state.formValue));
       } catch (error) {
         Toast.error('Не удалось подключить слой');
         services.logger.error('Не удалось удалить файл: ', (error as AxiosError).message);
@@ -450,33 +227,34 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         return;
       }
 
-      this.clearForm();
-
-      this.close();
+      state.clearForm();
+      close();
     }
 
-    if (this.valid && layerType === CrgLayerType.EXTERNAL) {
-      this.props.onAdd({
-        ...externalDefaults,
-        id: generateNextLayerId(),
-        title,
-        dataSourceUri: dataSourceUri,
-        minZoom,
-        resourceId: resourceId,
-        errorText: errorText
-      });
-      this.clearForm();
-
-      this.close();
+    if (state.valid && layerType === CrgLayerType.EXTERNAL) {
+      onAdd(createExternalLayer(state.formValue));
+      state.clearForm();
+      close();
     }
-  }
 
-  private calculateTitle: ValueFormula = (value): string => {
-    return (
-      (value as LayerFormValue)?.title ||
-      (value as LayerFormValue)?.datasource?.vectorTable?.title ||
-      (value as LayerFormValue)?.datasource?.file?.title ||
-      ''
-    );
-  };
-}
+    if (state.valid && layerType === CrgLayerType.EXTERNAL_NSPD) {
+      onAdd(createNspdLayer(state.formValue));
+      state.clearForm();
+      close();
+    }
+  }, [close, onAdd, state]);
+
+  return (
+    <FormDialog
+      className={cnAddLayerDialog()}
+      open={open}
+      schema={{ properties: state.fields }}
+      actionFunction={add}
+      onFormChange={state.handleFormChange}
+      actionButtonProps={{ children: 'Добавить' }}
+      onClose={close}
+      value={state.formValue}
+      title='Добавить слой'
+    />
+  );
+});

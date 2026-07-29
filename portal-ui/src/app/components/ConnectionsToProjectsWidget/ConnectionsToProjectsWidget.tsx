@@ -10,10 +10,10 @@ import { pluralize } from 'numeralize-ru';
 
 import { type FileConnection } from '../../services/data/files/files.models';
 import { type PropertyOption, PropertyType, type Schema } from '../../services/data/schema/schema.models';
-import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { Role } from '../../services/permissions/permissions.models';
 import { isLayersManagementAllowed } from '../../services/permissions/permissions.service';
+import { getViewChoiceOptions } from '../AddLayerDialog/AddLayerDialog.utils';
 import { Button } from '../Button/Button';
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
 import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';

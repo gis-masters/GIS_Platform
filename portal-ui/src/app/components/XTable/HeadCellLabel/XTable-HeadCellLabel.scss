@@ -10,19 +10,6 @@ body .XTable-HeadCellLabel {
 
   line-height: 20px;
 
-  &Wrapper {
-    display: flex;
-
-    width: 100%;
-    min-width: 0;
-
-    & .DescriptionMark {
-      flex-shrink: 0;
-
-      font-size: 20px;
-    }
-  }
-
   &_singleLineContent {
     display: flex;
     align-items: center;

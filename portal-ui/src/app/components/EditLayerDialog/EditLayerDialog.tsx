@@ -22,12 +22,13 @@ import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
 import { type GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { type CrgLayer, crgLayerSchema, CrgLayerType } from '../../services/gis/layers/layers.models';
-import { createLayer, getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import { createLayer } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { services } from '../../services/services';
 import { patch } from '../../services/util/patch';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
+import { getViewChoiceOptions } from '../AddLayerDialog/AddLayerDialog.utils';
 import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
 import { type FormProps } from '../Form/Form';
 import { FormDialog } from '../FormDialog/FormDialog';

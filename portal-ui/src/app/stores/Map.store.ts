@@ -177,13 +177,8 @@ class MapStore {
   }
 
   @computed
-  get isLoading(): boolean {
+  get loading(): boolean {
     return Boolean(this.loadingCount);
-  }
-
-  @computed
-  get isDrawEnabled(): boolean {
-    return mapStore.toolMode === ToolMode.DRAW;
   }
 
   @action

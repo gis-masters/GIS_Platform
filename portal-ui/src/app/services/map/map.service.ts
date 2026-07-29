@@ -324,7 +324,8 @@ class MapService {
       source: new TileArcGISRest({
         url: dataSourceUri,
         params: sourceParams,
-        tileLoadFunction: undefined
+        // blob URL через fetch — иначе cross-origin тайлы травят canvas при печати
+        tileLoadFunction: this.externalGisMapServerLoadFunction
       }),
       visible: true,
       opacity: (transparency ?? 100) / 100,
@@ -421,6 +422,26 @@ class MapService {
 
   refreshAllLayers() {
     this.getUserLayers().forEach(layer => layer.getSource()?.refresh());
+  }
+
+  /**
+   * Перепривязывает tile loader external/NSPD на blob (same-origin) и обновляет тайлы,
+   * чтобы toDataURL при печати не падал с SecurityError.
+   */
+  ensureExternalTilesSafeForPrint(): void {
+    this.getUserLayers().forEach(layer => {
+      if (!(layer instanceof TileLayer)) {
+        return;
+      }
+
+      const source = layer.getSource();
+      if (!(source instanceof TileArcGISRest)) {
+        return;
+      }
+
+      source.setTileLoadFunction(this.externalGisMapServerLoadFunction);
+      source.refresh();
+    });
   }
 
   hideSystemLayer(name: string) {

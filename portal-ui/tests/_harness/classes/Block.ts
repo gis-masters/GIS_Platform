@@ -65,7 +65,7 @@ export abstract class Block<S extends Selectors = Selectors> {
     });
   }
 
-  async waitForLoading(): Promise<void> {
+  async waitForLoading(options: { timeout?: number } = {}): Promise<void> {
     if (!this.selectors.loader) {
       throw new Error('Чтобы использовать waitForLoading заведи селектор loader');
     }
@@ -76,7 +76,7 @@ export abstract class Block<S extends Selectors = Selectors> {
     } catch {
       // ignore
     }
-    await loader.waitForDisplayed({ reverse: true });
+    await loader.waitForDisplayed({ reverse: true, ...options });
   }
 
   private async getParentOrRoot(): Promise<WebdriverIO.Element | WebdriverIO.Browser> {

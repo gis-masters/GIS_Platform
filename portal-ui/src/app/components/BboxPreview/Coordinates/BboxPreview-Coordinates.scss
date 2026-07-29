@@ -1,0 +1,16 @@
+.BboxPreview {
+  &-Coordinates {
+    overflow: hidden;
+    flex: 1;
+
+    min-width: 0;
+    max-width: 100%;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}

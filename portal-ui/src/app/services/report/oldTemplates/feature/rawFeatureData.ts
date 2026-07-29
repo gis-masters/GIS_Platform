@@ -3,6 +3,7 @@ import { applyView } from '../../../data/schema/utils/applyView';
 import { getReadablePropertyValue } from '../../../data/schema/utils/getReadablePropertyValue';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
+import { isExternalLayer } from '../../../gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { PrintTemplateOld } from '../PrintTemplateOld';
 
@@ -16,7 +17,7 @@ export const rawFeatureData: PrintTemplateOld<WfsFeature> = new PrintTemplateOld
   async render(this: PrintTemplateOld<WfsFeature>, entity: WfsFeature) {
     const layer = getLayerByFeatureInCurrentProject(entity);
 
-    if (!layer) {
+    if (!layer || isExternalLayer(layer)) {
       throw new Error('Layer not found');
     }
 
@@ -51,7 +52,7 @@ export const rawFeatureData: PrintTemplateOld<WfsFeature> = new PrintTemplateOld
   async getFileName(this: PrintTemplateOld<WfsFeature>, entity: WfsFeature) {
     const layer = getLayerByFeatureInCurrentProject(entity);
 
-    if (!layer) {
+    if (!layer || isExternalLayer(layer)) {
       throw new Error('Layer not found');
     }
 

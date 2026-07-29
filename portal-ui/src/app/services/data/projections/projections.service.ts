@@ -90,6 +90,12 @@ export async function getFeatureProjection(feature: WfsFeature): Promise<Project
     throw new Error('Не удалось определить проекцию слоя. Не найден слой для объекта: ' + feature.id);
   }
 
+  if (!layer.nativeCRS) {
+    services.logger.error('У слоя не задан nativeCRS: ', layer);
+
+    return undefined;
+  }
+
   return await getProjectionByCode(layer.nativeCRS);
 }
 

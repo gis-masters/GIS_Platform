@@ -9,6 +9,7 @@ import { type VectorTableConnection } from '../../services/data/vectorData/vecto
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
 import { extractResourceIdFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { isExternalLayer } from '../../services/gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { getFeaturesUrl } from '../../services/map/map.util';
@@ -114,7 +115,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
     const { feature } = this.props;
 
     const layer = getLayerByFeatureInCurrentProject(feature);
-    if (!layer) {
+    if (!layer || isExternalLayer(layer) || !layer.dataset) {
       throw new Error('Не удалось перейти к объекту, не найден слой: ' + feature.id);
     }
 

@@ -111,6 +111,7 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
               feature &&
               propertyName &&
               sidebars.layerOfEditedFeature &&
+              'dataset' in sidebars.layerOfEditedFeature &&
               sidebars.layerOfEditedFeature.dataset &&
               sidebars.layerOfEditedFeature.resourceId
             ) {

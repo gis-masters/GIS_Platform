@@ -16,19 +16,19 @@ import { deleteFeaturesAndEmitEvent } from '../../services/data/vectorData/vecto
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { GEOMETRY_COORDINATES_FLAT_DEPTH, getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
 import { type CrgLayer, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { isVectorLayer } from '../../services/gis/layers/layers.typeguards';
-import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { isNspdLayer, isVectorLayer } from '../../services/gis/layers/layers.typeguards';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
+import { EditFeatureMode } from '../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { getStyle, KnownStyleKey } from '../../services/map/styles/map-styles';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { services } from '../../services/services';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
+import { editFeatureStore } from '../../stores/EditFeature.store';
 import { mapStore } from '../../stores/Map.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { Button } from '../Button/Button';
 import { EditFeatureActions } from '../EditFeatureActions/EditFeatureActions';
 import { EditFeatureForm } from '../EditFeatureForm/EditFeatureForm';
@@ -110,6 +110,7 @@ export const EditFeature: FC = observer(() => {
     setEditFeatureData,
     shouldRender,
     setShouldRender,
+    setNoLayerSchema,
     layerSchema,
     setLayerSchema,
     featureDescription,
@@ -127,12 +128,12 @@ export const EditFeature: FC = observer(() => {
       });
     }
 
-    const success = await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'backToList');
+    const success = await mapModeService.changeMode(MapMode.SELECTED_FEATURES, undefined, 'backToList');
     if (success) {
       selectedFeaturesStore.clearActiveFeature();
       editFeatureStore.clear();
 
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {
@@ -155,7 +156,7 @@ export const EditFeature: FC = observer(() => {
     }
   }, [setEditFeatureData, setFeatures, setFormControls]);
 
-  useLayerData(layer, shouldRender, setLayerSchema, setShouldRender);
+  useLayerData(layer, setLayerSchema, setNoLayerSchema);
 
   useEditFeatureInitialization(
     features,
@@ -440,7 +441,7 @@ export const EditFeature: FC = observer(() => {
         mapService.refreshAllLayers();
 
         if (selectedFeaturesStore.features.length > 1) {
-          await mapModeManager.changeMode(
+          await mapModeService.changeMode(
             MapMode.SELECTED_FEATURES,
             {
               payload: {
@@ -452,7 +453,7 @@ export const EditFeature: FC = observer(() => {
           );
         } else {
           selectedFeaturesStore.setFeatures([]);
-          await mapModeManager.changeMode(MapMode.NONE, undefined, 'remove 1 feature');
+          await mapModeService.changeMode(MapMode.NONE, undefined, 'remove 1 feature');
         }
       } else {
         services.logger.warn(`Удаление только для режима ${EditFeatureMode[EditFeatureMode.single]}`);
@@ -577,7 +578,7 @@ export const EditFeature: FC = observer(() => {
             getEditFeatureForm()
           )}
 
-          {mode === 'single' && layer && !!currentFeatures?.length && isVectorLayer(layer) && (
+          {mode === 'single' && layer && !!currentFeatures?.length && (isVectorLayer(layer) || isNspdLayer(layer)) && (
             <EditFeatureActions feature={currentFeatures[0]} layer={layer} />
           )}
 

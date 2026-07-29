@@ -6,12 +6,12 @@ import { boundMethod } from 'autobind-decorator';
 import { FixedSizeList, type ListChildComponentProps } from 'react-window';
 
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
 import { type FeatureError } from '../../services/map/map-link-following.service';
+import { EditFeatureMode } from '../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { isArray } from '../../services/util/typeGuards/isArray';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
@@ -110,7 +110,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
       sidebars.setSelectedFeaturesEdited(true);
     }
 
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.EDIT_FEATURE,
       {
         payload: { features: [feature], mode: EditFeatureMode.single }

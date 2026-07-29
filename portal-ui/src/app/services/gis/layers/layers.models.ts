@@ -77,6 +77,7 @@ export interface CrgVectorableLayer extends CrgBaseLayer {
 export interface CrgExternalLayer extends CrgBaseLayer {
   type: CrgLayerType.EXTERNAL | CrgLayerType.EXTERNAL_GEOSERVER | CrgLayerType.EXTERNAL_NSPD;
   dataSourceUri: string;
+  view?: string;
 }
 
 export interface RelatedVectorLayers {

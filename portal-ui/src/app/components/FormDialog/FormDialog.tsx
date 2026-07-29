@@ -1,7 +1,7 @@
 import React, { Component, type ReactNode } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { type Breakpoint, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
@@ -41,6 +41,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   closeWithConfirm?: boolean;
   confirmOnWarnings?: boolean;
   warningsConfirmOptions?: DoConfirmOptions;
+  maxWidth?: Breakpoint | false;
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
@@ -99,7 +100,8 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       actionFunction,
       onFieldChange,
       confirmOnWarnings,
-      warningsConfirmOptions
+      warningsConfirmOptions,
+      maxWidth = 'md'
     } = this.props;
     const htmlId = generateRandomId();
 
@@ -109,7 +111,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
         open={open}
         onClose={this.close}
         fullWidth
-        maxWidth='md'
+        maxWidth={maxWidth}
       >
         {title && <DialogTitle>{title}</DialogTitle>}
         {subtitle && <div className={cnFormDialog('Subtitle')}>{subtitle}</div>}

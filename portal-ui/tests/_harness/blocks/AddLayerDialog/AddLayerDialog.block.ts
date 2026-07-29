@@ -58,7 +58,7 @@ class AddLayerDialogBlock extends Block {
   async selectLayerType(layerType: string): Promise<void> {
     const $root = await this.findBySelector('root');
     const formBlock = new FormBlock($root);
-    const $formField = await formBlock.getField('Тип слоя');
+    const $formField = await formBlock.getField('Тип слоя*');
 
     const $$layerTypeButtons = await $formField.$$('.MuiButtonBase-root').getElements();
     for (const $layerTypeBtn of $$layerTypeButtons) {

@@ -101,6 +101,7 @@ Then('в списке элементов explorer присутствует {stri
   const explorerBlock = new ExplorerBlock();
   await browser.waitUntil(
     async () => {
+      await explorerBlock.waitForLoading();
       const titles = await explorerBlock.getListTitles();
 
       return titles.includes(itemTitle);

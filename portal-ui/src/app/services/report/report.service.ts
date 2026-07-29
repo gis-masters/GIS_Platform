@@ -2,6 +2,7 @@ import { type LibraryRecord } from '../data/library/library.models';
 import { applyView } from '../data/schema/utils/applyView';
 import { type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
+import { isExternalLayer, isNspdLayer } from '../gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
 import { type TemplateInfo } from '../reportTemplate/reportTemplate.models';
 import { getTemplate } from '../reportTemplate/reportTemplate.service';
@@ -37,7 +38,7 @@ export const featuresCollectionPrintTemplates: PrintTemplateOld<WfsFeature[]>[] 
  */
 export async function getFeaturePrintTemplates(feature: WfsFeature): Promise<FeaturePrintTemplate[]> {
   const layer = getLayerByFeatureInCurrentProject(feature);
-  if (!layer) {
+  if (!layer || (isExternalLayer(layer) && !isNspdLayer(layer))) {
     return [];
   }
   const schema = await getLayerSchema(layer);

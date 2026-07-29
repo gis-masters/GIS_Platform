@@ -8,9 +8,9 @@ import { type CrgLayer } from '../../../services/gis/layers/layers.models';
 import { isVectorLayer } from '../../../services/gis/layers/layers.typeguards';
 import { type TreeItem } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 import { Layer } from '../../Layer/Layer';
 
 import './LayersTree-Item.scss';
@@ -69,7 +69,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
         f => extractResourceIdFromFeatureId(f.id) !== layer.resourceId
       );
 
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {

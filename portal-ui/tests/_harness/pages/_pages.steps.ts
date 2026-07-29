@@ -2,6 +2,7 @@ import { Given, Then, When } from '@wdio/cucumber-framework';
 
 import { type Schema } from '../../../src/app/services/data/schema/schema.models';
 import { sleep } from '../../../src/app/services/util/sleep';
+import { editFeatureBlock } from '../blocks/EditFeature/EditFeature.block';
 import { mapBlock } from '../blocks/Map/Map.block';
 import { root } from '../blocks/Root/Root';
 import { xTableBlock } from '../blocks/XTable/XTable.block';
@@ -17,6 +18,16 @@ import { LibraryRegistryPage } from './LibraryRegistry.page';
 import { MapPage } from './Map.page';
 import { OrgAdminPage } from './OrgAdmin';
 import { TasksJournalPage } from './TasksJournal.page';
+
+async function waitForMapPositionedOnFeatures(featureIds: string[]): Promise<void> {
+  await mapBlock.waitForVisible();
+
+  if (featureIds.length === 1) {
+    await editFeatureBlock.waitForVisible();
+  }
+
+  await mapBlock.waitForReadyForProkol();
+}
 
 async function findPage(title: string): Promise<Page> {
   const page = pagesRegistry.find(page => page.title === title);
@@ -100,7 +111,7 @@ Given(
       latestVectorTable.identifier,
       ids
     );
-    await mapBlock.waitForVisible();
+    await waitForMapPositionedOnFeatures(ids);
   }
 );
 
@@ -116,6 +127,7 @@ Given(
 
     const mapPage = new MapPage(latestProject.id);
     await mapPage.openWithPositionToFeatures(latestProject.id, latestDataset.identifier, tableName, ids);
+    await waitForMapPositionedOnFeatures(ids);
   }
 );
 
@@ -135,6 +147,7 @@ Given(
       tableName,
       [String(objectId)]
     );
+    await waitForMapPositionedOnFeatures([String(objectId)]);
   }
 );
 
@@ -147,6 +160,7 @@ Given('я на странице карты проекта, открыт объе
     latestVectorTable.identifier,
     [String(objectId)]
   );
+  await waitForMapPositionedOnFeatures([String(objectId)]);
 });
 
 When('я перехожу на страницу карты проекта {string}', openProjectMap);

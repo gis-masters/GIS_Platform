@@ -1,44 +1,48 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { type Schema } from '../../../services/data/schema/schema.models';
-import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import {
+  type CrgExternalLayer,
+  type CrgVectorableLayer,
+  type CrgVectorLayer
+} from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { type ShouldRender } from './useEditFeatureState';
 
 export const useLayerData = (
-  layer: CrgVectorableLayer | CrgVectorLayer | undefined,
-  shouldRender: ShouldRender,
+  layer: CrgVectorableLayer | CrgVectorLayer | CrgExternalLayer | undefined,
   setLayerSchema: (schema: Schema) => void,
-  setShouldRender: (shouldRender: ShouldRender) => void
+  setNoLayerSchema: (noLayerSchema: boolean) => void
 ): void => {
-  const layerRef = useRef(layer);
-
   useEffect(() => {
     let isMounted = true;
 
+    if (!layer) {
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        if (isMounted && layer && layer !== layerRef.current) {
-          const layerSchema = await getLayerSchema(layer);
-          if (!layerSchema) {
-            setShouldRender({ ...shouldRender, noLayerSchema: true });
-            layerRef.current = layer;
-
-            return;
-          }
-          setLayerSchema(layerSchema);
-          layerRef.current = layer;
+        const layerSchema = await getLayerSchema(layer);
+        if (!isMounted) {
+          return;
         }
+
+        if (!layerSchema) {
+          setNoLayerSchema(true);
+
+          return;
+        }
+
+        setLayerSchema(layerSchema);
       } catch {
-        layerRef.current = undefined;
+        // схема слоя недоступна — форма останется без полей
       }
     };
 
     void fetchData();
-    layerRef.current = layer;
 
     return () => {
       isMounted = false;
     };
-  }, [layer, shouldRender, setLayerSchema, setShouldRender]);
+  }, [layer, setLayerSchema, setNoLayerSchema]);
 };

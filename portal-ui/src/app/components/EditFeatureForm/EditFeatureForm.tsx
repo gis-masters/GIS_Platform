@@ -7,9 +7,9 @@ import { type WfsFeature } from 'src/app/services/geoserver/wfs/wfs.models';
 import { type EditedField, type OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
 import { convertOldToNewProperty } from '../../services/data/schema/utils/convertOldToNewProperty';
 import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { formatDate } from '../../services/util/date.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
+import { editFeatureStore } from '../../stores/EditFeature.store';
 import { type EditFeatureFormControl } from '../EditFeature/hooks/useEditFeatureState'; // TODO: запретить линтером ходить в чужие хуки
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { FormDescription } from '../Form/Description/Form-Description';

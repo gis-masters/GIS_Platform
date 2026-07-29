@@ -4,9 +4,9 @@ import { Tooltip } from '@mui/material';
 import { Redo, Undo } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
+import { editFeatureHistoryStore } from '../../../stores/EditFeatureHistory.store';
 import { IconButton } from '../../IconButton/IconButton';
 
 const cnEditFeatureGeometryHistoryControls = cn('EditFeatureGeometry', 'HistoryControls');

@@ -1,0 +1,243 @@
+{
+  "name": "nspd_oks",
+  "title": "Объекты капитального строительства",
+  "tableName": "nspd_oks",
+  "styleName": "nspd_oks",
+  "originName": "nspd_oks",
+  "readOnly": true,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "build_record_type_value",
+      "title": "Вид объекта недвижимости",
+      "valueType": "STRING"
+    },
+    {
+      "name": "build_record_registration_date",
+      "title": "Дата присвоения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "quarter_cad_number",
+      "title": "Кадастровый квартал",
+      "valueType": "STRING"
+    },
+    {
+      "name": "readable_address",
+      "title": "Адрес",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "building_name",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "right_type",
+      "title": "Тип права",
+      "valueType": "STRING"
+    },
+    {
+      "name": "build_record_area",
+      "title": "Площадь общая",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Учтенный",
+          "value": "Учтенный"
+        },
+        {
+          "title": "Ранее учтенный",
+          "value": "Ранее учтенный"
+        },
+        {
+          "title": "Временный",
+          "value": "Временный"
+        },
+        {
+          "title": "Архивный",
+          "value": "Архивный"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "ownership_type",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная",
+          "value": "Государственная"
+        },
+        {
+          "title": "Муниципальная",
+          "value": "Муниципальная"
+        },
+        {
+          "title": "Частная",
+          "value": "Частная"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "cost_value",
+      "title": "Кадастровая стоимость, р.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "cost_index",
+      "title": "Удельный показатель кадастровой стоимости",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 4
+    },
+       {
+      "name": "cost_application_date",
+      "title": "Дата применения стоимости",
+      "valueType": "DATETIME"
+    },
+     {
+      "name": "cost_approvement_date",
+      "title": "Дата утверждения стоимости",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "cost_determination_date",
+      "title": "Дата определения стоимости",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "cost_registration_date",
+      "title": "Дата регистрации стоимости",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "determination_couse",
+      "title": "Основание определения стоимости",
+      "valueType": "STRING"
+    },
+    {
+      "name": "floors",
+      "title": "Количество этажей (в том числе подземных)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "underground_floors",
+      "title": "Количество подземных этажей",
+      "valueType": "STRING"
+    },
+    {
+      "name": "facility_cad_number",
+      "title": "Кадастровый номер сооружения",
+      "valueType": "STRING"
+    },
+    {
+      "name": "intersected_cad_numbers",
+      "title": "Кадастровые номера пересекаемых объектов",
+      "valueType": "STRING"
+    },
+    {
+      "name": "permitted_use_name",
+      "title": "Разрешенное использование",
+      "valueType": "STRING"
+    },
+    {
+      "name": "previously_posted",
+      "title": "Предыдущий статус",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "united_cad_numbers",
+      "title": "Объединенные кадастровые номера",
+      "valueType": "STRING"
+    },
+    {
+      "name": "materials",
+      "title": "Материал стен",
+      "valueType": "STRING"
+    },
+    {
+      "name": "year_built",
+      "title": "Завершение строительства",
+      "valueType": "STRING"
+    },
+    {
+      "name": "year_commisioning",
+      "title": "Ввод в эксплуатацию",
+      "valueType": "STRING"
+    },
+    {
+      "name": "cultural_heritage_val",
+      "title": "Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "valueType": "STRING",
+      "hidden": true,
+      "maxLength": 50
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME",
+      "hidden": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "hidden": true,
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "valueType": "STRING",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": [
+        "Polygon"
+      ]
+    }
+  ]
+}

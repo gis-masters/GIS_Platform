@@ -18,8 +18,8 @@ import {
   isTifFile
 } from '../../../services/data/files/files.util';
 import { type LibraryRecord } from '../../../services/data/library/library.models';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { cryptoProStore } from '../../../stores/CryptoPro.store';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { IconButton } from '../../IconButton/IconButton';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';

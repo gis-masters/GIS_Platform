@@ -27,8 +27,8 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
       this.addOnErrorWindowHandler();
 
       // Инициализируем сервисы в правильном порядке
-      const { serviceInitializer } = await import('../../services/map/ServiceInitializer');
-      await serviceInitializer.initialize();
+      const { initializeMapServices } = await import('../../services/map/initializeMapServices');
+      await initializeMapServices();
     }
   }
 
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
 
   private addOnErrorWindowHandler() {
     const oldOnError = window.onerror;
+    // addEventListener('error') не даёт source/fileno/columnNumber/error и не сохраняет предыдущий onerror
     // eslint-disable-next-line unicorn/prefer-add-event-listener
     window.onerror = function (
       event: Event | string,
@@ -51,8 +52,7 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
       error?: Error
     ) {
       if (oldOnError) {
-        // eslint-disable-next-line prefer-rest-params
-        Reflect.apply(oldOnError, this, arguments);
+        Reflect.apply(oldOnError, this, [event, source, fileno, columnNumber, error]);
       }
 
       Toast.error({

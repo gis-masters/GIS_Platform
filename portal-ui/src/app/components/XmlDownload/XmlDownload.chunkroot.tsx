@@ -10,14 +10,14 @@ import { v4 as uuid } from 'uuid';
 import xmlbuilder from 'xmlbuilder';
 
 import { GeometryType, type WfsFeature, type WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
-import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { IconButton } from '../IconButton/IconButton';
 
 const cnXmlDownload = cn('XmlDownload');
 
 export interface XmlDownloadProps {
   feature: WfsFeature;
-  layer: CrgVectorLayer;
+  layer: CrgLayer;
 }
 
 @observer

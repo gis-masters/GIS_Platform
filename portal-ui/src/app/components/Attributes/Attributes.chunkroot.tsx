@@ -10,14 +10,15 @@ import {
   extractResourceIdFromFeatureId
 } from '../../services/geoserver/featureType/featureType.util';
 import { type CrgLayer, type CrgVectorableLayer, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { isExternalLayer } from '../../services/gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { type PageOptions } from '../../services/models';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { editFeatureStore } from '../../stores/EditFeature.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { type XTableInvoke } from '../XTable/XTable';
 import { AttributesBar } from './Bar/Attributes-Bar';
 import { AttributesFooter } from './Footer/Attributes-Footer';
@@ -49,7 +50,7 @@ function getSoftTabs(hardTabs: CrgVectorLayer[]): CrgVectorLayer[] {
 
     const layer = getLayerByFeatureInCurrentProject(feature);
 
-    if (layer && !hardTabs.some(({ complexName }) => complexName === layer.complexName)) {
+    if (layer && !isExternalLayer(layer) && !hardTabs.some(({ complexName }) => complexName === layer.complexName)) {
       layers.push(layer);
     }
   }
@@ -105,7 +106,7 @@ const Attributes = observer(function Attributes({ className }: IClassNameProps) 
       );
 
       if (selectedFeaturesWithoutLayer.length > 0) {
-        void mapModeManager.changeMode(
+        void mapModeService.changeMode(
           MapMode.SELECTED_FEATURES,
           {
             payload: { features: selectedFeaturesWithoutLayer }
@@ -113,7 +114,7 @@ const Attributes = observer(function Attributes({ className }: IClassNameProps) 
           'selectedFeaturesWithoutLayer-1'
         );
       } else {
-        void mapModeManager.changeMode(MapMode.NONE, undefined, 'selectedFeaturesWithoutLayer-2');
+        void mapModeService.changeMode(MapMode.NONE, undefined, 'selectedFeaturesWithoutLayer-2');
       }
     },
 

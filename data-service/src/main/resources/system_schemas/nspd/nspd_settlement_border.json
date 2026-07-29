@@ -1,0 +1,109 @@
+{
+  "name": "nspd_settlement_border",
+  "title": "Границы населённых пунктов",
+  "tableName": "nspd_settlement_border",
+  "styleName": "nspd_settlement_border",
+  "originName": "nspd_settlement_border",
+  "readOnly": true,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "type",
+      "title": "Вид",
+      "valueType": "STRING"
+    },
+    {
+      "name": "brd_nmb",
+      "title": "Реестровый номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "registration_date",
+      "title": "Дата постановки на учет / регистрации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "reg_code",
+      "title": "Идентификационный номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "maxLength": 5000,
+      "asTitle": true
+    },
+    {
+      "name": "doc",
+      "title": "Реквизиты правовых актов о согласовании и об утверждении изменения границ",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "document_name",
+      "title": "Документ",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "document_number",
+      "title": "Номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "document_date",
+      "title": "Дата",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "document_issuer",
+      "title": "Орган власти, организация выдавшие документ",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "valueType": "STRING",
+      "hidden": true,
+      "maxLength": 50
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME",
+      "hidden": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "hidden": true,
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "valueType": "STRING",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": [
+        "Polygon"
+      ]
+    }
+  ]
+}

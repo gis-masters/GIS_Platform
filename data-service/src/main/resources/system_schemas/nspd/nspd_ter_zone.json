@@ -1,0 +1,117 @@
+{
+  "name": "nspd_ter_zone",
+  "title": "Территориальные зоны",
+  "tableName": "nspd_ter_zone",
+  "styleName": "nspd_ter_zone",
+  "originName": "nspd_ter_zone",
+  "readOnly": true,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "type_boundary_value",
+      "title": "Вид",
+      "valueType": "STRING"
+    },
+    {
+      "name": "type_zone",
+      "title": "Тип зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "registration_date",
+      "title": "Дата присвоения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "reg_numb_border",
+      "title": "Реестровый номер границы",
+      "valueType": "STRING"
+    },
+    {
+      "name": "cadastral_district",
+      "title": "Кадастровый район",
+      "valueType": "STRING"
+    },
+    {
+      "name": "old_account_number",
+      "title": "Учетный номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name_by_doc",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "maxLength": 5000,
+       "asTitle": true
+    },
+    {
+      "name": "content_restrict_encumbrances",
+      "title": "Ограничение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "legal_act_document_name",
+      "title": "Документ",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "legal_act_document_number",
+      "title": "Номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "legal_act_document_date",
+      "title": "Дата",
+      "valueType": "STRING"
+    },
+    {
+      "name": "legal_act_document_issuer",
+      "title": "Орган власти, организация выдавшие документ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "valueType": "STRING",
+      "hidden": true,
+      "maxLength": 50
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME",
+      "hidden": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "hidden": true,
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "valueType": "STRING",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": [
+        "Polygon"
+      ]
+    }
+  ]
+}

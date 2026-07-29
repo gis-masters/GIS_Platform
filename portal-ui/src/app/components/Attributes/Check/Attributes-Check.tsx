@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 
 import './Attributes-Check.scss';
 
@@ -36,7 +36,7 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
   private async handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { feature } = this.props;
     if (selectedFeaturesStore.limitReached) {
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {
@@ -48,7 +48,7 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
       );
     } else {
       const selectionType = checked ? MapSelectionTypes.ADD : MapSelectionTypes.REMOVE;
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {

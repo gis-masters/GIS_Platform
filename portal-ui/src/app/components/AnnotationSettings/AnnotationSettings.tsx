@@ -20,7 +20,7 @@ import {
   type FontProperties
 } from '../../services/map/labels/map-labels.models';
 import { mapLabelsService } from '../../services/map/labels/map-labels.service';
-import { isAnnotationType } from '../../services/util/typeGuards/isAnnotationType';
+import { isAnnotationType } from '../../services/map/labels/map-labels.typeguards';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { LabelStylesSettings } from '../LabelStylesSettings/LabelStylesSettings';

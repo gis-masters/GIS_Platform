@@ -7,6 +7,7 @@ import { type ModifyEvent } from 'ol/interaction/Modify';
 import { Toast } from '../../../components/Toast/Toast';
 import { mapVerticesModificationStore } from '../../../stores/MapVerticesModification.store';
 import { projectionsStore } from '../../../stores/Projections.store';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 import { communicationService } from '../../communication.service';
 import { type Projection } from '../../data/projections/projections.models';
 import { projectionCodeToProjection } from '../../data/projections/projections.util';
@@ -14,12 +15,12 @@ import { updateFeature } from '../../data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
+import { isExternalLayer } from '../../gis/layers/layers.typeguards';
 import { getLayerByFeatureIdFromCurrentProject } from '../../gis/layers/layers.utils';
 import { services } from '../../services';
 import { transformGeometryToLayerProjectionInWfsFeature } from '../../util/coordinates-transform.util';
 import { featureToWfsFeature } from '../../util/open-layers.util';
 import { getVertexRemover } from '../../util/vertex/VertexRemoverFactory';
-import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../draw/map-draw.service';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
@@ -107,7 +108,7 @@ class MapVerticesModificationService {
     for (const feature of modifiedFeatures) {
       const featureId = String(feature.getId());
       const layer = getLayerByFeatureIdFromCurrentProject(featureId);
-      if (layer === undefined) {
+      if (!layer || isExternalLayer(layer)) {
         services.logger.warn('Не найден слой для фичи: ' + featureId);
 
         continue;

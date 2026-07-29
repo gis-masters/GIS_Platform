@@ -1,5 +1,6 @@
 import { type DataTable } from '@cucumber/cucumber';
 import { Then, When } from '@wdio/cucumber-framework';
+import { isEqual } from 'lodash';
 
 import { featuresListSidebarBlock } from './FeaturesListSidebar.block';
 
@@ -60,9 +61,21 @@ When('в боковой панели выделенных объектов я н
 });
 
 Then('в боковой панели выделенных объектов изменились названия объектов на:', async (expectedNames: DataTable) => {
-  const currentNames = await featuresListSidebarBlock.getFeaturesNames();
+  const expected = expectedNames.raw()[0];
+  let lastNames: string[] = [];
 
-  expect(expectedNames.raw()[0]).toEqual(currentNames);
+  // Схема/asTitle подгружаются асинхронно — ждём отрисовки названий
+  await browser.waitUntil(
+    async () => {
+      lastNames = await featuresListSidebarBlock.getFeaturesNames();
+
+      return !lastNames.includes('') && isEqual(expected, lastNames);
+    },
+    {
+      timeout: 10_000,
+      timeoutMsg: `Ожидались названия [${expected.join(', ')}], получено [${lastNames.join(', ')}]`
+    }
+  );
 });
 
 Then('в боковой панели выделенных объектов отображаются {string}', async (variant: string) => {

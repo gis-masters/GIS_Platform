@@ -7,11 +7,11 @@ import { type IClassNameProps } from '@bem-react/core';
 import { cloneDeep } from 'lodash';
 
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
+import { EditFeatureMode } from '../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
+import { editFeatureStore } from '../../stores/EditFeature.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { type EditFeatureFormControl } from '../EditFeature/hooks/useEditFeatureState';
 import { IconButton } from '../IconButton/IconButton';
 
@@ -26,7 +26,7 @@ const changeFeature = async (
     return;
   }
 
-  const status = await mapModeManager.changeMode(
+  const status = await mapModeService.changeMode(
     MapMode.EDIT_FEATURE,
     {
       payload: { features: [feature], mode: EditFeatureMode.single }

@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 
 import { type GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { EditFeatureGeometryError } from '../Error/EditFeatureGeometry-Error';
 
 import './EditFeatureGeometry-View.scss';

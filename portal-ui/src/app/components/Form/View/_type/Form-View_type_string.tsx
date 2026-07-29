@@ -27,7 +27,12 @@ class FormViewTypeString extends Component<FormControlProps> {
       fieldValue: rawFieldValue
     } = this.props;
 
-    const fieldValue = typeof rawFieldValue === 'string' ? rawFieldValue : '—';
+    let fieldValue = '—';
+    if (typeof rawFieldValue === 'string') {
+      fieldValue = rawFieldValue;
+    } else if (typeof rawFieldValue === 'number' || typeof rawFieldValue === 'boolean') {
+      fieldValue = String(rawFieldValue);
+    }
 
     const { propertyType, display } = property as PropertySchemaString;
     const code = display === 'code';

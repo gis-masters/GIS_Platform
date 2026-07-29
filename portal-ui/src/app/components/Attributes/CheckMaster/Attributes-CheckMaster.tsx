@@ -9,11 +9,11 @@ import { cloneDeep } from 'lodash';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
 import { type PageOptions } from '../../../services/models';
 import { removeFieldFilter } from '../../../services/util/filters/filters';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 import { FILTER_BY_SELECTION } from '../Attributes.models';
 
 import './Attributes-CheckMaster.scss';
@@ -88,7 +88,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
     const features = await this.getAllFeatures();
 
     if (this.selectingAllOperationId === operationId) {
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {
@@ -102,7 +102,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
   }
 
   private async applyDeselectAllFeatures() {
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.SELECTED_FEATURES,
       {
         payload: {

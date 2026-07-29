@@ -7,22 +7,19 @@ import { cn } from '@bem-react/classname';
 import { type Schema } from '../../services/data/schema/schema.models';
 import { applyView } from '../../services/data/schema/utils/applyView';
 import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/utils/changeSchemaNamesCaseByFeature';
-import {
-  extractFeatureId,
-  extractResourceIdFromFeatureId
-} from '../../services/geoserver/featureType/featureType.util';
+import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeatureById } from '../../services/geoserver/wfs/wfs.service';
 import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction, MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { type FeatureError } from '../../services/map/map-link-following.service';
-import { currentProject } from '../../stores/CurrentProject.store';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { IconButton } from '../IconButton/IconButton';
 import { RectangleSelectionCancel } from '../Icons/RectangleSelectionCancel';
@@ -63,14 +60,12 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
   );
 
   const layer = useMemo<CrgLayer | undefined>(() => {
-    if (feature) {
-      const resourceId = extractResourceIdFromFeatureId(feature.id);
-
-      return isSearchList
-        ? currentProject.getLayerByResourceIdFromAllVectorableLayers(resourceId)
-        : currentProject.getLayerByResourceIdFromVisibleAndHiddenByZoomVectorLayers(resourceId);
+    if (!feature) {
+      return;
     }
-  }, [feature, isSearchList]);
+
+    return getLayerByFeatureInCurrentProject(feature);
+  }, [feature]);
 
   const schema = useMemo<Schema | undefined>(() => {
     return layer?.view && rawSchema ? applyView(rawSchema, layer.view) : rawSchema;
@@ -126,7 +121,7 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
 
   const removeFromSelected = useCallback(async () => {
     if (feature) {
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: { features: [feature], type: MapSelectionTypes.REMOVE }

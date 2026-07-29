@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 
 import { type SearchItemDataSource } from '../../services/data/search/search.model';
-import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { MapMode } from '../../services/map/map.models';
+import { EditFeatureMode } from '../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { sidebars } from '../../stores/Sidebars.store';
 import { type ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchField } from '../SearchField/SearchField';
@@ -54,7 +54,7 @@ export class GlobalSearch extends Component<GlobalSearchProps> {
       // TODO: Тоже привести это к смене режима
       this.openDialog();
 
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.EDIT_FEATURE,
         {
           payload: {

@@ -12,6 +12,6 @@ const cnWorkspaceHeaderLoader = cn('WorkspaceHeader', 'Loader');
 
 export const WorkspaceHeaderLoader: FC = observer(() => (
   <div className={cnWorkspaceHeaderLoader()}>
-    {mapStore.isLoading && route.data.page === Pages.MAP && <LinearProgress />}
+    {mapStore.loading && route.data.page === Pages.MAP && <LinearProgress />}
   </div>
 ));

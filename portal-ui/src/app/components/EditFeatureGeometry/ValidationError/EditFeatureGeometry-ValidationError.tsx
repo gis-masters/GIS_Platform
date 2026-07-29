@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 import { type AxiosError } from 'axios';
 
 import { makeGeometryValid } from '../../../services/data/geometryValidation/geometryValidation.service';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { Button } from '../../Button/Button';
 
 import './EditFeatureGeometry-ValidationError.scss';

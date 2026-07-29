@@ -3,8 +3,12 @@ import { useLocalObservable } from 'mobx-react';
 import { type Schema } from '../../../services/data/schema/schema.models';
 import { type EditedField, type OldSchema } from '../../../services/data/schema/schemaOld.models';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import {
+  type CrgExternalLayer,
+  type CrgVectorableLayer,
+  type CrgVectorLayer
+} from '../../../services/gis/layers/layers.models';
+import { EditFeatureMode } from '../../../services/map/mode/map-mode.models';
 import { type ValidationResult } from '../../../services/util/FeaturePropertyValidatorsReact';
 
 export interface ShouldRender {
@@ -13,7 +17,7 @@ export interface ShouldRender {
   noLayerSchema: boolean;
 }
 
-export type EditFeatureLayer = CrgVectorableLayer | CrgVectorLayer | undefined;
+export type EditFeatureLayer = CrgVectorableLayer | CrgVectorLayer | CrgExternalLayer | undefined;
 
 export interface EditFeatureFormControl {
   key: string;
@@ -48,6 +52,7 @@ export interface EditFeatureState {
   setEditFeatureData(editFeatureData: EditedField[]): void;
   shouldRender: ShouldRender;
   setShouldRender(shouldRender: ShouldRender): void;
+  setNoLayerSchema(noLayerSchema: boolean): void;
   layerSchema: Schema | undefined;
   setLayerSchema(layerSchema: Schema | undefined): void;
   featureDescription: OldSchema | undefined;
@@ -105,6 +110,9 @@ export const useEditFeatureState = (): EditFeatureState => {
     },
     setShouldRender(shouldRender) {
       this.shouldRender = shouldRender;
+    },
+    setNoLayerSchema(noLayerSchema) {
+      this.shouldRender = { ...this.shouldRender, noLayerSchema };
     },
     layerSchema: undefined,
     setLayerSchema(layerSchema) {

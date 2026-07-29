@@ -7,12 +7,12 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { mapVerticesModificationService } from '../../services/map/vertices-modification/map-vertices-modification.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { SearchFeaturesList } from '../SearchFeaturesList/SearchFeaturesList';
@@ -109,14 +109,14 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
     let success: boolean;
     if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
       success =
-        (await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 1')) &&
-        (await mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 1.2'));
+        (await mapModeService.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 1')) &&
+        (await mapModeService.changeMode(MapMode.NONE, undefined, 'flc - 1.2'));
     } else if (mapStore.mode === MapMode.SELECTED_FEATURES) {
-      success = await mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 2');
+      success = await mapModeService.changeMode(MapMode.NONE, undefined, 'flc - 2');
     } else {
       success = await (selectedFeaturesStore.features.length > 0
-        ? mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 3')
-        : mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 4'));
+        ? mapModeService.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 3')
+        : mapModeService.changeMode(MapMode.NONE, undefined, 'flc - 4'));
     }
 
     if (success && this.props.searchValue) {

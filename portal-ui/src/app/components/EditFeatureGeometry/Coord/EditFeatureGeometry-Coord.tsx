@@ -16,11 +16,11 @@ import {
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid } from '../../../services/geoserver/wfs/wfs.util';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { services } from '../../../services/services';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 
 import './EditFeatureGeometry-Coord.scss';
@@ -68,19 +68,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   componentDidUpdate(prevProps: EditFeatureGeometryCoordProps): void {
-    const { val } = this.props;
-    const { val: prevVal } = prevProps;
-
-    // Обновляем строковые значения только если координаты изменились извне
-    if (prevVal[0] !== val[0]) {
-      this.stringX = val[0].toString();
-      this.triggerFlash(0);
-    }
-
-    if (prevVal[1] !== val[1]) {
-      this.stringY = val[1].toString();
-      this.triggerFlash(1);
-    }
+    this.syncStringValuesFromProps(this.props.val, prevProps.val);
   }
 
   render() {
@@ -225,13 +213,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   // При потере фокуса нормализуем значения
   @boundMethod
   private handleInputBlur() {
-    const numericX = this.parseCoordinateValue(this.stringX);
-    const numericY = this.parseCoordinateValue(this.stringY);
-
-    this.stringX = Number.isNaN(numericX) ? '0' : numericX.toString();
-
-    this.stringY = Number.isNaN(numericY) ? '0' : numericY.toString();
-
+    this.normalizeStringValues();
     coordinateHighlightService.setActiveVertex(null);
   }
 
@@ -300,5 +282,28 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @action
   private setDefaultProjection(projection: Projection): void {
     this.defaultProjection = projection;
+  }
+
+  @action
+  private syncStringValuesFromProps(val: Coordinate, prevVal: Coordinate): void {
+    // Обновляем строковые значения только если координаты изменились извне
+    if (prevVal[0] !== val[0]) {
+      this.stringX = val[0].toString();
+      this.triggerFlash(0);
+    }
+
+    if (prevVal[1] !== val[1]) {
+      this.stringY = val[1].toString();
+      this.triggerFlash(1);
+    }
+  }
+
+  @action
+  private normalizeStringValues(): void {
+    const numericX = this.parseCoordinateValue(this.stringX);
+    const numericY = this.parseCoordinateValue(this.stringY);
+
+    this.stringX = Number.isNaN(numericX) ? '0' : numericX.toString();
+    this.stringY = Number.isNaN(numericY) ? '0' : numericY.toString();
   }
 }

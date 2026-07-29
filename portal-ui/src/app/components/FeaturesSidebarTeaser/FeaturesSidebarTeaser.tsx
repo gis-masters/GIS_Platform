@@ -7,11 +7,11 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
+import { editFeatureStore } from '../../stores/EditFeature.store';
 import { mapStore } from '../../stores/Map.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { ViewLocation } from '../Icons/ViewLocation';

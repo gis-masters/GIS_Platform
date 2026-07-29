@@ -3,7 +3,8 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
+import { isNspdLayer, isVectorLayer } from '../../services/gis/layers/layers.typeguards';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { CopyFeaturesButton } from '../CopyFeaturesButton/CopyFeaturesButton';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
@@ -19,7 +20,7 @@ const cnEditFeatureActions = cn('EditFeatureActions');
 
 interface EditFeatureActionsProps {
   feature: WfsFeature;
-  layer?: CrgVectorLayer;
+  layer?: CrgLayer;
 }
 
 export const EditFeatureActions = observer(({ feature, layer }: EditFeatureActionsProps) => (
@@ -30,10 +31,14 @@ export const EditFeatureActions = observer(({ feature, layer }: EditFeatureActio
         <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
       </>
     )}
-    <PrintFeature feature={feature} layer={layer} />
+    {(isVectorLayer(layer) || isNspdLayer(layer)) && <PrintFeature feature={feature} layer={layer} />}
     {organizationSettings.downloadXml && layer && <XmlDownload feature={feature} layer={layer} />}
-    <OpenInAnotherProject feature={feature} />
-    <CopyUrlButton features={[feature]} />
+    {isVectorLayer(layer) && (
+      <>
+        <OpenInAnotherProject feature={feature} />
+        <CopyUrlButton features={[feature]} />
+      </>
+    )}
     <ZoomToFeature featureId={feature.id} zoomToLastCoordinate />
   </div>
 ));

@@ -1,0 +1,225 @@
+{
+  "name": "nspd_zu",
+  "title": "Земельные участки",
+  "tableName": "nspd_zu",
+  "styleName": "nspd_zu",
+  "originName": "nspd_zu",
+  "readOnly": true,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "land_record_type",
+      "title": "Вид объекта недвижимости",
+      "valueType": "STRING"
+    },
+    {
+      "name": "land_record_subtype",
+      "title": "Вид земельного участка",
+      "valueType": "STRING"
+    },
+    {
+      "name": "land_record_reg_date",
+      "title": "Дата присвоения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "quarter_cad_number",
+      "title": "Кадастровый квартал",
+      "valueType": "STRING"
+    },
+    {
+      "name": "readable_address",
+      "title": "Адрес",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "land_record_area",
+      "title": "Площадь по учету",
+      "valueType": "STRING"
+    },
+    {
+      "name": "specified_area",
+      "title": "Площадь уточненная",
+      "valueType": "STRING"
+    },
+    {
+      "name": "declared_area",
+      "title": "Площадь декларированная",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь",
+      "valueType": "STRING"
+    },
+    {
+      "name": "previously_posted",
+      "title": "Предыдущий статус",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "valueType": "STRING"
+    },
+    {
+      "name": "land_record_category_type",
+      "title": "Категория земель",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Земли населенных пунктов",
+          "value": "Земли населенных пунктов"
+        },
+        {
+          "title": "Земли сельскохозяйственного назначения",
+          "value": "Земли сельскохозяйственного назначения"
+        },
+        {
+          "title": "Промышленные земли",
+          "value": "Промышленные земли"
+        },
+        {
+          "title": "Земли лесного фонда",
+          "value": "Земли лесного фонда"
+        },
+        {
+          "title": "Особо охраняемые природные территории",
+          "value": "Особо охраняемые природные территории"
+        },
+        {
+          "title": "Земли водного фонда",
+          "value": "Земли водного фонда"
+        },
+        {
+          "title": "Земли государственного запаса",
+          "value": "Земли государственного запаса"
+        },
+        {
+          "value": "Категория не установлена",
+          "title": "Категория не установлена"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "permitted_use_established_by_document",
+      "title": "Вид разрешенного использования",
+      "valueType": "STRING"
+    },
+    {
+      "name": "right_type",
+      "title": "Тип права",
+      "valueType": "STRING"
+    },
+    {
+      "name": "ownership_type",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная",
+          "value": "Государственная"
+        },
+        {
+          "title": "Муниципальная",
+          "value": "Муниципальная"
+        },
+        {
+          "title": "Частная",
+          "value": "Частная"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "cost_value",
+      "title": "Кадастровая стоимость, р.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "cost_index",
+      "title": "Удельный показатель кадастровой стоимости",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 4
+    },
+    {
+      "name": "cost_application_date",
+      "title": "Дата применения стоимости",
+      "valueType": "DATETIME"
+    },
+     {
+      "name": "cost_approvement_date",
+      "title": "Дата утверждения стоимости",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "cost_determination_date",
+      "title": "Дата определения стоимости",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "cost_registration_date",
+      "title": "Дата регистрации стоимости",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "determination_couse",
+      "title": "Основание определения стоимости",
+      "valueType": "STRING"
+    },
+    
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "valueType": "STRING",
+      "hidden": true,
+      "maxLength": 50
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME",
+      "hidden": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "hidden": true,
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "valueType": "STRING",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

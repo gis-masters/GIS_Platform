@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { type SearchItemDataSource } from '../../services/data/search/search.model';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { MapMode } from '../../services/map/map.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { type ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchInProjectSearchField } from './SearchField/SearchInProject-SearchField';
@@ -44,7 +44,7 @@ export class SearchInProject extends Component {
         };
       });
 
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SEARCH_IN_PROJECT,
         {
           payload: { ...searchValue, source: sources }

@@ -1,10 +1,10 @@
 import { isBoolean } from 'lodash';
 
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { mergeToMultiLineString, mergeToMultiPoint, mergeToMultiPolygon } from '../../ol/marge-geometries';
 import { featureToWfsFeature } from '../../util/open-layers.util';
 import { sleep } from '../../util/sleep';
-import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
 import { FeatureState } from '../map.models';
 import { mapDrawService } from './map-draw.service';
 

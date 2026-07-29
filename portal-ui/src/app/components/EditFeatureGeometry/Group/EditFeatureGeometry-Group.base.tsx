@@ -10,9 +10,9 @@ import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { GEOMETRY_COORDINATES_FLAT_DEPTH, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
 import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';

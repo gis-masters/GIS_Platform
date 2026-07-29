@@ -2,13 +2,14 @@ import { type Coordinate } from 'ol/coordinate';
 
 import { currentProject } from '../../stores/CurrentProject.store';
 import { Pages, route } from '../../stores/Route.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { extractFeatureId } from '../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../geoserver/wfs/wfs.models';
+import { isVectorLayer } from '../gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
 import { services } from '../services';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { sleep } from '../util/sleep';
-import { selectedFeaturesStore } from './a-map-mode/selected-features/SelectedFeatures.store';
 import { buildFeaturesUrlFragment, type FeaturesUrlFragment } from './map.util';
 
 export async function setMapPositionToUrl(zoom: number, center: Coordinate): Promise<void> {
@@ -66,7 +67,7 @@ export function getFeaturesUrlFragment(features: WfsFeature[]): string | null {
 
   for (const feature of features) {
     const layer = getLayerByFeatureInCurrentProject(feature);
-    if (!layer) {
+    if (!isVectorLayer(layer)) {
       continue;
     }
 

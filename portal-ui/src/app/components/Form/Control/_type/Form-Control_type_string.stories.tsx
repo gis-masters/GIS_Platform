@@ -75,6 +75,14 @@ ViewEmpty.args = {
   auto: true
 };
 
+export const ViewNumber = Template.bind({});
+ViewNumber.args = {
+  schema: { properties: [stringField] },
+  value: { zu: 17_792 },
+  readonly: true,
+  auto: true
+};
+
 export const CodeEditable = Template.bind({});
 CodeEditable.args = {
   schema: { properties: [{ ...stringField, display: 'code' }] },

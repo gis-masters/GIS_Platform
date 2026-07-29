@@ -52,9 +52,9 @@ import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { type TreeItemPayload } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
-import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { MapAction, MapMode, MapSelectionTypes, ToolMode } from '../../../services/map/map.models';
+import { EditFeatureMode } from '../../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
 import {
   isLayersManagementAllowed,
   isShapeImportAllowed,
@@ -528,7 +528,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     mapLabelsStore.setLabelsVisibility(false);
     mapStore.setToolMode(ToolMode.NONE);
 
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.SELECTED_FEATURES,
       {
         payload: {
@@ -539,7 +539,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
       'addFeature 1.1'
     );
 
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.DRAW_FEATURE,
       {
         payload: {

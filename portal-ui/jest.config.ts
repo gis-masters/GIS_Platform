@@ -3,6 +3,8 @@ import type { JestConfigWithTsJest } from 'ts-jest';
 const jestConfig: JestConfigWithTsJest = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
+  maxWorkers: 6,
+  workerIdleMemoryLimit: '512MB',
   extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1'

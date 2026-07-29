@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { type FC, useCallback, useEffect } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
-import { boundMethod } from 'autobind-decorator';
 
 import { type SpatialReferenceSystem } from '../../../server-types/common-contracts';
 import { type Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
@@ -27,46 +25,96 @@ interface SelectProjectionProps extends IClassNameProps {
   onChange(projection: Projection): void;
 }
 
-@observer
-export class SelectProjection extends Component<SelectProjectionProps> {
-  @observable private dialogOpen = false;
-  @observable private additionalProjections: Projection[] = [
-    {
-      title: selectAnother,
-      authSrid: 0,
-      authName: selectAnother,
-      auth_srid: 0,
-      srtext: '',
-      auth_name: '',
-      proj4Text: ''
-    }
-  ];
+type SelectProjectionState = {
+  dialogOpen: boolean;
+  additionalProjections: Projection[];
+  readonly projections: Projection[];
+  openDialog(): void;
+  closeDialog(): void;
+  addProjection(projection: Projection): void;
+};
 
-  constructor(props: SelectProjectionProps) {
-    super(props);
-    makeObservable(this);
+function getRowId(srs: SpatialReferenceSystem) {
+  return `${srs.authName}${srs.authSrid}`;
+}
 
-    if (props.value) {
-      this.addProjection(props.value);
-    }
-  }
+export const SelectProjection: FC<SelectProjectionProps> = observer(
+  ({
+    labelInField,
+    fullWidth,
+    className,
+    value,
+    htmlId = 'projectionSelect',
+    label = 'Система координат',
+    onChange
+  }) => {
+    const state = useLocalObservable<SelectProjectionState>(() => ({
+      dialogOpen: false,
+      additionalProjections: [
+        {
+          title: selectAnother,
+          authSrid: 0,
+          authName: selectAnother,
+          auth_srid: 0,
+          srtext: '',
+          auth_name: '',
+          proj4Text: ''
+        }
+      ],
 
-  componentDidUpdate(prevProps: SelectProjectionProps): void {
-    const { value } = this.props;
-    if (value && prevProps.value !== value) {
-      this.addProjection(value);
-    }
-  }
+      get projections() {
+        return [...projectionsStore.favoriteProjections, ...this.additionalProjections];
+      },
 
-  render() {
-    const {
-      labelInField,
-      fullWidth,
-      className,
-      value,
-      htmlId = 'projectionSelect',
-      label = 'Система координат'
-    } = this.props;
+      openDialog() {
+        this.dialogOpen = true;
+      },
+
+      closeDialog() {
+        this.dialogOpen = false;
+      },
+
+      addProjection(projection) {
+        const isExist = this.projections.some(({ title }) => title === projection.title);
+        if (!isExist) {
+          this.additionalProjections.unshift(projection);
+        }
+      }
+    }));
+
+    const handleChange = useCallback(
+      (e: SelectChangeEvent) => {
+        if (e.target.value.startsWith(selectAnother)) {
+          state.openDialog();
+        } else {
+          const projection = state.projections.find(projection => e.target.value === getProjectionCode(projection));
+
+          if (projection) {
+            onChange(projection);
+          } else {
+            Toast.error('Не найдена выбранная система координат ' + e.target.value);
+          }
+        }
+      },
+      [onChange, state]
+    );
+
+    const handleAdditionalProjectionSelect = useCallback(
+      (items: Projection[]) => {
+        const selectedProjection = items[0];
+        registerProjectionArrayInProj4([selectedProjection]);
+        state.addProjection(selectedProjection);
+        onChange(selectedProjection);
+        state.closeDialog();
+      },
+      [onChange, state]
+    );
+
+    useEffect(() => {
+      if (value) {
+        state.addProjection(value);
+      }
+    }, [value, state]);
 
     return (
       <div className={cnSelectProjection(null, [className])}>
@@ -84,11 +132,11 @@ export class SelectProjection extends Component<SelectProjectionProps> {
           fullWidth={fullWidth}
           value={(value && getProjectionCode(value)) || ''}
           variant='standard'
-          onChange={this.handleChange}
+          onChange={handleChange}
         >
           {!value && <MenuItem value='' />}
 
-          {this.projections.map(item => {
+          {state.projections.map(item => {
             const crs = getProjectionCode(item);
 
             return (
@@ -101,68 +149,17 @@ export class SelectProjection extends Component<SelectProjectionProps> {
 
         <ChooseXTableDialog<Projection>
           getData={getProjections}
-          selectedItems={[...projectionsStore.favoriteProjections, ...this.additionalProjections]}
+          selectedItems={[...projectionsStore.favoriteProjections, ...state.additionalProjections]}
           title={'Выбор системы координат'}
-          open={this.dialogOpen}
+          open={state.dialogOpen}
           cols={projectionXTableCols}
-          getRowId={this.getRowId}
-          onClose={this.closeDialog}
-          onSelect={this.handleAdditionalProjectionSelect}
+          getRowId={getRowId}
+          onClose={state.closeDialog}
+          onSelect={handleAdditionalProjectionSelect}
           withoutSelectAll
           single
         />
       </div>
     );
   }
-
-  @computed private get projections(): Projection[] {
-    return [...projectionsStore.favoriteProjections, ...this.additionalProjections];
-  }
-
-  @boundMethod
-  private handleChange(e: SelectChangeEvent) {
-    if (e.target.value.startsWith(selectAnother)) {
-      this.openDialog();
-    } else {
-      const projection = this.projections.find(projection => e.target.value === getProjectionCode(projection));
-
-      if (projection) {
-        this.props.onChange(projection);
-      } else {
-        Toast.error('Не найдена выбранная система координат ' + e.target.value);
-      }
-    }
-  }
-
-  @action.bound
-  private handleAdditionalProjectionSelect(items: Projection[]) {
-    const { onChange } = this.props;
-    const selectedProjection = items[0];
-    registerProjectionArrayInProj4([selectedProjection]);
-    this.addProjection(selectedProjection);
-    onChange?.(selectedProjection);
-    this.closeDialog();
-  }
-
-  @action.bound
-  private openDialog() {
-    this.dialogOpen = true;
-  }
-
-  @action.bound
-  private closeDialog() {
-    this.dialogOpen = false;
-  }
-
-  @action.bound
-  private addProjection(projection: Projection) {
-    const isExist = this.projections.some(({ title }) => title === projection.title);
-    if (!isExist) {
-      this.additionalProjections.unshift(projection);
-    }
-  }
-
-  private getRowId(srs: SpatialReferenceSystem) {
-    return srs.authName + String(srs.authSrid);
-  }
-}
+);

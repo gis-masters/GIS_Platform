@@ -10,11 +10,11 @@ import { type Coordinate } from 'ol/coordinate';
 
 import { type GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { exportAsCSV } from '../../../services/util/export';
 import { extractCoordinates } from '../../../services/util/extractCoordinates.util';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
+import { editFeatureHistoryStore } from '../../../stores/EditFeatureHistory.store';
 import { IconButton } from '../../IconButton/IconButton';
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 

@@ -23,12 +23,12 @@ import {
 } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayerType, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { mergeGeometry } from '../../services/map/draw/mergeGeometry';
 import { services } from '../../services/services';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
+import { editFeatureStore } from '../../stores/EditFeature.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { IconButton } from '../IconButton/IconButton';
 import { ContourAdd } from '../Icons/ContourAdd';

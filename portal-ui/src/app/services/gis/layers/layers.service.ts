@@ -1,6 +1,3 @@
-import { createElement } from 'react';
-import { ListItemIcon, Tooltip } from '@mui/material';
-import { FilterAltOutlined } from '@mui/icons-material';
 import { isAxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
@@ -8,7 +5,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { getFileInfo } from '../../data/files/files.service';
 import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.util';
 import { getLibraryRecord } from '../../data/library/library.service';
-import { type PropertyOption, type Schema } from '../../data/schema/schema.models';
+import { type Schema } from '../../data/schema/schema.models';
 import { tablesSchemasCache } from '../../data/schema/tablesSchemasCache';
 import { convertGeoserverPropertiesToSchemaProperties } from '../../data/schema/utils/convertGeoserverPropertiesToSchemaProperties';
 import { getGeometryTypeFromGeoserverAttributes } from '../../data/schema/utils/getGeometryTypeFromGeoserverAttributes';
@@ -17,6 +14,7 @@ import { getVectorTable } from '../../data/vectorData/vectorData.service';
 import { type FeatureType } from '../../geoserver/featureType/featureType.model';
 import { getFeatureType } from '../../geoserver/featureType/featureType.service';
 import { type SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
+import { getNspdKnownLayer, nspdFallbackSchema } from '../../nspd/feature-info/nspd-feature-info.models';
 import { services } from '../../services';
 import { isArray } from '../../util/typeGuards/isArray';
 import { type CrgProject } from '../projects/projects.models';
@@ -139,6 +137,48 @@ async function getVectorTableSchema(datasetIdentifier: string, identifier: strin
   return vectorTable.schema;
 }
 
+async function getNspdLayerSchema(layer: CrgLayer): Promise<Schema> {
+  const schemaName = getNspdKnownLayer(layer.resourceId)?.schemaName;
+  if (!schemaName) {
+    return nspdFallbackSchema;
+  }
+
+  try {
+    const template = await schemaTemplateService.getSchemaTemplate(schemaName);
+
+    return template.classRule;
+  } catch {
+    return nspdFallbackSchema;
+  }
+}
+
+async function getVectorFromFileSchema(layer: CrgLayer): Promise<Schema> {
+  const featureType: FeatureType = await getFeatureType(layer);
+
+  let attributes = featureType.attributes.attribute;
+  if (!isArray(attributes)) {
+    attributes = [attributes];
+  }
+
+  const properties = convertGeoserverPropertiesToSchemaProperties(attributes);
+  const geometryType = getGeometryTypeFromGeoserverAttributes(attributes);
+  const template = `schema_template_${layer.id}_${layer.id}`;
+  if (supportedGeometryTypes.includes(geometryType)) {
+    return {
+      name: template,
+      title: template,
+      properties,
+      readOnly: true,
+      styleName: 'generic',
+      geometryType: geometryType as SupportedGeometryType
+    };
+  }
+
+  services.logger.warn(`Тип геометрии: ${geometryType} не поддерживается`);
+
+  return { name: template, title: template, properties, readOnly: true };
+}
+
 export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefined> {
   if (!layer) {
     return undefined;
@@ -159,60 +199,21 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
     tablesSchemasCache.add(layer.resourceId, vectorTableSchemaPromise);
 
     return await vectorTableSchemaPromise;
-  } else if (layer.type === CrgLayerType.DXF) {
+  }
+
+  if (layer.type === CrgLayerType.DXF) {
     const template = await schemaTemplateService.getSchemaTemplate('dxf_schema_v1');
 
     return template.classRule;
-  } else if (layer.type && isVectorFromFile(layer.type)) {
-    const featureType: FeatureType = await getFeatureType(layer);
+  }
 
-    let attributes = featureType.attributes.attribute;
-    if (!isArray(attributes)) {
-      attributes = [attributes];
-    }
+  if (layer.type && isVectorFromFile(layer.type)) {
+    return await getVectorFromFileSchema(layer);
+  }
 
-    const properties = convertGeoserverPropertiesToSchemaProperties(attributes);
-    const geometryType = getGeometryTypeFromGeoserverAttributes(attributes);
-    const template = `schema_template_${layer.id}_${layer.id}`;
-    if (supportedGeometryTypes.includes(geometryType)) {
-      return {
-        name: template,
-        title: template,
-        properties,
-        readOnly: true,
-        styleName: 'generic',
-        geometryType: geometryType as SupportedGeometryType
-      };
-    }
-
-    services.logger.warn(`Тип геометрии: ${geometryType} не поддерживается`);
-
-    return { name: template, title: template, properties, readOnly: true };
+  if (layer.type === CrgLayerType.EXTERNAL_NSPD) {
+    return await getNspdLayerSchema(layer);
   }
 
   throw new Error(`Тип слоя: ${layer.type} не поддерживается`);
-}
-
-export function getViewChoiceOptions(schema: Schema): PropertyOption[] {
-  const views = schema.views || [];
-
-  return [
-    { title: `${schema.title} (по-умолчанию)`, value: '' },
-    ...(views.map(type => ({
-      title: type.title || '',
-      value: type.id,
-      endIcon: type.definitionQuery
-        ? createElement(Tooltip, {
-            title: createElement(
-              'span',
-              {},
-              'Для этого представления задан определяющий запрос (Definition Query). Будут отображены только объекты, удовлетворяющие условию запроса:',
-              createElement('br'),
-              createElement('code', { children: type.definitionQuery })
-            ),
-            children: createElement(ListItemIcon, {}, createElement(FilterAltOutlined, { fontSize: 'small' }))
-          })
-        : undefined
-    })) || [])
-  ];
 }

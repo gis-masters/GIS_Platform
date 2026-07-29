@@ -1,6 +1,5 @@
-import React, { Component, createRef, type RefObject } from 'react';
-import { action, makeObservable, observable, runInAction } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Map, View } from 'ol';
 import { type Extent } from 'ol/extent';
@@ -12,9 +11,11 @@ import 'ol/ol.css';
 import { defaultOlProjectionCode } from '../../../services/data/projections/projections.models';
 import { getOlProjection } from '../../../services/data/projections/projections.service';
 import { services } from '../../../services/services';
-import { RingSpinner } from '../../RingSpinner/RingSpinner';
 import { waitForTilesLoad } from '../BboxPreview.util';
 import { BboxPreviewError } from '../Error/BboxPreview-Error';
+import { BboxPreviewImage } from '../Image/BboxPreview-Image';
+import { BboxPreviewLoading } from '../Loading/BboxPreview-Loading';
+import { BboxPreviewMapContainer } from '../MapContainer/BboxPreview-MapContainer';
 
 import './BboxPreview-Map.scss';
 
@@ -24,76 +25,55 @@ export interface BboxPreviewMapProps {
   bboxString: string;
 }
 
-@observer
-export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
-  private mapContainerRef: RefObject<HTMLDivElement> = createRef();
-  private mapInstanceRef: Map | null = null;
-  private loadingTimeoutRef: number | null = null;
-  private imageCaptured = false;
-  @observable private previewImage: string | null = null;
-  @observable private loading = false;
-  @observable private previewFailed = false;
+type BboxPreviewMapState = {
+  previewImage: string | null;
+  loading: boolean;
+  previewFailed: boolean;
+  reset(): void;
+  startGeneration(): void;
+  setLoading(loading: boolean): void;
+  failPreview(): void;
+  completeCapture(image: string): void;
+};
 
-  constructor(props: BboxPreviewMapProps) {
-    super(props);
-    makeObservable(this);
-  }
+export const BboxPreviewMap = observer(function BboxPreviewMap({ bboxString }: BboxPreviewMapProps) {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<Map | null>(null);
+  const loadingTimeoutRef = useRef<number | null>(null);
+  const imageCapturedRef = useRef(false);
 
-  componentDidMount() {
-    void this.generatePreview();
-  }
+  const state = useLocalObservable<BboxPreviewMapState>(() => ({
+    previewImage: null,
+    loading: false,
+    previewFailed: false,
 
-  componentDidUpdate(prevProps: BboxPreviewMapProps) {
-    if (prevProps.bboxString !== this.props.bboxString) {
-      this.cleanup();
-      void this.generatePreview();
+    reset() {
+      this.previewImage = null;
+      this.loading = false;
+      this.previewFailed = false;
+    },
+
+    startGeneration() {
+      this.loading = true;
+      this.previewImage = null;
+    },
+
+    setLoading(loading) {
+      this.loading = loading;
+    },
+
+    failPreview() {
+      this.previewFailed = true;
+      this.loading = false;
+    },
+
+    completeCapture(image) {
+      this.previewImage = image;
+      this.loading = false;
     }
-  }
+  }));
 
-  componentWillUnmount() {
-    this.cleanup();
-  }
-
-  render() {
-    const bbox = this.getBbox();
-    if (!bbox) {
-      return null;
-    }
-
-    return (
-      <div className={cnBboxPreview('Map')}>
-        {this.isLoading && (
-          <div className={cnBboxPreview('Loading')}>
-            <RingSpinner text='Загрузка превью' />
-          </div>
-        )}
-
-        {this.previewFailed && <BboxPreviewError />}
-
-        {this.shouldShowImage && <img src={this.previewImage!} alt='BBOX preview' className={cnBboxPreview('Image')} />}
-
-        {this.shouldShowError && <BboxPreviewError />}
-
-        <div ref={this.mapContainerRef} className={cnBboxPreview('MapContainer')} />
-      </div>
-    );
-  }
-
-  private get isLoading(): boolean {
-    return this.loading && !this.previewFailed;
-  }
-
-  private get shouldShowImage(): boolean {
-    return !!this.previewImage && !this.previewFailed && !this.loading;
-  }
-
-  private get shouldShowError(): boolean {
-    return !this.loading && !this.previewFailed && !this.previewImage;
-  }
-
-  private getBbox(): Extent | undefined {
-    const { bboxString } = this.props;
-
+  const getBbox = useCallback((): Extent | undefined => {
     if (!bboxString) {
       return undefined;
     }
@@ -103,33 +83,171 @@ export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
     } catch {
       return undefined;
     }
-  }
+  }, [bboxString]);
 
-  @action.bound
-  private async generatePreview() {
-    const bbox = this.getBbox();
+  const cleanup = useCallback(() => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.setTarget();
+      mapInstanceRef.current = null;
+    }
+
+    if (loadingTimeoutRef.current !== null) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
+
+    imageCapturedRef.current = false;
+    state.reset();
+  }, [state]);
+
+  const captureMapImage = useCallback(
+    (map: Map) => {
+      if (!map || imageCapturedRef.current || state.previewFailed) {
+        if (!state.previewFailed) {
+          state.setLoading(false);
+        }
+
+        return;
+      }
+
+      try {
+        const targetWidth = 600;
+        const targetHeight = 450;
+        const containerSize = map.getSize();
+
+        if (!containerSize) {
+          state.setLoading(false);
+
+          return;
+        }
+
+        const mapCanvas = document.createElement('canvas');
+        mapCanvas.width = targetWidth;
+        mapCanvas.height = targetHeight;
+
+        const mapContext = mapCanvas.getContext('2d');
+        if (!mapContext) {
+          state.setLoading(false);
+
+          return;
+        }
+
+        mapContext.fillStyle = '#ffffff';
+        mapContext.fillRect(0, 0, targetWidth, targetHeight);
+
+        const scaleX = targetWidth / containerSize[0];
+        const scaleY = targetHeight / containerSize[1];
+
+        const viewport = map.getViewport();
+        const layerCanvases = viewport.querySelectorAll('.ol-layer canvas');
+
+        let hasValidCanvas = false;
+
+        layerCanvases.forEach((canvas: Element) => {
+          if (!(canvas instanceof HTMLCanvasElement)) {
+            return;
+          }
+
+          if (canvas.width > 0) {
+            hasValidCanvas = true;
+            const parent = canvas.parentElement;
+            if (!parent) {
+              return;
+            }
+
+            const opacity = parent.style.opacity;
+            mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+
+            const matrixTransform = /^matrix\(([^(]*)\)$/.exec(canvas.style.transform);
+            if (matrixTransform) {
+              const matrix = matrixTransform[1].split(',').map(Number);
+              const scaledMatrix = [
+                matrix[0] * scaleX,
+                matrix[1] * scaleY,
+                matrix[2] * scaleX,
+                matrix[3] * scaleY,
+                matrix[4] * scaleX,
+                matrix[5] * scaleY
+              ];
+              CanvasRenderingContext2D.prototype.setTransform.apply(
+                mapContext,
+                scaledMatrix as unknown as [DOMMatrix2DInit]
+              );
+              mapContext.drawImage(canvas, 0, 0);
+            }
+          }
+        });
+
+        if (!hasValidCanvas) {
+          state.failPreview();
+          imageCapturedRef.current = true;
+
+          return;
+        }
+
+        CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
+
+        state.completeCapture(mapCanvas.toDataURL('image/png', 1));
+        imageCapturedRef.current = true;
+      } catch (error) {
+        services.logger.error('BboxPreview: Ошибка при захвате изображения', error);
+        state.failPreview();
+      }
+    },
+    [state]
+  );
+
+  const runBboxPreviewCapturePipeline = useCallback(
+    async (map: Map, isMapFailed: () => boolean): Promise<void> => {
+      if (imageCapturedRef.current || state.previewFailed || isMapFailed()) {
+        return;
+      }
+
+      try {
+        await new Promise<void>(resolve => {
+          map.once('rendercomplete', () => {
+            resolve();
+          });
+          map.render();
+        });
+
+        await waitForTilesLoad(map);
+
+        await new Promise<void>(resolve => setTimeout(resolve, 100));
+
+        if (!imageCapturedRef.current && !state.previewFailed && !isMapFailed()) {
+          captureMapImage(map);
+        }
+      } catch (error) {
+        services.logger.error('BboxPreview: Ошибка при ожидании загрузки тайлов', error);
+        if (!imageCapturedRef.current && !state.previewFailed && !isMapFailed()) {
+          captureMapImage(map);
+        }
+      }
+    },
+    [captureMapImage, state]
+  );
+
+  const generatePreview = useCallback(async () => {
+    const bbox = getBbox();
     if (!bbox) {
       return;
     }
 
-    if (!this.mapContainerRef.current) {
+    if (!mapContainerRef.current) {
       return;
     }
 
     try {
-      this.loading = true;
-      this.imageCaptured = false;
-      this.previewImage = null;
+      state.startGeneration();
+      imageCapturedRef.current = false;
 
       await getOlProjection();
 
       const projection = getProjection(defaultOlProjectionCode);
       if (!projection) {
         services.logger.error('BboxPreview: Проекция не найдена');
-        runInAction(() => {
-          this.previewFailed = true;
-          this.loading = false;
-        });
+        state.failPreview();
 
         return;
       }
@@ -156,31 +274,36 @@ export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
         if (failedTilesCount >= maxFailedTiles && !mapFailed) {
           mapFailed = true;
           services.logger.warn('BboxPreview: Карта недоступна, показываем сообщение об ошибке');
-          runInAction(() => {
-            this.previewFailed = true;
-            this.loading = false;
-          });
-          this.cleanup();
+          state.failPreview();
+          cleanup();
         }
       };
 
       osmSource.on('tileloaderror', handleTileLoadError);
 
-      const container = this.mapContainerRef.current;
+      const container = mapContainerRef.current;
       const map = new Map({
         target: container,
         view,
         layers: [tileLayer]
       });
 
-      this.mapInstanceRef = map;
+      mapInstanceRef.current = map;
 
-      setTimeout(() => {
+      const handleLoadingTimeout = () => {
+        if (!imageCapturedRef.current && !mapFailed) {
+          if (failedTilesCount >= maxFailedTiles) {
+            mapFailed = true;
+            state.failPreview();
+          } else {
+            captureMapImage(map);
+          }
+        }
+      };
+
+      const initializeMap = () => {
         if (!map || !container) {
-          runInAction(() => {
-            this.previewFailed = true;
-            this.loading = false;
-          });
+          state.failPreview();
 
           return;
         }
@@ -188,181 +311,41 @@ export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
         map.updateSize();
         view.fit(bbox, { padding: [10, 10, 10, 10] });
 
-        void this.runBboxPreviewCapturePipeline(map, () => mapFailed);
+        void runBboxPreviewCapturePipeline(map, () => mapFailed);
 
-        this.loadingTimeoutRef = window.setTimeout(() => {
-          if (!this.imageCaptured && !mapFailed) {
-            if (failedTilesCount >= maxFailedTiles) {
-              mapFailed = true;
-              runInAction(() => {
-                this.previewFailed = true;
-                this.loading = false;
-              });
-            } else {
-              this.captureMapImage(map);
-            }
-          }
-        }, 5000);
-      }, 100);
+        loadingTimeoutRef.current = window.setTimeout(handleLoadingTimeout, 5000);
+      };
+
+      setTimeout(initializeMap, 100);
     } catch (error) {
       services.logger.error('BboxPreview: Ошибка при генерации превью', error);
-      runInAction(() => {
-        this.previewFailed = true;
-        this.loading = false;
-      });
+      state.failPreview();
     }
+  }, [captureMapImage, cleanup, getBbox, runBboxPreviewCapturePipeline, state]);
+
+  useEffect(() => {
+    void generatePreview();
+
+    return () => {
+      cleanup();
+    };
+  }, [cleanup, generatePreview]);
+
+  const bbox = getBbox();
+  if (!bbox) {
+    return null;
   }
 
-  private async runBboxPreviewCapturePipeline(map: Map, isMapFailed: () => boolean): Promise<void> {
-    if (this.imageCaptured || this.previewFailed || isMapFailed()) {
-      return;
-    }
+  const isLoading = state.loading && !state.previewFailed;
+  const shouldShowError = !state.loading && !state.previewFailed && !state.previewImage;
 
-    try {
-      await new Promise<void>(resolve => {
-        map.once('rendercomplete', () => {
-          resolve();
-        });
-        map.render();
-      });
-
-      await waitForTilesLoad(map);
-
-      await new Promise<void>(resolve => setTimeout(resolve, 100));
-
-      if (!this.imageCaptured && !this.previewFailed && !isMapFailed()) {
-        this.captureMapImage(map);
-      }
-    } catch (error) {
-      services.logger.error('BboxPreview: Ошибка при ожидании загрузки тайлов', error);
-      if (!this.imageCaptured && !this.previewFailed && !isMapFailed()) {
-        this.captureMapImage(map);
-      }
-    }
-  }
-
-  @action.bound
-  private captureMapImage(map: Map) {
-    if (!map || this.imageCaptured || this.previewFailed) {
-      if (!this.previewFailed) {
-        this.loading = false;
-      }
-
-      return;
-    }
-
-    try {
-      const targetWidth = 600;
-      const targetHeight = 450;
-      const containerSize = map.getSize();
-
-      if (!containerSize) {
-        this.loading = false;
-
-        return;
-      }
-
-      const mapCanvas = document.createElement('canvas');
-      mapCanvas.width = targetWidth;
-      mapCanvas.height = targetHeight;
-
-      const mapContext = mapCanvas.getContext('2d');
-      if (!mapContext) {
-        this.loading = false;
-
-        return;
-      }
-
-      mapContext.fillStyle = '#ffffff';
-      mapContext.fillRect(0, 0, targetWidth, targetHeight);
-
-      const scaleX = targetWidth / containerSize[0];
-      const scaleY = targetHeight / containerSize[1];
-
-      const viewport = map.getViewport();
-      const layerCanvases = viewport.querySelectorAll('.ol-layer canvas');
-
-      let hasValidCanvas = false;
-
-      layerCanvases.forEach((canvas: Element) => {
-        if (!(canvas instanceof HTMLCanvasElement)) {
-          return;
-        }
-
-        if (canvas.width > 0) {
-          hasValidCanvas = true;
-          const parent = canvas.parentElement;
-          if (!parent) {
-            return;
-          }
-
-          const opacity = parent.style.opacity;
-          mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
-
-          const matrixTransform = /^matrix\(([^(]*)\)$/.exec(canvas.style.transform);
-          if (matrixTransform) {
-            const matrix = matrixTransform[1].split(',').map(Number);
-            const scaledMatrix = [
-              matrix[0] * scaleX,
-              matrix[1] * scaleY,
-              matrix[2] * scaleX,
-              matrix[3] * scaleY,
-              matrix[4] * scaleX,
-              matrix[5] * scaleY
-            ];
-            CanvasRenderingContext2D.prototype.setTransform.apply(
-              mapContext,
-              scaledMatrix as unknown as [DOMMatrix2DInit]
-            );
-            mapContext.drawImage(canvas, 0, 0);
-          }
-        }
-      });
-
-      if (!hasValidCanvas) {
-        runInAction(() => {
-          this.previewFailed = true;
-          this.loading = false;
-        });
-        this.imageCaptured = true;
-
-        return;
-      }
-
-      CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
-
-      this.previewImage = mapCanvas.toDataURL('image/png', 1);
-      this.imageCaptured = true;
-    } catch (error) {
-      services.logger.error('BboxPreview: Ошибка при захвате изображения', error);
-      runInAction(() => {
-        this.previewFailed = true;
-        this.loading = false;
-      });
-    } finally {
-      if (!this.previewFailed) {
-        runInAction(() => {
-          this.loading = false;
-        });
-      }
-    }
-  }
-
-  @action.bound
-  private cleanup() {
-    if (this.mapInstanceRef) {
-      this.mapInstanceRef.setTarget();
-      this.mapInstanceRef = null;
-    }
-
-    if (this.loadingTimeoutRef !== null) {
-      clearTimeout(this.loadingTimeoutRef);
-      this.loadingTimeoutRef = null;
-    }
-
-    this.imageCaptured = false;
-    this.previewImage = null;
-    this.loading = false;
-    this.previewFailed = false;
-  }
-}
+  return (
+    <div className={cnBboxPreview('Map')}>
+      {isLoading && <BboxPreviewLoading />}
+      {state.previewFailed && <BboxPreviewError />}
+      {!!state.previewImage && !state.previewFailed && !state.loading && <BboxPreviewImage src={state.previewImage} />}
+      {shouldShowError && <BboxPreviewError />}
+      <BboxPreviewMapContainer ref={mapContainerRef} />
+    </div>
+  );
+});

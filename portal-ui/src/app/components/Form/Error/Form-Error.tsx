@@ -14,5 +14,5 @@ interface FormErrorProps extends IClassNameProps, ChildrenProps {
 }
 
 export const FormError: FC<FormErrorProps> = ({ children, warning, contents }) => (
-  <div className={cnFormError({ warning, contents })}>{children}</div>
+  <span className={cnFormError({ warning, contents })}>{children}</span>
 );

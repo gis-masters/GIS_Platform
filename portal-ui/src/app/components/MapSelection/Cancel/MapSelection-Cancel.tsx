@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction, MapMode } from '../../../services/map/map.models';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
 import { mapStore } from '../../../stores/Map.store';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 import { IconButton } from '../../IconButton/IconButton';
 import { RectangleSelectionCancel } from '../../Icons/RectangleSelectionCancel';
 
@@ -17,7 +17,7 @@ export const MapSelectionCancel = observer(() => {
   const escKeyPressedRef = useRef(false);
 
   const clearSelectedFeatures = useCallback(async (): Promise<void> => {
-    await mapModeManager.changeMode(MapMode.NONE, undefined, 'clearSelectedFeatures');
+    await mapModeService.changeMode(MapMode.NONE, undefined, 'clearSelectedFeatures');
   }, []);
 
   useEffect(() => {

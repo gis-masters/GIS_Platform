@@ -1,0 +1,12 @@
+body .XTable-HeadCellLabelWrapper {
+  display: flex;
+
+  width: 100%;
+  min-width: 0;
+
+  & .DescriptionMark {
+    flex-shrink: 0;
+
+    font-size: 20px;
+  }
+}

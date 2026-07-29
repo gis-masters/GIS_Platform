@@ -5,9 +5,9 @@ import { withBemMod } from '@bem-react/core';
 import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType, type WfsMultiPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
-import { editFeatureHistoryStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
-import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../../services/map/draw/map-draw.service';
+import { editFeatureStore } from '../../../../stores/EditFeature.store';
+import { editFeatureHistoryStore } from '../../../../stores/EditFeatureHistory.store';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { cnEditFeatureGeometryForm, type EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 

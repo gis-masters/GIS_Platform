@@ -1,0 +1,14 @@
+.BboxPreview {
+  &-MapContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    visibility: hidden;
+
+    width: 600px;
+    height: 450px;
+
+    clip-path: inset(100%);
+  }
+}

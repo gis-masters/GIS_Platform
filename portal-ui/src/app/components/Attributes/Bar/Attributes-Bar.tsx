@@ -10,10 +10,10 @@ import { extractFeatureId } from '../../../services/geoserver/featureType/featur
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { type PageOptions } from '../../../services/models';
 import { calculateValues } from '../../../services/util/form/formValidation.utils';
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 import { convertToComplexField } from '../../Form/Form.utils';
 import { type XTableInvoke } from '../../XTable/XTable';
 import { type XTableColumn } from '../../XTable/XTable.models';

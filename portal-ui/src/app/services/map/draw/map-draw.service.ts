@@ -8,7 +8,9 @@ import { type DrawEvent } from 'ol/interaction/Draw';
 import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { mapStore } from '../../../stores/Map.store';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 import { communicationService } from '../../communication.service';
 import { type Projection } from '../../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../../data/projections/projections.service';
@@ -19,9 +21,7 @@ import { wfsFeaturesToOlFeatures } from '../../util/open-layers.util';
 import { sleep } from '../../util/sleep';
 import { isBoolean } from '../../util/typeGuards/isBoolean';
 import { getVertexRemover } from '../../util/vertex/VertexRemoverFactory';
-import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
-import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
-import { FeatureState, ToolMode } from '../map.models';
+import { FeatureState, MapMode, ToolMode } from '../map.models';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
@@ -63,14 +63,7 @@ class MapDrawService {
       highlightedFeature.set(FeatureState.ACTIVE, true);
     }
 
-    features.forEach(feature => {
-      const isActive: unknown = feature.get(FeatureState.ACTIVE);
-      if (isBoolean(isActive) && isActive) {
-        feature.setStyle(getStyle(KnownStyleKey.DrawingFeature));
-      } else {
-        feature.setStyle(getStyle(KnownStyleKey.SelectedFeaturesWithVertices));
-      }
-    });
+    this.applyDraftFeatureStyles(features, true);
 
     // Modify
     this.modify = new Modify({
@@ -167,7 +160,6 @@ class MapDrawService {
     const selectedFeatures = wfsFeaturesToOlFeatures(featuresInOlProjection);
     selectedFeatures.forEach(feature => {
       feature.set(FeatureState.SELECTED, true);
-      feature.setStyle(getStyle(KnownStyleKey.SelectedFeatures));
     });
 
     const highlightedFeature = selectedFeatures.find(feature => feature.getId() === activeFeature?.id);
@@ -176,7 +168,6 @@ class MapDrawService {
 
     if (activeFeature && highlightedFeature) {
       highlightedFeature.set(FeatureState.ACTIVE, true);
-      highlightedFeature.setStyle(getStyle(KnownStyleKey.ActiveFeature));
 
       const combinedFeatures = [...selectedFeatures];
       const highlightedFeatureId = highlightedFeature.getId();
@@ -189,8 +180,10 @@ class MapDrawService {
         combinedFeatures[existingIndex] = highlightedFeature;
       }
 
+      this.applyDraftFeatureStyles(combinedFeatures);
       this.addFeatures(combinedFeatures);
     } else {
+      this.applyDraftFeatureStyles(selectedFeatures);
       this.addFeatures(selectedFeatures);
     }
   }
@@ -345,6 +338,25 @@ class MapDrawService {
           };
         })
     );
+  }
+
+  /**
+   * Стили draft-слоя при рисовании (DRAW_FEATURE / кисточка в EDIT):
+   * активная — DrawingFeature, остальные — с кружками вершин.
+   */
+  private applyDraftFeatureStyles(features: Feature<Geometry>[], drawing = false) {
+    const withVertices = drawing || mapStore.mode === MapMode.DRAW_FEATURE || mapStore.toolMode === ToolMode.DRAW;
+
+    features.forEach(feature => {
+      const active: unknown = feature.get(FeatureState.ACTIVE);
+      if (isBoolean(active) && active) {
+        feature.setStyle(getStyle(withVertices ? KnownStyleKey.DrawingFeature : KnownStyleKey.ActiveFeature));
+      } else {
+        feature.setStyle(
+          getStyle(withVertices ? KnownStyleKey.SelectedFeaturesWithVertices : KnownStyleKey.SelectedFeatures)
+        );
+      }
+    });
   }
 
   private removeVertex(event: CustomEvent<SnapEvent>) {

@@ -8,6 +8,7 @@ import { pluralize } from 'numeralize-ru';
 
 import { type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { isExternalLayer } from '../../services/gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { getFeaturesUrl } from '../../services/map/map.util';
 import { copyToClipboard } from '../../services/util/clipboard.util';
@@ -64,7 +65,7 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
 
       const layer = getLayerByFeatureInCurrentProject(firstFeature);
 
-      if (!layer) {
+      if (!layer || isExternalLayer(layer) || !layer.dataset) {
         throw new Error('Не найден слой');
       }
 

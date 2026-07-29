@@ -1,4 +1,5 @@
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { isExternalLayer } from '../../gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { isArray } from '../../util/typeGuards/isArray';
@@ -157,8 +158,8 @@ export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] 
 
 export function hasPhotoModeInFeatures(features: WfsFeature[]): boolean {
   return features.some(feature => {
-    const photoMode = getLayerByFeatureInCurrentProject(feature)?.photoMode;
-    if (!photoMode) {
+    const layer = getLayerByFeatureInCurrentProject(feature);
+    if (!layer || isExternalLayer(layer) || !layer.photoMode) {
       return false;
     }
 
@@ -168,7 +169,7 @@ export function hasPhotoModeInFeatures(features: WfsFeature[]): boolean {
 
 export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
   const layer = getLayerByFeatureInCurrentProject(feature);
-  if (!layer?.photoMode || typeof layer?.photoMode !== 'string') {
+  if (!layer || isExternalLayer(layer) || !layer.photoMode || typeof layer.photoMode !== 'string') {
     return [];
   }
 
@@ -195,7 +196,7 @@ export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
       .filter(notFalsyFilter);
   } catch {
     // в данных может встречаться photoMode со значением в виде одиночной строки
-    const property = feature.properties[layer?.photoMode];
+    const property = feature.properties[layer.photoMode];
 
     if (typeof property === 'string') {
       try {

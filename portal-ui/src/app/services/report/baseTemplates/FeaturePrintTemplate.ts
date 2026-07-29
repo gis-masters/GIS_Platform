@@ -14,7 +14,8 @@ import { getReadablePropertyValue } from '../../data/schema/utils/getReadablePro
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
-import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
+import { isExternalLayer, isNspdLayer } from '../../gis/layers/layers.typeguards';
+import { getLayerByFeatureInCurrentProject, type LayerByFeature } from '../../gis/layers/layers.utils';
 import { type CreateReportRequest, type FeatureTemplateData, type PrintPreparedData } from '../report.models';
 import { isOutputFormat } from '../report.typeguards';
 import { buildCoordinatesList } from '../utils/buildCoordinatesList';
@@ -22,10 +23,19 @@ import { getFeatureSize } from '../utils/getFeatureSize';
 import { PrintTemplate } from './PrintTemplate';
 
 export class FeaturePrintTemplate extends PrintTemplate<WfsFeature> {
-  protected getLayerByFeature(feature: WfsFeature): CrgVectorLayer {
+  protected getLayerByFeature(feature: WfsFeature): LayerByFeature {
     const layer = getLayerByFeatureInCurrentProject(feature);
-    if (!layer) {
+    if (!layer || (isExternalLayer(layer) && !isNspdLayer(layer))) {
       throw new Error('Не найден слой для объекта');
+    }
+
+    return layer;
+  }
+
+  protected getVectorLayerByFeature(feature: WfsFeature): CrgVectorLayer {
+    const layer = this.getLayerByFeature(feature);
+    if (isNspdLayer(layer)) {
+      throw new Error('Шаблон доступен только для векторных слоёв');
     }
 
     return layer;

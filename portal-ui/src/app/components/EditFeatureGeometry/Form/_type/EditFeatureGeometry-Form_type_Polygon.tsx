@@ -2,7 +2,7 @@ import React, { type FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, type WfsPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
-import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { editFeatureStore } from '../../../../stores/EditFeature.store';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { cnEditFeatureGeometryForm, type EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 

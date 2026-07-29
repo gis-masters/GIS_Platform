@@ -7,16 +7,16 @@ import { boundMethod } from 'autobind-decorator';
 import { communicationService } from '../../../services/communication.service';
 import { type Schema } from '../../../services/data/schema/schema.models';
 import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { FilterBySelectionMode, MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
+import { EditFeatureMode } from '../../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
 import { type PageOptions } from '../../../services/models';
 import { getFieldFilterValue } from '../../../services/util/filters/filters';
 import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { type SortParams } from '../../../services/util/sortObjects';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { selectedFeaturesStore } from '../../../stores/SelectedFeatures.store';
 import { Loading } from '../../Loading/Loading';
 import { XTable, type XTableInvoke } from '../../XTable/XTable';
 import { type XTableColumn } from '../../XTable/XTable.models';
@@ -154,7 +154,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
     await mapService.positionToFeature(feature);
 
     if (!selectedFeaturesStore.limitReached) {
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {
@@ -166,7 +166,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
       );
     }
 
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.EDIT_FEATURE,
       {
         payload: { features: [feature], mode: EditFeatureMode.single }

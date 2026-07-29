@@ -18,7 +18,7 @@ export const FormErrors: FC<FormErrorsProps> = ({ errors, warnings, inHelperText
 
   return (
     !!(errors?.length || warnings?.length) && (
-      <div className={cnFormErrors({ contents })}>
+      <span className={cnFormErrors({ contents })}>
         {warnings?.map((warning, i) => (
           <FormError key={`w-${i}`} warning>
             {warning}
@@ -29,7 +29,7 @@ export const FormErrors: FC<FormErrorsProps> = ({ errors, warnings, inHelperText
             {error}
           </FormError>
         ))}
-      </div>
+      </span>
     )
   );
 };

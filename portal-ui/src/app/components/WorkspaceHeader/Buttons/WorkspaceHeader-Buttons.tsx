@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { BugReport, BugReportOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 
 import { MapAction } from '../../../services/map/map.models';
 import { mapStore } from '../../../stores/Map.store';
@@ -26,50 +25,42 @@ import './WorkspaceHeader-Buttons.scss';
 
 const cnWorkspaceHeaderButtons = cn('WorkspaceHeader', 'Buttons');
 
-@observer
-export class WorkspaceHeaderButtons extends Component {
-  render() {
-    return (
-      <div className={cnWorkspaceHeaderButtons()}>
-        {route.data.page === Pages.MAP && <SearchInProject />}
-        {route.data.page === Pages.DATA_MANAGEMENT && organizationSettings.viewServicesCalculator && (
-          <CalculatorButton />
-        )}
-        <CopyUrlButton inHeader />
-        {route.data.page === Pages.MAP && <PrintMapButton />}
-        {route.data.page === Pages.MAP && organizationSettings.viewBugReport && (
-          <Tooltip title='Проверка ошибок по приказу'>
-            <IconButton
-              onClick={this.handleBugsClick}
-              color='inherit'
-              disabled={!mapStore.allowedActions.includes(MapAction.CHECK_BUGS)}
-            >
-              {sidebars.bugReportOpen ? <BugReport /> : <BugReportOutlined />}
-            </IconButton>
-          </Tooltip>
-        )}
-
-        {route.data.page === Pages.MAP && (
-          <>
-            <ImportButton />
-            <ExportGmlMenu />
-          </>
-        )}
-
-        <HelpToggler />
-        <NotificationsToggler />
-        <RunningOutOfSpace />
-        <User />
-      </div>
-    );
-  }
-
-  @boundMethod
-  private handleBugsClick() {
-    if (sidebars.bugReportOpen) {
-      sidebars.closeBugReport();
-    } else {
-      sidebars.openBugReport();
-    }
+function handleBugsClick() {
+  if (sidebars.bugReportOpen) {
+    sidebars.closeBugReport();
+  } else {
+    sidebars.openBugReport();
   }
 }
+
+export const WorkspaceHeaderButtons: FC = observer(() => (
+  <div className={cnWorkspaceHeaderButtons()}>
+    {route.data.page === Pages.MAP && <SearchInProject />}
+    {route.data.page === Pages.DATA_MANAGEMENT && organizationSettings.viewServicesCalculator && <CalculatorButton />}
+    <CopyUrlButton inHeader />
+    {route.data.page === Pages.MAP && <PrintMapButton />}
+    {route.data.page === Pages.MAP && organizationSettings.viewBugReport && (
+      <Tooltip title='Проверка ошибок по приказу'>
+        <IconButton
+          onClick={handleBugsClick}
+          color='inherit'
+          disabled={!mapStore.allowedActions.includes(MapAction.CHECK_BUGS)}
+        >
+          {sidebars.bugReportOpen ? <BugReport /> : <BugReportOutlined />}
+        </IconButton>
+      </Tooltip>
+    )}
+
+    {route.data.page === Pages.MAP && (
+      <>
+        <ImportButton />
+        <ExportGmlMenu />
+      </>
+    )}
+
+    <HelpToggler />
+    <NotificationsToggler />
+    <RunningOutOfSpace />
+    <User />
+  </div>
+));

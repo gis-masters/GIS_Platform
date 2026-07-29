@@ -173,7 +173,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
             exclusive={!multiple}
             onChange={this.handleChangeButtonToggle}
           >
-            {!multiple && (
+            {!multiple && !property.required && (
               <ToggleButton size='small' value={EMPTY}>
                 {emptyTitle}
               </ToggleButton>
@@ -267,6 +267,10 @@ class FormControlTypeChoice extends Component<FormControlProps> {
   private handleChangeButtonToggle(event: React.MouseEvent<HTMLElement, MouseEvent>, value: string) {
     const { onChange, onNeedValidate, property, fieldValue } = this.props;
     const { multiple } = property as PropertySchemaChoice;
+
+    if (!multiple && property.required && (value === null || value === EMPTY)) {
+      return;
+    }
 
     // Конвертируем EMPTY → null
     const finalValue = !multiple && value === EMPTY ? null : value;

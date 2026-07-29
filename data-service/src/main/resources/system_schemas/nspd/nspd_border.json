@@ -1,0 +1,157 @@
+{
+  "name": "nspd_border",
+  "title": "Административное деление",
+  "tableName": "nspd_border",
+  "styleName": "nspd_border",
+  "originName": "nspd_border",
+  "readOnly": true,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "brd_nmb",
+      "title": "Вид",
+      "valueType": "STRING"
+    },
+    {
+      "name": "code",
+      "title": "Код",
+      "valueType": "STRING"
+    },
+    {
+      "name": "description",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "document_date",
+      "title": "Дата",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "document_issuer",
+      "title": "Орган власти, организация выдавшие документ",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "document_name",
+      "title": "Документ",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "document_number",
+      "title": "Номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "valueType": "STRING"
+    },
+    {
+      "name": "legal_acts",
+      "title": "Правовые акты",
+      "valueType": "STRING"
+    },
+    {
+      "name": "loc",
+      "title": "Локация",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "okato",
+      "title": "ОКАТО",
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "ОКТМО",
+      "valueType": "STRING"
+    },
+    {
+      "name": "orig_cad_num",
+      "title": "Оригинальный кадастровый онмер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "record_number",
+      "title": "Номер записи",
+      "valueType": "STRING"
+    },
+    {
+      "name": "reg_code",
+      "title": "Идентификационный номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "reg_num",
+      "title": "Реестровый номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "registration_date",
+      "title": "Дата постановки на учет / регистрации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "valueType": "STRING"
+    },
+    {
+      "name": "subcat",
+      "title": "Категория",
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "valueType": "STRING",
+      "hidden": true,
+      "maxLength": 50
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME",
+      "hidden": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "hidden": true,
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "valueType": "STRING",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": [
+        "Polygon"
+      ]
+    }
+  ]
+}

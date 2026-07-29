@@ -3,7 +3,7 @@ import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { type Coordinate } from 'ol/coordinate';
 
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { EditFeatureGeometryCopy } from '../Copy/EditFeatureGeometry-Copy';
 import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
 

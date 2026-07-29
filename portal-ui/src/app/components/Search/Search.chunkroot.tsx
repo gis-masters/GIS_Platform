@@ -10,7 +10,7 @@ import { type AxiosError } from 'axios';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { mapService } from '../../services/map/map.service';
-import { getNspdData, getNspdDataByAddress } from '../../services/nspd-data.service';
+import { getNspdData, getNspdDataByAddress } from '../../services/nspd/data/nspd-data.service';
 import { services } from '../../services/services';
 import { wfsFeaturesToFeatures } from '../../services/util/open-layers.util';
 import { type YaGeoObjectCollection } from '../../services/yandex-geocode.service';

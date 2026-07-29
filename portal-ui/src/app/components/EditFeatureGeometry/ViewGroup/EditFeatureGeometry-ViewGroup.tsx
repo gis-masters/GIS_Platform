@@ -13,7 +13,7 @@ import { cn } from '@bem-react/classname';
 import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { EditFeatureGeometryViewGroupControls } from '../ViewGroupControls/EditFeatureGeometry-ViewGroupControls';
 
 import './EditFeatureGeometry-ViewGroup.scss';

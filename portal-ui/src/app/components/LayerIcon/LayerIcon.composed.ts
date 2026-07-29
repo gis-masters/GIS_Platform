@@ -4,6 +4,7 @@ import { withTypeDxf } from './_type/LayerIcon_type_dxf';
 import { withTypeError } from './_type/LayerIcon_type_error';
 import { withTypeGroup } from './_type/LayerIcon_type_group';
 import { withTypeMid } from './_type/LayerIcon_type_mid';
+import { withTypeNspd } from './_type/LayerIcon_type_nspd';
 import { withTypeRaster } from './_type/LayerIcon_type_raster';
 import { withTypeShp } from './_type/LayerIcon_type_shp';
 import { withTypeTab } from './_type/LayerIcon_type_tab';
@@ -17,6 +18,7 @@ export const LayerIcon = composeU(
   withTypeTab as HOC<LayerIconProps>,
   withTypeMid as HOC<LayerIconProps>,
   withTypeRaster as HOC<LayerIconProps>,
+  withTypeNspd as HOC<LayerIconProps>,
   withTypeError as HOC<LayerIconProps>,
   withTypeGroup as HOC<LayerIconProps>
 )(Presenter) as typeof Presenter;

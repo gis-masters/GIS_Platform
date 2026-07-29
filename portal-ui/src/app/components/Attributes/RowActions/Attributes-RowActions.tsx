@@ -3,16 +3,16 @@ import { observer } from 'mobx-react';
 import { DeleteOutline, EditLocationOutlined, MyLocationOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { EditFeatureMode } from 'src/app/services/map/a-map-mode/edit-feature/EditFeature.models';
+import { EditFeatureMode } from 'src/app/services/map/mode/map-mode.models';
 
 import { doConfirm } from '../../../services/answer-modals.service';
 import { deleteFeaturesAndEmitEvent } from '../../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { Actions } from '../../Actions/Actions.composed';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ViewLocation } from '../../Icons/ViewLocation';
@@ -64,7 +64,7 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
   private async edit() {
     const { feature } = this.props;
 
-    await mapModeManager.changeMode(
+    await mapModeService.changeMode(
       MapMode.EDIT_FEATURE,
       {
         payload: { features: [feature], mode: EditFeatureMode.single }
@@ -87,7 +87,7 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
       await deleteFeaturesAndEmitEvent(layer.dataset, layer.resourceId, [feature]);
       mapService.refreshAllLayers();
 
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {

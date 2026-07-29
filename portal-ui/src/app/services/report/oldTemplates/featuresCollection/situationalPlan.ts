@@ -10,6 +10,7 @@ import { applyView } from '../../../data/schema/utils/applyView';
 import { getReadablePropertyValue } from '../../../data/schema/utils/getReadablePropertyValue';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
+import { isExternalLayer } from '../../../gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { hideNumberFeaturesOnMap, numberFeaturesOnMap } from '../../helpers/numberFeaturesOnMap';
 import { PrintTemplateOld } from '../PrintTemplateOld';
@@ -30,7 +31,7 @@ export const situationalPlan: PrintTemplateOld<WfsFeature[]> = new PrintTemplate
 
   async render(this: PrintTemplateOld<WfsFeature[]>, data: WfsFeature[]): Promise<string> {
     const layer = getLayerByFeatureInCurrentProject(data[0]);
-    if (!layer) {
+    if (!layer || isExternalLayer(layer)) {
       throw new Error('Не удалось сформировать ситуационный план. Не найден слой для объекта: ' + data[0].id);
     }
 

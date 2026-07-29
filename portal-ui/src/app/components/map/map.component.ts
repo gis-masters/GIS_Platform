@@ -11,13 +11,12 @@ import { getOlProjection } from '../../services/data/projections/projections.ser
 import { type CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { fetchCurrentProjectBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapMode, ToolMode } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { setMapPositionToUrl } from '../../services/map/map-url.service';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { cn } from '../../services/util/cn';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
@@ -25,6 +24,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { route } from '../../stores/Route.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { Toast } from '../Toast/Toast';
 
@@ -141,13 +141,13 @@ export class MapComponent implements OnInit, OnDestroy {
     mapService.zoomChanged.on(e => currentProject.changeZoom(e.detail), this);
 
     cursorHandler.init();
-    await mapModeManager.init();
+    await mapModeService.init();
   }
 
   ngOnDestroy(): void {
     mapService.destroyMap();
 
-    void mapModeManager.changeMode(MapMode.NONE, undefined, 'map ngOnDestroy');
+    void mapModeService.changeMode(MapMode.NONE, undefined, 'map ngOnDestroy');
 
     projectsService.clearCurrent();
     printSettings.reset();

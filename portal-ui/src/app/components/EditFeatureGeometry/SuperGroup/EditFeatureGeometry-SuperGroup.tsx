@@ -7,10 +7,10 @@ import { isNumber } from 'lodash';
 import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
+import { editFeatureHistoryStore } from '../../../stores/EditFeatureHistory.store';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 import { EditFeatureGeometryGroup } from '../Group/EditFeatureGeometry-Group.composed';
 import { EditFeatureGeometryToolbar } from '../Toolbar/EditFeatureGeometry-Toolbar';

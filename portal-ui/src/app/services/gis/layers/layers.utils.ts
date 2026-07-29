@@ -6,7 +6,13 @@ import {
   extractResourceIdFromFeatureId
 } from '../../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { type CrgLayer, CrgLayerType, type CrgVectorLayer, type NewCrgLayer } from './layers.models';
+import {
+  type CrgExternalLayer,
+  type CrgLayer,
+  CrgLayerType,
+  type CrgVectorLayer,
+  type NewCrgLayer
+} from './layers.models';
 
 const defaultProps = {
   enabled: true,
@@ -38,18 +44,29 @@ export function externalLayerDefaults(
   };
 }
 
-export function getLayerByFeatureInCurrentProject(feature: WfsFeature): CrgVectorLayer | undefined {
+export type LayerByFeature = CrgVectorLayer | CrgExternalLayer;
+
+export function getLayerByFeatureInCurrentProject(feature: WfsFeature): LayerByFeature | undefined {
   return getLayerByFeatureIdFromCurrentProject(feature.id);
 }
 
-export function getLayerByFeatureIdInCurrentProject(featureId: string): CrgVectorLayer | undefined {
+export function getLayerByFeatureIdInCurrentProject(featureId: string): LayerByFeature | undefined {
   return getLayerByFeatureIdFromCurrentProject(featureId);
 }
 
-export function getLayerByFeatureIdFromCurrentProject(featureId: string): CrgVectorLayer | undefined {
-  return currentProject.vectorableLayers.find(
-    ({ resourceId }) => resourceId === extractResourceIdFromFeatureId(featureId)
+export function getLayerByFeatureIdFromCurrentProject(featureId: string): LayerByFeature | undefined {
+  const resourceId = extractResourceIdFromFeatureId(featureId);
+
+  const vectorLayer = currentProject.vectorableLayers.find(layer => layer.resourceId === resourceId);
+  if (vectorLayer) {
+    return vectorLayer;
+  }
+
+  const nspdLayer = currentProject.externalLayers.find(
+    layer => layer.type === CrgLayerType.EXTERNAL_NSPD && layer.resourceId === resourceId
   );
+
+  return nspdLayer as CrgExternalLayer | undefined;
 }
 
 export function getLayerByComplexNameInCurrentProject(complexName: string): CrgVectorLayer | undefined {

@@ -11,16 +11,21 @@ import { extractFeatureId } from '../../../services/geoserver/featureType/featur
 import { transformFeatureService } from '../../../services/geoserver/wfs/transform-feature.service';
 import { type WfsFeature, type WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
-import { CrgLayerType, type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import {
+  type CrgExternalLayer,
+  CrgLayerType,
+  type CrgVectorableLayer,
+  type CrgVectorLayer
+} from '../../../services/gis/layers/layers.models';
 import { isVectorLayer } from '../../../services/gis/layers/layers.typeguards';
-import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
+import { EditFeatureMode } from '../../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../../services/map/mode/map-mode.service';
 import { services } from '../../../services/services';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { mapStore } from '../../../stores/Map.store';
 import { applyFieldValue } from '../../Form/Form.utils';
 import { Toast } from '../../Toast/Toast';
@@ -50,7 +55,7 @@ export const useFeatureSave = ({
   formControls: EditFeatureFormControl[];
   featureDescription: OldSchema | undefined;
   editFeatureData: EditedField[];
-  layer: CrgVectorableLayer | CrgVectorLayer | undefined;
+  layer: CrgVectorableLayer | CrgVectorLayer | CrgExternalLayer | undefined;
   isNew: boolean;
   mode: EditFeatureMode;
   setIsSaveInProgress(val: boolean): void;
@@ -167,7 +172,7 @@ export const useFeatureSave = ({
 
     // если есть ошибка при сохранении объекта, то не дергаем режимы что бы не провоцировать кучу проблем
     if (!editFeatureStore.geometryErrorMessage) {
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.SELECTED_FEATURES,
         {
           payload: {
@@ -178,7 +183,7 @@ export const useFeatureSave = ({
         'saveFeatureWithConfirm reopen 1'
       );
 
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.EDIT_FEATURE,
         {
           payload: {

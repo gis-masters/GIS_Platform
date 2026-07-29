@@ -11,10 +11,10 @@ import { PropertyType, type SimpleSchema } from '../../services/data/schema/sche
 import { type WfsFeature, type WfsMultiPolygonGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature } from '../../services/geoserver/wfs/wfs.service';
 import { type CrgLayer, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapMode } from '../../services/map/map.models';
+import { EditFeatureMode } from '../../services/map/mode/map-mode.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { SelectSuitableLayerDialog } from '../SelectSuitableLayerDialog/SelectSuitableLayerDialog';
 import { Toast } from '../Toast/Toast';
@@ -54,7 +54,7 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
         return;
       }
 
-      await mapModeManager.changeMode(
+      await mapModeService.changeMode(
         MapMode.DRAW_FEATURE,
         {
           payload: {

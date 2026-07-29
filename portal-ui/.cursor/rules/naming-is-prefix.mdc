@@ -1,0 +1,20 @@
+---
+description: Префикс is — только у методов и функций, не у свойств и констант
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Именование булевых: префикс `is`
+
+Глагольный префикс **`is`** оставлять для **методов и функций**. Для **свойств, полей и локальных констант** выбирать имена без `is`.
+
+```ts
+// предпочтительно
+const active = feature.get(FeatureState.ACTIVE);
+if (isBoolean(active) && active) { /* ... */ }
+
+function isActive(feature: Feature): boolean { /* ... */ }
+
+// избегать
+const isActive = feature.get(FeatureState.ACTIVE);
+```

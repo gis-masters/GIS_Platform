@@ -5,10 +5,11 @@ import { cn } from '@bem-react/classname';
 
 import { extractResourceIdFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { isExternalLayer } from '../../../services/gis/layers/layers.typeguards';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
-import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { editFeatureStore } from '../../../stores/EditFeature.store';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { type AttributesTableRecord } from '../Attributes.models';
 import { AttributesCheck } from '../Check/Attributes-Check';
@@ -68,7 +69,12 @@ export class AttributesRowHead extends Component<AttributesRowHeadProps> {
 
   @computed
   private get layer(): CrgVectorLayer | undefined {
-    return getLayerByFeatureInCurrentProject(this.props.rowData.feature);
+    const layer = getLayerByFeatureInCurrentProject(this.props.rowData.feature);
+    if (!layer || isExternalLayer(layer)) {
+      return undefined;
+    }
+
+    return layer;
   }
 
   private async fetchPermission() {

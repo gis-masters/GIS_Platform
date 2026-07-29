@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { type CrgLayer } from '../../services/gis/layers/layers.models';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { editFeatureStore } from '../../stores/EditFeature.store';
 import { CreateBufferDialog } from '../CreateBufferDialog/CreateBufferDialog';
 import { IconButton } from '../IconButton/IconButton';
 import { BufferAdd } from '../Icons/Buffer';

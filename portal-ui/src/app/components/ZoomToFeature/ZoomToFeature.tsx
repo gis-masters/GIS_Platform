@@ -10,12 +10,12 @@ import { getOlProjection, getProjectionByCode } from '../../services/data/projec
 import { getFeatureById } from '../../services/geoserver/wfs/wfs.service';
 import { getLayerByFeatureIdInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { mapService } from '../../services/map/map.service';
 import { services } from '../../services/services';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { wfsGeometryToGeometry } from '../../services/util/open-layers.util';
+import { editFeatureStore } from '../../stores/EditFeature.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { IconButton } from '../IconButton/IconButton';
 
 const cnZoomToFeature = cn('ZoomToFeature');

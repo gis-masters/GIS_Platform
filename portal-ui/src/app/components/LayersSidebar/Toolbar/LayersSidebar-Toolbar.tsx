@@ -13,6 +13,7 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { type CrgLayer, type CrgLayersGroup } from '../../../services/gis/layers/layers.models';
+import { isExternalLayer } from '../../../services/gis/layers/layers.typeguards';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { MapAction } from '../../../services/map/map.models';
 import { focusToLayer } from '../../../services/sidebarActions.service';
@@ -137,7 +138,9 @@ export const LayersSidebarToolbar = observer(function LayersSidebarToolbar({
       currentProject.layers.splice(0, 0, layer);
     });
 
-    await focusToLayer(layer);
+    if (!isExternalLayer(layer)) {
+      await focusToLayer(layer);
+    }
   }, []);
 
   const createGroup = useCallback(

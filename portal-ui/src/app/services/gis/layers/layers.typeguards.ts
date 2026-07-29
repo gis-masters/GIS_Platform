@@ -1,5 +1,5 @@
 import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
-import { type CrgLayer, CrgLayerType, type CrgVectorLayer } from './layers.models';
+import { type CrgExternalLayer, type CrgLayer, CrgLayerType, type CrgVectorLayer } from './layers.models';
 
 export function isCrgLayer(value: unknown): value is CrgLayer {
   if (!isRecordStringUnknown(value)) {
@@ -15,4 +15,24 @@ export function isVectorLayer(layer?: unknown): layer is CrgVectorLayer {
   }
 
   return layer.type === CrgLayerType.VECTOR;
+}
+
+export function isExternalLayer(layer?: unknown): layer is CrgExternalLayer {
+  if (!isCrgLayer(layer)) {
+    return false;
+  }
+
+  return (
+    layer.type === CrgLayerType.EXTERNAL ||
+    layer.type === CrgLayerType.EXTERNAL_NSPD ||
+    layer.type === CrgLayerType.EXTERNAL_GEOSERVER
+  );
+}
+
+export function isNspdLayer(layer?: unknown): layer is CrgExternalLayer {
+  if (!isCrgLayer(layer)) {
+    return false;
+  }
+
+  return layer.type === CrgLayerType.EXTERNAL_NSPD;
 }

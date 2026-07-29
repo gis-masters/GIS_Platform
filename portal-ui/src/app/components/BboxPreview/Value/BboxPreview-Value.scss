@@ -1,0 +1,11 @@
+.BboxPreview {
+  &-Value {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    gap: 8px;
+
+    max-width: 100%;
+    margin-top: 8px;
+  }
+}

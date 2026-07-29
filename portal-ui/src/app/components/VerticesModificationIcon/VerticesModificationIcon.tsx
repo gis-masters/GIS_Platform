@@ -5,11 +5,11 @@ import { Gamepad, GamepadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
-import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction, MapMode } from '../../services/map/map.models';
+import { mapModeService } from '../../services/map/mode/map-mode.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
+import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { IconButton } from '../IconButton/IconButton';
 
 import './VerticesModificationIcon.scss';
@@ -49,8 +49,8 @@ export class VerticesModificationIcon extends Component {
   @boundMethod
   private async editVertex() {
     await (this.verticesModificationModeActive()
-      ? mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'editVertex - 1')
-      : mapModeManager.changeMode(MapMode.VERTICES_MODIFICATION, undefined, 'editVertex - 2'));
+      ? mapModeService.changeMode(MapMode.SELECTED_FEATURES, undefined, 'editVertex - 1')
+      : mapModeService.changeMode(MapMode.VERTICES_MODIFICATION, undefined, 'editVertex - 2'));
   }
 
   private verticesModificationModeActive(): boolean {
