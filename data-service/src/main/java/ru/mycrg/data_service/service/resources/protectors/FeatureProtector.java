@@ -5,8 +5,10 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.exceptions.ConflictException;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 
@@ -49,6 +51,18 @@ public class FeatureProtector implements IResourceProtector {
     @Override
     public boolean isEditAllowed(ResourceQualifier qualifier) {
         return tableProtector.isEditAllowed(qualifier);
+    }
+
+    public void throwIsEditNotAllowed(ResourceQualifier qualifier, SchemaDto schema) {
+        if (!isEditAllowed(qualifier)) {
+            throw new ForbiddenException(
+                    "Таблица: '" + qualifier.getTableQualifier() + "' не доступна для обновления.");
+        }
+
+        if (schema.isReadOnly()) {
+            throw new ForbiddenException(
+                    "Таблица: '" + qualifier.getTableQualifier() + "' не доступна для редактирования.");
+        }
     }
 
     @Override

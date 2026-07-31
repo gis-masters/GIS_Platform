@@ -51,13 +51,20 @@ public class CustomRulesRecalculationService {
         for (ResourceQualifierDto resourceQualifier: rQualifiersDto) {
             ResourceQualifier rQualifier = new ResourceQualifier(resourceQualifier.getSchema(),
                                                                  resourceQualifier.getTable());
-            SchemaDto schema = schemaExtractor.get(rQualifier)
-                                              .orElseThrow(() -> new NotFoundException(rQualifier.getTableQualifier()));
+
             if (!datasetProtector.isEditAllowed(new ResourceQualifier(resourceQualifier.getSchema()))) {
                 log.error("Недостаточно прав для редактирования набора: {}", rQualifier.getSchema());
 
                 throw new ForbiddenException("Недостаточно прав для редактирования набора: " + rQualifier.getSchema());
             }
+
+            SchemaDto schema = schemaExtractor.get(rQualifier)
+                                              .orElseThrow(() -> new NotFoundException(rQualifier.getTableQualifier()));
+            if (schema.isReadOnly()) {
+                throw new ForbiddenException(
+                        "Таблица: '" + rQualifier.getTableQualifier() + "' не доступна для редактирования.");
+            }
+
             int page = 0;
             int size = 1000;
             while (true) {

@@ -10,7 +10,7 @@ import { addVectorTablePermissions } from '../commands/tables/addVectorTablePerm
 import { createVectorTableAs } from '../commands/tables/createVectorTableAs';
 import { getVectorTableInDatasetByTitle } from '../commands/tables/getVectorTableByTitle';
 import { getTestFeatures } from '../commands/tables/testFeatures';
-import { createRecordAsAdmin } from '../commands/tables/vectorTableRecordsManagement';
+import { createRecordsAsAdmin } from '../commands/tables/vectorTableRecordsManagement';
 import { type ScenarioScope } from '../ScenarioScope';
 
 const DEFAULT_CRS = 'EPSG:28406';
@@ -80,9 +80,7 @@ Given(
 Given('таблица наполнена данными {string}', async function (this: ScenarioScope, key: string) {
   this.latestFeatures = await getTestFeatures(key, this.latestSchema);
 
-  for (const feature of this.latestFeatures) {
-    await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
-  }
+  await createRecordsAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, this.latestFeatures);
 });
 
 Given('таблица наполнена данными, c один файлом, для фотослоя', async function (this: ScenarioScope) {
@@ -99,9 +97,7 @@ Given('таблица наполнена данными, c один файлом
         ])
     );
   }
-  for (const feature of this.latestFeatures) {
-    await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
-  }
+  await createRecordsAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, this.latestFeatures);
 });
 
 Given('таблица наполнена данными для фотослоя c несколькими объектами', async function (this: ScenarioScope) {
@@ -110,9 +106,7 @@ Given('таблица наполнена данными для фотослоя 
     this.latestFeatures.forEach(feature => (feature.properties.photo = this.latestUploadedFiles));
   }
 
-  for (const feature of this.latestFeatures) {
-    await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
-  }
+  await createRecordsAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, this.latestFeatures);
 });
 
 Given(

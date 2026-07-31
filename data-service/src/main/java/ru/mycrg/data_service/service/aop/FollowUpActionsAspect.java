@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.aop;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public class FollowUpActionsAspect {
     public void tasksPointcut() {
     }
 
-    @After("tasksPointcut() || featuresPointcut() || documentsPointcut()")
+    @AfterReturning("tasksPointcut() || featuresPointcut() || documentsPointcut()")
     void followUpAction(JoinPoint joinPoint) {
         try {
             ISchemable schemable = (ISchemable) joinPoint.getArgs()[0];

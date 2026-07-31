@@ -138,21 +138,21 @@ public class TableRecordsController {
                                                             @PathVariable List<Long> recordIds) {
         ResourceQualifier tableQualifier = new ResourceQualifier(datasetId, tableId);
 
+        TableModel table = tableService.getInfo(tableQualifier);
+        SchemaDto schema = table.getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + tableQualifier.getQualifier());
+        }
+
         if (recordIds.size() == 1) {
             ResourceQualifier recordQualifier = new ResourceQualifier(datasetId, tableId, recordIds.get(0), FEATURE);
-
-            TableModel table = tableService.getInfo(tableQualifier);
-            SchemaDto schema = table.getSchema();
-            if (schema == null) {
-                throw new NotFoundException("Не найдена схема таблицы: " + tableQualifier.getQualifier());
-            }
 
             Feature feature = spatialRecordsDao.findById(recordQualifier, schema)
                                                .orElseThrow(() -> new NotFoundException(recordIds.get(0)));
 
             mediator.execute(new DeleteTableRecordRequest(recordQualifier, feature, schema));
         } else {
-            mediator.execute(new DeleteMultipleTableRecordsRequest(tableQualifier, recordIds));
+            mediator.execute(new DeleteMultipleTableRecordsRequest(tableQualifier, schema, recordIds));
         }
 
         return ResponseEntity.noContent().build();

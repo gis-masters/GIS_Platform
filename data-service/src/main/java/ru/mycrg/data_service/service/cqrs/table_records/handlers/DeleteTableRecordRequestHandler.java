@@ -7,6 +7,8 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.DeleteTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
@@ -21,16 +23,23 @@ public class DeleteTableRecordRequestHandler implements IRequestHandler<DeleteTa
 
     private final SpatialRecordsDao spatialRecordsDao;
     private final BaseWriteDao baseDao;
+    private final FeatureProtector featureProtector;
 
-    public DeleteTableRecordRequestHandler(SpatialRecordsDao spatialRecordsDao, BaseWriteDao baseDao) {
+    public DeleteTableRecordRequestHandler(SpatialRecordsDao spatialRecordsDao,
+                                           BaseWriteDao baseDao,
+                                           FeatureProtector featureProtector) {
         this.spatialRecordsDao = spatialRecordsDao;
         this.baseDao = baseDao;
+        this.featureProtector = featureProtector;
     }
 
     @Override
     public Voidy handle(DeleteTableRecordRequest request) {
         ResourceQualifier rQualifier = request.getQualifier();
+        SchemaDto schema = request.getSchema();
         Feature feature = request.getFeature();
+
+        featureProtector.throwIsEditNotAllowed(rQualifier, schema);
 
         try {
             spatialRecordsDao.removeMultipleRecords(rQualifier, List.of(feature.getId()));

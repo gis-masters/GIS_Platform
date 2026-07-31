@@ -10,6 +10,7 @@ class MapVerticesModificationStore {
 
   @observable saving: boolean = false;
   @observable modifiedFeatures: Feature<Geometry>[] = [];
+  @observable updatableFeatureIds: string[] = [];
 
   private constructor() {
     makeObservable(this);
@@ -31,6 +32,11 @@ class MapVerticesModificationStore {
         this.modifiedFeatures[existingFeatureIndex] = newFeature;
       }
     }
+  }
+
+  @action
+  setUpdatableFeatureIds(featureIds: string[]) {
+    this.updatableFeatureIds = featureIds;
   }
 
   @action

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.schemaId;
@@ -192,7 +193,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         createTable(anotherTableDto);
     }
 
-    @When("Существует таблица доступная только для чтения")
+    @When("Существует таблица, по схеме с параметром: 'только для чтения'")
     public void initReadOnlyTable() {
         String schemaId = "advertising_point_simf_2022";
         anotherTableName = schemaId + "_" + generateString("STRING_5");
@@ -531,5 +532,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         post("/" + tableName + "/roleAssignment");
+
+        assertEquals("Не удалось выдать права на таблицу: " + tableName, SC_CREATED, response.statusCode());
     }
 }

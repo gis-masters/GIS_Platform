@@ -12,7 +12,10 @@ export const verticesModificationModeHandler: MapModeHandler = {
   async activate(): Promise<void> {
     services.logger.trace('VerticesModificationModeHandler activate');
 
-    mapVerticesModificationService.verticesModificationOn();
+    const ok = await mapVerticesModificationService.verticesModificationOn();
+    if (!ok) {
+      throw new Error('Нет прав на обновление выделенных объектов');
+    }
 
     selectedFeaturesStore.clearActiveFeature();
     const features = await mapDrawService.getFeatures();

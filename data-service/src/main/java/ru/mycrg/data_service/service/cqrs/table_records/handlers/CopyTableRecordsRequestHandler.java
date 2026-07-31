@@ -7,7 +7,6 @@ import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CopyTableRecordsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
@@ -60,11 +58,7 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
         SchemaDto schemaTarget = request.getSchemaTarget();
         List<Long> featureIds = request.getFeatureIds();
 
-        if (!featureProtector.isEditAllowed(targetQualifier)) {
-            String message = format("Недостаточно прав для записи в таблицу: %s", targetQualifier.getTableQualifier());
-
-            throw new ForbiddenException(message);
-        }
+        featureProtector.throwIsEditNotAllowed(targetQualifier, schemaTarget);
 
         List<String> targetColumnNames = ddlTablesSpecial.getAllColumnNames(targetQualifier.getTable());
 

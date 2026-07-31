@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
 import { type IReactionDisposer } from 'mobx';
 import { observer } from 'mobx-react';
-import { ButtonGroup, Tooltip } from '@mui/material';
-import { CancelOutlined, Close, SaveOutlined } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
 import { MapMode } from '../../services/map/map.models';
 import { mapModeService } from '../../services/map/mode/map-mode.service';
-import { mapVerticesModificationService } from '../../services/map/vertices-modification/map-vertices-modification.service';
 import { mapStore } from '../../stores/Map.store';
-import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { selectedFeaturesStore } from '../../stores/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { SearchFeaturesList } from '../SearchFeaturesList/SearchFeaturesList';
 import { type SearchInfo } from '../SearchField/SearchField';
 import { SelectedFeaturesList } from '../SelectedFeaturesList/SelectedFeaturesList';
-import { VerticesModificationIcon } from '../VerticesModificationIcon/VerticesModificationIcon';
+import { VerticesModification } from '../VerticesModification/VerticesModification';
 
 import './FeaturesListSidebarFeatures.scss';
 
@@ -47,45 +45,7 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
           <div className={cnFeaturesListSidebarFeatures('Header')}>
             {searchValue ? 'Результаты поиска' : 'Выделенные объекты'}
 
-            {mapStore.mode === MapMode.VERTICES_MODIFICATION && (
-              <div className={cnFeaturesListSidebarFeatures('Actions')}>
-                <div className={cnFeaturesListSidebarFeatures('Fon')} />
-                <ButtonGroup size='small' aria-label='vertices-mode-actions'>
-                  <Tooltip title='Сохранить изменения'>
-                    <span>
-                      <IconButton
-                        color='primary'
-                        onClick={this.saveVerticesModification}
-                        disabled={
-                          mapVerticesModificationStore.modifiedFeatures.length < 1 ||
-                          mapVerticesModificationStore.saving
-                        }
-                        loading={mapVerticesModificationStore.saving}
-                      >
-                        <SaveOutlined />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-
-                  <Tooltip title='Отменить изменения'>
-                    <span>
-                      <IconButton
-                        color='secondary'
-                        onClick={this.cancelVerticesModification}
-                        disabled={
-                          mapVerticesModificationStore.modifiedFeatures.length < 1 ||
-                          mapVerticesModificationStore.saving
-                        }
-                      >
-                        <CancelOutlined />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                </ButtonGroup>
-              </div>
-            )}
-
-            {!searchValue && <VerticesModificationIcon />}
+            <VerticesModification showButton={!searchValue} />
 
             <Tooltip title='Снять выделение со всех объектов (Esc, Esc)'>
               <IconButton className={cnFeaturesListSidebarFeatures('Close')} onClick={this.close}>
@@ -122,13 +82,5 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
     if (success && this.props.searchValue) {
       sidebars.setSearchValue({});
     }
-  }
-
-  private saveVerticesModification() {
-    void mapVerticesModificationService.save(mapVerticesModificationStore.modifiedFeatures);
-  }
-
-  private cancelVerticesModification() {
-    void mapVerticesModificationService.verticesModificationClear();
   }
 }

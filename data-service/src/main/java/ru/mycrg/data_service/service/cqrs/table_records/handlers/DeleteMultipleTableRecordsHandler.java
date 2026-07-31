@@ -8,6 +8,8 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.DeleteMultipleTableRecordsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
@@ -23,18 +25,24 @@ public class DeleteMultipleTableRecordsHandler implements IRequestHandler<Delete
     private final DdlTablesBase ddlTablesBase;
     private final BaseWriteDao baseDao;
     private final SpatialRecordsDao spatialRecordsDao;
+    private final FeatureProtector featureProtector;
 
     public DeleteMultipleTableRecordsHandler(SpatialRecordsDao spatialRecordsDao,
                                              DdlTablesBase ddlTablesBase,
-                                             BaseWriteDao baseDao) {
+                                             BaseWriteDao baseDao,
+                                             FeatureProtector featureProtector) {
         this.spatialRecordsDao = spatialRecordsDao;
         this.ddlTablesBase = ddlTablesBase;
         this.baseDao = baseDao;
+        this.featureProtector = featureProtector;
     }
 
     @Override
     public Voidy handle(DeleteMultipleTableRecordsRequest request) {
         ResourceQualifier rQualifier = request.getrQualifiers();
+        SchemaDto schema = request.getSchema();
+
+        featureProtector.throwIsEditNotAllowed(rQualifier, schema);
 
         try {
             if (ddlTablesBase.isExist(rQualifier)) {

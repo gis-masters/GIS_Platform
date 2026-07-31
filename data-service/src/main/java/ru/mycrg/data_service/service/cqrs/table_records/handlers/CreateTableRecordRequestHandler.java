@@ -9,6 +9,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.mappers.FeatureMapper;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CreateTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
 import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.validation.GeometryValidationService;
@@ -33,17 +34,20 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
     private final SpatialRecordsDao spatialRecordsDao;
     private final DdlTablesSpecial ddlTablesSpecial;
     private final GeometryValidationService geometryValidationService;
+    private final FeatureProtector featureProtector;
 
     public CreateTableRecordRequestHandler(CustomRuleCalculator customRuleCalculator,
                                            SystemAttributeHandler systemAttributeHandler,
                                            SpatialRecordsDao spatialRecordsDao,
                                            DdlTablesSpecial ddlTablesSpecial,
-                                           GeometryValidationService geometryValidationService) {
+                                           GeometryValidationService geometryValidationService,
+                                           FeatureProtector featureProtector) {
         this.customRuleCalculator = customRuleCalculator;
         this.systemAttributeHandler = systemAttributeHandler;
         this.spatialRecordsDao = spatialRecordsDao;
         this.ddlTablesSpecial = ddlTablesSpecial;
         this.geometryValidationService = geometryValidationService;
+        this.featureProtector = featureProtector;
     }
 
     @Override
@@ -51,6 +55,8 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
         Feature feature = request.getFeature();
         SchemaDto schema = request.getSchema();
         ResourceQualifier qualifier = request.getQualifier();
+
+        featureProtector.throwIsEditNotAllowed(qualifier, schema);
 
         //Если геометрия невалидная, мы никогда не внесём её через кнопку "Сохранить"
         //но если геометрии нет, то и проверять нечего

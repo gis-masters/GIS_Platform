@@ -104,6 +104,20 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         createFeature(new GeoJsonModel(properties));
     }
 
+    /**
+     * currentFeatureId - костылик для теста обновления записи, в таблице в которой её даже нельзя создать по api
+     */
+    @Given("В контексте заданы идентификаторы записей {string}")
+    public void setFeatureIds(String idsAsString) {
+        featureIds = Arrays.stream(idsAsString.split("\\s*,\\s*"))
+                           .map(Integer::parseInt)
+                           .collect(Collectors.toList());
+
+        if (featureIds.size() == 1) {
+            currentFeatureId = Integer.parseInt(idsAsString);
+        }
+    }
+
     @When("в текущей таблице существует запись со следующим содержимым")
     public void createFeatureInCurrentTable(String attributesAsJson) throws JsonProcessingException {
         createFeature(
@@ -127,6 +141,20 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь создает новую запись в таблице")
     public void createNewFeatureInCurrentTable() {
         createSomeFeatureInCurrentTable();
+    }
+
+    @When("Пользователь делает запрос на создание новой записи")
+    public void createFeatureAsCurrentUser() {
+        authorizationBase.loginAsCurrentUser();
+
+        postFeatureWithoutAssertingSuccess();
+    }
+
+    @When("Администратор делает запрос на создание новой записи")
+    public void createFeatureAsAdmin() {
+        authorizationBase.loginAsOwner();
+
+        postFeatureWithoutAssertingSuccess();
     }
 
     @When("Создана запись в слое с отсылкой на второй файл")
@@ -159,8 +187,26 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         deleteFeature(currentFeatureId);
     }
 
+    @When("Пользователь делает запрос на удаление существующей записи")
+    public void deleteFeatureAsCurrentUser() {
+        authorizationBase.loginAsCurrentUser();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete(String.format("/%s", currentFeatureId));
+    }
+
     @When("Пользователь делает запрос на массовое удаление записей слоя")
     public void deleteMultipleRecords() {
+        if (!featureIds.isEmpty()) {
+            deleteFeatures(featureIds);
+        }
+    }
+
+    @When("текущий пользователь делает запрос на массовое удаление записей слоя")
+    public void deleteMultipleRecordsAsCurrentUser() {
+        authorizationBase.loginAsCurrentUser();
+
         if (!featureIds.isEmpty()) {
             deleteFeatures(featureIds);
         }
@@ -169,6 +215,13 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на массовое редактирование записей слоя")
     public void updateMultipleRecords() {
         authorizationBase.loginAsCurrentUser();
+
+        updateMultipleRecordsAsCurrentUser();
+    }
+
+    @When("Администратор делает запрос на массовое редактирование записей слоя")
+    public void updateMultipleRecordsAsAdmin() {
+        authorizationBase.loginAsOwner();
 
         updateMultipleRecordsAsCurrentUser();
     }
@@ -223,6 +276,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на обновление существующей записи")
     public void updateFeatureInCurrentTable() {
+        assertNotNull("Запись должна объявляться в сценарии", currentFeatureId);
+
         authorizationBase.loginAsCurrentUser();
 
         updateCurrentFeatureAttributeAsCurrentUser("title", "new title");
@@ -230,6 +285,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос на обновление существующей записи")
     public void updateFeatureInCurrentTableByAdmin() {
+        assertNotNull("Запись должна объявляться в сценарии", currentFeatureId);
+
         authorizationBase.loginAsOwner();
 
         updateCurrentFeatureAttributeAsCurrentUser("title", "new title");
@@ -674,6 +731,19 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         currentFeatureId = extractEntityIdFromResponse(response);
     }
 
+    private void postFeatureWithoutAssertingSuccess() {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("title", "some feature");
+        properties.put("name", "testName");
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(JSON)
+                .when().
+                        body(gson.toJson(new GeoJsonModel(properties))).
+                        post("");
+    }
+
     // Нет GET пока что
 
     private void getFeature(Integer id) {
@@ -722,6 +792,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         patch("/" + currentFeatureId);
     }
 
+    //TODO: переписать patch join без Iterable
     private void updateFeatures(Map<String, Object> properties, List<Integer> ids) {
         String path = String.format("/api/data/datasets/%s/tables/%s/records-multiple",
                                     currentDatasetIdentifier, currentTableName);

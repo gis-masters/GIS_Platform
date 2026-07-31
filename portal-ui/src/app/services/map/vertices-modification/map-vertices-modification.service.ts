@@ -1,3 +1,4 @@
+import Collection from 'ol/Collection';
 import { type SnapEvent } from 'ol/events/SnapEvent';
 import type Feature from 'ol/Feature';
 import { type Geometry } from 'ol/geom';
@@ -16,7 +17,11 @@ import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { isExternalLayer } from '../../gis/layers/layers.typeguards';
-import { getLayerByFeatureIdFromCurrentProject } from '../../gis/layers/layers.utils';
+import {
+  getLayerByFeatureIdFromCurrentProject,
+  getLayerByFeatureInCurrentProject
+} from '../../gis/layers/layers.utils';
+import { isUpdateAllowed } from '../../permissions/permissions.service';
 import { services } from '../../services';
 import { transformGeometryToLayerProjectionInWfsFeature } from '../../util/coordinates-transform.util';
 import { featureToWfsFeature } from '../../util/open-layers.util';
@@ -35,9 +40,11 @@ class MapVerticesModificationService {
   private modify?: Modify;
 
   private verticesModification = {
-    init: () => {
+    init: (allowedFeatures: Feature<Geometry>[]) => {
+      this.verticesModification.destroy();
+
       this.modify = new Modify({
-        source: mapDrawService.getDrawSource()
+        features: new Collection(allowedFeatures)
       });
       mapService.map.addInteraction(this.modify);
 
@@ -54,24 +61,74 @@ class MapVerticesModificationService {
     reset: () => {
       this.modify?.setActive(false);
       this.modify?.setActive(true);
+    },
+    destroy: () => {
+      if (this.modify) {
+        this.modify.setActive(false);
+        mapService.map.removeInteraction(this.modify);
+        this.modify = undefined;
+      }
     }
   };
 
-  verticesModificationOn() {
+  async resolveUpdatableFeatureIds(features: WfsFeature[]): Promise<string[]> {
+    const layerAllowed = new Map<number, boolean>();
+    const updatableIds: string[] = [];
+
+    for (const feature of features) {
+      const layer = getLayerByFeatureInCurrentProject(feature);
+      if (!layer) {
+        continue;
+      }
+
+      let allowed = layerAllowed.get(layer.id);
+      if (allowed === undefined) {
+        allowed = await isUpdateAllowed(layer);
+        layerAllowed.set(layer.id, allowed);
+      }
+
+      if (allowed) {
+        updatableIds.push(feature.id);
+      }
+    }
+
+    mapVerticesModificationStore.setUpdatableFeatureIds(updatableIds);
+
+    return updatableIds;
+  }
+
+  async verticesModificationOn(): Promise<boolean> {
+    const updatableIds = await this.resolveUpdatableFeatureIds(selectedFeaturesStore.features);
+    if (updatableIds.length === 0) {
+      return false;
+    }
+
+    const updatableIdSet = new Set(updatableIds);
+    const allowedOlFeatures = mapDrawService
+      .getDrawSource()
+      .getFeatures()
+      .filter(feature => updatableIdSet.has(String(feature.getId())));
+
+    if (allowedOlFeatures.length === 0) {
+      return false;
+    }
+
     communicationService.minimizeAttributesBar.emit();
 
-    this.verticesModification.init();
+    this.verticesModification.init(allowedOlFeatures);
     this.verticesModification.setActive(true);
 
     mapSnapService.activate();
     communicationService.snapDblClick.on((event: CustomEvent<SnapEvent>) => this.handleDblClick(event), this);
+
+    return true;
   }
 
   verticesModificationOff() {
     mapVerticesModificationStore.updateModifiedCollection([]);
     void mapDrawService.reDrawFeatures(selectedFeaturesStore.features);
 
-    this.verticesModification.setActive(false);
+    this.verticesModification.destroy();
 
     mapSnapService.deactivate();
     communicationService.off(this);
@@ -114,6 +171,13 @@ class MapVerticesModificationService {
         continue;
       }
 
+      if (!(await isUpdateAllowed(layer))) {
+        services.logger.warn('Нет прав на обновление фичи: ' + featureId);
+        notSavedCounter++;
+
+        continue;
+      }
+
       const savedFeature = await this.saveFeature(feature, layer, projectionsStore.olProjection);
       if (savedFeature === null) {
         notSavedCounter++;
@@ -148,6 +212,10 @@ class MapVerticesModificationService {
 
     const { vertex, feature } = event.detail;
     if (vertex === undefined || feature === undefined) {
+      return;
+    }
+
+    if (!mapVerticesModificationStore.updatableFeatureIds.includes(String(feature.getId()))) {
       return;
     }
 

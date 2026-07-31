@@ -8,7 +8,6 @@ import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.UpdateMultipleTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
@@ -59,10 +58,7 @@ public class UpdateMultipleTableRecordRequestHandler implements IRequestHandler<
         Map<String, Object> properties = request.getProperties();
         List<Long> ids = request.getIds();
 
-        if (!featureProtector.isEditAllowed(qualifier)) {
-            throw new ForbiddenException(
-                    "Таблица: '" + qualifier.getTableQualifier() + "' не доступна для обновления.");
-        }
+        featureProtector.throwIsEditNotAllowed(qualifier, schema);
 
         List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(qualifier.getTable());
         throwIfNotMatchTableColumns(properties.keySet(), allColumnNames);

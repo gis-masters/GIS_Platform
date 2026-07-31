@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.cqrs.table_records.requests;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 
@@ -14,11 +15,12 @@ import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 public class DeleteMultipleTableRecordsRequest implements IRequest<Voidy>, Auditable {
 
     private final ResourceQualifier rQualifiers;
-
+    private final SchemaDto schema;
     private final List<Long> ids;
 
-    public DeleteMultipleTableRecordsRequest(ResourceQualifier rQualifiers, List<Long> ids) {
+    public DeleteMultipleTableRecordsRequest(ResourceQualifier rQualifiers, SchemaDto schema, List<Long> ids) {
         this.rQualifiers = rQualifiers;
+        this.schema = schema;
         this.ids = ids;
     }
 
@@ -37,6 +39,10 @@ public class DeleteMultipleTableRecordsRequest implements IRequest<Voidy>, Audit
 
     public ResourceQualifier getrQualifiers() {
         return rQualifiers;
+    }
+
+    public SchemaDto getSchema() {
+        return schema;
     }
 
     public List<Long> getIds() {

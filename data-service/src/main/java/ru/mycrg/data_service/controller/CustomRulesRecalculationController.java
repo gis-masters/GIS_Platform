@@ -19,6 +19,12 @@ public class CustomRulesRecalculationController {
 
     private final CustomRulesRecalculationService customRulesRecalculationService;
 
+    /**
+     * Весь контроллер это костыль для пересчёта правил после нечестного добавления данных в таблицу на прямую через БД.
+     * На данный момент код больше не считает ruleID используя JavaScript, логика перенесена на уровень БД и зашита
+     * при создании таблиц по схемама как Generated Always as. По сути можно удалить весь mvc путь. На данный момент
+     * нет мест, где бы этот код правда применялся и был бы важен.
+     */
     public CustomRulesRecalculationController(CustomRulesRecalculationService customRulesRecalculationService) {
         this.customRulesRecalculationService = customRulesRecalculationService;
     }
