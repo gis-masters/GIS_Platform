@@ -8,7 +8,7 @@ When('я нажимаю на стрелку назад в панели прос�
 });
 
 Then('открывается форма просмотра объекта', async function () {
-  await editFeatureBlock.waitForVisible();
+  await editFeatureBlock.waitForVisible({ timeout: 15_000 });
 });
 
 Then('не открывается форма просмотра объекта', async function () {

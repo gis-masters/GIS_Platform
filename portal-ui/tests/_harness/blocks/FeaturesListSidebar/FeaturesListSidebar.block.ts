@@ -2,6 +2,7 @@ import type { WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/ty
 
 import { Block } from '../../classes/Block';
 import { extractText } from '../../commands/extractText';
+import { editFeatureBlock } from '../EditFeature/EditFeature.block';
 import { FeaturesListItemBlock } from '../FeaturesListItem/FeaturesListItem.block';
 
 class FeaturesListSidebarBlock extends Block {
@@ -46,6 +47,8 @@ class FeaturesListSidebarBlock extends Block {
   async openObject(itemName: string) {
     const featuresListItemBlock = await this.getFeaturesListItemByTitle(itemName);
     await featuresListItemBlock.openObject();
+    await editFeatureBlock.waitForVisible();
+    await editFeatureBlock.waitForLoading();
   }
 
   async selectObject(itemName: string) {

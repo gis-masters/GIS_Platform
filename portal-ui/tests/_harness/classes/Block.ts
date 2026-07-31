@@ -40,9 +40,9 @@ export abstract class Block<S extends Selectors = Selectors> {
     await $root.waitForExist();
   }
 
-  async waitForVisible(): Promise<void> {
+  async waitForVisible(options?: { timeout?: number }): Promise<void> {
     const $root = await this.findBySelector('root');
-    await $root.waitForDisplayed();
+    await $root.waitForDisplayed(options);
   }
 
   async waitForHidden(): Promise<void> {

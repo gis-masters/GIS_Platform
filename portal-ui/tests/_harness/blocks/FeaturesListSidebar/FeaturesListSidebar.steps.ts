@@ -83,18 +83,32 @@ Then('в боковой панели выделенных объектов от�
 });
 
 Then('в боковой панели выделенных объектов существуют объекты:', async (expectedNames: DataTable) => {
-  const rawExpectedNames = expectedNames.raw();
-  rawExpectedNames.shift();
-  const currentNames = await Promise.all(
-    rawExpectedNames.map(async name => {
-      const featuresListItemBlock = await featuresListSidebarBlock.getFeaturesListItemByTitle(name[0]);
-      const [, layer, title] = await featuresListItemBlock.getItemData();
+  const rawExpectedNames = expectedNames.raw().slice(1);
+  let lastNames: string[][] = [];
 
-      return [title, layer];
-    })
+  // WFS-прокол и asTitle подгружаются асинхронно — ждём появления ожидаемых объектов
+  await browser.waitUntil(
+    async () => {
+      try {
+        lastNames = await Promise.all(
+          rawExpectedNames.map(async name => {
+            const featuresListItemBlock = await featuresListSidebarBlock.getFeaturesListItemByTitle(name[0]);
+            const [, layer, title] = await featuresListItemBlock.getItemData();
+
+            return [title, layer];
+          })
+        );
+
+        return isEqual(rawExpectedNames, lastNames);
+      } catch {
+        return false;
+      }
+    },
+    {
+      timeout: 10_000,
+      timeoutMsg: `Ожидались объекты ${JSON.stringify(rawExpectedNames)}, получено ${JSON.stringify(lastNames)}`
+    }
   );
-
-  expect(rawExpectedNames).toEqual(currentNames);
 });
 
 Then('панель выделенных объектов закрывается', async function () {

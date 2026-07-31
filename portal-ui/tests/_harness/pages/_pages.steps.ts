@@ -23,9 +23,10 @@ async function waitForMapPositionedOnFeatures(featureIds: string[]): Promise<voi
   await mapBlock.waitForVisible();
 
   if (featureIds.length === 1) {
-    await editFeatureBlock.waitForVisible();
+    await editFeatureBlock.waitForVisible({ timeout: 15_000 });
   }
 
+  await mapBlock.waitForMapPositionStable();
   await mapBlock.waitForReadyForProkol();
 }
 

@@ -1,6 +1,7 @@
 import { type DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { attributesBlock } from '../Attributes/Attributes.block';
+import { mapBlock } from '../Map/Map.block';
 import { layersSidebarBlock } from './LayersSidebar.block';
 
 When('в списке слоёв на карте я нажимаю кнопку `Настроить слои проекта`', async () => {
@@ -23,7 +24,7 @@ When(
     await layersSidebarBlock.selectLayersListElementMenuItem(layerName, menuItemTitle);
 
     if (menuItemTitle === 'Перейти к слою') {
-      await browser.pause(400); // анимация перехода к объектам слоя на карте
+      await mapBlock.waitForMapPositionStable();
     }
 
     await attributesBlock.waitForLoading();

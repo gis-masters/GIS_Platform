@@ -1,4 +1,5 @@
 import { Block } from '../../classes/Block';
+import { doubleClick } from '../../commands/doubleClick';
 
 export class FeaturesListItemBlock extends Block {
   selectors = {
@@ -24,21 +25,21 @@ export class FeaturesListItemBlock extends Block {
   }
 
   async openObject(): Promise<void> {
-    const $title = await this.findBySelector('id');
-    await $title.waitForClickable();
-    await $title.doubleClick();
+    const $id = await this.findBySelector('id');
+    await $id.waitForClickable();
+    await doubleClick($id);
   }
 
   async selectObject(): Promise<void> {
-    const $title = await this.findBySelector('id');
-    await $title.waitForClickable();
-    await $title.click();
+    const $id = await this.findBySelector('id');
+    await $id.waitForClickable();
+    await $id.click();
   }
 
   async focusToObject(): Promise<void> {
-    const $title = await this.findBySelector('id');
-    await $title.waitForClickable();
-    await $title.moveTo();
+    const $id = await this.findBySelector('id');
+    await $id.waitForClickable();
+    await $id.moveTo();
   }
 
   async getItemData(): Promise<string[]> {

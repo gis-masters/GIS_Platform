@@ -251,8 +251,25 @@ Then(
 );
 
 Then('в атрибутивной таблице существуют вкладки с заголовками:', async function (attributeTitle: DataTable) {
-  const titles = await attributesBlock.getTabsTitles();
-  expect(titles).toEqual(attributeTitle.raw()[0]);
+  const expected = attributeTitle.raw()[0];
+  let titles: string[] = [];
+
+  // Вкладки атрибутивки появляются после завершения WFS-прокола
+  await browser.waitUntil(
+    async () => {
+      try {
+        titles = await attributesBlock.getTabsTitles();
+
+        return isEqual(titles, expected);
+      } catch {
+        return false;
+      }
+    },
+    {
+      ...waitUntilOptions,
+      timeoutMsg: `Ожидались вкладки [${expected.join(', ')}], получено [${titles.join(', ')}]`
+    }
+  );
 });
 
 When('в атрибутивной таблице я нажимаю `Копировать N объектов в другой слой`', async function () {

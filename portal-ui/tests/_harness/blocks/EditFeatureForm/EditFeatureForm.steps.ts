@@ -14,7 +14,7 @@ Then(
 Then('форма просмотра объекта открывается в режиме {string}', async function (mode: string) {
   const expected = mode === 'чтения';
 
-  await editFeatureBlock.waitForVisible();
+  await editFeatureBlock.waitForVisible({ timeout: 15_000 });
   await editFeatureBlock.waitForLoading();
   await editFeatureFormBlock.waitForForm();
   const isReadonly = await editFeatureBlock.isReadonlyMode();
@@ -34,6 +34,9 @@ Then(
 When(
   'в форме редактирования объекта я изменяю значение поля {string} на {string}',
   async function (title: string, value: string) {
+    await editFeatureBlock.waitForVisible();
+    await editFeatureBlock.waitForLoading();
+    await editFeatureFormBlock.waitForForm();
     await editFeatureFormBlock.changeEditFormFieldValue(title, value);
   }
 );
