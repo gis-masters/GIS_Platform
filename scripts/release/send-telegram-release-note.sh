@@ -25,14 +25,22 @@ NOTIFICATION=false
 ##Переменные собраны, основная логика дальше
 
 send_telegram_message() {
-    local message=$1
-#    local theme_id=$2
-    curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-        -d chat_id="$CHAT_ID" \
-        -d text="$message" \
-        -d parse_mode="Markdown" \
-        -d disable_notification="$NOTIFICATION"
-#        -d message_thread_id="$theme_id"
+    local message="$1"
+    message="${message:0:4096}"
+
+   json_payload=$(jq -n \
+    --arg chat_id "$CHAT_ID" \
+    --arg text "$message" \
+    --arg notification "$NOTIFICATION" \
+      '{chat_id: $chat_id, text: $text, parse_mode: "Markdown", disable_notification: $notification }')
+
+    curl -s -X POST "https://tg-gateway.programgeoplan.workers.dev/bot$BOT_TOKEN/sendMessage" \
+        -H "Content-Type: application/json" \
+        -H "X-Auth-Token: $ACCESS_TOKEN" \
+        -d "$json_payload" > /dev/null
+
+    
+    echo "✅ Сообщение отправлено"
 }
 
 make_message() {
@@ -69,7 +77,8 @@ make_message() {
     local changes=$(sed -n "${start_line},${end_line}p" "$changelog_file" | sed '/^$/d' | grep -v "^### Список изменений")
     
     # Формируем итоговое сообщение
-    echo "\`Опубликована новая версия от $release_title\`"
+    echo "Опубликован новый релиз картографической платформы https://github.com/gis-masters/GIS\_Platform"
+    echo "\`Версия от $release_title\`"
     echo "Список изменений:"
     echo "$changes"
 }
