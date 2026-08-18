@@ -15,6 +15,60 @@ describe('cql parser', () => {
     expect(parseCql(cql)).toStrictEqual(filter);
   });
 
+  test('cql с равенством и true преобразуется в свойство фильтра с boolean true', () => {
+    expect(parseCql('propertyName = true')).toStrictEqual({ propertyName: true });
+  });
+
+  test('cql с равенством и false преобразуется в свойство фильтра с boolean false', () => {
+    expect(parseCql('propertyName = false')).toStrictEqual({ propertyName: false });
+  });
+
+  test('cql с равенством TRUE в верхнем регистре преобразуется в boolean true', () => {
+    expect(parseCql('propertyName = TRUE')).toStrictEqual({ propertyName: true });
+  });
+
+  test('cql с равенством FALSE в верхнем регистре преобразуется в boolean false', () => {
+    expect(parseCql('propertyName = FALSE')).toStrictEqual({ propertyName: false });
+  });
+
+  test('cql с равенством и именем поля trueFlag не откусывает префикс true', () => {
+    expect(parseCql('(trueFlag = 1)')).toStrictEqual({ trueFlag: 1 });
+  });
+
+  test('cql с AND и именем поля trueFlag не откусывает префикс true', () => {
+    expect(parseCql('a = 1 AND trueFlag = 2')).toStrictEqual({ $and: [{ a: 1 }, { trueFlag: 2 }] });
+  });
+
+  test('cql с равенством и именем поля false_positive не откусывает префикс false', () => {
+    expect(parseCql('(false_positive = 1)')).toStrictEqual({ false_positive: 1 });
+  });
+
+  test('cql с AND и именем поля false_positive не откусывает префикс false', () => {
+    expect(parseCql('a = 1 AND false_positive = 2')).toStrictEqual({ $and: [{ a: 1 }, { false_positive: 2 }] });
+  });
+
+  test('cql с IN и false преобразуется в равенство с boolean false', () => {
+    expect(parseCql('propertyName IN(false)')).toStrictEqual({ propertyName: false });
+  });
+
+  test('cql с IN true и false преобразуется в $or равенств с boolean', () => {
+    expect(parseCql('propertyName IN(true, false)')).toStrictEqual({
+      $or: [{ propertyName: false }, { propertyName: true }]
+    });
+  });
+
+  test('cql с IN, содержащим null, разбирается как OR равенства и IS null', () => {
+    expect(parseCql("(propertyName IN('value1','value2') OR (propertyName IS null))")).toStrictEqual({
+      $or: [{ $or: [{ propertyName: 'value2' }, { propertyName: 'value1' }] }, { propertyName: null }]
+    });
+  });
+
+  test('cql с IN false и IS null через OR преобразуется в $or равенства и IS null', () => {
+    expect(parseCql('(flag IN(false) OR (flag IS null))')).toStrictEqual({
+      $or: [{ flag: false }, { flag: null }]
+    });
+  });
+
   test('cql с неравенством и строкой преобразуется в свойство фильтра с оператором $ne со строковым значением', () => {
     const cql = "(propertyName <> 'someValue')";
     const filter = { propertyName: { $ne: 'someValue' } };

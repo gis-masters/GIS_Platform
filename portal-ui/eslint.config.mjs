@@ -398,6 +398,7 @@ export default defineConfig([globalIgnores([
         "react-hooks/exhaustive-deps": 1,
 
         "sonarjs/cognitive-complexity": 1,
+        "sonarjs/regex-complexity": 1,
         "sonarjs/no-clear-text-protocols": "off",
         "sonarjs/deprecation": "off",
         "sonarjs/function-return-type": "off",

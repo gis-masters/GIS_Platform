@@ -10,6 +10,10 @@ import {
   PropertyType,
   type SimpleSchema
 } from '../../services/data/schema/schema.models';
+import {
+  isReservedPropertyName,
+  RESERVED_PROPERTY_NAME_ERROR
+} from '../../services/data/schema/utils/isReservedPropertyName';
 import { Form } from '../Form/Form';
 
 const cnEditPropertySchemaForm = cn('EditPropertySchemaForm');
@@ -68,6 +72,11 @@ export function getPropertyFieldsSchema(propertyType?: PropertyType, editing = f
         maxLength: 63,
         regex: '^[a-z][a-z0-9_]*$',
         regexErrorMessage: 'Только строчные латинские буквы, цифры и "_". Первый символ должен быть буквой.',
+        validationFormula(value: unknown) {
+          if (typeof value === 'string' && isReservedPropertyName(value)) {
+            return [RESERVED_PROPERTY_NAME_ERROR];
+          }
+        },
         propertyType: PropertyType.STRING
       },
       {

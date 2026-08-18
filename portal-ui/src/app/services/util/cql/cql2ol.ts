@@ -25,6 +25,7 @@ import { type Geometry } from 'ol/geom';
 import { type Units } from 'ol/proj/Units';
 
 type FilterFunc = (...args: Filter[]) => Filter;
+type CqlLiteral = string | number | boolean;
 
 interface TokenInfo {
   type: Token;
@@ -55,7 +56,7 @@ const patterns = {
   [Token.IS_NULL]: /^is null/i,
   [Token.COMMA]: /^,/,
   [Token.LOGICAL]: /^(and|or)/i,
-  [Token.VALUE]: /^('([^']|'')*'|-?\d+(\.\d*)?|\.\d+)/,
+  [Token.VALUE]: /^('([^']|'')*'|-?\d+(\.\d*)?|\.\d+|true\b|false\b)/i,
   [Token.LPAREN]: /^\(/,
   [Token.RPAREN]: /^\)/,
   [Token.SPATIAL]: /^(bbox|intersects|dwithin|within|contains)/i,
@@ -93,7 +94,7 @@ const patterns = {
 };
 
 const follows: Partial<Record<Token, Token[]>> = {
-  [Token.LPAREN]: [Token.GEOMETRY, Token.SPATIAL, Token.PROPERTY, Token.VALUE, Token.LPAREN],
+  [Token.LPAREN]: [Token.GEOMETRY, Token.SPATIAL, Token.VALUE, Token.PROPERTY, Token.LPAREN],
   [Token.RPAREN]: [Token.NOT, Token.LOGICAL, Token.END, Token.RPAREN],
   [Token.PROPERTY]: [Token.COMPARISON, Token.BETWEEN, Token.COMMA, Token.IS_NULL, Token.IN],
   [Token.BETWEEN]: [Token.VALUE],
@@ -116,8 +117,11 @@ function ilikeOperator(propertyName: string, expression: string) {
   return like(propertyName, expression, '%', '.', '!', false);
 }
 
-function inOperator(propertyName: string, values: (string | number)[]) {
-  return values.length > 1 ? or(...values.map(val => equalTo(propertyName, val))) : equalTo(propertyName, values[0]);
+function inOperator(propertyName: string, values: CqlLiteral[]) {
+  // OL equalTo объявлен как string|number; boolean нельзя гонять через String, иначе в expression попадёт "false".
+  return values.length > 1
+    ? or(...values.map(val => equalTo(propertyName, val as string | number)))
+    : equalTo(propertyName, values[0] as string | number);
 }
 
 const numberOperators: Record<string, (propertyName: string, expression: number) => Filter> = {
@@ -250,7 +254,10 @@ function buildAst(tokens: TokenInfo[]) {
         }
         operatorStack.pop(); // toss out the LPAREN
 
-        if (operatorStack.length > 0 && operatorStack.at(-1)?.type === Token.SPATIAL) {
+        if (
+          operatorStack.length > 0 &&
+          (operatorStack.at(-1)?.type === Token.SPATIAL || operatorStack.at(-1)?.type === Token.IN)
+        ) {
           const operator = operatorStack.pop();
           if (operator) {
             postfix.push(operator);
@@ -275,7 +282,7 @@ function buildAst(tokens: TokenInfo[]) {
     }
   }
 
-  function buildTree(): Filter | string | number | Geometry | undefined {
+  function buildTree(): Filter | CqlLiteral | Geometry | undefined {
     const tok = postfix.pop();
     let rhs: Filter | string;
     let lhs: Filter | string;
@@ -283,14 +290,14 @@ function buildAst(tokens: TokenInfo[]) {
     let min: number;
     let max: number;
     let property: string;
-    let value: string | number | Geometry;
+    let value: CqlLiteral | Geometry;
     let maxy: number;
     let maxx: number;
     let miny: number;
     let minx: number;
     let distance: number;
     let unit: Units;
-    let values: (string | number)[];
+    let values: CqlLiteral[];
 
     switch (tok?.type) {
       case Token.LOGICAL: {
@@ -308,7 +315,7 @@ function buildAst(tokens: TokenInfo[]) {
         values = [];
 
         do {
-          values.push(buildTree() as string | number);
+          values.push(buildTree() as CqlLiteral);
         } while (postfix.at(-1)?.type === Token.VALUE);
 
         property = buildTree() as string;
@@ -336,8 +343,15 @@ function buildAst(tokens: TokenInfo[]) {
       }
       case Token.VALUE: {
         const quoted = /^'(.*)'$/.exec(tok.text);
+        if (quoted) {
+          return quoted[1].replaceAll("''", "'");
+        }
 
-        return quoted ? quoted[1].replaceAll("''", "'") : Number(tok.text);
+        if (/^(?:true|false)$/i.test(tok.text)) {
+          return tok.text.toLowerCase() === 'true';
+        }
+
+        return Number(tok.text);
       }
       case Token.SPATIAL: {
         switch (tok.text.toUpperCase()) {

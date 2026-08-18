@@ -21,6 +21,18 @@ describe('cql builder', () => {
     expect(buildCql(filter)).toBe(cql);
   });
 
+  test('свойство фильтра с простым значением и boolean true преобразуется в равенство без кавычек', () => {
+    const filter = { flag: true };
+    const cql = '(flag = true)';
+    expect(buildCql(filter)).toBe(cql);
+  });
+
+  test('свойство фильтра с простым значением и boolean false преобразуется в равенство без кавычек', () => {
+    const filter = { flag: false };
+    const cql = '(flag = false)';
+    expect(buildCql(filter)).toBe(cql);
+  });
+
   test('свойство фильтра с оператором $eq и строкой преобразуется в равенство с кавычками', () => {
     const filter = { propertyName: { $eq: 'someValue' } };
     const cql = "(propertyName = 'someValue')";
@@ -84,6 +96,12 @@ describe('cql builder', () => {
   test('свойство фильтра с оператором $in, содержащим null, преобразуется в связку IN и IS null через OR', () => {
     const filter = { propertyName: { $in: ['value1', 'value2', null] } };
     const cql = "((propertyName IN('value1','value2') OR (propertyName IS null)))";
+    expect(buildCql(filter)).toBe(cql);
+  });
+
+  test('свойство фильтра с оператором $in, содержащим null и false, преобразуется в связку IN и IS null через OR', () => {
+    const filter = { flag: { $in: [null, false] } };
+    const cql = '((flag IN(false) OR (flag IS null)))';
     expect(buildCql(filter)).toBe(cql);
   });
 

@@ -29,6 +29,10 @@ public class SchemaLogicValidator {
             Set<ErrorInfo> mismatches = new HashSet<>();
 
             for (SimplePropertyDto property: schema.getProperties()) {
+                if (isReservedPropertyName(property.getName())) {
+                    mismatches.add(new ErrorInfo(property.getName(), "Имя поля не может быть true или false"));
+                }
+
                 boolean isRequired = TRUE.equals(property.isRequired());
 
                 // Правило 1. Свойство не может быть задано одновременно и required и hidden
@@ -63,5 +67,15 @@ public class SchemaLogicValidator {
 
             throw new DataServiceException("Не удалось проверить схему на логические несоответствия");
         }
+    }
+
+    private boolean isReservedPropertyName(String name) {
+        if (name == null) {
+            return false;
+        }
+
+        String normalizedName = name.trim();
+
+        return "true".equalsIgnoreCase(normalizedName) || "false".equalsIgnoreCase(normalizedName);
     }
 }

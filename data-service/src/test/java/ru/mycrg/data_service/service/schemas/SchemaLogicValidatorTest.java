@@ -2,6 +2,8 @@ package ru.mycrg.data_service.service.schemas;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -293,5 +295,46 @@ public class SchemaLogicValidatorTest {
 
         Set<ErrorInfo> errors = slv.validate(schema);
         assertEquals(0, errors.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"true", "TRUE", "false", "FALSE"})
+    public void property_reservedName_isInvalid(String name) {
+        SchemaDto schema = schemaWithProperty(name);
+
+        Set<ErrorInfo> errors = slv.validate(schema);
+        assertEquals(1, errors.size());
+        ErrorInfo error = errors.iterator().next();
+        assertEquals("Имя поля не может быть true или false", error.getMessage());
+    }
+
+    @Test
+    public void property_nameTrueFlag_isValid() {
+        SchemaDto schema = schemaWithProperty("trueFlag");
+
+        Set<ErrorInfo> errors = slv.validate(schema);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void property_nameFalsePositive_isValid() {
+        SchemaDto schema = schemaWithProperty("false_positive");
+
+        Set<ErrorInfo> errors = slv.validate(schema);
+        assertEquals(0, errors.size());
+    }
+
+    private SchemaDto schemaWithProperty(String name) {
+        SchemaDto schema = new SchemaDto();
+        schema.setTableName("validtable");
+
+        SimplePropertyDto property = new SimplePropertyDto();
+        property.setName(name);
+        property.setTitle("Test Property");
+        property.setValueType("STRING");
+
+        schema.addProperty(property);
+
+        return schema;
     }
 }

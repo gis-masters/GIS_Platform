@@ -10,6 +10,10 @@ import {
   type PropertySchema,
   PropertyType
 } from '../../../services/data/schema/schema.models';
+import {
+  isReservedPropertyName,
+  RESERVED_PROPERTY_NAME_ERROR
+} from '../../../services/data/schema/utils/isReservedPropertyName';
 import { type FieldErrors } from '../../../services/util/form/formValidation.utils';
 import { Button } from '../../Button/Button';
 import { getPropertyFieldsSchema } from '../../EditPropertySchemaForm/EditPropertySchemaForm';
@@ -267,6 +271,15 @@ export class SchemaPropertiesCreateItem extends Component<SchemaPropertiesCreate
   }
 
   private getNameValidationErrors(name?: string): FieldErrors[] {
+    if (name && isReservedPropertyName(name)) {
+      return [
+        {
+          field: 'name',
+          messages: [RESERVED_PROPERTY_NAME_ERROR]
+        }
+      ];
+    }
+
     if (name && !/^[a-z]\w*$/i.test(name)) {
       return [
         {
