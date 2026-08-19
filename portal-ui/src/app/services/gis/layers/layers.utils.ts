@@ -37,10 +37,13 @@ export function vectorLayerDefaults(): Pick<
 export function externalLayerDefaults(
   url?: string
 ): Pick<NewCrgLayer, 'nativeCRS' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'> {
+  const nspd = url?.includes('nspd.gov.ru');
+
   return {
     ...defaultProps,
     nativeCRS: defaultOlProjectionCode,
-    type: url?.includes('nspd.gov.ru') ? CrgLayerType.EXTERNAL_NSPD : CrgLayerType.EXTERNAL
+    type: nspd ? CrgLayerType.EXTERNAL_NSPD : CrgLayerType.EXTERNAL,
+    transparency: nspd ? 100 : defaultProps.transparency
   };
 }
 
