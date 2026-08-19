@@ -27,6 +27,7 @@ import {
 } from '../../services/data/schema/schema.models';
 import { applyContentType } from '../../services/data/schema/utils/applyContentType';
 import { applyView } from '../../services/data/schema/utils/applyView';
+import { appendIncomingGeometryTypeOption } from '../../services/data/schema/utils/ensureGeometryTypeOption';
 import {
   GeometryType,
   type SupportedGeometryType,
@@ -351,24 +352,27 @@ export class SchemaCard extends Component<SchemaCardProps> {
   }
 
   private get geometryTypeOptions(): PropertyOption[] {
-    return [
-      {
-        title: 'Без геометрии',
-        value: NO_GEOMETRY
-      },
-      {
-        value: GeometryType.MULTI_POINT,
-        title: 'Точка'
-      },
-      {
-        value: GeometryType.MULTI_LINE_STRING,
-        title: 'Линия'
-      },
-      {
-        value: GeometryType.MULTI_POLYGON,
-        title: 'Полигон'
-      }
-    ];
+    return appendIncomingGeometryTypeOption(
+      [
+        {
+          title: 'Без геометрии',
+          value: NO_GEOMETRY
+        },
+        {
+          value: GeometryType.POINT,
+          title: 'Точка'
+        },
+        {
+          value: GeometryType.MULTI_LINE_STRING,
+          title: 'Линия'
+        },
+        {
+          value: GeometryType.MULTI_POLYGON,
+          title: 'Полигон'
+        }
+      ],
+      this.schemaWithAppliedType.geometryType
+    );
   }
 
   private isNoGeometryValue(value?: string): boolean {

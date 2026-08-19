@@ -3,7 +3,6 @@ import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { EditNoteOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { type AxiosError } from 'axios';
 import { debounce, type DebouncedFunc } from 'lodash';
 
 import { doConfirm } from '../../services/answer-modals.service';
@@ -16,11 +15,16 @@ import {
   schemaForSchema
 } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
+import { ensureGeometryTypeOption } from '../../services/data/schema/utils/ensureGeometryTypeOption';
 import { DataEntityType, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { updateVectorTableSchema } from '../../services/data/vectorData/vectorData.service';
 import { GeometryType, type SupportedGeometryType } from '../../services/geoserver/wfs/wfs.models';
+import { FormFieldErrorsError } from '../../services/util/form/FormFieldErrorsError';
 import { getSchemaTagsOptions } from '../../services/util/form/getSchemaTagsOptions';
 import { isArray } from '../../services/util/typeGuards/isArray';
+import { isArrayOf } from '../../services/util/typeGuards/isArrayOf';
+import { isAxiosError } from '../../services/util/typeGuards/isAxiosError';
+import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 import { FormDialog } from '../FormDialog/FormDialog';
@@ -50,11 +54,69 @@ function parseTags(tags: unknown): string[] {
   }
 }
 
+function isSchemaSaveFieldError(value: unknown): value is { field?: string; message?: string } {
+  if (!isRecordStringUnknown(value)) {
+    return false;
+  }
+
+  return (
+    (value.field === undefined || typeof value.field === 'string') &&
+    (value.message === undefined || typeof value.message === 'string')
+  );
+}
+
+function getSchemaSaveErrorMessage(error: unknown, properties?: PropertySchema[]): string {
+  const data = isAxiosError(error) ? error.response?.data : undefined;
+  if (!isRecordStringUnknown(data)) {
+    return 'Ошибка сохранения схемы';
+  }
+
+  const { errors, message } = data;
+  const errorsMessages: string[] = [];
+
+  if (isArrayOf(errors, isSchemaSaveFieldError)) {
+    errors.forEach(({ field, message: fieldMessage }) => {
+      let errorMessage = '';
+
+      if (field) {
+        const matches = field.match(/\[(\d+)]/);
+
+        if (matches && matches.length > 1) {
+          const propertyIndex = Number.parseInt(matches[1], 10);
+
+          if (propertyIndex) {
+            const property = properties?.[propertyIndex];
+            errorMessage = property?.name ? `Ошибка в поле ${property.name}: ` : '';
+          }
+        }
+      }
+
+      if (fieldMessage) {
+        errorMessage += fieldMessage;
+      }
+
+      if (errorMessage) {
+        errorsMessages.push(errorMessage);
+      }
+    });
+  }
+
+  if (errorsMessages.length) {
+    return errorsMessages.join('. ');
+  }
+
+  if (typeof message === 'string' && message) {
+    return message;
+  }
+
+  return 'Ошибка сохранения схемы';
+}
+
 export interface SchemaEditDialogProps {
-  title: string;
   open: boolean;
   onClose(): void;
   schema: Schema;
+  title?: string;
   explorerItem?: Library | VectorTable;
   readonly?: boolean;
   editing?: boolean;
@@ -120,7 +182,7 @@ const ensureShapeProperty = (
 const createSchemaFields: PropertySchema[] = [
   {
     name: 'name',
-    title: 'Наименование',
+    title: 'Идентификатор',
     required: true,
     minLength: 1,
     maxLength: 63,
@@ -163,13 +225,14 @@ const createSchemaFields: PropertySchema[] = [
   {
     name: 'geometryType',
     title: 'Тип геометрии',
+    dynamicPropertyFormula: ensureGeometryTypeOption,
     options: [
       {
         title: 'Без геометрии',
         value: ''
       },
       {
-        value: GeometryType.MULTI_POINT,
+        value: GeometryType.POINT,
         title: 'Точка'
       },
       {
@@ -200,7 +263,7 @@ const createSchemaFields: PropertySchema[] = [
   {
     name: 'properties',
     title: 'Свойства',
-    description: 'Набор полей для хранения сведений - значимых характреристик объектов',
+    description: 'Набор полей для хранения сведений — значимых характеристик объектов',
     propertyType: PropertyType.CUSTOM,
     ControlComponent: SchemaPropertiesControl
   }
@@ -398,6 +461,29 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
     [explorerItem]
   );
 
+  const confirmSchemaWarnings = useCallback(async () => {
+    if (state.warnings.length === 0) {
+      return true;
+    }
+
+    return doConfirm({
+      title: 'Предупреждения по схеме',
+      message: (
+        <>
+          <p>Перед сохранением обнаружены предупреждения:</p>
+          <ul className={cnSchemaEditDialog('ConfirmWarningList')}>
+            {state.warnings.map((line, index) => (
+              <li key={index}>{line}</li>
+            ))}
+          </ul>
+          <p>{state.isCreateMode ? 'Создать схему?' : 'Сохранить схему?'}</p>
+        </>
+      ),
+      okText: state.isCreateMode ? 'Всё равно создать' : 'Всё равно сохранить',
+      cancelText: 'Вернуться к редактированию'
+    });
+  }, [state]);
+
   const save = useCallback(async () => {
     if (!state.currentSchema) {
       state.setError('Ошибка сохранения схемы');
@@ -405,27 +491,8 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
       return;
     }
 
-    if (state.warnings.length > 0) {
-      const saveAnyway = await doConfirm({
-        title: 'Предупреждения по схеме',
-        message: (
-          <>
-            <p>Перед сохранением обнаружены предупреждения:</p>
-            <ul className={cnSchemaEditDialog('ConfirmWarningList')}>
-              {state.warnings.map((line, index) => (
-                <li key={index}>{line}</li>
-              ))}
-            </ul>
-            <p>Сохранить схему?</p>
-          </>
-        ),
-        okText: 'Всё равно сохранить',
-        cancelText: 'Вернуться к редактированию'
-      });
-
-      if (!saveAnyway) {
-        return;
-      }
+    if (!(await confirmSchemaWarnings())) {
+      return;
     }
 
     state.setLoading(true);
@@ -436,39 +503,10 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
       state.setLoading(false);
       closeDialog();
     } catch (error) {
-      const err = error as AxiosError<{ errors?: [{ field: string; message: string }] }>;
-      const errorsMessages: string[] = [];
-
-      err.response?.data?.errors?.forEach(({ field, message }) => {
-        let errorMessage: string = '';
-
-        if (field) {
-          const regex = /\[(\d+)]/;
-          const matches = field.match(regex);
-
-          if (matches && matches.length > 1) {
-            const propertyIndex = Number.parseInt(matches[1], 10);
-
-            if (propertyIndex) {
-              const property = state.currentSchema?.properties[propertyIndex];
-              errorMessage = property?.name ? `Ошибка в поле ${property.name}: ` : '';
-            }
-          }
-        }
-
-        if (message) {
-          errorMessage += message;
-        }
-
-        if (errorMessage) {
-          errorsMessages.push(errorMessage);
-        }
-      });
-
-      state.setError(errorsMessages.length ? errorsMessages.join('. ') : 'Ошибка сохранения схемы');
+      state.setError(getSchemaSaveErrorMessage(error, state.currentSchema?.properties));
       state.setLoading(false);
     }
-  }, [closeDialog, onSave, state, updateSchema]);
+  }, [closeDialog, confirmSchemaWarnings, onSave, state, updateSchema]);
 
   const handleJsonChange = useCallback(
     ({ schema: schemaJson }: { schema: string }) => {
@@ -510,6 +548,8 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
         ...schema,
         ...state.currentSchema,
         ...value,
+        tableName: value.tableName || value.name,
+        originName: value.originName || value.name,
         tags: parseTags(value.tags),
         properties: ensureShapeProperty(
           value.properties ?? state.currentSchema?.properties ?? schema.properties,
@@ -524,19 +564,73 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
     [schema, state, onSave, updateSchema]
   );
 
-  // добавить флаг для создания схемы
-  if (state.isCreateMode) {
+  const createSchemaFromJson = useCallback(async () => {
+    if (!state.currentSchema) {
+      state.setError('Ошибка сохранения схемы');
+
+      return;
+    }
+
+    if (!(await confirmSchemaWarnings())) {
+      return;
+    }
+
+    state.setLoading(true);
+
+    try {
+      await createSchema(state.currentSchema);
+      state.setLoading(false);
+      closeDialog();
+    } catch (error) {
+      state.setError(getSchemaSaveErrorMessage(error, state.currentSchema?.properties));
+      state.setLoading(false);
+    }
+  }, [closeDialog, confirmSchemaWarnings, createSchema, state]);
+
+  const createSchemaFromForm = useCallback(
+    async (value: SchemaCreateFormValue) => {
+      if (!(await confirmSchemaWarnings())) {
+        throw new FormFieldErrorsError([{ field: '__schemaWarningsAborted' }]);
+      }
+
+      await createSchema(value);
+    },
+    [confirmSchemaWarnings, createSchema]
+  );
+
+  const schemaMessages = (state.warnings.length > 0 || state.error) && (
+    <div className={cnSchemaEditDialog('Messages')}>
+      {state.warnings.map((line, index) => (
+        <div key={index} className={cnSchemaEditDialog('Warning')}>
+          {line}
+        </div>
+      ))}
+      {state.error && <div className={cnSchemaEditDialog('Error')}>{state.error}</div>}
+    </div>
+  );
+
+  if (state.isCreateMode && !state.jsonMode) {
     return (
       <FormDialog<SchemaCreateFormValue>
         open={open}
         title={title}
         schema={{ properties: createSchemaFields }}
         value={state.currentSchema}
-        actionFunction={createSchema}
+        actionFunction={createSchemaFromForm}
         onFormChange={handleCreateFormChange}
         actionButtonProps={{ children: 'Создать' }}
         closeButtonProps={{ children: 'Отмена' }}
         onClose={closeDialog}
+        afterForm={schemaMessages}
+        additionalAction={
+          <Button
+            className={cnSchemaEditDialog('JsonToggle')}
+            startIcon={<EditNoteOutlined />}
+            onClick={toggleJsonMode}
+          >
+            Редактировать в JSON
+          </Button>
+        }
         closeWithConfirm
       />
     );
@@ -572,16 +666,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
             />
           ))}
 
-        {(state.warnings.length > 0 || state.error) && (
-          <div className={cnSchemaEditDialog('Messages')}>
-            {state.warnings.map((line, index) => (
-              <div key={index} className={cnSchemaEditDialog('Warning')}>
-                {line}
-              </div>
-            ))}
-            {state.error && <div className={cnSchemaEditDialog('Error')}>{state.error}</div>}
-          </div>
-        )}
+        {schemaMessages}
       </DialogContent>
 
       <DialogActions>
@@ -591,9 +676,9 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
             color='primary'
             loading={state.loading}
             startIcon={<SaveOutlined />}
-            onClick={save}
+            onClick={state.isCreateMode ? createSchemaFromJson : save}
           >
-            Сохранить
+            {state.isCreateMode ? 'Создать' : 'Сохранить'}
           </Button>
         )}
 

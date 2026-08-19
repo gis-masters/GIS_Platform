@@ -168,6 +168,8 @@ class SchemaService {
     schemaTemplateService.clearCache();
     await schemaClient.createSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'create', data: schema });
+
+    return schema;
   }
 
   async updateSchema(schema: Schema) {

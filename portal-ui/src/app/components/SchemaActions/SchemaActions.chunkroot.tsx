@@ -8,6 +8,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { Actions } from '../Actions/Actions.composed';
 import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { SchemaActionsClose } from './Close/SchemaActions-Close';
+import { SchemaActionsCopy } from './Copy/SchemaActions-Copy';
 import { SchemaActionsDelete } from './Delete/SchemaActions-Delete';
 import { SchemaActionsEdit } from './Edit/SchemaActions-Edit';
 import { SchemaActionsPreview } from './Preview/SchemaActions-Preview';
@@ -49,6 +50,8 @@ const SchemaActions: FC<SchemaActionsProps> = observer(
         {!readonly && (
           <SchemaActionsEdit editing schema={schema} as={as} disabled={!canEdit} tooltipText={editTooltip} />
         )}
+
+        <SchemaActionsCopy schema={schema} as={as} />
 
         <SchemaActionsPreview schema={schema} as={as} />
 
