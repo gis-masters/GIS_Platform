@@ -1,0 +1,46 @@
+{
+  "styleName": "terrain_microforms_point",
+  "tags": ["system", "Топоплан 2000"],
+  "name": "terrain_microforms_point_topo_2000",
+  "title": "Микроформы рельефа точечные",
+  "tableName": "terrain_microforms_point_topo_2000",
+  "originName": "terrain_microforms_point_topo_2000",
+  "description": "Класс объектов «Микроформы рельефа точечные»",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "desc1",
+      "title": "Описание",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "code",
+      "title": "КОД",
+      "required": true,
+      "maxLength": 9,
+      "valueType": "STRING"
+    },
+    {
+      "name": "depth",
+      "title": "Глубина",
+      "valueType": "DOUBLE",
+      "totalDigits": 12,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    }
+  ]
+}

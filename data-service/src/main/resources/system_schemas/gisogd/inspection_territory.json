@@ -1,0 +1,115 @@
+{
+  "styleName": "inspection_territory",
+  "tags": ["system", "ГИСОГД"],
+  "name": "inspection_territory",
+  "title": "Территории плановых (рейдовых) осмотров",
+  "tableName": "inspection_territory",
+  "originName": "inspection_territory",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "settl_name",
+      "title": "Наименование населенного пункта",
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "okato",
+      "title": "Код ОКАТО",
+      "required": true,
+      "maxLength": 11,
+      "valueType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "required": true,
+      "maxLength": 200,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "route_length",
+      "title": "Протяженность маршрута, м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "insp_area",
+      "title": "Площадь территории осмотра, кв.м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "responsible",
+      "title": "ФИО лица ответственного за организацию проведения планового (рейдового) осмотра",
+      "required": true,
+      "maxLength": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "start_date",
+      "title": "Дата начала проведения планового (рейдового) осмотра",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "end_date",
+      "title": "Дата окончания проведения планового (рейдового) осмотра",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "status",
+      "title": "Статус осмотра",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "К исполнению",
+          "value": "1"
+        },
+        {
+          "title": "В работе",
+          "value": "2"
+        },
+        {
+          "title": "Выполнен",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "resolution",
+      "title": "Основание проведения планового (рейдового) осмотра",
+      "required": true,
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "insp_act",
+      "title": "Акт планового (рейдового) осмотра территории",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "notes",
+      "title": "Примечания",
+      "maxLength": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

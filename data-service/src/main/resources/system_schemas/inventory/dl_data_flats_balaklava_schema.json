@@ -1,0 +1,297 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_flats_balaklava_schema",
+  "title": "Квартиры и помещения",
+  "relations": [
+    {
+      "type": "document",
+      "title": "Ограничения и обременения на квартиру",
+      "library": "dl_data_limits_balaklava",
+      "property": "cad_kv",
+      "targetProperty": "title"
+    },
+    {
+      "type": "document",
+      "title": "Зарегистрированные права на квартиру",
+      "library": "dl_data_owners_balaklava",
+      "property": "cad_kv",
+      "targetProperty": "title"
+    }
+  ],
+  "tableName": "dl_data_flats_balaklava",
+  "originName": "dl_data_flats_balaklava",
+  "description": "Квартиры и помещения",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "title",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_oks",
+      "title": "Кадастровый номер здания",
+      "minWidth": 240,
+      "required": true,
+      "maxLength": 25,
+      "valueType": "STRING",
+      "description": "Если кадастрового номера здания нет, то указываем условный"
+    },
+    {
+      "name": "cad_kv",
+      "title": "Кадастровый номер квартиры / помещения",
+      "minWidth": 240,
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "naznach",
+      "title": "Назначение",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Жилое",
+          "value": "Жилое"
+        },
+        {
+          "title": "Нежилое",
+          "value": "Нежилое"
+        }
+      ]
+    },
+    {
+      "name": "area_egrn",
+      "title": "Площадь по материалам ЕГРН, м. кв.",
+      "minWidth": 230,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_bti",
+      "title": "Площадь по материалам БТИ, м. кв.",
+      "minWidth": 230,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "rooms",
+      "title": "Количество жилых комнат ",
+      "minWidth": 160,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_rooms",
+      "title": "Площадь жилых комнат м.кв.",
+      "minWidth": 180,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "floor_loc",
+      "title": "Расположение на этаже",
+      "minWidth": 150,
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "БТИ",
+          "value": "БТИ"
+        },
+        {
+          "title": "ЕГРН",
+          "value": "ЕГРН"
+        },
+        {
+          "title": "Выявленно при обследовании",
+          "value": "Выявленно при обследовании"
+        }
+      ]
+    },
+    {
+      "name": "address",
+      "title": "Адрес",
+      "minWidth": 150,
+      "valueType": "STRING"
+    },
+    {
+      "name": "t_own",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная федеральная",
+          "value": "Государственная федеральная"
+        },
+        {
+          "title": "Государственная субъектов РФ",
+          "value": "Государственная субъектов РФ"
+        },
+        {
+          "title": "Муниципальная",
+          "value": "Муниципальная"
+        },
+        {
+          "title": "Частная",
+          "value": "Частная"
+        },
+        {
+          "title": "Принят на учет как бесхозяйный объект недвижимого имущества",
+          "value": "Принят на учет как бесхозяйный объект недвижимого имущества"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "minWidth": 150,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "doc_egrn",
+      "title": "Выписка ЕГРН",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "kv_balaklava",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Квартиры и помещения",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "cad_oks"
+        },
+        {
+          "name": "cad_kv"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "t_own"
+        },
+        {
+          "name": "naznach"
+        },
+        {
+          "name": "area_egrn"
+        },
+        {
+          "name": "area_bti"
+        },
+        {
+          "name": "rooms"
+        },
+        {
+          "name": "area_rooms"
+        },
+        {
+          "name": "floor_loc"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "source"
+        },
+        {
+          "name": "doc_egrn"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Новая территория",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

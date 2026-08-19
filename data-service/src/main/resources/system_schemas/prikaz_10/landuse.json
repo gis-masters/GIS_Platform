@@ -1,0 +1,85 @@
+{
+  "name": "landuse",
+  "title": "Земли по категориям",
+  "styleName": "landuse_123",
+  "tableName": "landuse",
+  "originName": "LandUse",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Земли по категориям",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": " Земли по категориям",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Земли населенных пунктов",
+          "value": "702010100"
+        },
+        {
+          "title": "Земли сельскохозяйственного назначения",
+          "value": "702010200"
+        },
+        {
+          "title": "Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения",
+          "value": "702010300"
+        },
+        {
+          "title": "Земли особо охраняемых территорий и объектов",
+          "value": "702010400"
+        },
+        {
+          "title": "Земли лесного фонда",
+          "value": "702010500"
+        },
+        {
+          "title": "Земли водного фонда",
+          "value": "702010600"
+        },
+        {
+          "title": "Земли запаса",
+          "value": "702010700"
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

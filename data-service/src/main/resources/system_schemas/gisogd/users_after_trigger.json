@@ -1,0 +1,234 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "users_after_trigger",
+  "title": "Сотрудники организаций ОГД",
+  "tableName": "users_after_trigger",
+  "description": "Сотрудник организации ОГД",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "title_fio",
+      "title": "ФИО",
+      "display": "multiline",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "sur_name",
+      "title": "Фамилия",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "middle_name",
+      "title": "Фамилия",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "email",
+      "title": "Пользователь",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "position1",
+      "title": "Должность",
+      "readOnly": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "guid",
+      "title": "Уникальный идентификатор",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "hidden": true,
+      "display": "multiline",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Имя",
+      "hidden": true,
+      "display": "multiline",
+      "valueType": "STRING"
+    },
+    {
+      "name": "supplier_data_connection",
+      "title": "Организация",
+      "multiple": true,
+      "required": true,
+      "libraries": ["dl_data_supplier"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата публикации в ГИСОГД РФ",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "minWidth": 200,
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "minWidth": 200,
+      "asTitle": true,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Сотрудник организации ОГД",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Сотрудник организации ОГД",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "title_fio"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "position"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "last_modified"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование"
+        },
+        {
+          "name": "folder_title",
+          "title": "Наименование"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "tags": ["system", "ГИСОГД"],
+  "name": "indent_line",
+  "title": "Линии отступа от красных линий",
+  "styleName": "indent_line",
+  "tableName": "indent_line",
+  "originName": "indent_line",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "guid_indent_line",
+      "title": "guid_indent_line",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "number",
+      "title": "Планировочный номер",
+      "asTitle": true,
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Материалы библиотеки данных",
+      "library": "dl_data_section7",
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "readOnly": true,
+      "minWidth": 300,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_deleted",
+      "title": "Удален/Не удален",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

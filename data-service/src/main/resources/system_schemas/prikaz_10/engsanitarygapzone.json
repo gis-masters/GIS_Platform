@@ -1,0 +1,107 @@
+{
+  "name": "engsanitarygapzone",
+  "title": "Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций",
+  "styleName": "engsanitarygapzone_698",
+  "tableName": "engsanitarygapzone",
+  "originName": "EngSanitaryGapZone",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Санитарный разрыв магистральных трубопроводов углеводородного сырья",
+          "value": "603010301"
+        },
+        {
+          "title": "Санитарный разрыв компрессорных установок",
+          "value": "603010302"
+        },
+        {
+          "title": "Санитарный разрыв линий электропередачи",
+          "value": "603010303"
+        }
+      ]
+    },
+    {
+      "name": "zone_desc",
+      "title": "Описание зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование объекта (для которого устанавливается зона)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "numberzoit",
+      "title": "Учетный номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "reestrzoit",
+      "title": "Реестровый номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "dateegrn",
+      "title": "Дата внесения зон с особыми условиями использования территории в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

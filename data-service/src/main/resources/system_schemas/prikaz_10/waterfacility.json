@@ -1,0 +1,248 @@
+{
+  "name": "waterfacility",
+  "title": "Объекты водоснабжения",
+  "styleName": "waterfacility_point_123",
+  "tableName": "waterfacility",
+  "originName": "WaterFacility",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Объекты водоснабжения",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": " Объекты водоснабжения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Водозабор",
+          "value": "602041101"
+        },
+        {
+          "title": "Водопроводные очистные сооружения",
+          "value": "602041102"
+        },
+        {
+          "title": "Насосная станция",
+          "value": "602041103"
+        },
+        {
+          "title": "Водонапорная башня",
+          "value": "602041104"
+        },
+        {
+          "title": "Резервуар",
+          "value": "602041105"
+        },
+        {
+          "title": "Артезианская скважина",
+          "value": "602041106"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "Код ОКТМО",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "required": true,
+      "maxLength": 11,
+      "minLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "water_stype",
+      "title": "Тип водозабора по характеристикам источника",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Подземный водозабор",
+          "value": "1"
+        },
+        {
+          "title": "Поверхностный водозабор",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "ground_pos",
+      "title": "Расположение объекта относительно уровня земли",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Наземное",
+          "value": "1"
+        },
+        {
+          "title": "Надземное",
+          "value": "2"
+        },
+        {
+          "title": "Подземное",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "wear_prcnt",
+      "title": "Процент износа, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "fact_use",
+      "title": "Фактическое использование объекта, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "output",
+      "title": "Производительность, тыс. куб. м/сут",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "size_zso_1",
+      "title": "Размер первого пояса зоны санитарной охраны источника водоснабжения, м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "size_zso_2",
+      "title": "Размер второго пояса зоны санитарной охраны источника водоснабжения, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "size_zso_3",
+      "title": "Размер третьего пояса зоны санитарной охраны источника водоснабжения, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "zone_size",
+      "title": "Размер зоны санитарной охраны водопроводных сооружений, м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "name": "admemo",
+  "title": "Территория муниципального образования",
+  "styleName": "admemo_698",
+  "tableName": "admemo",
+  "originName": "AdmeMO",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Муниципальный район",
+          "value": "601020301"
+        },
+        {
+          "title": "Городской округ",
+          "value": "601020302"
+        },
+        {
+          "title": "Городской округ с внутригородским делением",
+          "value": "601020303"
+        },
+        {
+          "title": "Внутригородская территория (внутригородское муниципальное образование) города федерального значения",
+          "value": "601020304"
+        },
+        {
+          "title": "Внутригородской район",
+          "value": "601020305"
+        },
+        {
+          "title": "Городское поселение",
+          "value": "601020306"
+        },
+        {
+          "title": "Сельское поселение",
+          "value": "601020307"
+        },
+        {
+          "title": "Муниципальный округ",
+          "value": "601020312"
+        },
+        {
+          "title": "Территория агломерации",
+          "value": "601020313"
+        },
+        {
+          "title": "Межселенная территория",
+          "value": "601020314"
+        }
+      ]
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "Код ОКТМО",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "required": true,
+      "maxLength": 11,
+      "minLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "population",
+      "title": "Численность населения, тыс. чел.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status_adm",
+      "title": "Статус объекта административно-территориального деления",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "hidden": true,
+      "title": "геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

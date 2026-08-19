@@ -1,0 +1,164 @@
+{
+  "name": "public_territory_borders_dpt",
+  "title": "Границы территории общего пользования",
+  "tags": ["system", "ДПТ"],
+  "tableName": "public_territory_borders_dpt",
+  "description": "Границы территории общего пользования",
+  "originName": "public_territory_borders_dpt",
+  "styleName": "public_territory_borders_dpt",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "class",
+      "title": "Код объекта",
+      "valueType": "CHOICE",
+      "required": true,
+      "asTitle": true,
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7С.1",
+          "title": "Индивидуальной жилой застройки"
+        },
+        {
+          "value": "7С.2",
+          "title": "Многоквартирной жилой застройки"
+        },
+        {
+          "value": "7С.3",
+          "title": "Учебного-образовательного назначения"
+        },
+        {
+          "value": "7С.4",
+          "title": "Территории общественно-делового назначения"
+        },
+        {
+          "value": "7С.5",
+          "title": "Детские игровые и спортивные площадки"
+        },
+        {
+          "value": "7С.6",
+          "title": "Производственного, коммунально-складского, инженерного и транспортного назначения"
+        },
+        {
+          "value": "7С.7",
+          "title": "Тротуары, дорожки, площади"
+        },
+        {
+          "value": "7С.8",
+          "title": "Дачных, садовых и огороднических товариществ"
+        },
+        {
+          "value": "7С.9",
+          "title": "Озелененные территории общего пользования"
+        },
+        {
+          "value": "7С.10",
+          "title": "Защитного озеленения"
+        },
+        {
+          "value": "7С.11",
+          "title": "Территории, не покрытые лесом и кустарниками"
+        },
+        {
+          "value": "7С.12",
+          "title": "Территории, покрытые лесом и кустарниками"
+        },
+        {
+          "value": "7С.13",
+          "title": "Зона поверхностных водных объектов"
+        },
+        {
+          "value": "7С.14",
+          "title": "Ритуального назначения"
+        },
+        {
+          "value": "7С.15",
+          "title": "Добычи полезных ископаемых"
+        },
+        {
+          "value": "7С.16",
+          "title": "Объектов сельскохозяйственного назначения"
+        },
+        {
+          "value": "7С.17",
+          "title": "Сельскохозяйственного использования"
+        },
+        {
+          "value": "7С.18",
+          "title": "Рекреационного назначения"
+        },
+        {
+          "value": "7С.19",
+          "title": "Складирования и захоронения отходов"
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "valueType": "CHOICE",
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7В.1",
+          "title": "Существующий"
+        },
+        {
+          "value": "7В.2",
+          "title": "Планируемый"
+        }
+      ]
+    },
+    {
+      "name": "area",
+      "title": "Площадь общая, кв. м.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "description": "Пользователь создавший объект (Заполняется автоматически)",
+      "valueType": "STRING",
+      "readOnly": true
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "description": "Дата создания объекта (Заполняется автоматически)",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа",
+      "readOnly": true
+    },
+    {
+      "name": "updated_by",
+      "title": "Редактор",
+      "valueType": "STRING",
+      "description": "Пользователь редактировавший объект последним (Заполняется автоматически)",
+      "maxLength": 50,
+      "readOnly": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "INT",
+      "hidden": true
+    }
+  ]
+}

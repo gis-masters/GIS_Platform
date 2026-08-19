@@ -1,0 +1,327 @@
+{
+  "tags": ["system", "Библиотека", "Владельцы"],
+  "name": "dl_data_owners",
+  "title": "Собственники",
+  "readOnly": true,
+  "tableName": "dl_data_owners",
+  "description": "Правообладатель",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер исходного ЗУ",
+      "hidden": true,
+      "asTitle": true,
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "territorykey_for_build",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "displayMode": "newTab",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_32:buildings_new_1_96b6",
+          "scratch_database_32:zu_new_k_1_df89"
+        ],
+        "property": "dl_data_owners_connections",
+        "projectId": 1846
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "territorykey_for_zu",
+      "title": "Территория действия",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "displayMode": "newTab",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_32:zu_new_k_1_df89"],
+        "property": "file",
+        "projectId": 1565
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ?",
+      "required": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "owner_fio",
+      "title": "ФИО собственника",
+      "minWidth": 150,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type_own",
+      "title": "Тип собственности",
+      "minWidth": 100,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная",
+          "value": "Государственная"
+        },
+        {
+          "title": "Физическая",
+          "value": "Физическая"
+        },
+        {
+          "title": "Юридическая",
+          "value": "Юридическая"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "ad_reg",
+      "title": "Адрес регистрации",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "ad_fact",
+      "title": "Адрес фактический",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "tel",
+      "title": "Контактный номер",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "minWidth": 200,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "ser_pasport",
+      "title": "Серия паспорта",
+      "maxLength": 5,
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_pasport",
+      "title": "Номер паспорта",
+      "maxLength": 7,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_birth",
+      "title": "Дата рождения",
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "dateFormat": "LL"
+    },
+    {
+      "name": "place_birth",
+      "title": "Место рождения",
+      "minWidth": 200,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "pas_issued",
+      "title": "Кем выдан паспорт",
+      "minWidth": 200,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_issue_pas",
+      "title": "Дата выдачи паспорта",
+      "minWidth": 180,
+      "valueType": "DATETIME",
+      "dateFormat": "LL"
+    },
+    {
+      "name": "unit_code",
+      "title": "Код подразделения",
+      "maxLength": 15,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inn",
+      "title": "ИНН",
+      "maxLength": 15,
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_schet",
+      "title": "№ л.с. получателя",
+      "maxLength": 24,
+      "valueType": "STRING"
+    },
+    {
+      "name": "banking",
+      "title": "Банк получателя",
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Личные данные",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "file_1",
+      "title": "Реквизиты счета",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "file_2",
+      "title": "Согласие на обработку перссональных данных",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "document_feedback",
+      "title": "Квартиры и помещения",
+      "valueType": "URL",
+      "valueFormulaParams": {
+        "text": "Найти связанные документы",
+        "library": "dl_data_flats",
+        "property": "dl_data_owners_connections",
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToDocumentsMentioningThisDocument"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "owner",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Правообладатель",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "cad_num"
+        },
+        {
+          "name": "territorykey_for_build"
+        },
+        {
+          "name": "tel"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "file_1"
+        },
+        {
+          "name": "inn"
+        },
+        {
+          "name": "file_2"
+        },
+        {
+          "name": "document_feedback"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "children": [
+        {
+          "contentType": "owner"
+        },
+        {
+          "contentType": "folder_v1"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

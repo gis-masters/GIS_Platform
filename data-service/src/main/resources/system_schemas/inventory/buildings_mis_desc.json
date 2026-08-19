@@ -1,0 +1,31 @@
+{
+  "styleName": "buildings_mis_desc",
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "buildings_mis_desc",
+  "title": "Здания и сооружения",
+  "tableName": "buildings_mis_desc",
+  "originName": "buildings_mis_desc",
+  "description": "Здания и сооружения",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "name": "cemetery",
+  "title": "Места погребения",
+  "styleName": "cemetery_point_123",
+  "tableName": "cemetery",
+  "originName": "Cemetery",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Места погребения",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": " Места погребения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Кладбище",
+          "value": "602050301"
+        },
+        {
+          "title": "Воинское кладбище, военное мемориальное кладбище",
+          "value": "602050302"
+        },
+        {
+          "title": "Крематорий",
+          "value": "602050303"
+        },
+        {
+          "title": "Историческое кладбище",
+          "value": "602050304"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "Код ОКТМО",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "required": true,
+      "maxLength": 11,
+      "minLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "cemet_type",
+      "title": "Тип кладбища ",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Общественное",
+          "value": "1"
+        },
+        {
+          "title": "Вероисповедальное",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "cemet_stype",
+      "title": "Классификация кладбища в соответствии с санитарной классификацией",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Кладбища смешанного и традиционного захоронения площадью от 20 до 40 га",
+          "value": "1"
+        },
+        {
+          "title": "Кладбища смешанного и традиционного захоронения площадью от 10 до 20 га",
+          "value": "2"
+        },
+        {
+          "title": "Кладбища смешанного и традиционного захоронения площадью 10 и менее га",
+          "value": "3"
+        },
+        {
+          "title": "Сельское кладбище",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "cemet_wtype",
+      "title": "Тип воинского кладбища, военного мемориального кладбища",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное военное мемориальное кладбище",
+          "value": "1"
+        },
+        {
+          "title": "Воинское кладбище",
+          "value": "2"
+        },
+        {
+          "title": "Военное мемориальное кладбище",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "cemet_stat",
+      "title": "Статус кладбища ",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующее",
+          "value": "1"
+        },
+        {
+          "title": "Закрытое",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "hzrd_class",
+      "title": "Класс опасности объекта в соответствии с санитарной классификацией",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "I класс опасности объекта",
+          "value": "1"
+        },
+        {
+          "title": "II класс опасности объекта",
+          "value": "2"
+        },
+        {
+          "title": "III класс опасности объекта",
+          "value": "3"
+        },
+        {
+          "title": "IV класс опасности объекта",
+          "value": "4"
+        },
+        {
+          "title": "V класс опасности объекта",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "name": "area",
+      "title": "Площадь объекта, га",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

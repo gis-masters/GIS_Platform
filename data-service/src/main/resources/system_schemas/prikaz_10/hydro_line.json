@@ -1,0 +1,119 @@
+{
+  "name": "hydro_line",
+  "title": "Поверхностные водные объекты",
+  "styleName": "hydro_line_123",
+  "tableName": "hydro_line",
+  "originName": "Hydro",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Поверхностные водные объекты",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Поверхностные водные объекты",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Море или его отдельная часть (пролив, залив, в том числе бухта, лиман и другие)",
+          "value": "706020100"
+        },
+        {
+          "title": "Водоток (река, ручей, канал)",
+          "value": "706020200"
+        },
+        {
+          "title": "Водоем (озеро, пруд, обводненный карьер, водохранилище)",
+          "value": "706020300"
+        },
+        {
+          "title": "Болото",
+          "value": "706020400"
+        },
+        {
+          "title": "Природный выход подземных вод (родник, гейзер)",
+          "value": "706020500"
+        },
+        {
+          "title": "Ледник, снежник",
+          "value": "706020600"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "length",
+      "title": "Общая длина водотока, км",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "area",
+      "title": "Общая площадь водоема, га",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "wpz_size",
+      "title": "Размер водоохраной зоны объекта, м",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "rs_size",
+      "title": "Размер прибрежной полосы объекта, м",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "fsh_size",
+      "title": "Размер береговой полосы общего пользования объекта, м",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    }
+  ]
+}

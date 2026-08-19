@@ -78,7 +78,7 @@
       "title": "Дата определения стоимости",
       "valueType": "DATETIME"
     },
-     {
+    {
       "name": "cost_registration_date",
       "title": "Дата регистрации стоимости",
       "valueType": "DATETIME"
@@ -169,7 +169,6 @@
       "title": "Глубина залегания",
       "valueType": "STRING"
     },
-
     {
       "name": "united_cad_numbers",
       "title": "Объединенные кадастровые номера",
@@ -219,9 +218,7 @@
       "title": "Геометрия",
       "valueType": "GEOMETRY",
       "hidden": true,
-      "allowedValues": [
-        "Polygon"
-      ]
+      "allowedValues": ["Polygon"]
     }
   ]
 }

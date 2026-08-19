@@ -1,0 +1,123 @@
+{
+  "name": "engprotectionzone",
+  "title": "Охранная зона инженерных коммуникаций",
+  "styleName": "engprotectionzone_698",
+  "tableName": "engprotectionzone",
+  "originName": "EngProtectionZone",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Охранная зона инженерных коммуникаций",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Охранная зона нефтепроводов и нефтепродуктопроводов, аммиакопроводов",
+          "value": "603010501"
+        },
+        {
+          "title": "Охранная зона газопроводов и систем газоснабжения",
+          "value": "603010502"
+        },
+        {
+          "title": "Охранная зона объектов электроэнергетики (объектов электросетевого хозяйства и объектов по производству электрической энергии); (вдоль линий электропередачи, вокруг подстанций)",
+          "value": "603010503"
+        },
+        {
+          "title": "Охранная зона линий и сооружений связи",
+          "value": "603010504"
+        },
+        {
+          "title": "Охранная зона гидроэнергетических объектов",
+          "value": "603010505"
+        },
+        {
+          "title": "Охранная зона тепловых сетей",
+          "value": "603010506"
+        },
+        {
+          "title": "Охранная зона канализационных сетей и сооружений",
+          "value": "603010507"
+        }
+      ]
+    },
+    {
+      "name": "zone_desc",
+      "title": "Описание зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование объекта (для которого устанавливается зона)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "numberzoit",
+      "title": "Учетный номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "reestrzoit",
+      "title": "Реестровый номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "dateegrn",
+      "title": "Дата внесения зон с особыми условиями использования территории в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

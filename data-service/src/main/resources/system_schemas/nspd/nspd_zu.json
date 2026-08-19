@@ -159,7 +159,7 @@
       "title": "Дата применения стоимости",
       "valueType": "DATETIME"
     },
-     {
+    {
       "name": "cost_approvement_date",
       "title": "Дата утверждения стоимости",
       "valueType": "DATETIME"
@@ -179,7 +179,6 @@
       "title": "Основание определения стоимости",
       "valueType": "STRING"
     },
-    
     {
       "name": "created_by",
       "title": "Создатель",

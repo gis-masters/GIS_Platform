@@ -1,0 +1,416 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_court_cases",
+  "title": "Документы",
+  "tableName": "dl_data_court_cases",
+  "description": "Документы",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "minWidth": 100,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Выписки ЕГРН",
+          "value": "folder_v1"
+        },
+        {
+          "title": "Выписка ЕГРН",
+          "value": "doc_egrn"
+        },
+        {
+          "title": "Договора купли продажи",
+          "value": "folder_v2"
+        },
+        {
+          "title": "Договор купли продажи",
+          "value": "doc_dkp"
+        },
+        {
+          "title": "Уставные документы",
+          "value": "folder_v3"
+        },
+        {
+          "title": "Уставные документы",
+          "value": "doc_approv"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "territorykey_for_buildings",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "displayMode": "newTab",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_32: buildings_new_1_96b6"],
+        "property": "cadastralnum",
+        "projectId": 1846
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "territorykey_for_zu",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "displayMode": "newTab"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cadastralnum",
+      "title": "Кадастровый номер",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Адрес",
+      "minWidth": 100,
+      "valueType": "FIAS",
+      "searchMode": "address"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "minWidth": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "Код ФИАС",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "document_egrn",
+      "title": "Выписка",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "document_dkp",
+      "title": "Договор купли продажи",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "document_approv",
+      "title": "Уставные документы",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "minWidth": 200,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Последняя модификация",
+      "required": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_egrn",
+      "icon": "GPZU",
+      "type": "DOCUMENT",
+      "title": "Выписка ЕГРН",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "cadastralnum"
+        },
+        {
+          "name": "territorykey_for_buildings"
+        },
+        {
+          "name": "territorykey_for_zu"
+        },
+        {
+          "name": "fias",
+          "title": "Адрес"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "document_egrn"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "doc_dkp",
+      "icon": "GPZU",
+      "type": "DOCUMENT",
+      "title": "Договор купли продажи",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "cadastralnum"
+        },
+        {
+          "name": "territorykey_for_buildings"
+        },
+        {
+          "name": "territorykey_for_zu"
+        },
+        {
+          "name": "fias",
+          "title": "Адрес"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "document_dkp"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "doc_approv",
+      "icon": "GPZU",
+      "type": "DOCUMENT",
+      "title": "Уставные документы",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "cadastralnum"
+        },
+        {
+          "name": "territorykey_for_buildings"
+        },
+        {
+          "name": "territorykey_for_zu"
+        },
+        {
+          "name": "fias",
+          "title": "Адрес"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "document_approv"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "children": [
+        {
+          "contentType": "doc_egrn"
+        },
+        {
+          "contentType": "folder_v1"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        },
+        {
+          "name": "fias",
+          "title": "Адрес",
+          "valueType": "FIAS",
+          "searchMode": "address"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        }
+      ]
+    },
+    {
+      "id": "folder_v2",
+      "type": "FOLDER",
+      "children": [
+        {
+          "contentType": "doc_dkp"
+        },
+        {
+          "contentType": "folder_v2"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        },
+        {
+          "name": "fias",
+          "title": "Адрес",
+          "valueType": "FIAS",
+          "searchMode": "address"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        }
+      ]
+    },
+    {
+      "id": "folder_v3",
+      "type": "FOLDER",
+      "children": [
+        {
+          "contentType": "doc_approv"
+        },
+        {
+          "contentType": "folder_v3"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        },
+        {
+          "name": "fias",
+          "title": "Адрес",
+          "valueType": "FIAS",
+          "searchMode": "address"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        }
+      ]
+    }
+  ]
+}

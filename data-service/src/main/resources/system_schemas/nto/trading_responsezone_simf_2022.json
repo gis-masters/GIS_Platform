@@ -1,0 +1,47 @@
+{
+  "tags": ["system", "НТО"],
+  "name": "trading_responsezone_simf_2022",
+  "title": "Зоны ответственности",
+  "styleName": "trading_responsezone_simf_2022",
+  "tableName": "trading_responsezone_simf_2022",
+  "description": "Зоны ответственности",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "objectname",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "trade_num",
+      "title": "Номер объекта на схеме относительно которого установлена зона",
+      "maxLength": 10,
+      "valueType": "STRING"
+    },
+    {
+      "name": "descript",
+      "title": "Описание зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв. м.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

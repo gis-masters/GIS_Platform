@@ -1,0 +1,2074 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_rsoks_part",
+  "title": "Описание разрешенного к строительству проекта",
+  "tableName": "dl_data_rsoks_part",
+  "description": "Описание разрешенного к строительству проекта",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "decree",
+      "title": "Форма согласно приказу",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "P117",
+          "value": "P117"
+        },
+        {
+          "title": "P446",
+          "value": "P446"
+        }
+      ]
+    },
+    {
+      "name": "oks",
+      "title": "Объект капитального строительства",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1:oks_13_1627_79c6",
+          "scratch_database_1:oks_13_line_1627_4bce"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "dl_data_rsoks_data_connection",
+      "title": "Разрешения на строительство",
+      "multiple": true,
+      "libraries": ["dl_data_rsoks"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "oks_project_info",
+      "title": "Краткие проектные характеристики для строительства, реконструкции объекта капитального строительства, объекта культурного наследия",
+      "valueType": "STRING"
+    },
+    {
+      "name": "volume",
+      "title": "Объем, куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "under_land_area",
+      "title": "Площадь подземной части участка, кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "land_area",
+      "title": "Площадь участка, кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "under_floor_number",
+      "title": "Количество подземных этажей",
+      "valueType": "INT"
+    },
+    {
+      "name": "resident_number",
+      "title": "Вместимость, чел",
+      "valueType": "INT"
+    },
+    {
+      "name": "building_area",
+      "title": "Площадь застройки, кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "other_param_info",
+      "title": "Иные показатели",
+      "valueType": "STRING"
+    },
+    {
+      "name": "line_object_project_info",
+      "title": "Краткие проектные характеристики линейного объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "line_object_category",
+      "title": "Категория линейного объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "line_object_classes",
+      "title": "Категория линейного объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Автомобильная дорога",
+          "value": "1"
+        },
+        {
+          "title": "Автомобильный мост",
+          "value": "2"
+        },
+        {
+          "title": "Автомобильный тоннель",
+          "value": "3"
+        },
+        {
+          "title": "Водовод",
+          "value": "4"
+        },
+        {
+          "title": "Водопровод",
+          "value": "5"
+        },
+        {
+          "title": "Газопровод",
+          "value": "6"
+        },
+        {
+          "title": "Железнодорожная линия",
+          "value": "7"
+        },
+        {
+          "title": "Железнодорожный мост",
+          "value": "8"
+        },
+        {
+          "title": "Железнодорожный тоннель",
+          "value": "9"
+        },
+        {
+          "title": "Канализационный коллектор",
+          "value": "10"
+        },
+        {
+          "title": "Коллектор",
+          "value": "11"
+        },
+        {
+          "title": "Линия связи",
+          "value": "12"
+        },
+        {
+          "title": "Линия электропередачи",
+          "value": "13"
+        },
+        {
+          "title": "Нефтепровод",
+          "value": "14"
+        },
+        {
+          "title": "Трамвайный путь",
+          "value": "15"
+        },
+        {
+          "title": "Троллейбусная линия",
+          "value": "16"
+        },
+        {
+          "title": "Трубопровод",
+          "value": "17"
+        },
+        {
+          "title": "Электрическая сеть",
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "name": "line_object_length",
+      "title": "Протяженность линейного объекта",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "line_object_power",
+      "title": "Мощность линейного объекта",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "line_object_voltage",
+      "title": "Тип и уровень напряжения линий электропередачи",
+      "valueType": "STRING"
+    },
+    {
+      "name": "line_object_safety",
+      "title": "Конструктивные элементы, влияющие на безопасность линейного объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "building_area_oks_part",
+      "title": "Площадь застройки части ОКС кв. м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_oks_part",
+      "title": "Площадь части ОКС кв. м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "not_living_area",
+      "title": "Площадь нежилых помещений кв. м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "living_area",
+      "title": "Площадь жилых помещений, кв. м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "number_room",
+      "title": "Количество помещений шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_not_living_room",
+      "title": "Количество нежилых помещений шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_living_room",
+      "title": "Количество жилых помещений шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "appartments_total",
+      "title": "В том числе квартир шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "parking_space",
+      "title": "Количество машино-мест шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_place_non_prod_fac_pr",
+      "title": "Количество мест в объекте непроизводственного назначения проектное",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_place_non_prod_fac_fa",
+      "title": "Количество мест в объекте непроизводственного назначения фактическое",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_room_non_prod_fac_pr",
+      "title": "Количество помещений объекта непроизводственного назначения проектное",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_room_non_prod_fac_fa",
+      "title": "Количество помещений объекта непроизводственного назначения фактическое",
+      "valueType": "INT"
+    },
+    {
+      "name": "capacity_non_prod_fac_pr",
+      "title": "Вместимость объекта непроизводственного назначения проектная",
+      "valueType": "INT"
+    },
+    {
+      "name": "capacity_non_prod_fac_fa",
+      "title": "Вместимость объекта непроизводственного назначения фактическая",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_floor_non_prod_fac_pr",
+      "title": "Количество этажей объекта непроизводственного назначения проектное",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_floor_non_prod_fac_fa",
+      "title": "Количество этажей объекта непроизводственного назначения фактическое",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_floor_undegraund_non_prod_fac_pr",
+      "title": "В том числе подземных, у объекта непроизводственного",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_floor_undegraund_non_prod_fac_fa",
+      "title": "В том числе подземных, у объекта непроизводственного",
+      "valueType": "INT"
+    },
+    {
+      "name": "eng_systems_non_prod_fac_pr",
+      "title": "Сети и системы инженерно-технического обеспечения объекта непроизводственного",
+      "valueType": "STRING"
+    },
+    {
+      "name": "eng_systems_non_prod_fac_fa",
+      "title": "Сети и системы инженерно-технического обеспечения объекта непроизводственного",
+      "valueType": "STRING"
+    },
+    {
+      "name": "foundation_materials_non_prod_fac_pr",
+      "title": "Материалы фундаментов объекта непроизводственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "foundation_materials_non_prod_fac_fa",
+      "title": "Материалы фундаментов объекта непроизводственного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wall_materials_non_prod_fac_pr",
+      "title": "Материалы стен объекта непроизводственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wall_materials_non_prod_fac_fa",
+      "title": "Материалы стен объекта непроизвосдтвенного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "floor_materials_non_prod_fac_pr",
+      "title": "Материалы перекрытий объекта непроизводственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "floor_materials_non_prod_fac_fa",
+      "title": "Материалы перекрытий объекта непроизводственного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "roof_materials_non_prod_fac_pr",
+      "title": "Материалы кровли объекта непроизводственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "roof_materials_non_prod_fac_fa",
+      "title": "Материалы кровли объекта непроизводственного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "other_indicators_non_prod_fac_pr",
+      "title": "Иные показатели объекта непроизводственного назначения проектные",
+      "valueType": "STRING"
+    },
+    {
+      "name": "other_indicators_non_prod_fac_fa",
+      "title": "Иные показатели объекта непроизводственного назначения фактические",
+      "valueType": "STRING"
+    },
+    {
+      "name": "living_area_without_balcony_pr",
+      "title": "Общая площадь жилых помещений (за исключением балконов, лоджий, веранд и террас) (проектое)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_not_living_pr",
+      "title": "Общая площадь нежилых помещений, в том числе площадь общего имущества в многоквартирном доме (проектная)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_not_living_fa",
+      "title": "Общая площадь нежилых помещений, в том числе площадь общего имущества в многоквартирном доме (фактическая)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "number_floor_pr",
+      "title": "Количество этажей (проектное)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_floor_underground_pr",
+      "title": "в том числе подземных (проектное)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_floor_underground_fa",
+      "title": "в том числе подземных (фактическое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_sections_pr",
+      "title": "Количество секций (проектое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_sections_fa",
+      "title": "Количество секций (фактическое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "appartments_total_pr",
+      "title": "Количество квартир, всего в том числе: (проектное)",
+      "valueType": "INT"
+    },
+    {
+      "name": "appartments_total_area_pr",
+      "title": "Количество квартир/общая площадь, всего в том числе: (проектное)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "appartments_total_area_fa",
+      "title": "Количество квартир/общая площадь, всего в том числе: (фактическое)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "one_room_pr",
+      "title": "1-комнатные (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "one_room_area_pr",
+      "title": "1-комнатные кв. м.(проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "one_room_fa",
+      "title": "1-комнатные (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "one_room_area_fa",
+      "title": "1-комнатные кв. м. (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "two_room_pr",
+      "title": "2-комнатные (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "two_room_area_pr",
+      "title": "2-комнатные кв. м. (проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "two_room_fa",
+      "title": "2-комнатные (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "two_room_area_fa",
+      "title": "2-комнатные кв. м. (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "three_room_pr",
+      "title": "3-комнатные (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "three_room_area_pr",
+      "title": "3-комнатные кв. м. (проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "three_room_fa",
+      "title": "3-комнатные (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "three_room_area_fa",
+      "title": "3-комнатные кв. м. (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "four_room_pr",
+      "title": "4-комнатные (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "four_room_area_pr",
+      "title": "4-комнатные кв. м. (проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "four_room_fa",
+      "title": "4-комнатные (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "four_room_area_fa",
+      "title": "4-комнатные кв. м. (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "more_then_four_room_pr",
+      "title": "более чем 4-комнатные (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "more_then_four_room_area_pr",
+      "title": "более чем 4-комнатные кв. м. (проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "more_then_four_room_fa",
+      "title": "более чем 4-комнатные (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "more_then_four_room_area_fa",
+      "title": "более чем 4-комнатные кв. м. (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "living_area_with_balcony_pr",
+      "title": "Общая площадь жилых помещений (с учетом балконов, лоджий, веранд и террас) (проектная)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "living_area_with_balcony_fa",
+      "title": "Общая площадь жилых помещений (с учетом балконов, лоджий, веранд и террас) (фактическая)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "eng_systems_pr",
+      "title": "Сети и системы инженерно-технического обеспечения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "power_measure",
+      "title": "Единица измерения мощности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Ватт",
+          "value": "212"
+        },
+        {
+          "title": "Киловатт",
+          "value": "214"
+        },
+        {
+          "title": "Мегаватт",
+          "value": "215"
+        },
+        {
+          "title": "Вольт",
+          "value": "222"
+        },
+        {
+          "title": "Киловольт",
+          "value": "223"
+        },
+        {
+          "title": "Ампер",
+          "value": "260"
+        }
+      ]
+    },
+    {
+      "name": "power_lines_type",
+      "title": "Типы линий электропередачи",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "КЛ",
+          "value": "1"
+        },
+        {
+          "title": "ВЛ",
+          "value": "2"
+        },
+        {
+          "title": "КВЛ",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "power_lines_level",
+      "title": "Уровень напряженности линии электропередач этажей (ед.)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "eng_systems_fa",
+      "title": "Сети и системы инженерно-технического обеспечения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "foundation_materials_pr",
+      "title": "Материалы фундаментов (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "foundation_materials_fa",
+      "title": "Материалы фундаментов (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wall_materials_pr",
+      "title": "Материалы стен (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wall_materials_fa",
+      "title": "Материалы стен (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "floor_materials_pr",
+      "title": "Материалы перекрытий (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "floor_materials_fa",
+      "title": "Материалы перекрытий (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "roof_materials_pr",
+      "title": "Материалы кровли (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "roof_materials_fa",
+      "title": "Материалы кровли (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "other_indicators_pr",
+      "title": "Иные показатели (проектные)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "other_indicators_fa",
+      "title": "Иные показатели (фактические)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "object_name_from_pd",
+      "title": "Наименование ОКС, в соответствии с проектной документацией",
+      "valueType": "STRING"
+    },
+    {
+      "name": "oks_type_pr",
+      "title": "Тип объекта ОКС (проектный)",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Объект непроизводственного назначения",
+          "value": "1"
+        },
+        {
+          "title": "Объект производственного назначения",
+          "value": "2"
+        },
+        {
+          "title": "Линейный объект",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "oks_type_fa",
+      "title": "Тип объекта ОКС (фактический",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Объект непроизводственного назначения",
+          "value": "1"
+        },
+        {
+          "title": "Объект производственного назначения",
+          "value": "2"
+        },
+        {
+          "title": "Линейный объект",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "oks_purpose",
+      "title": "Назначение",
+      "multiple": true,
+      "libraries": ["data_oks_purpose"],
+      "valueType": "DOCUMENT",
+      "description": "Назначение объекта капитального строительства",
+      "maxDocuments": 1
+    },
+    {
+      "name": "power_pr",
+      "title": "Мощность (проектная)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "power_fa",
+      "title": "Мощность (фактическая)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "performance_pr",
+      "title": "Производительность (проектная)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "performance_fa",
+      "title": "Производительность (фактическая)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "eng_systems_prod_fac_pr",
+      "title": "Сети и системы инженерно-технического обеспечения объекта производственного",
+      "valueType": "STRING"
+    },
+    {
+      "name": "eng_systems_prod_fac_fa",
+      "title": "Сети и системы инженерно-технического обеспечения объекта производственного",
+      "valueType": "STRING"
+    },
+    {
+      "name": "foundation_materials_prod_fac_pr",
+      "title": "Материалы фундаментов объекта производственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "foundation_materials_prod_fac_fa",
+      "title": "Материалы фундаментов объекта производственного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wall_materials_prod_fac_pr",
+      "title": "Материалы стен объекта производственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wall_materials_prod_fac_fa",
+      "title": "Материалы стен объекта производственного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "floor_materials_prod_fac_pr",
+      "title": "Материалы перекрытий объекта производственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "floor_materials_prod_fac_fa",
+      "title": "Материалы перекрытий объекта производственного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "roof_materials_prod_fac_pr",
+      "title": "Материалы кровли объекта производственного назначения проект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "roof_materials_prod_fac_fa",
+      "title": "Материалы кровли объекта производственного назначения факт",
+      "valueType": "STRING"
+    },
+    {
+      "name": "other_indicators_prod_fac_pr",
+      "title": "Иные показатели объекта производственного назначения проектные",
+      "valueType": "STRING"
+    },
+    {
+      "name": "other_indicators_prod_fac_fa",
+      "title": "Иные показатели объекта производственного назначения фактические",
+      "valueType": "STRING"
+    },
+    {
+      "name": "category_pr",
+      "title": "Категория (класс) (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "category_fa",
+      "title": "Категория (класс) (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "length_pr",
+      "title": "Протяженность (проектная)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "length_fa",
+      "title": "Протяженность (фактическая)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "throughput_pr",
+      "title": "Мощность (пропускная способность, грузооборот, интенсивность движения) (проектная)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "throughput_fa",
+      "title": "Мощность (пропускная способность, грузооборот, интенсивность движения) (фактическая)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "pipelines_info_pr",
+      "title": "Диаметры и количество трубопроводов, характеристики материалов труб (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "pipelines_info_fa",
+      "title": "Диаметры и количество трубопроводов, характеристики материалов труб (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "voltage_level_pr",
+      "title": "Тип (КЛ, ВЛ, КВЛ), уровень напряжения линий электропередачи (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "voltage_level_fa",
+      "title": "Тип (КЛ, ВЛ, КВЛ), уровень напряжения линий электропередачи (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "structural_elements_safety_pr",
+      "title": "Перечень конструктивных элементов, оказывающих влияние на безопасность (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "structural_elements_safety_fa",
+      "title": "Перечень конструктивных элементов, оказывающих влияние на безопасность (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "line_object_other_info",
+      "title": "Иные показатели линейного объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "line_object_other_info_fa",
+      "title": "Иные показатели линейного объекта фактические",
+      "valueType": "STRING"
+    },
+    {
+      "name": "energy_efficiency_class_pr",
+      "title": "Класс энергоэффективности здания (проектный)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "energy_efficiency_class_fa",
+      "title": "Класс энергоэффективности здания (фактический)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "specific_consumption_thermal_energy_pr",
+      "title": "Удельный расход тепловой энергии на 1 кв.м. площади (проектный)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "specific_consumption_thermal_energy_fa",
+      "title": "Удельный расход тепловой энергии на 1 кв.м. площади (фактический)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "insulation_materials_external_enclosing_structures_pr",
+      "title": "Материалы утепления наружных ограждающих конструкций (проектные)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "insulation_materials_external_enclosing_structures_fa",
+      "title": "Материалы утепления наружных ограждающих конструкций (фактические)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "filling_light_openings_pr",
+      "title": "Заполнение световых проемов (проектное)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "filling_light_openings_fa",
+      "title": "Заполнение световых проемов (фактическое)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "building_area_fa",
+      "title": "Площадь застройки кв. м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_area_oks_part_fa",
+      "title": "Площадь застройки части ОКС кв. м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_oks_part_fa",
+      "title": "Площадь части ОКС кв. м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "total_area_not_living_fa",
+      "title": "Площадь нежилых помещений (фактическая), кв.м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "living_area_without_balcony_fa",
+      "title": "Общая площадь жилых помещений (за исключением балконов, лоджий, веранд и террас) (фактичекое)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "number_room_fa",
+      "title": "Количество помещений (фактическое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_not_living_room_fa",
+      "title": "Количество нежилых помещений шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_living_room_fa",
+      "title": "Количество жилых помещений шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "appartments_total_fa",
+      "title": "Количество квартир, всего в том числе: (фактическое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "parking_space_fa",
+      "title": "Количество машино-мест шт.",
+      "valueType": "INT"
+    },
+    {
+      "name": "capacity_fa",
+      "title": "Вместимость (фактическая)",
+      "valueType": "INT"
+    },
+    {
+      "name": "line_object_name",
+      "title": "Наименование линейного объекта, предусмотренного проектной документацией",
+      "valueType": "STRING"
+    },
+    {
+      "name": "line_object_number",
+      "title": "Кадастровый номер реконструированного линейного объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "part_length_fa",
+      "title": "Протяженность участка или части линейного объекта м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_volume_total_pr",
+      "title": "Строительный объем - всего (проектный), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_volume_total_fa",
+      "title": "Строительный объем - всего (фактический), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_volume_total_above_ground_pr",
+      "title": "в том числе надземной части (проектный), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_volume_total_above_ground_fa",
+      "title": "в том числе надземной части (фактический), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "total_area_pr",
+      "title": "Общая площадь (проектная), кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "built_in_area_pr",
+      "title": "Площадь  встроенно-пристроенных помещений (проектная), кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "built_in_area_fa",
+      "title": "Площадь  встроенно-пристроенных помещений (фактическая), кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "height_fa",
+      "title": "Высота (м.)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "min_number_floor_fa",
+      "title": "Минимальное количество этажей (ед.)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "maх_number_floor_fa",
+      "title": "Максимальное количество этажей (ед.)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "min_underground_floors",
+      "title": "Минимальное количество подземных этажей (ед.)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "max_underground_floors",
+      "title": "Максимальное количество подземных этажей (ед.)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "underground_part",
+      "title": "Объем подземной части (куб. м.)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "number_buildings_pr",
+      "title": "Количество зданий, сооружений (проектное)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_buildings_fa",
+      "title": "Количество зданий, сооружений (фактическое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "elevators_non_prod_data_connection",
+      "title": "Лифты",
+      "multiple": true,
+      "libraries": ["dl_data_lifts"],
+      "valueType": "DOCUMENT",
+      "description": "?elevators_non_prod?",
+      "maxDocuments": 10
+    },
+    {
+      "name": "elevators_non_prod_fac_pr",
+      "title": "Количество лифтов объекта непроизводственного назначения (проект) шт.",
+      "valueType": "STRING"
+    },
+    {
+      "name": "elevators_non_prod_fac_fa",
+      "title": "Лифты объекта непроизводственного назначения (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "escalators_non_prod_data_connection",
+      "title": "Эскалаторы",
+      "multiple": true,
+      "libraries": ["dl_data_escalators"],
+      "valueType": "DOCUMENT",
+      "description": "?escalators_non_prod?",
+      "maxDocuments": 10
+    },
+    {
+      "name": "escalators_non_prod_fac_pr",
+      "title": "Эскалаторы объекта непроизводственного назначения (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "escalators_non_prod_fac_fa",
+      "title": "Эскалаторы объекта непроизводственного назначения (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wheelchair_lifts_non_prod_data_connection",
+      "title": "Инвалидные подъемники",
+      "multiple": true,
+      "libraries": ["dl_data_wheelchair_lifts"],
+      "valueType": "DOCUMENT",
+      "description": "?wheelchair_lifts_non_prod?",
+      "maxDocuments": 10
+    },
+    {
+      "name": "wheelchair_lifts_non_prod_fac_pr",
+      "title": "Инвалидные подъемники объекта непроизводственного назначения (проект)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "wheelchair_lifts_non_prod_fac_fa",
+      "title": "Инвалидные подъемники объекта непроизводственного назначения (факт)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "elevators_pr",
+      "title": "Лифты (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "elevators_fa",
+      "title": "Лифты (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "escalators_data_connection",
+      "title": "Эскалаторы",
+      "multiple": true,
+      "libraries": ["dl_data_escalators"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "escalators_pr",
+      "title": "Эскалаторы (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "escalators_fa",
+      "title": "Эскалаторы (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "wheelchair_lifts_data_connection",
+      "title": "Инвалидные подъемники",
+      "multiple": true,
+      "libraries": ["dl_data_wheelchair_lifts"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "wheelchair_lifts_pr",
+      "title": "Инвалидные подъёмники (проект)",
+      "valueType": "INT"
+    },
+    {
+      "name": "wheelchair_lifts_fa",
+      "title": "Инвалидные подъёмники (факт)",
+      "valueType": "INT"
+    },
+    {
+      "name": "elevators_prod_fac",
+      "title": "Лифты",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "elevators_prod_fac_pr",
+      "title": "Лифты объекта производственного назначения (проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "elevators_prod_fac_fa",
+      "title": "Лифты объекта производственного назначения (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "escalators_prod_fac",
+      "title": "Эскалаторы",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "escalators_prod_fac_pr",
+      "title": "Эскалаторы объекта производственного назначения (проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "escalators_prod_fac_fa",
+      "title": "Эскалаторы объекта производственного назначения (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "wheelchair_lifts_prod_fac",
+      "title": "Инвалидные подъемники",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "wheelchair_lifts_prod_fac_pr",
+      "title": "Инвалидные подъемники объекта производственного назначения (проект)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "wheelchair_lifts_prod_fac_fa",
+      "title": "Инвалидные подъемники объекта производственного назначения (факт)",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "prolong_due",
+      "title": "Изменение даты ввода в эксплуатацию",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа, утвердившего документ",
+      "multiple": true,
+      "readOnly": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "if_from_eis_zh",
+      "title": "Пришло из ЕИС ЖС",
+      "readOnly": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "minWidth": 200,
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "minWidth": 200,
+      "asTitle": true,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Карточка документа",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "decree"
+        },
+        {
+          "name": "oks"
+        },
+        {
+          "name": "dl_data_rsoks_data_connection"
+        },
+        {
+          "name": "oks_project_info"
+        },
+        {
+          "name": "volume"
+        },
+        {
+          "name": "height_fa",
+          "title": "Высота (м.)",
+          "valueType": "STRING"
+        },
+        {
+          "name": "min_number_floor_fa",
+          "title": "Минимальное количество этажей (ед.)",
+          "valueType": "STRING"
+        },
+        {
+          "name": "maх_number_floor_fa",
+          "title": "Максимальное количество этажей (ед.)",
+          "valueType": "STRING"
+        },
+        {
+          "name": "min_underground_floors",
+          "title": "Минимальное количество подземных этажей (ед.)",
+          "valueType": "STRING"
+        },
+        {
+          "name": "max_underground_floors",
+          "title": "Максимальное количество подземных этажей (ед.)",
+          "valueType": "STRING"
+        },
+        {
+          "name": "underground_part",
+          "title": "Объем подземной части (куб. м.)",
+          "valueType": "STRING"
+        },
+        {
+          "name": "under_land_area"
+        },
+        {
+          "name": "land_area"
+        },
+        {
+          "name": "under_floor_number"
+        },
+        {
+          "name": "resident_number"
+        },
+        {
+          "name": "building_area"
+        },
+        {
+          "name": "other_param_info"
+        },
+        {
+          "name": "line_object_project_info"
+        },
+        {
+          "name": "line_object_category"
+        },
+        {
+          "name": "line_object_classes"
+        },
+        {
+          "name": "line_object_length"
+        },
+        {
+          "name": "line_object_power"
+        },
+        {
+          "name": "line_object_voltage"
+        },
+        {
+          "name": "line_object_safety"
+        },
+        {
+          "name": "building_area_oks_part"
+        },
+        {
+          "name": "area_oks_part"
+        },
+        {
+          "name": "not_living_area"
+        },
+        {
+          "name": "living_area"
+        },
+        {
+          "name": "number_room"
+        },
+        {
+          "name": "number_not_living_room"
+        },
+        {
+          "name": "number_living_room"
+        },
+        {
+          "name": "appartments_total"
+        },
+        {
+          "name": "parking_space"
+        },
+        {
+          "name": "number_place_non_prod_fac_pr"
+        },
+        {
+          "name": "number_place_non_prod_fac_fa"
+        },
+        {
+          "name": "number_room_non_prod_fac_pr"
+        },
+        {
+          "name": "number_room_non_prod_fac_fa"
+        },
+        {
+          "name": "capacity_non_prod_fac_pr"
+        },
+        {
+          "name": "capacity_non_prod_fac_fa"
+        },
+        {
+          "name": "number_floor_non_prod_fac_pr"
+        },
+        {
+          "name": "number_floor_non_prod_fac_fa"
+        },
+        {
+          "name": "number_floor_undegraund_non_prod_fac_pr"
+        },
+        {
+          "name": "number_floor_undegraund_non_prod_fac_fa"
+        },
+        {
+          "name": "eng_systems_non_prod_fac_pr"
+        },
+        {
+          "name": "eng_systems_non_prod_fac_fa"
+        },
+        {
+          "name": "foundation_materials_non_prod_fac_pr"
+        },
+        {
+          "name": "foundation_materials_non_prod_fac_fa"
+        },
+        {
+          "name": "wall_materials_non_prod_fac_pr"
+        },
+        {
+          "name": "wall_materials_non_prod_fac_fa"
+        },
+        {
+          "name": "floor_materials_non_prod_fac_pr"
+        },
+        {
+          "name": "floor_materials_non_prod_fac_fa"
+        },
+        {
+          "name": "roof_materials_non_prod_fac_pr"
+        },
+        {
+          "name": "roof_materials_non_prod_fac_fa"
+        },
+        {
+          "name": "other_indicators_non_prod_fac_pr"
+        },
+        {
+          "name": "other_indicators_non_prod_fac_fa"
+        },
+        {
+          "name": "living_area_without_balcony_pr"
+        },
+        {
+          "name": "area_not_living_pr"
+        },
+        {
+          "name": "area_not_living_fa"
+        },
+        {
+          "name": "number_floor_pr"
+        },
+        {
+          "name": "number_floor_underground_pr"
+        },
+        {
+          "name": "number_floor_underground_fa"
+        },
+        {
+          "name": "number_sections_pr"
+        },
+        {
+          "name": "number_sections_fa"
+        },
+        {
+          "name": "appartments_total_pr"
+        },
+        {
+          "name": "appartments_total_area_pr"
+        },
+        {
+          "name": "appartments_total_area_fa"
+        },
+        {
+          "name": "one_room_pr"
+        },
+        {
+          "name": "one_room_area_pr"
+        },
+        {
+          "name": "one_room_fa"
+        },
+        {
+          "name": "one_room_area_fa"
+        },
+        {
+          "name": "two_room_pr"
+        },
+        {
+          "name": "two_room_area_pr"
+        },
+        {
+          "name": "two_room_fa"
+        },
+        {
+          "name": "two_room_area_fa"
+        },
+        {
+          "name": "three_room_pr"
+        },
+        {
+          "name": "three_room_area_pr"
+        },
+        {
+          "name": "three_room_fa"
+        },
+        {
+          "name": "three_room_area_fa"
+        },
+        {
+          "name": "four_room_pr"
+        },
+        {
+          "name": "four_room_area_pr"
+        },
+        {
+          "name": "four_room_fa"
+        },
+        {
+          "name": "four_room_area_fa"
+        },
+        {
+          "name": "more_then_four_room_pr"
+        },
+        {
+          "name": "more_then_four_room_area_pr"
+        },
+        {
+          "name": "more_then_four_room_fa"
+        },
+        {
+          "name": "more_then_four_room_area_fa"
+        },
+        {
+          "name": "living_area_with_balcony_pr"
+        },
+        {
+          "name": "living_area_with_balcony_fa"
+        },
+        {
+          "name": "eng_systems_pr"
+        },
+        {
+          "name": "eng_systems_fa"
+        },
+        {
+          "name": "power_measure"
+        },
+        {
+          "name": "power_lines_type"
+        },
+        {
+          "name": "power_lines_level"
+        },
+        {
+          "name": "foundation_materials_pr"
+        },
+        {
+          "name": "foundation_materials_fa"
+        },
+        {
+          "name": "wall_materials_pr"
+        },
+        {
+          "name": "wall_materials_fa"
+        },
+        {
+          "name": "floor_materials_pr"
+        },
+        {
+          "name": "floor_materials_fa"
+        },
+        {
+          "name": "roof_materials_pr"
+        },
+        {
+          "name": "roof_materials_fa"
+        },
+        {
+          "name": "other_indicators_pr"
+        },
+        {
+          "name": "other_indicators_fa"
+        },
+        {
+          "name": "object_name_from_pd"
+        },
+        {
+          "name": "oks_type_pr"
+        },
+        {
+          "name": "oks_type_fa"
+        },
+        {
+          "name": "oks_purpose"
+        },
+        {
+          "name": "power_pr"
+        },
+        {
+          "name": "power_fa"
+        },
+        {
+          "name": "performance_pr"
+        },
+        {
+          "name": "performance_fa"
+        },
+        {
+          "name": "eng_systems_prod_fac_pr"
+        },
+        {
+          "name": "eng_systems_prod_fac_fa"
+        },
+        {
+          "name": "foundation_materials_prod_fac_pr"
+        },
+        {
+          "name": "foundation_materials_prod_fac_fa"
+        },
+        {
+          "name": "wall_materials_prod_fac_pr"
+        },
+        {
+          "name": "wall_materials_prod_fac_fa"
+        },
+        {
+          "name": "floor_materials_prod_fac_pr"
+        },
+        {
+          "name": "floor_materials_prod_fac_fa"
+        },
+        {
+          "name": "roof_materials_prod_fac_pr"
+        },
+        {
+          "name": "roof_materials_prod_fac_fa"
+        },
+        {
+          "name": "other_indicators_prod_fac_pr"
+        },
+        {
+          "name": "other_indicators_prod_fac_fa"
+        },
+        {
+          "name": "category_pr"
+        },
+        {
+          "name": "category_fa"
+        },
+        {
+          "name": "length_pr"
+        },
+        {
+          "name": "length_fa"
+        },
+        {
+          "name": "throughput_pr"
+        },
+        {
+          "name": "throughput_fa"
+        },
+        {
+          "name": "pipelines_info_pr"
+        },
+        {
+          "name": "pipelines_info_fa"
+        },
+        {
+          "name": "voltage_level_pr"
+        },
+        {
+          "name": "voltage_level_fa"
+        },
+        {
+          "name": "structural_elements_safety_pr"
+        },
+        {
+          "name": "structural_elements_safety_fa"
+        },
+        {
+          "name": "line_object_other_info"
+        },
+        {
+          "name": "line_object_other_info_fa"
+        },
+        {
+          "name": "energy_efficiency_class_pr"
+        },
+        {
+          "name": "energy_efficiency_class_fa"
+        },
+        {
+          "name": "specific_consumption_thermal_energy_pr"
+        },
+        {
+          "name": "specific_consumption_thermal_energy_fa"
+        },
+        {
+          "name": "insulation_materials_external_enclosing_structures_pr"
+        },
+        {
+          "name": "insulation_materials_external_enclosing_structures_fa"
+        },
+        {
+          "name": "filling_light_openings_pr"
+        },
+        {
+          "name": "filling_light_openings_fa"
+        },
+        {
+          "name": "building_area_fa"
+        },
+        {
+          "name": "building_area_oks_part_fa"
+        },
+        {
+          "name": "area_oks_part_fa"
+        },
+        {
+          "name": "total_area_not_living_fa"
+        },
+        {
+          "name": "living_area_without_balcony_fa"
+        },
+        {
+          "name": "number_room_fa"
+        },
+        {
+          "name": "number_not_living_room_fa"
+        },
+        {
+          "name": "number_living_room_fa"
+        },
+        {
+          "name": "appartments_total_fa"
+        },
+        {
+          "name": "parking_space_fa"
+        },
+        {
+          "name": "capacity_fa"
+        },
+        {
+          "name": "line_object_name"
+        },
+        {
+          "name": "line_object_number"
+        },
+        {
+          "name": "part_length_fa"
+        },
+        {
+          "name": "building_volume_total_pr"
+        },
+        {
+          "name": "building_volume_total_fa"
+        },
+        {
+          "name": "building_volume_total_above_ground_pr"
+        },
+        {
+          "name": "building_volume_total_above_ground_fa"
+        },
+        {
+          "name": "total_area_pr"
+        },
+        {
+          "name": "built_in_area_pr"
+        },
+        {
+          "name": "built_in_area_fa"
+        },
+        {
+          "name": "number_buildings_pr"
+        },
+        {
+          "name": "number_buildings_fa"
+        },
+        {
+          "name": "elevators_non_prod_data_connection"
+        },
+        {
+          "name": "elevators_non_prod_fac_pr"
+        },
+        {
+          "name": "elevators_non_prod_fac_fa"
+        },
+        {
+          "name": "escalators_non_prod_data_connection"
+        },
+        {
+          "name": "escalators_non_prod_fac_pr"
+        },
+        {
+          "name": "escalators_non_prod_fac_fa"
+        },
+        {
+          "name": "wheelchair_lifts_non_prod_data_connection"
+        },
+        {
+          "name": "wheelchair_lifts_non_prod_fac_pr"
+        },
+        {
+          "name": "wheelchair_lifts_non_prod_fac_fa"
+        },
+        {
+          "name": "elevators_pr"
+        },
+        {
+          "name": "elevators_fa"
+        },
+        {
+          "name": "escalators_data_connection"
+        },
+        {
+          "name": "escalators_pr"
+        },
+        {
+          "name": "escalators_fa"
+        },
+        {
+          "name": "wheelchair_lifts_data_connection"
+        },
+        {
+          "name": "wheelchair_lifts_pr"
+        },
+        {
+          "name": "wheelchair_lifts_fa"
+        },
+        {
+          "name": "elevators_prod_fac"
+        },
+        {
+          "name": "elevators_prod_fac_pr"
+        },
+        {
+          "name": "elevators_prod_fac_fa"
+        },
+        {
+          "name": "escalators_prod_fac"
+        },
+        {
+          "name": "escalators_prod_fac_pr"
+        },
+        {
+          "name": "escalators_prod_fac_fa"
+        },
+        {
+          "name": "wheelchair_lifts_prod_fac"
+        },
+        {
+          "name": "wheelchair_lifts_prod_fac_pr"
+        },
+        {
+          "name": "wheelchair_lifts_prod_fac_fa"
+        },
+        {
+          "name": "prolong_due"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "if_from_eis_zh"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "last_modified"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

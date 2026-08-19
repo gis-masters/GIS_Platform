@@ -1,0 +1,87 @@
+{
+  "styleName": "greenery",
+  "tags": ["system", "Зеленые насаждения"],
+  "name": "greenery",
+  "title": "Участки растительности",
+  "tableName": "greenery",
+  "originName": "greenery",
+  "description": "Участки растительности",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "status",
+      "title": "Статус",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Современная",
+          "value": "Современная"
+        },
+        {
+          "title": "Историческая",
+          "value": "Историческая"
+        },
+        {
+          "title": "Естественная",
+          "value": "Естественная"
+        }
+      ],
+      "asTitle": true
+    },
+    {
+      "name": "name",
+      "title": "Наименование",
+      "maxLength": 250,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв.м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ]
+}

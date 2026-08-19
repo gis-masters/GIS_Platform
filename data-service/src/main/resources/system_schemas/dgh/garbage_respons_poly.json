@@ -1,0 +1,180 @@
+{
+  "styleName": "garbage_respons_poly",
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "garbage_respons_poly",
+  "title": "Ответственные",
+  "tableName": "garbage_respons_poly",
+  "originName": "garbage_respons_poly",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Тип территории",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная собственность",
+          "value": "1"
+        },
+        {
+          "title": "Муниципальная собственность",
+          "value": "2"
+        },
+        {
+          "title": "Частная собственность",
+          "value": "3"
+        },
+        {
+          "title": "Право аренды",
+          "value": "4"
+        },
+        {
+          "title": "Право безвозмездного пользования",
+          "value": "5"
+        },
+        {
+          "title": "Участки на кадастровом учете",
+          "value": "6"
+        },
+        {
+          "title": "Придомовые территории",
+          "value": "7"
+        },
+        {
+          "title": "Дороги, проезды",
+          "value": "8"
+        },
+        {
+          "title": "Скверы",
+          "value": "9"
+        },
+        {
+          "title": "Участки, не учтенные в ЕГРН",
+          "value": "10"
+        },
+        {
+          "title": "Прочие",
+          "value": "11"
+        }
+      ],
+      "asTitle": true
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "raddress",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "landuser",
+      "title": "Землепользователь",
+      "valueType": "STRING"
+    },
+    {
+      "name": "usage",
+      "title": "Вид использования земельного участка",
+      "valueType": "STRING"
+    },
+    {
+      "name": "propertyty",
+      "title": "Тип собственности",
+      "valueType": "STRING"
+    },
+    {
+      "name": "responsible",
+      "title": "Наименование ответственного",
+      "valueType": "STRING"
+    },
+    {
+      "name": "responsi_1",
+      "title": "Ответственный",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ЖСК ТСН ТСЖ",
+          "value": "1"
+        },
+        {
+          "title": "МУП «Аванград»",
+          "value": "2"
+        },
+        {
+          "title": "МКД(ответственный не указан)",
+          "value": "3"
+        },
+        {
+          "title": "МУП «Железнодорожный Жилсервис»",
+          "value": "4"
+        },
+        {
+          "title": "МУП «Киевский Жилсервис»",
+          "value": "5"
+        },
+        {
+          "title": "МУП «Центральный Жилсервис»",
+          "value": "6"
+        },
+        {
+          "title": "МБУ «Город»",
+          "value": "7"
+        },
+        {
+          "title": "Землепользователь(государственная собственность)",
+          "value": "8"
+        },
+        {
+          "title": "Землепользователь(муниципальная собственность)",
+          "value": "9"
+        },
+        {
+          "title": "Землепользователь(арендатор)",
+          "value": "10"
+        },
+        {
+          "title": "Землепользователь(безвозмездное пользование)",
+          "value": "11"
+        },
+        {
+          "title": "Землепользователь(на кадастровом учете)",
+          "value": "12"
+        },
+        {
+          "title": "Землепользователь(ИЖС)",
+          "value": "13"
+        },
+        {
+          "title": "Землепользователь(юридическое лицо)",
+          "value": "14"
+        },
+        {
+          "title": "Ответственный не определен",
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "name": "area",
+      "title": "Площадь м. кв.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

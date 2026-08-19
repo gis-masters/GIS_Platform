@@ -1,0 +1,71 @@
+{
+  "styleName": "terzonesimfgor",
+  "tags": ["system", "ГИСОГД"],
+  "name": "terzonesimfgor",
+  "title": "Территориальные зоны",
+  "readOnly": true,
+  "tableName": "terzonesimfgor",
+  "originName": "terzonesimfgor",
+  "description": "Территориальные зоны",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "objectname",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "objectcode",
+      "title": "Код зоны",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admemr",
+      "title": "Муниципальный район",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admemo",
+      "title": "Муниципальное образование",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admenp",
+      "title": "Населённый пункт",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape_area",
+      "title": "Площадь, кв.м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "reglament",
+      "title": "Правила землепользования и застройки",
+      "required": true,
+      "maxLength": 500,
+      "valueType": "URL"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

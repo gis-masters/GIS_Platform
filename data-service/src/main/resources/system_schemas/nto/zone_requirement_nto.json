@@ -1,0 +1,128 @@
+{
+  "tags": ["system", "НТО"],
+  "name": "zone_requirement_nto",
+  "title": "Зоны требований к НТО",
+  "styleName": "zone_requirement_nto",
+  "tableName": "zone_requirement_nto",
+  "description": "Зоны требований к нестационарным торговым объектам",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Вид объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Зона НТО",
+          "value": "Зона НТО"
+        },
+        {
+          "title": "Граница населенного пункта",
+          "value": "Граница населенного пункта"
+        }
+      ]
+    },
+    {
+      "name": "name",
+      "title": "Наименование",
+      "asTitle": true,
+      "display": "multiline",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING",
+      "description": "Наименование зоны"
+    },
+    {
+      "name": "note",
+      "title": "Описание зоны",
+      "display": "multiline",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Расчётная площадь, кв. м.",
+      "readOnly": true,
+      "valueType": "DOUBLE",
+      "description": "Площадь, вычисленная по координатам",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "photo",
+      "title": "Фото",
+      "maxSize": 50000000,
+      "maxFiles": 15,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Фотоматериалы"
+    },
+    {
+      "name": "projects",
+      "title": "Типовые проекты НТО",
+      "maxSize": 50000000,
+      "maxFiles": 15,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "files",
+      "title": "Требования",
+      "maxSize": 50000000,
+      "maxFiles": 15,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Требования к оформлению НТО"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "maxLength": 254,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "required": false,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "required": false,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "required": false,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "required": false,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

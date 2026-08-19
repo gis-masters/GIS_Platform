@@ -1,0 +1,175 @@
+{
+  "styleName": "pzz",
+  "tags": ["system", "ГИСОГД"],
+  "name": "pzz",
+  "title": "Правила землепользования и застройки",
+  "tableName": "pzz",
+  "originName": "pzz",
+  "description": "Правила землепользования и застройки",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "maxLength": 25,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "numb_statement",
+      "title": "Номер заявления",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "regdate",
+      "title": "Дата регистрации заявления",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "applicant",
+      "title": "Заявитель",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "contact",
+      "title": "Контактные данные заявителя",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "docstatus",
+      "title": "Статус заявления",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Принято и зарегистрировано",
+          "value": "1"
+        },
+        {
+          "title": "Отсканировано и направлено руководителю ",
+          "value": "2"
+        },
+        {
+          "title": "Направлено на Комиссию по подготовке ПЗЗ",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "result",
+      "title": "Результат предоставления услуги",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Комиссия не проводилась",
+          "value": "1"
+        },
+        {
+          "title": "Рекомендовано Комиссией к внесению изменений в ПЗЗ и направлено главе Администрации",
+          "value": "2"
+        },
+        {
+          "title": "Отклонено Комиссией и направлено главе Администрации",
+          "value": "3"
+        },
+        {
+          "title": "Решение о внесении изменений в ПЗЗ принято и направлено в представительный орган власти",
+          "value": "4"
+        },
+        {
+          "title": "Решение об отклонении проекта принято и направлено заявителю",
+          "value": "5"
+        },
+        {
+          "title": "Принято постановление о проведении общественных обсуждений",
+          "value": "6"
+        },
+        {
+          "title": "Принято постановление о проведении публичных слушаний",
+          "value": "7"
+        },
+        {
+          "title": "Протокол и заключение по результатам общественных обсуждений/ публичных слушаний подготовлены и опубликованы",
+          "value": "8"
+        },
+        {
+          "title": "Принято решение о внесении изменений в ПЗЗ",
+          "value": "9"
+        },
+        {
+          "title": "Принято решение об отклонении проекта внесения изменений в ПЗЗ",
+          "value": "10"
+        },
+        {
+          "title": "Решение опубликовано в ФГИС ТП, на портале Правительства РК, сведения переданы в ЕГРН",
+          "value": "11"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "rej_reas",
+      "title": "Причина отклонения",
+      "valueType": "STRING"
+    },
+    {
+      "name": "end_date",
+      "title": "Дата окончания общественных обсуждений/ публичных слушаний",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "public_date",
+      "title": "Дата опубликования заключения по итогам общественных обсуждений/ публичных слушаний",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "doc",
+      "title": "Протокол по итогам общественных обсуждений/ публичных слушаний",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/documents"
+    },
+    {
+      "name": "docu",
+      "title": "Заключение по итогам общественных обсуждений/ публичных слушаний",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/documents"
+    },
+    {
+      "name": "num_solut",
+      "title": "Номер решения о внесении изменений/ об отклонении",
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "change_date",
+      "title": "Дата решения о внесении изменений/ об отклонении",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "document",
+      "title": "Решение о внесении изменений/ об отклонении",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/documents"
+    },
+    {
+      "name": "intro_date",
+      "title": "Дата вступления в силу решения о внесении изменений/ об отклонении",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

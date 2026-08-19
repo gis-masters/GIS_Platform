@@ -1,0 +1,146 @@
+{
+  "styleName": "trees",
+  "tags": ["system", "Зеленые насаждения"],
+  "name": "trees",
+  "title": "Древесная растительность",
+  "tableName": "trees",
+  "originName": "trees",
+  "description": "Древесная растительность",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "vid",
+      "title": "Вид",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Хвойные",
+          "value": "Хвойные"
+        },
+        {
+          "title": "Лиственные",
+          "value": "Лиственные"
+        }
+      ]
+    },
+    {
+      "name": "diametr",
+      "title": "Диаметр ствола",
+      "maxLength": 10,
+      "valueType": "STRING"
+    },
+    {
+      "name": "kol_vo",
+      "title": "Количество",
+      "valueType": "INT"
+    },
+    {
+      "name": "stvolnost",
+      "title": "Ствольность",
+      "maxLength": 10,
+      "valueType": "STRING"
+    },
+    {
+      "name": "sost",
+      "title": "Состояние",
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Пересаживаемые",
+          "value": "Пересаживаемые"
+        },
+        {
+          "title": "Сохраняемые",
+          "value": "Сохраняемые"
+        },
+        {
+          "title": "Удаляемые",
+          "value": "Удаляемые"
+        }
+      ]
+    },
+    {
+      "name": "poroda",
+      "title": "Порода",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "value",
+      "title": "Значение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "number",
+      "title": "Номер",
+      "valueType": "INT"
+    },
+    {
+      "name": "documents",
+      "title": "Документы",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "photo",
+      "title": "Фотографии",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ]
+}

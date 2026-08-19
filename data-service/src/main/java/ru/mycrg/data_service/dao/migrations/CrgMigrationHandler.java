@@ -123,11 +123,6 @@ public class CrgMigrationHandler {
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_START_DELIMITER,
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
 
-                log.debug("====== Выполняем миграции схем ======");
-                Arrays.stream(ctx.getResources("classpath:sql/schemas/**"))
-                      .filter(resource -> isFile(resource.getFilename()))
-                      .forEach(resource -> executeMigration(connection, resource));
-
                 schemaSystemMigrationHandler.sync(connection);
 
                 log.debug("====== Выполняем временные миграции ======");

@@ -1,0 +1,243 @@
+{
+  "tags": ["system", "ГИСОГД"],
+  "name": "public_territory_borders",
+  "title": "Границы территории общего пользования",
+  "styleName": "public_territory_borders",
+  "tableName": "public_territory_borders",
+  "originName": "public_territory_borders",
+  "description": "Границы территории общего пользования",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "guid_public_territory_borders",
+      "title": "guid_public_territory_borders",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "class",
+      "title": "Вид элемента планировочной структуры",
+      "asTitle": true,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Индивидуальной жилой застройки",
+          "value": "7С.1"
+        },
+        {
+          "title": "Многоквартирной жилой застройки",
+          "value": "7С.2"
+        },
+        {
+          "title": "Учебного-образовательного назначения",
+          "value": "7С.3"
+        },
+        {
+          "title": "Территории общественно-делового назначения",
+          "value": "7С.4"
+        },
+        {
+          "title": "Детские игровые и спортивные площадки",
+          "value": "7С.5"
+        },
+        {
+          "title": "Производственного, коммунально-складского, инженерного и транспортного назначения",
+          "value": "7С.6"
+        },
+        {
+          "title": "Тротуары, дорожки, площади",
+          "value": "7С.7"
+        },
+        {
+          "title": "Дачных, садовых и огороднических товариществ",
+          "value": "7С.8"
+        },
+        {
+          "title": "Озелененные территории общего пользования",
+          "value": "7С.9"
+        },
+        {
+          "title": "Защитного озеленения",
+          "value": "7С.10"
+        },
+        {
+          "title": "Территории, не покрытые лесом и кустарниками",
+          "value": "7С.11"
+        },
+        {
+          "title": "Территории, покрытые лесом и кустарниками",
+          "value": "7С.12"
+        },
+        {
+          "title": "Зона поверхностных водных объектов",
+          "value": "7С.13"
+        },
+        {
+          "title": "Ритуального назначения",
+          "value": "7С.14"
+        },
+        {
+          "title": "Добычи полезных ископаемых",
+          "value": "7С.15"
+        },
+        {
+          "title": "Объектов сельскохозяйственного назначения",
+          "value": "7С.16"
+        },
+        {
+          "title": "Сельскохозяйственного использования",
+          "value": "7С.17"
+        },
+        {
+          "title": "Рекреационного назначения",
+          "value": "7С.18"
+        },
+        {
+          "title": "Складирования и захоронения отходов",
+          "value": "7С.19"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "7В.1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "7В.2"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь общая, кв. м.",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "file",
+      "title": "Материалы библиотеки данных",
+      "library": "dl_data_section7",
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "readOnly": true,
+      "minWidth": 300,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "is_deleted",
+      "title": "Удален/Не удален",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

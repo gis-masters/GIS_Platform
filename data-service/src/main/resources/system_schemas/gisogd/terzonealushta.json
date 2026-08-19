@@ -1,0 +1,59 @@
+{
+  "styleName": "terzonealushta",
+  "tags": ["system", "ГИСОГД"],
+  "name": "terzonealushta",
+  "title": "Территориальные зоны",
+  "readOnly": true,
+  "tableName": "terzonealushta",
+  "originName": "terzonealushta",
+  "description": "Территориальные зоны",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "objectname",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "objectcode",
+      "title": "Код зоны",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape_star",
+      "title": "Площадь, кв.м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "admemr",
+      "title": "Муниципальный район",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "link",
+      "title": "Правила землепользования и застройки",
+      "required": true,
+      "valueType": "URL",
+      "displayMode": "in_popup"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

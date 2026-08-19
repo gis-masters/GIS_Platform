@@ -1,0 +1,96 @@
+{
+  "name": "red_line_line_dpt",
+  "title": "Красные линии",
+  "tags": ["system", "ДПТ"],
+  "tableName": "red_line_line_dpt",
+  "description": "Красные линии",
+  "originName": "red_line_line_dpt",
+  "styleName": "red_line_line_dpt",
+  "readOnly": false,
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "number",
+      "title": "Планировочный номер",
+      "valueType": "STRING",
+      "asTitle": true,
+      "maxLength": 256
+    },
+    {
+      "name": "status",
+      "title": "Статус красных линий",
+      "valueType": "CHOICE",
+      "required": true,
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7Е.1",
+          "title": "Существующий"
+        },
+        {
+          "value": "7Е.2",
+          "title": "Планируемый"
+        },
+        {
+          "value": "7Е.3",
+          "title": "Отменяемый"
+        }
+      ]
+    },
+    {
+      "name": "length",
+      "title": "Протяженность, м.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING",
+      "maxLength": 256
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "description": "Пользователь создавший объект (Заполняется автоматически)",
+      "valueType": "STRING",
+      "readOnly": true
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "description": "Дата создания объекта (Заполняется автоматически)",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата редактирования",
+      "valueType": "DATETIME",
+      "description": "Дата последнего редактирования объекта (Заполняется автоматически)",
+      "readOnly": true
+    },
+    {
+      "name": "updated_by",
+      "title": "Редактор",
+      "valueType": "STRING",
+      "description": "Пользователь редактировавший объект последним (Заполняется автоматически)",
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "INT",
+      "hidden": true
+    }
+  ]
+}

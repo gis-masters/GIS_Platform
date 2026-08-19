@@ -1,0 +1,322 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_rentobject",
+  "title": "Аренда объектов недвижимости",
+  "relations": [
+    {
+      "type": "feature",
+      "title": "Объект на карте",
+      "layers": [
+        "scratch_database_26: object_zu_23_ca7c",
+        "scratch_database_26: object_oks_23_ece5"
+      ],
+      "property": "cadnum_zu",
+      "projectId": 1500,
+      "targetProperty": "cadnum_zu"
+    },
+    {
+      "type": "feature",
+      "title": "Объект на карте",
+      "layers": [
+        "scratch_database_26: object_oks_23_ece5",
+        "scratch_database_26: object_oks_23_ece5"
+      ],
+      "property": "cadnum_oks",
+      "projectId": 1500,
+      "targetProperty": "cadnum_oks"
+    }
+  ],
+  "tableName": "dl_rentobject",
+  "description": "Аренда объектов недвижимости",
+  "properties": [
+    {
+      "name": "content_type_id",
+      "title": "Тип объекта недвижимости",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Земельный участок",
+          "value": "zu"
+        },
+        {
+          "title": "Объект капитального строительства",
+          "value": "oks"
+        },
+        {
+          "title": "Помещение",
+          "value": "flat"
+        },
+        {
+          "title": "Папка",
+          "value": "folder_v1"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Арендатор",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cadnum_zu",
+      "title": "Кадастровый номер земельного участка",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cadnum_oks",
+      "title": "Кадастровый номер здания",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cadnum_flat",
+      "title": "Кадастровый номер помещения",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "docnum",
+      "title": "Номер договора",
+      "valueType": "STRING"
+    },
+    {
+      "name": "docdate",
+      "title": "Дата договора",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "validuntil",
+      "title": "Срок действия договора",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь по договору,м. кв.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "cost_rent",
+      "title": "Арендная плата,руб./мес.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Документы",
+      "maxSize": 90000000,
+      "maxFiles": 20,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 150,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "zu",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Земельный участок",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Тип объекта недвижимости",
+          "defaultValue": "zu"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "cadnum_zu"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "area"
+        },
+        {
+          "name": "cost_rent"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        }
+      ]
+    },
+    {
+      "id": "oks",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Объект капитального строиетльства",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Тип объекта недвижимости",
+          "defaultValue": "oks"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "cadnum_oks"
+        },
+        {
+          "name": "cadnum_zu"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "area"
+        },
+        {
+          "name": "cost_rent"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        }
+      ]
+    },
+    {
+      "id": "flat",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Помещение",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Тип объекта недвижимости",
+          "defaultValue": "flat"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "cadnum_flat"
+        },
+        {
+          "name": "cadnum_oks"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "area"
+        },
+        {
+          "name": "cost_rent"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

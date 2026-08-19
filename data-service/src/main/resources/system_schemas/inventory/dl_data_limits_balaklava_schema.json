@@ -1,0 +1,266 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_limits_balaklava_schema",
+  "title": "Ограничения и обременения",
+  "tableName": "dl_data_limits_balaklava",
+  "originName": "dl_data_limits_balaklava",
+  "description": "Ограничения и обременения",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "person",
+      "title": "Вид объекта недвижимости",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Здание",
+          "value": "Здание"
+        },
+        {
+          "title": "Сооружение",
+          "value": "Сооружение"
+        },
+        {
+          "title": "Земельный участок",
+          "value": "Земельный участок"
+        },
+        {
+          "title": "Объект незавершенного строительства",
+          "value": "Объект незавершенного строительства"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Кадастровый номер",
+      "minWidth": 150,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_zouit",
+      "title": "Площадь объекта, обремененная ЗОУИТ",
+      "minWidth": 210,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "type_right",
+      "title": "Вид ограничения",
+      "minWidth": 120,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Запрещение регистрации",
+          "value": "Запрещение регистрации"
+        },
+        {
+          "title": "Арест",
+          "value": "Арест"
+        },
+        {
+          "title": "Ипотека в силу закона",
+          "value": "Ипотека в силу закона"
+        },
+        {
+          "title": "Ограничения прав на земельный участок, предусмотренные статьей 56 Земельного кодекса РФ",
+          "value": "Ограничения прав на земельный участок, предусмотренные статьей 56 Земельного кодекса РФ"
+        }
+      ]
+    },
+    {
+      "name": "reg_zouit",
+      "title": "Дата постановки на учет ЗОУИТ",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "date_reg",
+      "title": "Дата гос. регистрации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "number",
+      "title": "Номер гос. регистрации",
+      "minWidth": 100,
+      "maxLength": 224,
+      "valueType": "STRING"
+    },
+    {
+      "name": "period",
+      "title": "Срок ограничения",
+      "minWidth": 200,
+      "maxLength": 500,
+      "valueType": "STRING",
+      "description": "Срок, на который установленно ограничение"
+    },
+    {
+      "name": "person_with_limits",
+      "title": "Лицо, в пользу которого установлено ограничение",
+      "minWidth": 250,
+      "maxLength": 224,
+      "valueType": "STRING"
+    },
+    {
+      "name": "reason",
+      "title": "Основание гос. регистрации",
+      "minWidth": 170,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content",
+      "title": "Содержание ограничения и обременения",
+      "minWidth": 300,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_closing",
+      "title": "Дата прекращения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "file",
+      "title": "Документы",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "owner",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Ограничения и обременения",
+      "attributes": [
+        {
+          "name": "person"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "area_zouit"
+        },
+        {
+          "name": "type_right"
+        },
+        {
+          "name": "reg_zouit"
+        },
+        {
+          "name": "date_reg"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "period"
+        },
+        {
+          "name": "person_with_limits"
+        },
+        {
+          "name": "reason"
+        },
+        {
+          "name": "content"
+        },
+        {
+          "name": "date_closing"
+        },
+        {
+          "name": "file",
+          "title": "Документы",
+          "maxSize": 50000000,
+          "maxFiles": 10,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_gpzu_info_p2_4",
+  "title": "ГПЗУ, п.2.4 Требования к назначению, параметрам и размещению ОКСа на земельном участке",
+  "tableName": "dl_data_gpzu_info_p2_4",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "dl_data_gpzu_data_connection",
+      "title": "ГПЗУ",
+      "multiple": true,
+      "required": true,
+      "libraries": ["dl_data_gpzu"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "causes",
+      "title": "Причины",
+      "valueType": "STRING"
+    },
+    {
+      "name": "order_requisites",
+      "title": "Реквизиты акта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "usage_requirements",
+      "title": "Требования к использованию",
+      "valueType": "STRING"
+    },
+    {
+      "name": "limit_height",
+      "title": "Предельная высота зданий",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "limit_building_area",
+      "title": "Предельная площадь застройки",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "other1",
+      "title": "Иные требования 1",
+      "valueType": "STRING"
+    },
+    {
+      "name": "limit_indent",
+      "title": "Предельный отступ зданий",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "other2",
+      "title": "Иные требования 2",
+      "valueType": "STRING"
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа, утвердившего документ",
+      "multiple": true,
+      "readOnly": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "asTitle": true,
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Карточка документа",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "dl_data_gpzu_data_connection"
+        },
+        {
+          "name": "causes"
+        },
+        {
+          "name": "order_requisites"
+        },
+        {
+          "name": "usage_requirements"
+        },
+        {
+          "name": "limit_height"
+        },
+        {
+          "name": "limit_building_area"
+        },
+        {
+          "name": "other1"
+        },
+        {
+          "name": "limit_indent"
+        },
+        {
+          "name": "other2"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "last_modified"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

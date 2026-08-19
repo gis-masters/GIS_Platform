@@ -1,0 +1,446 @@
+{
+  "tags": ["system", "Библиотека", "Документооборот"],
+  "name": "dl_data_docflow",
+  "title": "Документооборот",
+  "tableName": "dl_data_docflow",
+  "description": "Документооборот",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 400,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Исходящее письмо Южный Обход",
+          "value": "doc_01"
+        },
+        {
+          "title": "Входящее письмо Южный Обход",
+          "value": "doc_02"
+        },
+        {
+          "title": "Исходящие письма Южный Обход",
+          "value": "folder_outbox"
+        },
+        {
+          "title": "Входящие письма Южный Обход",
+          "value": "folder_inbox"
+        },
+        {
+          "title": "Исходящее письмо Перевальное Алушта",
+          "value": "doc_03"
+        },
+        {
+          "title": "Входящее письмо Перевальное Алушта",
+          "value": "doc_04"
+        },
+        {
+          "title": "Исходящие письма Перевальное Алушта",
+          "value": "folder_outbox_for_pereval_alyshta"
+        },
+        {
+          "title": "Входящие письма Перевальное Алушта",
+          "value": "folder_inbox_for_pereval_alyshta"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Номер документа",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "docdate",
+      "title": "Дата документа",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "territorykey",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "displayMode": "newTab",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_25: parcels_new_1_df2a"],
+        "property": "file_3",
+        "projectId": 1465
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "territorykey_for_pereval_alyshta",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "displayMode": "newTab",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_25: parcels_new_106_4397"],
+        "property": "file_3",
+        "projectId": 1565
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "text",
+      "title": "Краткое содержание",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "applicant",
+      "title": "Адресат",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "executor",
+      "title": "Исполнитель",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Выбор файла",
+      "maxSize": 50000000,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "library": "dl_data_docflow",
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_01",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Исходящее письмо",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_01"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "text"
+        },
+        {
+          "name": "applicant",
+          "title": "Адресат",
+          "description": "Кому направлено письмо"
+        },
+        {
+          "name": "executor",
+          "title": "Исполнитель",
+          "description": "Кто подготовил письмо"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_02",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Входящее письмо",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_02"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "text"
+        },
+        {
+          "name": "applicant",
+          "title": "Адресант",
+          "required": true,
+          "description": "От кого получено письмо"
+        },
+        {
+          "name": "executor",
+          "title": "Исполнитель",
+          "required": true,
+          "description": "Кому отписано в работу"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_03",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Исходящее письмо",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_03"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "territorykey_for_pereval_alyshta"
+        },
+        {
+          "name": "text"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "executor",
+          "title": "Исполнитель",
+          "description": "Кто подготовил письмо"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_04",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Входящее письм",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_04"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "territorykey_for_pereval_alyshta"
+        },
+        {
+          "name": "text"
+        },
+        {
+          "name": "applicant",
+          "title": "Адресант",
+          "required": true,
+          "description": "От кого получено письмо"
+        },
+        {
+          "name": "executor",
+          "title": "Исполнитель",
+          "required": true,
+          "description": "Кому отписано в работу"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "folder_outbox",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Исходящие письма",
+      "children": [
+        {
+          "contentType": "doc_01"
+        },
+        {
+          "contentType": "folder_outbox"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    },
+    {
+      "id": "folder_inbox",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Входящие письма",
+      "children": [
+        {
+          "contentType": "doc_02"
+        },
+        {
+          "contentType": "folder_inbox"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    },
+    {
+      "id": "folder_outbox_for_pereval_alyshta",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Исходящие письма",
+      "children": [
+        {
+          "contentType": "doc_03"
+        },
+        {
+          "contentType": "folder_outbox_for_pereval_alyshta"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    },
+    {
+      "id": "folder_inbox_for_pereval_alyshta",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Входящие письма",
+      "children": [
+        {
+          "contentType": "doc_04"
+        },
+        {
+          "contentType": "folder_inbox_for_pereval_alyshta"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    },
+    {
+      "id": "after_root_folder",
+      "type": "FOLDER",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_law_doc_schema",
+  "title": "Юридические документы",
+  "tableName": "dl_data_law_doc",
+  "originName": "dl_data_law_doc",
+  "description": "Юридичские документы",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "title",
+      "title": "Название документа",
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "customer",
+      "title": "Заказчик",
+      "valueType": "STRING"
+    },
+    {
+      "name": "id_proj",
+      "title": "ID проекта",
+      "valueType": "INT"
+    },
+    {
+      "name": "date_of_doc",
+      "title": "Год создания документа",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "name",
+      "title": "Название проекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "approval_date",
+      "title": "Дата утверждения документа",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "performer",
+      "title": "Исполнитель",
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Адрес",
+      "valueType": "FIAS",
+      "searchMode": "address"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "id",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "ghostylink",
+      "title": "Переход на Карту проектов",
+      "readOnly": true,
+      "valueType": "URL",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_21: igdi_1371_bf7c"],
+        "property": "doc",
+        "projectId": 1371
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "file",
+      "title": "Выбор документов",
+      "maxSize": 50000000,
+      "maxFiles": 500,
+      "multiple": true,
+      "valueType": "FILE"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "contracts",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "customer"
+        },
+        {
+          "name": "id_proj"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "performer"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "approval_date"
+        },
+        {
+          "name": "file",
+          "title": "Добавить документ",
+          "maxSize": 50000000,
+          "maxFiles": 10,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Добавить папку",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

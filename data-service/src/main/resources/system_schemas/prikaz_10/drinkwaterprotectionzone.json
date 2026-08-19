@@ -1,0 +1,111 @@
+{
+  "name": "drinkwaterprotectionzone",
+  "title": "Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
+  "styleName": "drinkwaterprotectionzone_123",
+  "tableName": "drinkwaterprotectionzone",
+  "originName": "DrinkWaterProtectionZone",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Первый пояс зоны санитарной охраны источника водоснабжения",
+          "value": "603010801"
+        },
+        {
+          "title": "Второй пояс зоны санитарной охраны источника водоснабжения",
+          "value": "603010802"
+        },
+        {
+          "title": "Третий пояс зоны санитарной охраны источника водоснабжения",
+          "value": "603010803"
+        },
+        {
+          "title": "Санитарно-защитная полоса водоводов",
+          "value": "603010804"
+        }
+      ]
+    },
+    {
+      "name": "zone_desc",
+      "title": "Описание зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование объекта (для которого устанавливается зона)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "numberzoit",
+      "title": "Учетный номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "reestrzoit",
+      "title": "Реестровый номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "dateegrn",
+      "title": "Дата внесения зон с особыми условиями использования территории в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

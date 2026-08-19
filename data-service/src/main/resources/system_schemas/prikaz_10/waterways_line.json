@@ -1,0 +1,167 @@
+{
+  "name": "waterways_line",
+  "title": "Водные пути",
+  "styleName": "waterways_line_123",
+  "tableName": "waterways_line",
+  "originName": "WaterWays",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Водные пути",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Водные пути",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Внутренний водный путь",
+          "value": "602031401"
+        },
+        {
+          "title": "Корабельные фарватеры",
+          "value": "602031402"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "upper_bnd",
+      "title": "Верхняя граница по течению",
+      "valueType": "STRING"
+    },
+    {
+      "name": "lower_bnd",
+      "title": "Нижняя граница по течению",
+      "valueType": "STRING"
+    },
+    {
+      "name": "waylenght",
+      "title": "Протяженность, км",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "compl_name",
+      "title": "Наименование комплексного объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_tc",
+      "title": "Наименование транспортного коридора",
+      "valueType": "STRING"
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    }
+  ]
+}

@@ -1,0 +1,5102 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_section13",
+  "title": "13. Дела о застроенных или подлежащих застройке земельных участках",
+  "tableName": "dl_data_section13",
+  "originName": "dl_data_section13",
+  "description": "13. Дела о застроенных или подлежащих застройке земельных участках",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "hidden": true,
+      "pattern": "^\\d{2}:\\d{2}:\\d{6}:\\d+$",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 300,
+      "required": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "guid",
+      "title": "Глобальный идентификатор",
+      "valueType": "UUID"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "required": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "01. ГПЗУ",
+          "value": "doc_13.01"
+        },
+        {
+          "title": "02. Историко-культурная экспертиза",
+          "value": "doc_13.02"
+        },
+        {
+          "title": "03. Экологическая экспертиза",
+          "value": "doc_13.03"
+        },
+        {
+          "title": "04. Разрешение на строительство",
+          "value": "doc_13.04"
+        },
+        {
+          "title": "05. Прекращение действия разрешения",
+          "value": "doc_13.05"
+        },
+        {
+          "title": "06. Внесение изменений в РНС",
+          "value": "doc_13.06"
+        },
+        {
+          "title": "07. Экспертиза ПД",
+          "value": "doc_13.07"
+        },
+        {
+          "title": "08. Соответствие предмету охраны",
+          "value": "doc_13.08"
+        },
+        {
+          "title": "09. Схема расположения ОКС",
+          "value": "doc_13.09"
+        },
+        {
+          "title": "10. Инженерные изыскания",
+          "value": "doc_13.10"
+        },
+        {
+          "title": "11. Отклонение от предельных параметров",
+          "value": "doc_13.11"
+        },
+        {
+          "title": "12. Условно разрешенный вид использования",
+          "value": "doc_13.12"
+        },
+        {
+          "title": "13. Акт соответствия параметров",
+          "value": "doc_13.13"
+        },
+        {
+          "title": "14. Строительный надзор",
+          "value": "doc_13.14"
+        },
+        {
+          "title": "16. Экологический надзор",
+          "value": "doc_13.16"
+        },
+        {
+          "title": "17. Акт соответствия многоквартирного дома",
+          "value": "doc_13.17"
+        },
+        {
+          "title": "18. Разрешение на ввод объекта в эксплуатацию",
+          "value": "doc_13.18"
+        },
+        {
+          "title": "19. Технический план ОКС",
+          "value": "doc_13.19"
+        },
+        {
+          "title": "20. Уведомление о строительстве",
+          "value": "doc_13.20"
+        },
+        {
+          "title": "21. Уведомление об изменении параметров",
+          "value": "doc_13.21"
+        },
+        {
+          "title": "22. Уведомление о соответствии параметров",
+          "value": "doc_13.22"
+        },
+        {
+          "title": "23. Уведомление о несоответствии параметров",
+          "value": "doc_13.23"
+        },
+        {
+          "title": "24. Описание объекта ИЖС, СД",
+          "value": "doc_13.24"
+        },
+        {
+          "title": "25. Уведомление о соответствии описания",
+          "value": "doc_13.25"
+        },
+        {
+          "title": "26. Уведомление о несоответствии описания",
+          "value": "doc_13.26"
+        },
+        {
+          "title": "27. Уведомление об окончании строительства",
+          "value": "doc_13.27"
+        },
+        {
+          "title": "28. Уведомление о соответствии ИЖС и СД",
+          "value": "doc_13.28"
+        },
+        {
+          "title": "29. Уведомление о несоответствии ИЖС и СД",
+          "value": "doc_13.29"
+        },
+        {
+          "title": "30. Уведомление о планируемом сносе ОКС",
+          "value": "doc_13.30"
+        },
+        {
+          "title": "31. Обследование ОКС, подлежащего сносу",
+          "value": "doc_13.31"
+        },
+        {
+          "title": "32. Проект организации работ по сносу",
+          "value": "doc_13.32"
+        },
+        {
+          "title": "33. Уведомление о завершении сноса",
+          "value": "doc_13.33"
+        },
+        {
+          "title": "34. Решение об адресе",
+          "value": "doc_13.34"
+        },
+        {
+          "title": "35. Разрешение на использование земель",
+          "value": "doc_13.35"
+        },
+        {
+          "title": "36. Соглашение о сервитуте",
+          "value": "doc_13.36"
+        },
+        {
+          "title": "37. Публичный сервитут",
+          "value": "doc_13.37"
+        },
+        {
+          "title": "38. Иные документы и материалы",
+          "value": "doc_13.38"
+        },
+        {
+          "title": "39. Сведения о проектной документации",
+          "value": "doc_13.39"
+        },
+        {
+          "title": "Дело о земельном участке",
+          "value": "folder_v1"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование данных",
+      "display": "multiline",
+      "minWidth": 800,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING",
+      "description": "Полное наименование документа"
+    },
+    {
+      "name": "const_government_order_id",
+      "title": "Идентификатор номера приказа, в соответствии с которым выдается РНС",
+      "required": true,
+      "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
+      "enumerations": [
+        {
+          "title": "Номер соответствует Приказу Минстроя РФ от 19.02.2015 N 117/ПР",
+          "value": "1"
+        },
+        {
+          "title": "Номер соответствует Приказу Минстроя РФ от 03.06.2022 N 446/ПР",
+          "value": "2"
+        },
+        {
+          "title": "Иное",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "const_cadastral_district",
+      "title": "Кадастровый округ",
+      "hidden": true,
+      "display": "multiline",
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС, для Крыма по умолчанию 91"
+    },
+    {
+      "name": "const_cadastral_area",
+      "title": "Кадастровый район",
+      "hidden": true,
+      "display": "multiline",
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС"
+    },
+    {
+      "name": "territorykey",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1:landplot_1627_2d2b__7829",
+          "scratch_database_1:easement_1627_bb27__7829",
+          "scratch_database_1:oks_13_1627_79c6__7829",
+          "scratch_database_1:oks_13_line_1627_4bce__7829"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "landplot_connection",
+      "title": "Земельный участок",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "ЗУ на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1:landplot_1627_2d2b"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "easement_connection",
+      "title": "Территория действия",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1:easement_1627_bb27"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "oks_connection",
+      "title": "Территория действия",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1:oks_13_1627_79c6",
+          "scratch_database_1:oks_13_line_1627_4bce"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "regnum",
+      "title": "Регистрационный номер",
+      "minWidth": 200,
+      "readOnly": true,
+      "valueType": "STRING",
+      "description": "Регистрационный номер в ГИСОГД РК"
+    },
+    {
+      "name": "regdate",
+      "title": "Дата регистрации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата регистрации документа в ГИСОГД РК"
+    },
+    {
+      "name": "lacotean",
+      "title": "Местоположение",
+      "valueType": "STRING",
+      "required": true,
+      "description": "Адрес или при отсутствии адреса иное описание местоположения, для ГИСОГД РФ"
+    },
+    {
+      "name": "fias",
+      "title": "Населённый пункт",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "FIAS",
+      "searchMode": "oktmo",
+      "description": "Для ГИСОГД РФ"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "minWidth": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "Код ФИАС",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "applicant",
+      "title": "Заявитель",
+      "minWidth": 400,
+      "maxLength": 300,
+      "valueType": "STRING"
+    },
+    {
+      "name": "docnum",
+      "title": "Номер документа",
+      "required": true,
+      "valueType": "STRING",
+      "description": "При наличии утверждаемых документов указывается номер утверждающего документа"
+    },
+    {
+      "name": "docdate",
+      "title": "Дата документа",
+      "required": true,
+      "valueType": "DATETIME",
+      "description": "При наличии утверждаемых документов указывается дата утверждающего документа"
+    },
+    {
+      "name": "validuntil",
+      "title": "Действует до",
+      "valueType": "DATETIME",
+      "description": "Срок действия документа"
+    },
+    {
+      "name": "termination_reason",
+      "title": "Основание прекращения действия",
+      "multiple": true,
+      "libraries": ["dl_data_section13"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "termination_reason_eis",
+      "title": "Основание прекращения действия РНС",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Принудительное прекращение права собственности и иных прав на земельные участки, в том числе изъятие земельных участков для государственных или муниципальных нужд",
+          "value": "1"
+        },
+        {
+          "title": "Предписания уполномоченного Правительством Российской Федерации федерального органа исполнительной власти о прекращении действия разрешения на строительство на основании несоответствия разрешения на строительство ограничениям использования объектов недвижимости, установленным на приаэродромной территории",
+          "value": "2"
+        },
+        {
+          "title": "Отказ от права собственности и иных прав на земельные участки",
+          "value": "3"
+        },
+        {
+          "title": "Расторжение договора аренды и иных договоров, на основании которых у граждан и юридических лиц возникли права на земельные участки",
+          "value": "4"
+        },
+        {
+          "title": "Прекращения права пользования недрами, если разрешение на строительство выдано на строительство, реконструкцию объекта капитального строительства на земельном участке, предоставленном пользователю недр и необходимом для ведения работ, связанных с пользованием недрами",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "name": "orgname",
+      "title": "Наименование органа",
+      "required": true,
+      "valueType": "STRING",
+      "description": "Наименование органа, утвердившего документ"
+    },
+    {
+      "name": "organ_doc_info",
+      "title": "Сведения об организации, выдавшей документ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_resident",
+      "title": "Является ли организация-разработчик резидентом РФ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "developer_type",
+      "title": "Лицо, разработавшее документацию",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Юридическое лицо",
+          "value": "legal"
+        },
+        {
+          "title": "Индивидуальный предприниматель",
+          "value": "individual"
+        },
+        {
+          "title": "Физическое лицо",
+          "value": "physical"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "project_doc_year",
+      "title": "Год документации",
+      "valueType": "STRING"
+    },
+    {
+      "name": "docstatus",
+      "title": "Статус действия",
+      "required": true,
+      "valueType": "CHOICE",
+      "description": "Обязательное по Приказу № 433/пр",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "0С.1"
+        },
+        {
+          "title": "Недействующий",
+          "value": "0С.2"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "constructiontype",
+      "title": "Вид строительства",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Строительство объекта капитального строительства",
+          "value": "0I.1"
+        },
+        {
+          "title": "Строительство линейного объекта",
+          "value": "0I.2"
+        },
+        {
+          "title": "Строительство объекта капитального строительства, входящего в состав линейного",
+          "value": "0I.3"
+        },
+        {
+          "title": "Реконструкция объекта капитального строительства",
+          "value": "0I.4"
+        },
+        {
+          "title": "Реконструкция линейного объекта",
+          "value": "0I.5"
+        },
+        {
+          "title": "Реконструкция объекта капитального строительства, входящего в состав линейного",
+          "value": "0I.6"
+        },
+        {
+          "title": "Работы по сохранению объекта культурного наследия",
+          "value": "0I.7"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "service_status",
+      "title": "Статус услуги",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Получено",
+          "value": "Received"
+        },
+        {
+          "title": "Изменить пользователя",
+          "value": "ChangeUser"
+        },
+        {
+          "title": "Рассмотрение",
+          "value": "Consideration"
+        },
+        {
+          "title": "Согласие",
+          "value": "Agreement"
+        },
+        {
+          "title": "Дополнительное соглашение",
+          "value": "AdditionalAgreement"
+        },
+        {
+          "title": "Отклонение",
+          "value": "Rejection"
+        },
+        {
+          "title": "Отказ",
+          "value": "Denied"
+        },
+        {
+          "title": "Готово",
+          "value": "Done"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "namefrompd",
+      "title": "Наименование из ПД",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING",
+      "description": "Наименование объекта (этапа) из проектной документации"
+    },
+    {
+      "name": "developer",
+      "title": "Застройщик",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "egrzdate",
+      "title": "Дата в ЕГРЗ",
+      "valueType": "DATETIME",
+      "description": "Дата размещения в ЕГРЗ"
+    },
+    {
+      "name": "supplier_data_connection",
+      "title": "Организация",
+      "multiple": true,
+      "libraries": ["dl_data_supplier"],
+      "valueType": "DOCUMENT",
+      "description": "Организация, выполнившая подготовку документации",
+      "maxDocuments": 10
+    },
+    {
+      "name": "inbox_data_key_data_connection",
+      "title": "Реестр учёта сведений",
+      "multiple": true,
+      "required": true,
+      "libraries": ["dl_data_inbox_data"],
+      "valueType": "DOCUMENT",
+      "description": "Реестр учёта сведений, документов, материалов, поступивших на размещение в информационную систему, и результатов их рассмотрения / Обязательное по Приказу № 433/пр",
+      "maxDocuments": 10
+    },
+    {
+      "name": "guiddocpreviousversion",
+      "title": "Версии",
+      "multiple": true,
+      "libraries": ["dl_data_section13"],
+      "valueType": "DOCUMENT",
+      "description": "Предыдущая версия данных",
+      "maxDocuments": 5
+    },
+    {
+      "name": "developer_data_connection",
+      "title": "Застройщик",
+      "multiple": true,
+      "libraries": ["dl_data_customer"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа, утвердившего документ",
+      "multiple": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "issue_person_connection",
+      "title": "Сведения об сотруднике осуществляющего выдачу РНС",
+      "multiple": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "description": "Обязательно для синхронизации с ЕИС ЖС. Соб. уполномоченном сотруднике органа, организации, осуществляющего выдачу разрешения на строительство",
+      "maxDocuments": 10
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_public",
+      "title": "Публичный документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "file_project",
+      "title": "Проект решения",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Заполняется только Министерством",
+      "maxDocuments": 10
+    },
+    {
+      "name": "file",
+      "title": "Выбор файла",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Обязательное по Приказу № 433/пр",
+      "maxDocuments": 10
+    },
+    {
+      "name": "date_uis",
+      "title": "Дата отправки в ЕИС ЖС",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "uis_sync_status",
+      "title": "Статус синхронизации с ЕИС ЖС",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "uis_response",
+      "title": "Ответ из ЕИС ЖС",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "multiple": true,
+      "libraries": ["dl_data_section13"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "object_kind",
+      "title": "Объект капитального строительства",
+      "required": true,
+      "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
+      "enumerations": [
+        {
+          "title": "Многоквартирный дом",
+          "value": "1"
+        },
+        {
+          "title": "Дом блокированной застройки",
+          "value": "2"
+        },
+        {
+          "title": "Нежилое здание",
+          "value": "3"
+        },
+        {
+          "title": "Жилой блок в блокированном жилом доме с приусадебным участком",
+          "value": "4"
+        },
+        {
+          "title": "Индивидуальный жилой дом",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "name": "object_purpose",
+      "title": "Назначение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
+      "enumerations": [
+        {
+          "title": "Жилое",
+          "value": "1"
+        },
+        {
+          "title": "Нежилое",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "object_purpose_functional",
+      "title": "Функциональное назначение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
+      "enumerations": [
+        {
+          "title": "Иное",
+          "value": "1"
+        },
+        {
+          "title": "Производственный объект",
+          "value": "2"
+        },
+        {
+          "title": "Жилое здание",
+          "value": "3"
+        },
+        {
+          "title": "Социальный объект",
+          "value": "4"
+        },
+        {
+          "title": "Линейный объект",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "name": "build_capital_type",
+      "title": "Вид объекта капитального строительства",
+      "required": true,
+      "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
+      "enumerations": [
+        {
+          "title": "Здание",
+          "value": "1"
+        },
+        {
+          "title": "Строение",
+          "value": "2"
+        },
+        {
+          "title": "Сооружение",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "const_permission_type",
+      "title": "Вид разрешения",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Разрешение на выполнение всех строительных работ",
+          "value": "1"
+        },
+        {
+          "title": "Разрешение на выполнение отдельных видов строительных работ",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "number_objects",
+      "title": "Количество объектов (этапов)",
+      "required": true,
+      "maxLength": 5,
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС"
+    },
+    {
+      "name": "smev_message_id",
+      "title": "Номер сообщения СМЭВ-3",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС"
+    },
+    {
+      "name": "number_long_objects",
+      "title": "Количество линейных объектов",
+      "maxLength": 5,
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС"
+    },
+    {
+      "name": "object_name_eis",
+      "title": "Наименование объекта ОКС",
+      "required": true,
+      "valueType": "STRING",
+      "description": "Поле обязательно для синхронизации с ЕИС ЖС"
+    },
+    {
+      "name": "detail",
+      "title": "Уточнение основания прекращения действия РНС",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "canceled_doc_number",
+      "title": "Номер предписания",
+      "valueType": "TEXT",
+      "description": "На основании которого выдано решение о прекращении действия"
+    },
+    {
+      "name": "canceled_doc_date",
+      "title": "Дата предписания",
+      "valueType": "DATETIME",
+      "description": "На основании которого выдано решение о прекращении действия"
+    },
+    {
+      "name": "organization_2",
+      "title": "Организация выдавшая предписание",
+      "multiple": true,
+      "libraries": ["dl_data_organization"],
+      "valueType": "DOCUMENT",
+      "description": "Организация, выдавшая предписание, на основании которого выдано решение о прекращении действия",
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "minWidth": 200,
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации с ГИСОГД РФ",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "minWidth": 200,
+      "asTitle": true,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "type",
+      "title": "Тип файла",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_13.01",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "01. ГПЗУ",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.01"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "cad_num"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.02",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "02. Историко-культурная экспертиза",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.02"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.03",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "03. Экологическая экспертиза",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.03"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "egrzdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.04",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "04. Разрешение на строительство",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.04"
+        },
+        {
+          "name": "title",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "namefrompd"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "developer"
+        },
+        {
+          "name": "const_permission_type"
+        },
+        {
+          "name": "constructiontype"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection",
+          "defaultValueWellKnownFormula": "parentDocument"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file_project",
+          "title": "Проект РНС"
+        },
+        {
+          "name": "file",
+          "defaultValueWellKnownFormula": "inherit",
+          "dynamicPropertyFormula": "return { required: !(obj?.file_project != null) }",
+          "title": "Выданный РНС",
+          "maxDocuments": 1
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "relations"
+        },
+        {
+          "name": "number_objects"
+        },
+        {
+          "name": "number_long_objects"
+        },
+        {
+          "name": "object_name_eis"
+        },
+        {
+          "name": "object_kind"
+        },
+        {
+          "name": "object_purpose"
+        },
+        {
+          "name": "object_purpose_functional"
+        },
+        {
+          "name": "build_capital_type"
+        },
+        {
+          "name": "object_name_eis"
+        },
+        {
+          "name": "const_government_order_id"
+        },
+        {
+          "name": "const_cadastral_district"
+        },
+        {
+          "name": "const_cadastral_area"
+        },
+        {
+          "name": "issue_person_connection"
+        },
+        {
+          "name": "date_uis"
+        },
+        {
+          "name": "smev_message_id"
+        },
+        {
+          "name": "uis_sync_status"
+        },
+        {
+          "name": "uis_response"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.05",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "05. Прекращение действия разрешения",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.05"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "relations",
+          "required": true,
+          "description": "Разрешение на строительство"
+        },
+        {
+          "name": "detail"
+        },
+        {
+          "name": "canceled_doc_number"
+        },
+        {
+          "name": "canceled_doc_date"
+        },
+        {
+          "name": "organization_2"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum",
+          "description": ""
+        },
+        {
+          "name": "docdate",
+          "description": ""
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection",
+          "description": "Организация выдавшая решение о прекращении действия РНС"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "number_objects"
+        },
+        {
+          "name": "number_long_objects"
+        },
+        {
+          "name": "termination_reason_eis"
+        },
+        {
+          "name": "object_name_eis"
+        },
+        {
+          "name": "const_government_order_id"
+        },
+        {
+          "name": "const_cadastral_district"
+        },
+        {
+          "name": "const_cadastral_area"
+        },
+        {
+          "name": "issue_person_connection"
+        },
+        {
+          "name": "object_kind"
+        },
+        {
+          "name": "object_purpose"
+        },
+        {
+          "name": "object_purpose_functional"
+        },
+        {
+          "name": "date_uis"
+        },
+        {
+          "name": "smev_message_id"
+        },
+        {
+          "name": "uis_sync_status"
+        },
+        {
+          "name": "uis_response"
+        },
+        {
+          "name": "build_capital_type"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.06",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "06. Внесении изменений в разрешение",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.06"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "namefrompd"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "constructiontype"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "date_uis"
+        },
+        {
+          "name": "uis_sync_status"
+        },
+        {
+          "name": "uis_response"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.07",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "07. Экспертиза ПД",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.07"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.08",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "08. Соответствие предмету охраны",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.08"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.09",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "09. Схема расположения ОКС",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.09"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.10",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "10. Инженерные изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.10"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "egrzdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.11",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "11. Отклонение от предельных параметров",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.11"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.12",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "12. Условно разрешенный вид использования",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.12"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.13",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "13. Акт соответствия параметров",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.13"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.14",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "14. Строительный надзор",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.14"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.16",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "16. Экологический надзор",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.16"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.17",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "17. Акт соответствия многоквартирного дома",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.17"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.18",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "18. Разрешение на ввод объекта в эксплуатацию",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.18"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "namefrompd"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "constructiontype"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "developer"
+        },
+        {
+          "name": "docnum",
+          "description": "При наличии утверждаемых документов указывается номер утверждающего документа / Обязательное по Приказу № 433/пр"
+        },
+        {
+          "name": "docdate",
+          "description": "При наличии утверждаемых документов указывается дата утверждающего документа / Обязательное по Приказу № 433/пр"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file_project",
+          "title": "Проект РНВ"
+        },
+        {
+          "name": "file",
+          "maxDocuments": 1,
+          "dynamicPropertyFormula": "return { required: !(obj?.file_project != null) }",
+          "title": "Решение РНВ"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "relations"
+        },
+        {
+          "name": "number_objects"
+        },
+        {
+          "name": "number_long_objects"
+        },
+        {
+          "name": "object_name_eis"
+        },
+        {
+          "name": "object_kind"
+        },
+        {
+          "name": "object_purpose"
+        },
+        {
+          "name": "object_purpose_functional"
+        },
+        {
+          "name": "build_capital_type"
+        },
+        {
+          "name": "const_government_order_id"
+        },
+        {
+          "name": "const_cadastral_district"
+        },
+        {
+          "name": "const_cadastral_area"
+        },
+        {
+          "name": "issue_person_connection"
+        },
+        {
+          "name": "date_uis"
+        },
+        {
+          "name": "smev_message_id"
+        },
+        {
+          "name": "uis_sync_status"
+        },
+        {
+          "name": "uis_response"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.19",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "19. Технический план ОКС",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.19"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.20",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "20. Уведомление о строительстве",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.20"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "developer"
+        },
+        {
+          "name": "docnum",
+          "required": false
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.21",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "21. Уведомление об изменении параметров",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.21"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "developer"
+        },
+        {
+          "name": "docnum",
+          "required": false
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.22",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "22. Уведомление о соответствии параметров",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.22"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.23",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "23. Уведомление о несоответствии параметров",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.23"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.24",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "24. Описание объекта ИЖС, СД",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.24"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.25",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "25. Уведомление о соответствии описания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.25"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.26",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "26. Уведомление о несоответствии описания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.26"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.27",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "27. Уведомление об окончании строительства",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.27"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "developer"
+        },
+        {
+          "name": "docnum",
+          "required": false
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.28",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "28. Уведомление о соответствии ИЖС и СД",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.28"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.29",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "29. Уведомление о несоответствии ИЖС и СД",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.29"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.30",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "30. Уведомление о планируемом сносе ОКС",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.30"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.31",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "31. Обследование ОКС, подлежащего сносу",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.31"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.32",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "32. Проект организации работ по сносу",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.32"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.33",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "33. Уведомление о завершении сноса",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.33"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.34",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "34. Решение об адресе",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.34"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.35",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "35. Разрешение на использование земель",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.35"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.36",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "36. Соглашение о сервитуте",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.36"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.37",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "37. Публичный сервитут",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.37"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.38",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "38. Иные документы и материалы",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.38"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "orgname",
+          "required": false
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_13.39",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "39. Сведения о проектной документации",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "doc_13.39"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "developer_type"
+        },
+        {
+          "name": "project_doc_year"
+        },
+        {
+          "name": "file"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Дело о земельном участке",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    }
+  ]
+}

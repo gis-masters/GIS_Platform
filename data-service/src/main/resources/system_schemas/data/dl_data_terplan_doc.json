@@ -1,0 +1,216 @@
+{
+  "name": "dl_data_terplan_doc",
+  "title": "Документы развития территорий",
+  "tags": ["system", "Библиотека", "Тер.планирование"],
+  "tableName": "dl_data_terplan_doc",
+  "description": "Библиотека для документов территориального планирования",
+  "originName": "dl_data_terplan_doc",
+  "styleName": "dl_data_terplan_doc",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "valueType": "INT"
+    },
+    {
+      "name": "is_folder",
+      "title": "Признак раздела",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "valueType": "CHOICE",
+      "hidden": true,
+      "maxLength": 50,
+      "enumerations": [
+        {
+          "value": "doc",
+          "title": "Документ"
+        },
+        {
+          "value": "folder",
+          "title": "Папка"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "required": true,
+      "maxLength": 500
+    },
+    {
+      "name": "status_type",
+      "title": "Статус документа",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "value": "Проектный",
+          "title": "Проектный"
+        },
+        {
+          "value": "Действующий",
+          "title": "Действующий"
+        },
+        {
+          "value": "Архивный",
+          "title": "Архивный"
+        }
+      ]
+    },
+    {
+      "name": "document_type",
+      "title": "Тип документа",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "value": "СТП",
+          "title": "Схема территориального планирования"
+        },
+        {
+          "value": "Проект планировки территории",
+          "title": "Проект планировки территории"
+        },
+        {
+          "value": "Проект межевания территории",
+          "title": "Проект межевания территории"
+        },
+        {
+          "value": "Генеральный план поселения",
+          "title": "Генеральный план поселения"
+        },
+        {
+          "value": "Генеральный план городского округа",
+          "title": "Генеральный план городского округа"
+        },
+        {
+          "value": "Генеральная схема развития транспортной инфраструктуры",
+          "title": "Генеральная схема развития транспортной инфраструктуры"
+        },
+        {
+          "value": "Местные нормативы градостроительного проектирования",
+          "title": "Местные нормативы градостроительного проектирования"
+        },
+        {
+          "value": "Программы комплексного развития",
+          "title": "Программы комплексного развития систем инженерной, транспортной и социальной инфраструктуры"
+        },
+        {
+          "value": "Прочие",
+          "title": "Прочие"
+        }
+      ]
+    },
+    {
+      "name": "doc_num",
+      "title": "Номер документа",
+      "valueType": "STRING",
+      "required": true
+    },
+    {
+      "name": "approve_date",
+      "title": "Дата утверждения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "org_name",
+      "title": "Утвердивший орган",
+      "valueType": "STRING"
+    },
+    {
+      "name": "files",
+      "title": "Файлы",
+      "valueType": "FILE",
+      "multiple": true,
+      "maxSize": 50000000
+    },
+    {
+      "name": "guiddocpreviousversion",
+      "title": "Версии",
+      "valueType": "DOCUMENT",
+      "multiple": true,
+      "description": "Предыдущие версии документа",
+      "libraries": ["dl_data_doc", "dl_data_terplan_doc"],
+      "maxDocuments": 10
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "valueType": "DOCUMENT",
+      "multiple": true,
+      "libraries": ["dl_data_doc", "dl_data_terplan_doc"],
+      "maxDocuments": 10
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "maxLength": 522,
+      "valueType": "STRING",
+      "display": "multiline"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc",
+      "type": "DOCUMENT",
+      "title": "Документ",
+      "icon": "GPZU",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "doc_num"
+        },
+        {
+          "name": "status_type"
+        },
+        {
+          "name": "document_type"
+        },
+        {
+          "name": "approve_date"
+        },
+        {
+          "name": "org_name"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "relations"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "created_at",
+          "title": "Внесено"
+        }
+      ]
+    },
+    {
+      "id": "folder",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование раздела"
+        }
+      ]
+    }
+  ]
+}

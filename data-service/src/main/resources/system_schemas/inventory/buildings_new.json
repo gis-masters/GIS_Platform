@@ -1,0 +1,163 @@
+{
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "buildings_new",
+  "title": "Здания",
+  "relations": [
+    {
+      "type": "document",
+      "title": "Собственник",
+      "property": "cadastralnum",
+      "targetProperty": "cad_num"
+    },
+    {
+      "type": "document",
+      "title": "Документы",
+      "property": "cadastralnum"
+    },
+    {
+      "type": "document",
+      "title": "Квартиры и помещения",
+      "library": "dl_data_flats",
+      "property": "cadastralnum",
+      "targetProperty": "cad_oks"
+    }
+  ],
+  "styleName": "buildings_new",
+  "tableName": "buildings_new",
+  "originName": "buildings_new",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "cadastralnum",
+      "title": "Кадастровый номер ОКС",
+      "asTitle": true,
+      "required": true,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_oks",
+      "title": "Номер ОКС",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num_zu",
+      "title": "Кадастровый номер земельного участка",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "readablead",
+      "title": "Адрес",
+      "required": true,
+      "maxLength": 300,
+      "valueType": "STRING"
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение здания",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cost",
+      "title": "Кадастровая стоимость, р.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_kpt",
+      "title": "Площадь ЕГРН, м.кв.",
+      "valueType": "DOUBLE",
+      "description": "Площадь указанная в КПТ",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_fact_autocalc",
+      "title": "Площадь фактическая, м. кв.",
+      "readOnly": true,
+      "valueType": "DOUBLE",
+      "description": "Площадь расчитаная автоматически",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "dl_data_owners_connections",
+      "title": "Собственник",
+      "multiple": true,
+      "libraries": ["dl_data_owners"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 3
+    },
+    {
+      "name": "dl_data_documents_connections",
+      "title": "Документы",
+      "multiple": true,
+      "libraries": ["dl_data_documents"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 6
+    },
+    {
+      "name": "dl_data_flats_connections",
+      "title": "Квартиры и помещения",
+      "multiple": true,
+      "libraries": ["dl_data_flats"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 3
+    },
+    {
+      "name": "doc_egrn",
+      "title": "Документы привязанные к данном объекту",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 25
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

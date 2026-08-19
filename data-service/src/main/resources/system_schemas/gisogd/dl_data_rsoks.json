@@ -1,0 +1,452 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_rsoks",
+  "title": "Разрешение на строительство ОКС",
+  "tableName": "dl_data_rsoks",
+  "description": "13.04 Разрешение на строительство",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "dl_data_section13_data_connection",
+      "title": "13.04 Разрешение на строительство",
+      "multiple": true,
+      "required": true,
+      "libraries": ["dl_data_section13"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "dl_data_uge_data_connection",
+      "title": "Заключение гос.экспертизы проекта ОКС",
+      "multiple": true,
+      "libraries": ["dl_data_uge"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "ppm_info",
+      "title": "Сведения о проекте планировки и проекте межевания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "project_info",
+      "title": "Сведения о проектной документации ОКС",
+      "valueType": "STRING"
+    },
+    {
+      "name": "dl_data_gpzu_data_connection",
+      "title": "Сведения о градостроительном плане ЗУ",
+      "multiple": true,
+      "libraries": ["dl_data_gpzu"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_srzu_data_connection",
+      "title": "Сведения о схеме расположения земельного участка или земельных участков на кадастровом плане территории",
+      "multiple": true,
+      "libraries": ["dl_data_section18"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_ppm_data_connection",
+      "title": "Проект межевания территории",
+      "multiple": true,
+      "libraries": ["dl_data_section7"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_ppt_data_connection",
+      "title": "Проект планировки территории",
+      "multiple": true,
+      "libraries": ["dl_data_section7"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_project_developer_data_connection",
+      "title": "Сведения о разработчике проектной документации",
+      "multiple": true,
+      "libraries": ["dl_data_project_developer"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_project_doc_data_connection",
+      "title": "Проектная документация",
+      "multiple": true,
+      "libraries": ["dl_data_section18"],
+      "valueType": "DOCUMENT",
+      "description": "Для синхронизации с ГИОСГД РФ",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_project_documentation_description_connection",
+      "title": "Проектная документация",
+      "multiple": true,
+      "libraries": ["dl_data_section18"],
+      "valueType": "DOCUMENT",
+      "description": "Для синхронизации с ЕИС ЖС",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_tar_data_connection",
+      "title": "Типовое архитектурное решение объекта капительного строительства для исторического поселения",
+      "multiple": true,
+      "libraries": ["dl_data_section18"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_gece_data_connection",
+      "title": "Сведения о государственной экологической экспертизе",
+      "multiple": true,
+      "libraries": ["dl_data_section13"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_ps3_8_49_data_connection",
+      "title": "Подтверждение соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.8 статьи 49 Градостроительного кодекса РФ",
+      "multiple": true,
+      "libraries": ["dl_data_section18"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_ps3_9_49_data_connection",
+      "title": "Подтверждение соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.9 статьи 49 Градостроительного кодекса РФ",
+      "multiple": true,
+      "libraries": ["dl_data_section18"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа, утвердившего документ",
+      "multiple": true,
+      "readOnly": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "developer_type",
+      "title": "Лицо, разработавшее документацию",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Юридическое лицо",
+          "value": "Юридическое лицо"
+        },
+        {
+          "title": "Физическое лицо",
+          "value": "Физическое лицо"
+        },
+        {
+          "title": "Индивидуальный предприниматель",
+          "value": "Индивидуальный предприниматель"
+        }
+      ]
+    },
+    {
+      "name": "if_from_eis_zh",
+      "title": "Пришло из ЕИС ЖС",
+      "readOnly": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "reason_changes",
+      "title": "Статус синхронизации",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Переход (получение) прав на земельный участок",
+          "value": "1"
+        },
+        {
+          "title": "Переход (получение) прав пользования недрами",
+          "value": "2"
+        },
+        {
+          "title": "Образование земельных участков путем раздела, перераспределения земельных участков или выдела из земельных участков",
+          "value": "3"
+        },
+        {
+          "title": "Образование земельного участка путем объединения земельных участков",
+          "value": "4"
+        },
+        {
+          "title": "Продление срока действия разрешения на строительство",
+          "value": "5"
+        },
+        {
+          "title": "Изменение характеристик объекта",
+          "value": "6"
+        },
+        {
+          "title": "Исправление технической ошибки",
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "name": "basis_changes",
+      "title": "Основание внесений изменений (на основании какого документа)",
+      "display": "multiline",
+      "minWidth": 400,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "extended_to",
+      "title": "Продлить до",
+      "valueType": "DATETIME",
+      "description": "Дата продления разрешения на строительство"
+    },
+    {
+      "name": "document_feedback",
+      "title": "Документы, связанные с этим разрешением",
+      "valueType": "URL",
+      "valueFormulaParams": {
+        "text": "Найти связанные документы",
+        "library": "dl_data_rsoks_part",
+        "property": "dl_data_rsoks_data_connection",
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToDocumentsMentioningThisDocument"
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "asTitle": true,
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Карточка документа",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "dl_data_section13_data_connection"
+        },
+        {
+          "name": "dl_data_uge_data_connection"
+        },
+        {
+          "name": "ppm_info"
+        },
+        {
+          "name": "project_info"
+        },
+        {
+          "name": "document_feedback"
+        },
+        {
+          "name": "dl_data_gpzu_data_connection"
+        },
+        {
+          "name": "dl_data_srzu_data_connection"
+        },
+        {
+          "name": "dl_data_ppm_data_connection"
+        },
+        {
+          "name": "dl_data_ppt_data_connection"
+        },
+        {
+          "name": "dl_data_project_developer_data_connection"
+        },
+        {
+          "name": "dl_data_project_doc_data_connection"
+        },
+        {
+          "name": "dl_data_project_documentation_description_connection"
+        },
+        {
+          "name": "dl_data_tar_data_connection"
+        },
+        {
+          "name": "dl_data_gece_data_connection"
+        },
+        {
+          "name": "dl_data_ps3_8_49_data_connection"
+        },
+        {
+          "name": "dl_data_ps3_9_49_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "developer_type"
+        },
+        {
+          "name": "if_from_eis_zh"
+        },
+        {
+          "name": "reason_changes"
+        },
+        {
+          "name": "basis_changes"
+        },
+        {
+          "name": "extended_to"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "last_modified"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

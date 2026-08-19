@@ -1,0 +1,119 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "data_oks_purpose",
+  "title": "Назначения объектов капитального строительства",
+  "tableName": "data_oks_purpose",
+  "description": "Назначение объектов капитального строительства",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Назначение объекта",
+      "display": "multiline",
+      "minWidth": 400,
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "code",
+      "title": "Код назначения объекта",
+      "display": "multiline",
+      "minWidth": 400,
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Назначение объекта капитального строительства",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "code"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

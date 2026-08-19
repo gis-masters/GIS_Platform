@@ -1,0 +1,18 @@
+{
+  "styleName": "zone_a",
+  "tags": ["system", "ГИСОГД"],
+  "name": "zone_a",
+  "title": "Зона А",
+  "tableName": "zone_a",
+  "originName": "zone_a",
+  "description": "Зона А",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

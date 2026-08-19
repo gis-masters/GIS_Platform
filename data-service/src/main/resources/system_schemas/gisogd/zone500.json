@@ -1,0 +1,18 @@
+{
+  "styleName": "zone500",
+  "tags": ["system", "ГИСОГД"],
+  "name": "zone500",
+  "title": "Пятисотметровая зона",
+  "tableName": "zone500",
+  "originName": "zone500",
+  "description": "Пятисотметровая зона",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

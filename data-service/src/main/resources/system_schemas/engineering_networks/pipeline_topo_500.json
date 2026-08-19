@@ -1,0 +1,107 @@
+{
+  "styleName": "pipeline_topo_500",
+  "tags": ["system", "Топография 500 Инженерные сети"],
+  "name": "pipeline_topo_500",
+  "title": "Трубопроводы специального назначения",
+  "tableName": "pipeline_topo_500",
+  "originName": "pipeline_topo_500",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Воздухопровод",
+          "value": "1"
+        },
+        {
+          "title": "Нефтепровод",
+          "value": "2"
+        },
+        {
+          "title": "Технический трубопровод",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "INTEGER",
+      "asTitle": true
+    },
+    {
+      "name": "pline_type",
+      "title": "Вид расположения трубопровода",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Наземный",
+          "value": "1"
+        },
+        {
+          "title": "Подземный",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "pline_cnt",
+      "title": "Количество труб",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "d_pline",
+      "title": "Диаметр трубопровода, мм",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "1"
+        },
+        {
+          "title": "Не действующий",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "length",
+      "title": "Протяженность, м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 0
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "balance_holder",
+      "title": "Принадлежность сети",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

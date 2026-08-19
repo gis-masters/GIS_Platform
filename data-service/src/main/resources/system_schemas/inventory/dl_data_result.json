@@ -1,0 +1,318 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_result",
+  "title": "Итоговые документы",
+  "relations": [
+    {
+      "type": "feature",
+      "title": "Объект на карте",
+      "layers": ["scratch_database_11: result_100214_b42a"],
+      "property": "num_ter",
+      "projectId": 1467,
+      "targetProperty": "num_ter"
+    }
+  ],
+  "tableName": "dl_data_result",
+  "originName": "dl_data_result",
+  "description": "Итоговые документы",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 400,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Тип",
+      "minWidth": 300,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Документ",
+          "value": "text_doc"
+        },
+        {
+          "title": "Папка",
+          "value": "folder"
+        }
+      ]
+    },
+    {
+      "name": "num_ter",
+      "title": "Номер территории",
+      "valueType": "STRING"
+    },
+    {
+      "name": "document_type",
+      "title": "Вид изысканий",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Инженерно-геодезические изыскания",
+          "value": "IGDI"
+        },
+        {
+          "title": "Инженерно-геологические изыскания",
+          "value": "IGI"
+        },
+        {
+          "title": "Инженерно-экологические изыскания",
+          "value": "IEI"
+        },
+        {
+          "title": "Инженерно-гидрометеорологические изыскания",
+          "value": "IGMI"
+        },
+        {
+          "title": "Дендрологические изыскания",
+          "value": "DI"
+        },
+        {
+          "title": "Иные изыскания",
+          "value": "II"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Наименование документа",
+      "minWidth": 400,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name_obj",
+      "title": "Наименование объекта",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "number",
+      "title": "ID сделки",
+      "valueType": "STRING",
+      "description": "Должно соответствовать id в Битрикс"
+    },
+    {
+      "name": "status_type",
+      "title": "Статус документа",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "В работе",
+          "value": "В работе"
+        },
+        {
+          "title": "Согласован (утвержден)",
+          "value": "Согласован (утвержден)"
+        },
+        {
+          "title": "Иной",
+          "value": "Иной"
+        }
+      ]
+    },
+    {
+      "name": "native_crs",
+      "title": "Система координат",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Pulkovo 1942 / CS63 ZONE X4",
+          "value": "EPSG: 7828"
+        },
+        {
+          "title": "Pulkovo 1942 / CS63 ZONE X5",
+          "value": "EPSG: 7829"
+        },
+        {
+          "title": "MSK Sevastopol",
+          "value": "MSK Sevastopol"
+        },
+        {
+          "title": "WGS 84 / Pseudo-Mercator",
+          "value": "EPSG: 3857"
+        }
+      ]
+    },
+    {
+      "name": "scale",
+      "title": "Номинальный масштаб",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "5000",
+          "value": "5000"
+        },
+        {
+          "title": "2000",
+          "value": "2000"
+        },
+        {
+          "title": "1000",
+          "value": "1000"
+        },
+        {
+          "title": "500",
+          "value": "500"
+        }
+      ]
+    },
+    {
+      "name": "date_of_doc",
+      "title": "Год создания документа",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "minWidth": 400,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "file",
+      "title": "Выбор документа",
+      "maxSize": 90000000,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "guiddocpreviousversion",
+      "title": "Версии",
+      "library": "dl_data_result",
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "description": "Предыдущая версия данных",
+      "maxDocuments": 10
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "multiple": true,
+      "libraries": [
+        "dl_data_result",
+        "dl_data_contracts_buyout",
+        "dl_data_flats_balaklava",
+        "dl_data_limits_balaklava",
+        "dl_data_oks_property_yugip",
+        "dl_data_owners_balaklava"
+      ],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "text_doc",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Документ",
+      "attributes": [
+        {
+          "name": "num_ter"
+        },
+        {
+          "name": "name_obj"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "document_type"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "status_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "folder",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

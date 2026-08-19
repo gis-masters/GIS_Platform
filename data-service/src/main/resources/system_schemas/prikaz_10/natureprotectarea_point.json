@@ -1,0 +1,176 @@
+{
+  "name": "natureprotectarea_point",
+  "title": "Особо охраняемые природные территории",
+  "styleName": "natureprotectarea_point_123",
+  "tableName": "natureprotectarea_point",
+  "originName": "NatureProtectArea",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Особо охраняемые природные территории",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Особо охраняемые природные территории",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственный природный заповедник, в том числе биосферный",
+          "value": "605010101"
+        },
+        {
+          "title": "Национальный парк",
+          "value": "605010102"
+        },
+        {
+          "title": "Природный парк",
+          "value": "605010103"
+        },
+        {
+          "title": "Государственный природный заказник",
+          "value": "605010104"
+        },
+        {
+          "title": "Памятник природы",
+          "value": "605010105"
+        },
+        {
+          "title": "Дендрологический парк, ботанический сад",
+          "value": "605010106"
+        },
+        {
+          "title": "Иные особо охраняемые природные территории",
+          "value": "605010107"
+        }
+      ]
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь объекта, га",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "obj_desc",
+      "title": "Описание объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "kadastrzu",
+      "title": "Кадастровый номер земельного участка, на котором расположен объект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    }
+  ]
+}

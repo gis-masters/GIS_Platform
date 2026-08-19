@@ -1,0 +1,68 @@
+{
+  "styleName": "streets_cleaning",
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "streets_cleaning",
+  "title": "Ответственные по уборке (улицы)",
+  "tableName": "streets_cleaning",
+  "originName": "streets_cleaning",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта»",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Ответственные по уборке (улицы)",
+          "value": "50105001"
+        }
+      ]
+    },
+    {
+      "name": "streetname",
+      "title": "Название улицы",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "plotnumb",
+      "title": "Номер участка",
+      "required": true,
+      "maxLength": 2,
+      "valueType": "STRING"
+    },
+    {
+      "name": "deputy",
+      "title": "Ответственный от администрации (заместитель главы)",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "yardkeeper",
+      "title": "Ответственный по контролю за содержанием (дворник)",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "supervisor",
+      "title": "Ответственный по контролю за содержанием (мастер)",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "notes",
+      "title": "Примечания",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    }
+  ]
+}

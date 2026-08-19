@@ -1,0 +1,53 @@
+{
+  "styleName": "geodetic_network_point",
+  "tags": ["system", "Топоплан 2000"],
+  "name": "geodetic_network_point_topo_2000",
+  "title": "Геодезические пункты",
+  "tableName": "geodetic_network_point_topo_2000",
+  "originName": "geodetic_network_point_topo_2000",
+  "description": "Класс объектов «Геодезические пункты»",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "desc1",
+      "title": "Описание",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "code",
+      "title": "КОД",
+      "required": true,
+      "maxLength": 9,
+      "valueType": "STRING"
+    },
+    {
+      "name": "x",
+      "title": "X",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "y",
+      "title": "Y",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Line"]
+    }
+  ]
+}

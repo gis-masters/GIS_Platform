@@ -1,0 +1,364 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_gpzu",
+  "title": "Градостроительный план земельного участка",
+  "tableName": "dl_data_gpzu",
+  "description": "Градостроительный план земельного участка",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "dl_data_section13_data_connection",
+      "title": "Тематический набор данных",
+      "multiple": true,
+      "libraries": ["dl_data_section13"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 2
+    },
+    {
+      "name": "project_requisites",
+      "title": "Реквизиты проекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "project_developer_data_connection",
+      "title": "Исполнитель проектной документации",
+      "multiple": true,
+      "libraries": ["dl_data_project_developer"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "info_p2",
+      "title": "Информация о градостроительном регламенте",
+      "valueType": "STRING",
+      "description": "Инфо, п.2, информация о градостроительном регламенте либо требованиях к назначению, параметрам и размещению объекта капитального строительства на земельном участке, на который действие градостроительного регламента не распространяется или для которого градостроительный регламент не устанавливается"
+    },
+    {
+      "name": "info_p2_1",
+      "title": "Реквизиты акта органа государственной власти субъекта РФ",
+      "valueType": "STRING",
+      "description": "Инфо, п.2.1, Реквизиты акта органа государственной власти субъекта Российской Федерации, органа местного самоуправления, содержащего градостроительный регламент либо реквизиты акта федерального органа государственной власти, органа государственной власти субъекта Российской Федерации, органа местного самоуправления, иной организации, определяющего, в соответствии с федеральными законами, порядок использования земельного участка, на который действие градостроительного регламента не распространяется или для которого градостроительный регламент не устанавливается"
+    },
+    {
+      "name": "info_p2_2_1",
+      "title": "Инфо, п.2.2, основные виды разрешенного использования земельного участка",
+      "multiple": true,
+      "libraries": ["dl_data_permitted_land_use_types"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "info_p2_2_2",
+      "title": "Инфо, п.2.2, условно разрешенные виды использования земельного участка",
+      "multiple": true,
+      "libraries": ["dl_data_permitted_land_use_types"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "info_p2_2_3",
+      "title": "Инфо, п.2.2, вспомогательные виды разрешенного использования земельного участка",
+      "multiple": true,
+      "libraries": ["dl_data_permitted_land_use_types"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "info_p5",
+      "title": "Информация об ограничениях использования земельного участка",
+      "valueType": "STRING",
+      "description": "Инфо, п.5, информация об ограничениях использования земельного участка, в том числе если земельный участок полностью или частично расположен в границах зон с особыми условиями использования территорий"
+    },
+    {
+      "name": "info_p7",
+      "title": "Инфо, п.7, Информация о границах публичных сервитутов",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: easement_1627_bb27"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "info_p8",
+      "title": "Номер и (или) наименование элемента планировочной структуры",
+      "valueType": "STRING",
+      "description": "Инфо, п.8, Номер и (или) наименование элемента планировочной структуры, в границах которого расположен земельный участок"
+    },
+    {
+      "name": "info_p9",
+      "title": "Информация о возможности подключения ОКСов к сетям инженерно-технического обеспечения",
+      "valueType": "STRING"
+    },
+    {
+      "name": "info_p10",
+      "title": "Реквизиты нормативных правовых актов субъекта РФ",
+      "valueType": "STRING",
+      "description": "Инфо, п.10, Реквизиты нормативных правовых актов субъекта Российской Федерации, муниципальных правовых актов, устанавливающих требования к благоустройству территории"
+    },
+    {
+      "name": "info_p11",
+      "title": "Инфо, п.7, Информация о границах публичных сервитутов",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1: red_line_100436_547c",
+          "scratch_database_1: red_line_line_100436_096d"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "info_p3",
+      "title": "Информация п.3",
+      "valueType": "STRING"
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа, утвердившего документ",
+      "multiple": true,
+      "readOnly": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "land_plot_planning_organisation_docs",
+      "title": "Схема планировочной организации земельного участка",
+      "maxSize": 10000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "if_from_eis_zh",
+      "title": "Пришло из ЕИС ЖС",
+      "readOnly": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "asTitle": true,
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Карточка документа",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "dl_data_section13_data_connection"
+        },
+        {
+          "name": "project_requisites"
+        },
+        {
+          "name": "project_developer_data_connection"
+        },
+        {
+          "name": "info_p2"
+        },
+        {
+          "name": "info_p2_1"
+        },
+        {
+          "name": "info_p2_2_1"
+        },
+        {
+          "name": "info_p2_2_2"
+        },
+        {
+          "name": "info_p2_2_3"
+        },
+        {
+          "name": "info_p5"
+        },
+        {
+          "name": "info_p7"
+        },
+        {
+          "name": "info_p8"
+        },
+        {
+          "name": "info_p9"
+        },
+        {
+          "name": "info_p10"
+        },
+        {
+          "name": "info_p11"
+        },
+        {
+          "name": "info_p3"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "if_from_eis_zh"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "last_modified"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

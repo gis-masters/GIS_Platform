@@ -1,0 +1,71 @@
+{
+  "styleName": "terzonesimf",
+  "tags": ["system", "ГИСОГД"],
+  "name": "terzonesimf",
+  "title": "Территориальные зоны",
+  "readOnly": true,
+  "tableName": "terzonesimf",
+  "originName": "terzonesimf",
+  "description": "Территориальные зоны",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "objectname",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "objectcode",
+      "title": "Код зоны",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admemr",
+      "title": "Муниципальный район",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admemo",
+      "title": "Муниципальное образование",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admenp",
+      "title": "Населённый пункт",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "link",
+      "title": "Правила землепользования и застройки",
+      "required": true,
+      "valueType": "URL",
+      "displayMode": "in_popup"
+    },
+    {
+      "name": "shape_star",
+      "title": "Площадь, га",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

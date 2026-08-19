@@ -1,0 +1,857 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_section19_schema",
+  "title": "Cервисы предоставления государственных и муниципальных услуг",
+  "tableName": "dl_data_section19",
+  "originName": "dl_data_section19",
+  "description": "Cервисы предоставления государственных и муниципальных услуг",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "gisogd_regnum",
+      "title": "Регистрационный номер ГИСОГД РК",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogd_regdate",
+      "title": "Дата регистрации в ГИСОГД РК",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь,отражающий иерархию объектов",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "title",
+      "title": "Наименование  документа",
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "ОКТМО",
+      "required": true,
+      "maxLength": 11,
+      "valueType": "STRING"
+    },
+    {
+      "name": "details",
+      "title": "Описание",
+      "hidden": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file_path",
+      "title": "Приложенные файлы",
+      "hidden": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "is_public",
+      "title": "Публичный документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "surname",
+      "title": "Фамилия",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Имя",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "patronymic",
+      "title": "Отчество",
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_birth",
+      "title": "Дата рождения",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "typ_doc",
+      "title": "Тип документа",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "series",
+      "title": "Серия",
+      "required": true,
+      "maxLength": 4,
+      "valueType": "STRING"
+    },
+    {
+      "name": "number",
+      "title": "Номер",
+      "required": true,
+      "maxLength": 6,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_issue",
+      "title": "Дата выдачи",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "issued_by",
+      "title": "Кем выдан",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "regist_address",
+      "title": "Адрес регистрации",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "mail_reg_address",
+      "title": "Совпадает ли почтовый адрес с адресом регистрации",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "mailing_address",
+      "title": "Почтовый адрес",
+      "valueType": "STRING"
+    },
+    {
+      "name": "email",
+      "title": "Email",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "telephone_number",
+      "title": "Телефон",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "agreement",
+      "title": "Даю свое согласие на обработку моих персональных данных,указанных мною в данном заявлении,в соответствии с законодательством Российской Федерации",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "truth",
+      "title": "Предоставление заведомо неправдивых данных,а так же в случае предоставления данных,которые можно использовать во вред правам и законным интересам граждан и органам государственной власти,так же предоставление данных,порочащих честь,имя и деловую репутацию указанным выше субъектов влечет за собой предусмотренную действующим законодательством ответственность",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "area",
+      "title": "Общая площадь (кв.м)",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address_zu",
+      "title": "Адрес земельного участка в соответствии с государственным адресным реестром",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type_law",
+      "title": "Вид права",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Право собственности",
+          "value": "TL.1"
+        },
+        {
+          "title": "Право пожизненно наследуемого владения",
+          "value": "TL.2"
+        },
+        {
+          "title": "Право бессрочного постоянного владения",
+          "value": "TL.3"
+        },
+        {
+          "title": "Право ограничения пользования чужим имуществом",
+          "value": "TL.4"
+        },
+        {
+          "title": "Право аренды",
+          "value": "TL.5"
+        },
+        {
+          "title": "Право безвозмездного срочного пользования",
+          "value": "TL.6"
+        },
+        {
+          "title": "Иной вид права",
+          "value": "TL.7"
+        }
+      ]
+    },
+    {
+      "name": "doc_pravo",
+      "title": "Правоустанавливающий документ",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Договор купли-продажи",
+          "value": "DP.1"
+        },
+        {
+          "title": "Договор аренды",
+          "value": "DP.2"
+        },
+        {
+          "title": "Договор субаренды",
+          "value": "DP.3"
+        },
+        {
+          "title": "Договор безвозмездного срочного пользования земельным участком",
+          "value": "DP.4"
+        },
+        {
+          "title": "Договор дарения",
+          "value": "DP.5"
+        },
+        {
+          "title": "Свидетельство о вступлении гражданином в наследство",
+          "value": "DP.6"
+        },
+        {
+          "title": "Договор мены",
+          "value": "DP.7"
+        },
+        {
+          "title": "Иной документ",
+          "value": "DP.8"
+        }
+      ]
+    },
+    {
+      "name": "num_doc_zu",
+      "title": "Номер",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_doc_zu",
+      "title": "Дата",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "pravo_doc",
+      "title": "Правоустанавливающий документ",
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "tech_conditions",
+      "title": "Технические условия подключения объекта капитального строительства к сетям инженерно-технического обеспечения",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "reference",
+      "title": "Выписка из Единого государственного реестра недвижимости",
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "identity_doc",
+      "title": "Документ,удостоверяющий личность",
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "form_info",
+      "title": "Форма предоставления сведений",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Бумажный",
+          "value": "FI.1"
+        },
+        {
+          "title": "Электронный",
+          "value": "FI.2"
+        }
+      ]
+    },
+    {
+      "name": "delivery_method",
+      "title": "Способ доставки сведений",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Почтовое отправление",
+          "value": "DM.1"
+        },
+        {
+          "title": "На руки",
+          "value": "DM.2"
+        },
+        {
+          "title": "На электронную почту",
+          "value": "DM.1"
+        },
+        {
+          "title": "В личном кабинете на портале государственных и муниципальных услуг",
+          "value": "DM.2"
+        }
+      ]
+    },
+    {
+      "name": "name_oks",
+      "title": "Наименование объекта капитального строительства в соответствии с проектной документацией",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name_organ",
+      "title": "Наименование организации,выдавшей положительное заключение экспертизы проектной документации",
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_regist",
+      "title": "Регистрационный номер и дата выдачи положительного заключения экспертизы проектной документации ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num_reconstructed",
+      "title": "Кадастровый номер реконструируемого объекта капитального строительства",
+      "valueType": "STRING"
+    },
+    {
+      "name": "gpzu",
+      "title": "Сведения о градостроительном плане земельного участка",
+      "valueType": "STRING"
+    },
+    {
+      "name": "pptpmt",
+      "title": "Сведения о проекте планировки и проекте межевания территории",
+      "valueType": "STRING"
+    },
+    {
+      "name": "construction_time",
+      "title": "Срок,в который будет осуществляться строительство/реконструкция объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_buildings",
+      "title": "Площадь застройки,кв.м.",
+      "valueType": "STRING"
+    },
+    {
+      "name": "bulk",
+      "title": "Объем,куб.м.",
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "minWidth": 200,
+      "asTitle": true,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "readOnly": true,
+      "minWidth": 300,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "num_floors",
+      "title": "Количество этажей",
+      "maxLength": 3,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "files",
+      "title": "Выбор файла",
+      "multiple": true,
+      "valueType": "FILE"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_gpzu1",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Выдача градостроительного плана земельного участка",
+      "attributes": [
+        {
+          "name": "title",
+          "required": true
+        },
+        {
+          "name": "surname"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "patronymic"
+        },
+        {
+          "name": "date_birth"
+        },
+        {
+          "name": "typ_doc"
+        },
+        {
+          "name": "series"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "date_issue"
+        },
+        {
+          "name": "issued_by"
+        },
+        {
+          "name": "regist_address"
+        },
+        {
+          "name": "mail_reg_address"
+        },
+        {
+          "name": "mailing_address"
+        },
+        {
+          "name": "email"
+        },
+        {
+          "name": "telephone_number"
+        },
+        {
+          "name": "agreement"
+        },
+        {
+          "name": "truth"
+        },
+        {
+          "name": "area"
+        },
+        {
+          "name": "cad_num"
+        },
+        {
+          "name": "address_zu"
+        },
+        {
+          "name": "type_law"
+        },
+        {
+          "name": "doc_pravo"
+        },
+        {
+          "name": "num_doc_zu"
+        },
+        {
+          "name": "date_doc_zu"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogd_regnum"
+        },
+        {
+          "name": "gisogd_regdate"
+        },
+        {
+          "name": "files",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "doc_2",
+      "icon": "GPZU",
+      "type": "DOCUMENT",
+      "title": "Предоставление сведений разделов ГИСОГД РК",
+      "attributes": [
+        {
+          "name": "title",
+          "required": true
+        },
+        {
+          "name": "surname"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "patronymic"
+        },
+        {
+          "name": "date_birth"
+        },
+        {
+          "name": "typ_doc"
+        },
+        {
+          "name": "series"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "date_issue"
+        },
+        {
+          "name": "issued_by"
+        },
+        {
+          "name": "regist_address"
+        },
+        {
+          "name": "mail_reg_address"
+        },
+        {
+          "name": "mailing_address"
+        },
+        {
+          "name": "email"
+        },
+        {
+          "name": "telephone_number"
+        },
+        {
+          "name": "cad_num"
+        },
+        {
+          "name": "address_zu",
+          "title": "Адрес объекта"
+        },
+        {
+          "name": "form_info"
+        },
+        {
+          "name": "delivery_method"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogd_regnum"
+        },
+        {
+          "name": "gisogd_regdate"
+        },
+        {
+          "name": "files",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "doc_3",
+      "icon": "GPZU",
+      "type": "DOCUMENT",
+      "title": "Получение разрешения на строительство",
+      "attributes": [
+        {
+          "name": "title",
+          "required": true
+        },
+        {
+          "name": "surname"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "patronymic"
+        },
+        {
+          "name": "date_birth"
+        },
+        {
+          "name": "typ_doc"
+        },
+        {
+          "name": "series"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "date_issue"
+        },
+        {
+          "name": "issued_by"
+        },
+        {
+          "name": "regist_address"
+        },
+        {
+          "name": "mail_reg_address"
+        },
+        {
+          "name": "mailing_address"
+        },
+        {
+          "name": "email"
+        },
+        {
+          "name": "telephone_number"
+        },
+        {
+          "name": "name_oks"
+        },
+        {
+          "name": "name_organ"
+        },
+        {
+          "name": "num_regist"
+        },
+        {
+          "name": "cad_num_reconstructed"
+        },
+        {
+          "name": "gpzu"
+        },
+        {
+          "name": "pptpmt"
+        },
+        {
+          "name": "address_zu",
+          "title": "Адрес объекта"
+        },
+        {
+          "name": "construction_time"
+        },
+        {
+          "name": "area"
+        },
+        {
+          "name": "area_buildings"
+        },
+        {
+          "name": "bulk"
+        },
+        {
+          "name": "num_floors"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogd_regnum"
+        },
+        {
+          "name": "gisogd_regdate"
+        },
+        {
+          "name": "files",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "doc_4",
+      "icon": "GPZU",
+      "type": "DOCUMENT",
+      "title": "Присвоение объекту адресации адреса и аннулирование указанного адреса",
+      "attributes": [
+        {
+          "name": "title",
+          "required": true
+        },
+        {
+          "name": "surname"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "patronymic"
+        },
+        {
+          "name": "date_birth"
+        },
+        {
+          "name": "typ_doc"
+        },
+        {
+          "name": "series"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "date_issue"
+        },
+        {
+          "name": "issued_by"
+        },
+        {
+          "name": "regist_address"
+        },
+        {
+          "name": "mail_reg_address"
+        },
+        {
+          "name": "mailing_address"
+        },
+        {
+          "name": "email"
+        },
+        {
+          "name": "telephone_number"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogd_regnum"
+        },
+        {
+          "name": "gisogd_regdate"
+        },
+        {
+          "name": "files",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

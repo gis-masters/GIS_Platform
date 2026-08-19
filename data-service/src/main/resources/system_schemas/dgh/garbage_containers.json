@@ -1,0 +1,121 @@
+{
+  "styleName": "garbage_containers",
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "garbage_containers",
+  "title": "Контейнерные площадки",
+  "tableName": "garbage_containers",
+  "originName": "garbage_containers",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Контейнерые площадки",
+          "value": "50101001"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "contnumpl",
+      "title": "Количество контейнеров планируемое",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "contnumact",
+      "title": "Количество контейнеров фактическое",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Место расположения площадки",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "landsctype",
+      "title": "Тип площадки (благоустройство)",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Благоустроена",
+          "value": "1"
+        },
+        {
+          "title": "Благоустроена, требует ремонта",
+          "value": "2"
+        },
+        {
+          "title": "Не благоустроена",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "enttype",
+      "title": "Тип площадки (подход)",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Асфальт",
+          "value": "1"
+        },
+        {
+          "title": "Щебень",
+          "value": "2"
+        },
+        {
+          "title": "Бетон",
+          "value": "3"
+        },
+        {
+          "title": "Бетонный экран",
+          "value": "4"
+        },
+        {
+          "title": "Выкатной",
+          "value": "5"
+        },
+        {
+          "title": "Грунтовка",
+          "value": "6"
+        },
+        {
+          "title": "На проезжей части",
+          "value": "7"
+        },
+        {
+          "title": "Твердое покрытие",
+          "value": "8"
+        },
+        {
+          "title": "Подход отсутствует",
+          "value": "9"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "notes",
+      "title": "Примечания",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    }
+  ]
+}

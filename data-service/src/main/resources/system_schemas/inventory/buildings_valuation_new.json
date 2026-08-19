@@ -1,0 +1,332 @@
+{
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "buildings_valuation_new",
+  "title": "Здания. Инвентарный план",
+  "relations": [
+    {
+      "type": "document",
+      "title": "Квартиры и помещения в составе ОКС",
+      "library": "dl_data_flats_balaklava",
+      "property": "cad_oks"
+    },
+    {
+      "type": "document",
+      "title": "Ограничения и обременения на ОКС",
+      "library": "dl_data_limits_balaklava",
+      "property": "cad_oks",
+      "targetProperty": "title"
+    },
+    {
+      "type": "document",
+      "title": "Зарегистрированные права на ОКС",
+      "library": "dl_data_owners_balaklava",
+      "property": "cad_oks",
+      "targetProperty": "title"
+    },
+    {
+      "type": "feature",
+      "title": "Перейти к ЗУ",
+      "layers": ["scratch_database_11: zu_valuation_new_1353_8002"],
+      "property": "cad_zu",
+      "projectId": 1193,
+      "targetProperty": "cad_zu"
+    }
+  ],
+  "styleName": "buildings_valuation_new",
+  "tableName": "buildings_valuation_new",
+  "originName": "buildings_valuation_new",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "n_ter",
+      "title": "Номер территории",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "kod",
+      "title": "Номер на плане",
+      "required": true,
+      "maxLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_zu",
+      "title": "Кадастровый номер земельного участка",
+      "asTitle": true,
+      "required": true,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type_oks",
+      "title": "Вид ОКС",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Здание",
+          "value": "Здание"
+        },
+        {
+          "title": "Сооружение",
+          "value": "Сооружение"
+        },
+        {
+          "title": "Объект незавершенного строительства",
+          "value": "объект незавершенного строительства"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "cad_oks",
+      "title": "Кадастровый номер объекта недвижимости",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Адрес",
+      "required": true,
+      "maxLength": 300,
+      "valueType": "STRING"
+    },
+    {
+      "name": "okn",
+      "title": "Объект культурного наследия",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Является ОКН",
+          "value": "да"
+        },
+        {
+          "title": "Не является ОКН",
+          "value": "нет"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение по ЕГРН",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Многоквартирный дом",
+          "value": "Многоквартирный дом"
+        },
+        {
+          "title": "Жилой дом",
+          "value": "Жилой дом"
+        },
+        {
+          "title": "Нежилое здание",
+          "value": "Нежилое здание"
+        },
+        {
+          "title": "Садовый дом",
+          "value": "Садовый дом"
+        },
+        {
+          "title": "Иные",
+          "value": "Иные"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "bti_name",
+      "title": "Назначение по БТИ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Фактическое назначение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "t_ppt",
+      "title": "Тип ОКС для ППТ",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Многоквартирная жилая застройка",
+          "value": "1"
+        },
+        {
+          "title": "Индивидуальная жилая застройка",
+          "value": "2"
+        },
+        {
+          "title": "Общественно-делового назначения ",
+          "value": "3"
+        },
+        {
+          "title": "Социального и коммунально-бытового обслуживания",
+          "value": "4"
+        },
+        {
+          "title": "Производственного и коммунально-складского назначения",
+          "value": "5"
+        },
+        {
+          "title": "Инженерной инфраструктуры",
+          "value": "6"
+        },
+        {
+          "title": "Транспортной инфраструктуры",
+          "value": "7"
+        },
+        {
+          "title": "Гостиничного обслуживания ",
+          "value": "8"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "t_own",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная федеральная",
+          "value": "Государственная федеральная"
+        },
+        {
+          "title": "Государственная субъектов РФ",
+          "value": "Государственная субъектов РФ"
+        },
+        {
+          "title": "Муниципальная",
+          "value": "Муниципальная"
+        },
+        {
+          "title": "Частная",
+          "value": "Частная"
+        },
+        {
+          "title": "Принят на учет как бесхозяйный объект недвижимого имущества",
+          "value": "Принят на учет как бесхозяйный объект недвижимого имущества"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь ЕГРН, м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_fact_autocalc",
+      "title": "Площадь вычисляемая, м. кв.",
+      "valueType": "DOUBLE",
+      "readOnly": true,
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "area_bti",
+      "title": "Площадь помещений общая (БТИ), м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "total_fl",
+      "title": "Количество жилых помещений (квартир)",
+      "valueType": "INT"
+    },
+    {
+      "name": "a_rooms_fl",
+      "title": "Площадь жилых помещений (для МКД), м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "floor_gr",
+      "title": "Количество этажей в т.ч. подземных, мансарда",
+      "valueType": "INT"
+    },
+    {
+      "name": "floor_und",
+      "title": "Количество подземных этажей",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ЕГРН",
+          "value": "ЕГРН"
+        },
+        {
+          "title": "Выявленный при обследовании",
+          "value": "Выявленный при обследовании"
+        },
+        {
+          "title": "БТИ",
+          "value": "БТИ"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "defunct",
+      "title": "ОКС демонтирован",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "doc_egrn",
+      "title": "Выписка ЕГРН",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 25
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "шейп",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

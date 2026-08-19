@@ -1,0 +1,118 @@
+{
+  "styleName": "hydrography_line",
+  "tags": ["system", "Топоплан 2000"],
+  "name": "hydrography_line_topo_2000",
+  "title": "Гидрография линейная",
+  "tableName": "hydrography_line_topo_2000",
+  "originName": "hydrography_line_topo_2000",
+  "description": "Класс объектов «Гидрография линейная»",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "desc1",
+      "title": "Описание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "ТИП",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "NAME",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "relobjecti",
+      "title": "relObjectI",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "relat_h",
+      "title": "RELAT_H",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "depth",
+      "title": "ГЛУБИНА",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "name_own",
+      "title": "NAME_OWN",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "mater_cons",
+      "title": "MATER_CONS",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "flow_rate",
+      "title": "Скорость потока",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "code",
+      "title": "КОД",
+      "required": true,
+      "maxLength": 9,
+      "valueType": "STRING"
+    },
+    {
+      "name": "code_2",
+      "title": "КОД_2",
+      "required": true,
+      "maxLength": 9,
+      "valueType": "STRING"
+    },
+    {
+      "name": "width",
+      "title": "Ширина",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

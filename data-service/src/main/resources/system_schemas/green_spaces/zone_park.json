@@ -1,0 +1,85 @@
+{
+  "styleName": "zone_park",
+  "tags": ["system", "Зеленые насаждения"],
+  "name": "zone_park",
+  "title": "Парковое зонирование",
+  "tableName": "zone_park",
+  "originName": "zone_park",
+  "description": "Парковое зонирование",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "zone_name",
+      "title": "Наименование зоны",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв.м",
+      "hidden": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь фактическая, м. кв.",
+      "valueType": "DOUBLE",
+      "description": "Площадь посчитана автоматически",
+      "readOnly": true,
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация (фотоматериалы)",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ]
+}

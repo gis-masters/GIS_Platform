@@ -1,0 +1,173 @@
+{
+  "name": "formed_land_dpt",
+  "title": "Образуемый (изменяемый) земельный участок",
+  "tags": ["system", "ДПТ"],
+  "tableName": "formed_land_dpt",
+  "description": "Образуемый (изменяемый) земельный участок",
+  "originName": "formed_land_dpt",
+  "styleName": "formed_land_dpt",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "class",
+      "title": "Вид границы",
+      "valueType": "CHOICE",
+      "required": true,
+      "asTitle": true,
+      "description": "Вид границы образуемого (изменяемого) земельного участка",
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7F.1",
+          "title": "Границы существующих (сохраняемых) земельных участков"
+        },
+        {
+          "value": "7F.2",
+          "title": "Границы образуемых земельных участков, в отношении которых предполагается изъятие и (или) резервирование для государственных или муниципальных нужд"
+        },
+        {
+          "value": "7F.3",
+          "title": "Границы изменяемых земельных участков"
+        },
+        {
+          "value": "7F.4",
+          "title": "Границы образуемых земельных участков"
+        },
+        {
+          "value": "7F.5",
+          "title": "Границы образуемых земельных участков, которые будут отнесены к имуществу общего пользования"
+        },
+        {
+          "value": "7F.6",
+          "title": "Границы образуемых земельных участков, которые будут отнесены к территориям общего пользования"
+        },
+        {
+          "value": "7F.7",
+          "title": "Границы образуемых земельных участков, предполагаемых к изъятию для государственных или муниципальных нужд"
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "valueType": "CHOICE",
+      "required": true,
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7В.1",
+          "title": "Существующий"
+        },
+        {
+          "value": "7В.2",
+          "title": "Планируемый"
+        }
+      ]
+    },
+    {
+      "name": "forming_type",
+      "title": "Способ образования",
+      "valueType": "CHOICE",
+      "description": "Способ образования земельного участка",
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7G.1",
+          "title": "Образование земельных участков из земель или земельных участков, находящихся в государственной или муниципальной собственности"
+        },
+        {
+          "value": "7G.2",
+          "title": "Раздел земельного участка"
+        },
+        {
+          "value": "7G.3",
+          "title": "Объединение земельных участков"
+        },
+        {
+          "value": "7G.4",
+          "title": "Выдел земельного участка"
+        },
+        {
+          "value": "7G.5",
+          "title": "Перераспределение земельных участков"
+        }
+      ]
+    },
+    {
+      "name": "nominal_num",
+      "title": "Условный или кад. номер",
+      "valueType": "STRING",
+      "required": true,
+      "description": "Условный или кадастровый номер образуемого (изменяемого) земельного участка"
+    },
+    {
+      "name": "location_info",
+      "title": "Местоположение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв.м",
+      "valueType": "DOUBLE",
+      "required": true,
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "easement",
+      "title": "Сервитут",
+      "valueType": "URL",
+      "description": "Информация о наличии публичного сервитута"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "description": "Пользователь создавший объект (Заполняется автоматически)",
+      "valueType": "STRING",
+      "readOnly": true
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "description": "Дата создания объекта (Заполняется автоматически)",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата редактирования",
+      "valueType": "DATETIME",
+      "description": "Дата последнего редактирования объекта (Заполняется автоматически)",
+      "readOnly": true
+    },
+    {
+      "name": "updated_by",
+      "title": "Редактор",
+      "valueType": "STRING",
+      "description": "Пользователь редактировавший объект последним (Заполняется автоматически)",
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING",
+      "maxLength": 256
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "INT",
+      "hidden": true
+    }
+  ]
+}

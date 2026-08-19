@@ -1,0 +1,140 @@
+{
+  "name": "floodarea",
+  "title": "Зоны затопления и подтопления",
+  "styleName": "floodarea_123",
+  "tableName": "floodarea",
+  "originName": "FloodArea",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Зоны затопления и подтопления",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Зоны затопления и подтопления",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Зона затопления",
+          "value": "603011401"
+        },
+        {
+          "title": "Зона подтопления",
+          "value": "603011402"
+        }
+      ]
+    },
+    {
+      "name": "flooding_t",
+      "title": "Характеристика зоны затопления",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Не зарегулированные водотоки и естественные водоемы при половодьях и паводках однопроцентной обеспеченности",
+          "value": "1"
+        },
+        {
+          "title": "Устьевые участки водотоков при нагонных явлениях расчетной обеспеченности",
+          "value": "2"
+        },
+        {
+          "title": "Водохранилища при уровнях воды, соответствующих форсированному подпорному уровню воды",
+          "value": "3"
+        },
+        {
+          "title": "Зарегулированные водотоки в нижних бьефах гидроузлов, при пропуске гидроузлами паводков расчетной обеспеченности",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "uderfl_t",
+      "title": "Характеристика зоны подтопления",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "сильное подтопление (глубина залегания грунтовых вод менее 0,3 м)",
+          "value": "1"
+        },
+        {
+          "title": "умеренное подтопление (глубина залегания грунтовых вод от 0,3-0,7 до 1,2-2 м)",
+          "value": "2"
+        },
+        {
+          "title": "слабое подтопление (глубина залегания грунтовых вод от 2 до 3 м)",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование объекта (для которого устанавливается зона)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "numberzoit",
+      "title": "Учетный номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "reestrzoit",
+      "title": "Реестровый номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "dateegrn",
+      "title": "Дата внесения зон с особыми условиями использования территории в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

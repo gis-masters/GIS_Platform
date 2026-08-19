@@ -1,0 +1,111 @@
+{
+  "name": "otherprotectionzone",
+  "title": "Охранная зона иного назначения",
+  "styleName": "otherprotectionzone_698",
+  "tableName": "otherprotectionzone",
+  "originName": "OtherProtectionZone",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Охранная зона иного назначения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Охранная зона стационарных пунктов наблюдений за состоянием окружающей природной среды, ее загрязнением",
+          "value": "603010701"
+        },
+        {
+          "title": "Охранная зона обсерваторий и иных научных объектов",
+          "value": "603010702"
+        }
+      ]
+    },
+    {
+      "name": "zone_desc",
+      "title": "Описание зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование объекта (для которого устанавливается зона)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "numberzoit",
+      "title": "Учетный номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "reestrzoit",
+      "title": "Реестровый номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "dateegrn",
+      "title": "Дата внесения зон с особыми условиями использования территории в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

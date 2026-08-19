@@ -1,0 +1,102 @@
+{
+  "name": "forestpark",
+  "title": "Лесопарковый зеленый пояс",
+  "styleName": "forestpark_123",
+  "tableName": "forestpark",
+  "originName": "ForestPark",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Лесопарковый зеленый пояс",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Лесопарковый зеленый пояс",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Лесопарковый зеленый пояс",
+          "value": "705020100"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно Положению о территориальном планировании",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "obj_desc",
+      "title": "Описание объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, га",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

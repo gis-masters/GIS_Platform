@@ -1,0 +1,112 @@
+{
+  "styleName": "inspection_result",
+  "tags": ["system", "ГИСОГД"],
+  "name": "inspection_result",
+  "title": "Противодействие самовольному и незаконному строительству",
+  "tableName": "inspection_result",
+  "originName": "inspection_result",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "settl_name",
+      "title": "Наименование населенного пункта",
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Адрес земельного участка (описание местоположения)",
+      "required": true,
+      "maxLength": 200,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "det_aut",
+      "title": "Орган исполнительной власти РК/орган местного самоуправления, выявивший самовольную постройку",
+      "required": true,
+      "maxLength": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "det_date",
+      "title": "Дата выявления нарушения",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "sup_doc",
+      "title": "Документ, подтверждающий наличие признаков самовольной постройки",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "add_doc",
+      "title": "Дополнительные документы, подтверждающие наличие признаков самовольной постройки",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "rec_date",
+      "title": "Дата получения ОМС уведомления о выявлении самовольной постройки",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "reg_dec",
+      "title": "Решение ОМС относительно выявленного нарушения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Решение о сносе самовольной постройки либо решение о сносе самовольной постройки или ее приведении в соответствие с установленными требованиями",
+          "value": "1"
+        },
+        {
+          "title": "Обращение в суд с иском о сносе самовольной постройки или ее приведении в соответствие с установленными требованиями",
+          "value": "2"
+        },
+        {
+          "title": "Направление уведомления о том, что наличие признаков самовольной постройки не усматривается",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "dec_date",
+      "title": "Дата принятия решения ОМС",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "conf_doc",
+      "title": "Дополнительные документы, подтверждающие факт выявленного нарушения/либо отсутствие нарушения",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "not_date",
+      "title": "Дата уведомления ОИВ о принятом решении со стороны ОМС",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

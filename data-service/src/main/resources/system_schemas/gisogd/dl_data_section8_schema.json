@@ -1,0 +1,1529 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_section8_schema",
+  "title": "08. Инженерные изыскания",
+  "tableName": "dl_data_section8",
+  "originName": "dl_data_section8",
+  "description": "08. Инженерные изыскания",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 300,
+      "required": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "required": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или файл"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "01. Инженерно-геодезические изыскания",
+          "value": "doc_8.01"
+        },
+        {
+          "title": "02. Инженерно-геологические изыскания",
+          "value": "doc_8.02"
+        },
+        {
+          "title": "03. Инженерно-гидрометеорологические изыскания",
+          "value": "doc_8.03"
+        },
+        {
+          "title": "04. Инженерно-экологические изыскания ",
+          "value": "doc_8.04"
+        },
+        {
+          "title": "05. Инженерно-геотехнические изыскания",
+          "value": "doc_8.05"
+        },
+        {
+          "title": "0.6 Инженерно-геофизические изыскания",
+          "value": "doc_8.06"
+        },
+        {
+          "title": "0.7 Археологические изыскания",
+          "value": "doc_8.07"
+        },
+        {
+          "title": "0.8 Морские инженерно-геологические изыскания",
+          "value": "doc_8.08"
+        },
+        {
+          "title": "Папка",
+          "value": "folder_v1"
+        },
+        {
+          "title": "Материалы инженерных изысканий",
+          "value": "folder_v2"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "territorykey",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: eng_surveyy_789_51f0"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "regnum",
+      "title": "Регистрационный номер",
+      "minWidth": 200,
+      "readOnly": true,
+      "valueType": "STRING",
+      "description": "Регистрационный номер в ГИСОГД РК"
+    },
+    {
+      "name": "regdate",
+      "title": "Дата регистрации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата регистрации документа в ГИСОГД РК"
+    },
+    {
+      "name": "address",
+      "title": "Адрес (местоположение)",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Населённый пункт",
+      "minWidth": 400,
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "minWidth": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "Код ФИАС",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "docname",
+      "title": "Наименование данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "docnum",
+      "title": "Номер  документа",
+      "minWidth": 200,
+      "valueType": "STRING",
+      "description": "При наличии утверждаемых документов указывается номер утверждающего документа"
+    },
+    {
+      "name": "docdate",
+      "title": "Дата документа",
+      "valueType": "DATETIME",
+      "description": "При наличии утверждаемых документов указывается дата утверждающего документа"
+    },
+    {
+      "name": "docstatus",
+      "title": "Статус действия",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "0С.1"
+        },
+        {
+          "title": "Недействующий",
+          "value": "0С.2"
+        },
+        {
+          "title": "Проект",
+          "value": "0С.3"
+        }
+      ]
+    },
+    {
+      "name": "research_type",
+      "title": "Вид изученности природных и техногенных условий",
+      "multiple": true,
+      "libraries": ["research_type"],
+      "valueType": "DOCUMENT",
+      "description": "Вид изученности природных и техногенных условий территории на основании результатов инженерных изысканий",
+      "maxDocuments": 5
+    },
+    {
+      "name": "change_date",
+      "title": "Дата внесения изменений или исправлений",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "orgname",
+      "title": "Наименование органа",
+      "minWidth": 200,
+      "required": true,
+      "valueType": "STRING",
+      "description": "Орган утвердивший документ"
+    },
+    {
+      "name": "supplier_data_connection",
+      "title": "Организация",
+      "multiple": true,
+      "libraries": ["dl_data_supplier"],
+      "valueType": "DOCUMENT",
+      "description": "Наименование органа,утвердившего документ",
+      "maxDocuments": 10
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа,утвердившего документ",
+      "multiple": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "cipher",
+      "title": "Шифр технического отчета",
+      "minWidth": 300,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "survdate",
+      "title": "Дата проведения изысканий",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "date_end",
+      "title": "Дата окончания срока действия изысканий",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "engineerorg",
+      "title": "Организация выполнившая подготовку",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "responce",
+      "title": "Специалист выполнивший подготовку",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "native_crs",
+      "title": "Система координат",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Pulkovo 1942 / Gauss-Kruger zone 6",
+          "value": "EPSG: 28406"
+        },
+        {
+          "title": "Pulkovo 1942 / Gauss-Kruger zone 7",
+          "value": "EPSG: 28407"
+        },
+        {
+          "title": "Pulkovo 1942 / CS63 ZONE X5",
+          "value": "EPSG: 7829"
+        },
+        {
+          "title": "Pulkovo 1942 / CS63 ZONE X4",
+          "value": "EPSG: 7828"
+        },
+        {
+          "title": "WGS 84 / Pseudo-Mercator",
+          "value": "EPSG: 3857"
+        },
+        {
+          "title": "Отсутствует",
+          "value": "EPSG: null"
+        }
+      ]
+    },
+    {
+      "name": "guiddocpreviousversion",
+      "title": "Предыдущая версия данных",
+      "minWidth": 300,
+      "multiple": true,
+      "libraries": ["dl_data_section8"],
+      "valueType": "DOCUMENT"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "minWidth": 300,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий,реконструируемый,строящийся",
+          "value": "S.1"
+        },
+        {
+          "title": "Планируемый к размещению ",
+          "value": "S.2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "S.3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "S.4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Значение объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "R.1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "R.2"
+        },
+        {
+          "title": "Местное значение муниципального района ",
+          "value": "R.3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "R.4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "R.5"
+        },
+        {
+          "title": "Иное значение",
+          "value": "R.6"
+        }
+      ]
+    },
+    {
+      "name": "is_public",
+      "title": "Публичный документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "inbox_data_key_data_connection",
+      "title": "Входящие документы",
+      "multiple": true,
+      "libraries": ["dl_data_inbox_data"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "asTitle": true,
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "readOnly": true,
+      "minWidth": 300,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "type",
+      "title": "Тип файла",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "file",
+      "title": "Основной документ",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "file_1",
+      "title": "Дополнительные материалы",
+      "hidden": true,
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 5
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_8.01",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "01. Инженерно-геодезические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.01"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_8.02",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "02. Инженерно-геологические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.02"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_8.03",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "03. Инженерно-гидрометеорологические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.03"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_8.04",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "04. Инженерно-экологические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.04"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_8.05",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "05. Инженерно-геотехнические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.05"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_8.06",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "06. Инженерно-геофизические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.06"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_8.07",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "07. Археологические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.07"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "doc_8.08",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "08. Морские инженерно-геологические изыскания",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_8.08"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "cipher"
+        },
+        {
+          "name": "research_type"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "survdate"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "responce"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "reg_status"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    },
+    {
+      "id": "folder_v2",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Материалы инженерных изысканий",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        },
+        {
+          "name": "territorykey",
+          "title": "Территория действия"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "note",
+          "title": "Примечание",
+          "display": "multiline",
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

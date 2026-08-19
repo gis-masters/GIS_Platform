@@ -1,0 +1,99 @@
+{
+  "name": "mineralarea",
+  "title": "Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей",
+  "styleName": "mineralarea_123",
+  "tableName": "mineralarea",
+  "originName": "MineralArea",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": " Участки недр, предоставленных для добычи полезных ископаемых, а также в целях, не связанных с их добычей",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Лицензионные участки",
+          "value": "609010101"
+        }
+      ]
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "min_develp",
+      "title": "Недропользователь",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "minerals",
+      "title": "Полезные ископаемые",
+      "valueType": "STRING"
+    },
+    {
+      "name": "licence",
+      "title": "Лицензия",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_start",
+      "title": "Дата выдачи лицензии",
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_close",
+      "title": "Дата окончания лицензии",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв. км.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "status_otv",
+      "title": "Статус отвода",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

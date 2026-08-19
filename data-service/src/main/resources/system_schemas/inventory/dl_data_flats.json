@@ -1,0 +1,352 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_flats",
+  "title": "Квартиры и помещения",
+  "relations": [
+    {
+      "type": "feature",
+      "title": "Переход к объекту на карте",
+      "layers": ["scratch_database_32:buildings_new_1_96b6"],
+      "property": "cad_num",
+      "projectId": 1846,
+      "targetProperty": "cad_num"
+    }
+  ],
+  "tableName": "dl_data_flats",
+  "originName": "dl_data_flats",
+  "description": "Квартиры и помещения",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "territorykey",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "displayMode": "newTab",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_32:buildings_new_1_96b6"],
+        "property": "dl_data_flats_connections",
+        "projectId": 1846,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "cad_oks",
+      "title": "Кадастровый номер здания",
+      "minWidth": 240,
+      "required": true,
+      "maxLength": 25,
+      "valueType": "STRING",
+      "description": "Если кадастрового номера здания нет, то указываем условный",
+      "defaultValueFormula": "return parent.title"
+    },
+    {
+      "name": "cad_kv",
+      "title": "Кадастровый номер квартиры / помещения",
+      "minWidth": 240,
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "naznach",
+      "title": "Назначение",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Жилое",
+          "value": "Жилое"
+        },
+        {
+          "title": "Нежилое",
+          "value": "Нежилое"
+        }
+      ]
+    },
+    {
+      "name": "area_egrn",
+      "title": "Площадь по материалам ЕГРН, м. кв.",
+      "minWidth": 230,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_bti",
+      "title": "Площадь по материалам БТИ, м. кв.",
+      "minWidth": 230,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "rooms",
+      "title": "Количество жилых комнат",
+      "minWidth": 160,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_rooms",
+      "title": "Площадь жилых комнат м.кв.",
+      "minWidth": 180,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "floor_loc",
+      "title": "Расположение на этаже",
+      "minWidth": 150,
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "БТИ",
+          "value": "БТИ"
+        },
+        {
+          "title": "ЕГРН",
+          "value": "ЕГРН"
+        },
+        {
+          "title": "Выявленно при обследовании",
+          "value": "Выявленно при обследовании"
+        }
+      ]
+    },
+    {
+      "name": "field_name",
+      "title": "Адрес",
+      "valueType": "FIAS"
+    },
+    {
+      "name": "field_name__id",
+      "title": "Адрес(id)",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "field_name__address",
+      "title": "Адрес(address)",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "field_name__oktmo",
+      "title": "Адрес(oktmo)",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Адрес",
+      "hidden": true,
+      "minWidth": 150,
+      "valueType": "STRING"
+    },
+    {
+      "name": "t_own",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная федеральная",
+          "value": "Государственная федеральная"
+        },
+        {
+          "title": "Государственная субъектов РФ",
+          "value": "Государственная субъектов РФ"
+        },
+        {
+          "title": "Муниципальная",
+          "value": "Муниципальная"
+        },
+        {
+          "title": "Частная",
+          "value": "Частная"
+        },
+        {
+          "title": "Принят на учет как бесхозяйный объект недвижимого имущества",
+          "value": "Принят на учет как бесхозяйный объект недвижимого имущества"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "Данные отсутствуют"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "dl_data_owners_connections",
+      "title": "Собственник",
+      "multiple": true,
+      "libraries": ["dl_data_owners"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 3
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "minWidth": 150,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "dl_data_documents_connections",
+      "title": "Документы",
+      "multiple": true,
+      "libraries": ["dl_data_documents"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 6
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "kv_balaklava",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Квартиры и помещения",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "cad_oks"
+        },
+        {
+          "name": "cad_kv"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "field_name"
+        },
+        {
+          "name": "field_name__id"
+        },
+        {
+          "name": "field_name__address"
+        },
+        {
+          "name": "field_name__oktmo"
+        },
+        {
+          "name": "t_own"
+        },
+        {
+          "name": "dl_data_owners_connections"
+        },
+        {
+          "name": "naznach"
+        },
+        {
+          "name": "area_egrn"
+        },
+        {
+          "name": "area_bti"
+        },
+        {
+          "name": "rooms"
+        },
+        {
+          "name": "area_rooms"
+        },
+        {
+          "name": "floor_loc"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "source"
+        },
+        {
+          "name": "dl_data_documents_connections"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        },
+        {
+          "name": "territorykey"
+        }
+      ]
+    }
+  ]
+}

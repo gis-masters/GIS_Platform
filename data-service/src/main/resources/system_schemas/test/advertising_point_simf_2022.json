@@ -1,0 +1,50 @@
+{
+  "name": "advertising_point_simf_2022",
+  "title": "Рекламные конструкции города Симферополь",
+  "readOnly": true,
+  "tableName": "advertising_point_simf_2022",
+  "originName": "advertising_point_simf_2022",
+  "tags": ["system", "Тестовые"],
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Модульная малая двухсторонняя",
+          "value": "510000001"
+        },
+        {
+          "title": "Модульная малая односторонняя",
+          "value": "510000002"
+        },
+        {
+          "title": "Отдельно стоящий короб",
+          "value": "510000003"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Местоположение (адресное описание)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация (фотомонтаж)",
+      "valueType": "FILE",
+      "multiple": true,
+      "maxSize": 50000000
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    }
+  ]
+}

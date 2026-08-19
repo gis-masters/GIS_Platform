@@ -1,0 +1,91 @@
+{
+  "styleName": "unaut_constr_not",
+  "tags": ["system", "ГИСОГД"],
+  "name": "unaut_constr_not",
+  "title": "Уведомление о выявлении самовольной постройки",
+  "tableName": "unaut_constr_not",
+  "originName": "unaut_constr_not",
+  "description": "Уведомление о выявлении самовольной постройки",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Решение о (сносе) / (приведении в соответствие с установленными требованиями) самовольной постройки",
+          "value": "3001"
+        },
+        {
+          "title": "Исковые заявления в суд о (сносе) / (приведении в соответствие с установленными требованиями) самовольной постройки",
+          "value": "3002"
+        },
+        {
+          "title": "Уведомление об отсутствии признаков самовольной постройки",
+          "value": "3003"
+        }
+      ],
+      "asTitle": true
+    },
+    {
+      "name": "address",
+      "title": "Местоположение (адресное описание)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "plot_cad_num",
+      "title": "Кадастровый номер земельного участка",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oks_cad_num",
+      "title": "Кадастровый номер ОКС",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "insp_bas",
+      "title": "Основание проведения осмотра территории",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "contr_bas",
+      "title": "Основание проведения контрольно-надзорных мероприятий",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "notification",
+      "title": "Уведомление о выявлении самовольной постройки",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "decision",
+      "title": "Решение, принятое органом местного самоуправления",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "documents",
+      "title": "Дополнительные документы",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

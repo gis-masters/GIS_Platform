@@ -1,0 +1,138 @@
+{
+  "styleName": "oks_archive",
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "oks_archive",
+  "title": "Объекты капитального строительства",
+  "tableName": "oks_archive",
+  "originName": "oks_archive",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id_oks",
+      "title": "id объекта",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "cad_oks",
+      "title": "Кадастровый номер ОКСа",
+      "required": true,
+      "maxLength": 25,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "owner",
+      "title": "Вид собственника",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Фізична особа",
+          "value": "Физическое лицо"
+        },
+        {
+          "title": "Юридична особа",
+          "value": "Юридическое лицо"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "name_oks",
+      "title": "Собственник",
+      "valueType": "STRING"
+    },
+    {
+      "name": "t_own",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Приватна власність",
+          "value": "Частная собственность"
+        },
+        {
+          "title": "Комунальна власність",
+          "value": "Коммунальная собственность"
+        },
+        {
+          "title": "Державна власність",
+          "value": "Государственная собственность"
+        }
+      ]
+    },
+    {
+      "name": "start_date",
+      "title": "Дата возникновения права собственности",
+      "valueType": "DATETIME",
+      "dateFormat": "LL"
+    },
+    {
+      "name": "end_date",
+      "title": "Дата прекращения права собственности",
+      "valueType": "DATETIME",
+      "dateFormat": "LL"
+    },
+    {
+      "name": "address",
+      "title": "Адрес",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "usage",
+      "title": "Назначение здания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь, м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_fact",
+      "title": "Фактическая площадь, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "doc",
+      "title": "Документы",
+      "maxSize": 150000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Документы подтверждающие право собственности",
+      "maxDocuments": 10
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

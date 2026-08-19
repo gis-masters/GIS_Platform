@@ -1,0 +1,64 @@
+{
+  "name": "indent_line_dpt",
+  "title": "Линии отступа от красных линий",
+  "tags": ["system", "ДПТ"],
+  "tableName": "indent_line_dpt",
+  "description": "Линии отступа от красных линий",
+  "originName": "indent_line_dpt",
+  "styleName": "indent_line_dpt",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "number",
+      "title": "Планировочный номер",
+      "valueType": "STRING",
+      "required": true,
+      "asTitle": true,
+      "maxLength": 50
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "description": "Пользователь создавший объект (Заполняется автоматически)",
+      "valueType": "STRING",
+      "readOnly": true
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "description": "Дата создания объекта (Заполняется автоматически)",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата редактирования",
+      "valueType": "DATETIME",
+      "description": "Дата последнего редактирования объекта (Заполняется автоматически)",
+      "readOnly": true
+    },
+    {
+      "name": "updated_by",
+      "title": "Редактор",
+      "valueType": "STRING",
+      "description": "Пользователь редактировавший объект последним (Заполняется автоматически)",
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "INT",
+      "hidden": true
+    }
+  ]
+}

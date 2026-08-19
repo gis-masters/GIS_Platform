@@ -1,0 +1,106 @@
+{
+  "name": "dl_data_doc",
+  "title": "Документы",
+  "tags": ["system", "Библиотека"],
+  "tableName": "dl_data_doc",
+  "description": "Библиотека документов",
+  "originName": "dl_data_doc",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "valueType": "INT"
+    },
+    {
+      "name": "is_folder",
+      "title": "Признак раздела",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "valueType": "STRING",
+      "required": true,
+      "maxLength": 50
+    },
+    {
+      "name": "title",
+      "title": "Наименование документа",
+      "valueType": "STRING",
+      "required": true
+    },
+    {
+      "name": "doc_num",
+      "title": "Номер документа",
+      "valueType": "STRING"
+    },
+    {
+      "name": "files",
+      "title": "Файлы",
+      "valueType": "FILE",
+      "multiple": true,
+      "maxSize": 50000000,
+      "maxFiles": 10
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "valueType": "DOCUMENT",
+      "multiple": true,
+      "libraries": ["dl_data_doc"],
+      "maxDocuments": 10
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "maxLength": 522,
+      "valueType": "STRING",
+      "display": "multiline"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_tif",
+      "type": "DOCUMENT",
+      "title": "Документ",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "doc_num"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "relations"
+        },
+        {
+          "name": "created_at",
+          "title": "Внесено"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование раздела"
+        }
+      ]
+    }
+  ]
+}

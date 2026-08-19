@@ -1,0 +1,214 @@
+{
+  "tags": ["system", "КПТ"],
+  "name": "zu_pro",
+  "title": "Земельные участки",
+  "styleName": "zu_pro",
+  "tableName": "zu_pro",
+  "description": "Земельные участки",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "cadastralnum",
+      "title": "Кадастровый номер",
+      "asTitle": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_zu",
+      "title": "Номер ЗУ",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "usage",
+      "title": "Разрешенное использование по документу",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "subtype",
+      "title": "Вид земельного участка",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Землепользование",
+          "value": "Землепользование"
+        },
+        {
+          "title": "Многоконтурный участок",
+          "value": "Многоконтурный участок"
+        },
+        {
+          "title": "Обособленный участок",
+          "value": "Обособленный участок"
+        }
+      ]
+    },
+    {
+      "name": "category",
+      "title": "Категория земельного участка",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Земли водного фонда",
+          "value": "Земли водного фонда"
+        },
+        {
+          "title": "Земли лесного фонда",
+          "value": "Земли лесного фонда"
+        },
+        {
+          "title": "Земли особо охраняемых территорий и объектов",
+          "value": "Земли особо охраняемых территорий и объектов"
+        },
+        {
+          "title": "Земли запаса",
+          "value": "Земли запаса"
+        },
+        {
+          "title": "Земли населенных пунктов",
+          "value": "Земли населенных пунктов"
+        },
+        {
+          "title": "Земли сельскохозяйственного назначения",
+          "value": "Земли сельскохозяйственного назначения"
+        },
+        {
+          "title": "Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения",
+          "value": "Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения"
+        },
+        {
+          "title": "Категория не установлена",
+          "value": "Категория не установлена"
+        },
+        {
+          "title": "Не задано",
+          "value": "не задано"
+        }
+      ]
+    },
+    {
+      "name": "readableaddress",
+      "title": "Адрес в соответствии с ФИАС",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "objecttype",
+      "title": "Тип объекта недвижимости",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cost",
+      "title": "Кадастровая стоимость, р.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area",
+      "title": "Площадь вычисляемая, м.кв.",
+      "valueType": "DOUBLE",
+      "description": "Площадь вычисляемая из координат",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "area_doc_2",
+      "title": "Площадь по документу, м. кв.",
+      "valueType": "DOUBLE",
+      "description": "Площадь указанная в КПТ",
+      "totalDigits": 38,
+      "fractionDigits": 0
+    },
+    {
+      "name": "area_kpt",
+      "title": "Площадь по документу, м. кв.",
+      "hidden": true,
+      "valueType": "DOUBLE",
+      "description": "Площадь указанная в КПТ",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "description": "Дата импорта XML в слой",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "aisums_property_type",
+      "title": "Тип собственности АИС УМС",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "aisums_number",
+      "title": "Номер АИС УМС",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "acsept_at",
+      "title": "Дата",
+      "hidden": true,
+      "valueType": "DATETIME",
+      "description": "Дата получения КПТ"
+    },
+    {
+      "name": "source_doc",
+      "title": "Документ источник",
+      "multiple": true,
+      "libraries": ["dl_data_kpt"],
+      "valueType": "DOCUMENT",
+      "description": "Отсылка к документу из которого получен объект",
+      "maxDocuments": 5
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "name": "signs_on_buildings",
+  "tags": ["system", "advertising"],
+  "title": "Вывески на зданиях",
+  "readOnly": false,
+  "styleName": "signs_on_buildings",
+  "tableName": "signs_on_buildings",
+  "originName": "signs_on_buildings",
+  "description": "Вывески на зданиях",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "objectid",
+      "title": "№",
+      "readOnly": true,
+      "valueType": "LONG",
+      "description": "Идентификатор объекта (Заполняется автоматически)",
+      "maxDefaultWidth": 105
+    },
+    {
+      "name": "location",
+      "title": "Местоположение (адресное описание)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер конструкции",
+      "valueType": "STRING"
+    },
+    {
+      "name": "inf_area",
+      "title": "Площадь информационного поля",
+      "valueType": "STRING"
+    },
+    {
+      "name": "response",
+      "title": "Ответственный за размещение и эксплуатацию",
+      "valueType": "STRING"
+    },
+    {
+      "name": "issue_date",
+      "title": "Дата выдачи разрешения на установку и эксплуатацию",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "exp_date",
+      "title": "Дата окончания действия разрешения на установку и эксплуатацию",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "reg_number",
+      "title": "Номер в Реестре согласований",
+      "valueType": "STRING"
+    },
+    {
+      "name": "owner",
+      "title": "Собственник объекта недвижимого имущества, на котором установлена конструкция",
+      "valueType": "STRING"
+    },
+    {
+      "name": "cancelreas",
+      "title": "Основания аннулирования согласования",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "notes",
+      "title": "Примечания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "doc",
+      "title": "Документы",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация (фотоматериалы)",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "shape",
+      "title": "shape",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "STRING",
+      "description": "Пользователь создавший объект (Заполняется автоматически)"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата создания объекта (Заполняется автоматически)"
+    },
+    {
+      "name": "updated_by",
+      "title": "Редактор",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "STRING",
+      "description": "Пользователь редактировавший объект последним (Заполняется автоматически)"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата редактирования",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последнего редактирования объекта (Заполняется автоматически)"
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "tags": ["system", "Библиотека", "Электронный архив"],
+  "name": "research_type",
+  "title": "Вид изысканий",
+  "tableName": "research_type",
+  "description": "Вид изысканий",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование вида изученности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Инженерно-геодезическое",
+          "value": "0Н.1"
+        },
+        {
+          "title": "Инженерно-геологическое",
+          "value": "0Н.2"
+        },
+        {
+          "title": "Инженерно-гидрометеорологическое",
+          "value": "0Н.3"
+        },
+        {
+          "title": "Инженерно-экологические",
+          "value": "0Н.4"
+        },
+        {
+          "title": "Инженерно-геотехнические",
+          "value": "0Н.5"
+        },
+        {
+          "title": "Инженерно-геофизические",
+          "value": "0Н.6"
+        },
+        {
+          "title": "Археологические изыскания",
+          "value": "0Н.7"
+        },
+        {
+          "title": "Морские инженерно-геологические изыскания",
+          "value": "0Н.8"
+        }
+      ]
+    },
+    {
+      "name": "code",
+      "title": "Наименование вида изученности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Инженерно-геодезическое",
+          "value": "0Н.1"
+        },
+        {
+          "title": "Инженерно-геологическое",
+          "value": "0Н.2"
+        },
+        {
+          "title": "Инженерно-гидрометеорологическое",
+          "value": "0Н.3"
+        },
+        {
+          "title": "Инженерно-экологические",
+          "value": "0Н.4"
+        },
+        {
+          "title": "Инженерно-геотехнические",
+          "value": "0Н.5"
+        },
+        {
+          "title": "Инженерно-геофизические",
+          "value": "0Н.6"
+        },
+        {
+          "title": "Археологические изыскания",
+          "value": "0Н.7"
+        },
+        {
+          "title": "Морские инженерно-геологические изыскания",
+          "value": "0Н.8"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "какое-то инженерное изыскание",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "code"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

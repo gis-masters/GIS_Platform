@@ -1,0 +1,134 @@
+{
+  "name": "natureprotectionzone",
+  "title": "Охранная зона особо охраняемых природных территорий",
+  "styleName": "natureprotectionzone_698",
+  "tableName": "natureprotectionzone",
+  "originName": "NatureProtectionZone",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Охранная зона особо охраняемых природных территорий",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Охранная зона особо охраняемых природных территорий (государственного природного заповедника, национального парка, природного парка, памятника природы)",
+          "value": "603010601"
+        }
+      ]
+    },
+    {
+      "name": "zone_oopt",
+      "title": "Тип охранной зоны особо охраняемых природных территорий",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Охранная зона государственного природного заповедника, в том числе биосферного",
+          "value": "1"
+        },
+        {
+          "title": "Охранная зона национального парка",
+          "value": "2"
+        },
+        {
+          "title": "Охранная зона природного парка",
+          "value": "3"
+        },
+        {
+          "title": "Охранная зона государственного природного заказника",
+          "value": "4"
+        },
+        {
+          "title": "Охранная зона памятника природы",
+          "value": "5"
+        },
+        {
+          "title": "Охранная зона дендрологического парка либо ботанического сада",
+          "value": "6"
+        },
+        {
+          "title": "Охранная зона иных особо охраняемых природных территорий",
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "name": "zone_desc",
+      "title": "Описание зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование объекта (для которого устанавливается зона)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "numberzoit",
+      "title": "Учетный номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "reestrzoit",
+      "title": "Реестровый номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "dateegrn",
+      "title": "Дата внесения зон с особыми условиями использования территории в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

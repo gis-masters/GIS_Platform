@@ -1,0 +1,114 @@
+{
+  "tags": ["system", "КПТ"],
+  "name": "borderwaterobj",
+  "title": "Береговые линии (границы водных объектов)",
+  "styleName": "borderwaterobj",
+  "tableName": "borderwaterobj",
+  "originName": "borderwaterobj",
+  "description": "Береговые линии (границы водных объектов)",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "regnumborder",
+      "title": "Реестровый номер границы",
+      "asTitle": true,
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "btypecode",
+      "title": "Вид объекта реестра границ (код)",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "btype",
+      "title": "Вид объекта реестра границ",
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование водного объекта",
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "wocode",
+      "title": "Вид объекта реестра границ (код)",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "wotype",
+      "title": "Вид объекта реестра границ",
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "rdate",
+      "title": "Дата постановки на учет",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "description": "Дата импорта XML в слой",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "acsept_at",
+      "title": "Дата",
+      "hidden": true,
+      "valueType": "DATETIME",
+      "description": "Дата приёма данных из  АИС УМС"
+    },
+    {
+      "name": "source_doc",
+      "title": "Документ источник",
+      "multiple": true,
+      "libraries": ["dl_data_kpt"],
+      "valueType": "DOCUMENT",
+      "description": "Отсылка к документу из которого получен объект",
+      "maxDocuments": 5
+    }
+  ]
+}

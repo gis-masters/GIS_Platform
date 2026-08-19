@@ -1,0 +1,112 @@
+{
+  "styleName": "unsched_inspection",
+  "tags": ["system", "ГИСОГД"],
+  "name": "unsched_inspection",
+  "title": "Внеплановые проверки",
+  "tableName": "unsched_inspection",
+  "originName": "unsched_inspection",
+  "description": "Внеплановые проверки",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Физические лица",
+          "value": "2001"
+        },
+        {
+          "title": "Юридические лица",
+          "value": "2002"
+        }
+      ],
+      "asTitle": true
+    },
+    {
+      "name": "address",
+      "title": "Местоположение (адресное описание)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "user_name",
+      "title": "Наименование землепользователя",
+      "valueType": "STRING"
+    },
+    {
+      "name": "plot_cad_num",
+      "title": "Кадастровый номер земельного участка",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oks_cad_num",
+      "title": "Кадастровый номер ОКС",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "insp_bas",
+      "title": "Основание проведения осмотра территории",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "contr_bas",
+      "title": "Основание проведения контрольно-надзорных мероприятий",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "contr_res",
+      "title": "Результаты контрольно-надзорных мероприятий",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Выявленный объект самовольной постройки",
+          "value": "1"
+        },
+        {
+          "title": "Объект без нарушений установленных градостроительных регламентов",
+          "value": "5"
+        },
+        {
+          "title": "Принятые решения о сносе или приведении в соответствие с установленными требованиями",
+          "value": "6"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "notification",
+      "title": "Уведомление о выявлении самовольной постройки",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "decision",
+      "title": "Решение, принятое органом местного самоуправления",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "documents",
+      "title": "Дополнительные документы",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_organization",
+  "title": "Организации",
+  "tableName": "dl_data_organization",
+  "description": "Организации",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "organization_opf",
+      "title": "Организационно-правовая форма организации",
+      "valueType": "STRING"
+    },
+    {
+      "name": "organization_reg_number",
+      "title": "Регистрационный номер организации",
+      "valueType": "STRING",
+      "description": "Поле обязательно для заполнения, если организация не является резидентом Российской Федерации"
+    },
+    {
+      "name": "is_resident",
+      "title": "Является ли резидентом РФ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "minWidth": 300,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Карточка организации для ГИСОГД",
+          "value": "Карточка организации для ГИСОГД"
+        }
+      ]
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "supplier_guid",
+      "title": "supplier_guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "title",
+      "title": "Сокращенное наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "full_title",
+      "title": "Полное наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 600,
+      "valueType": "STRING"
+    },
+    {
+      "name": "regdate",
+      "title": "Дата регистрации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "legal_address",
+      "title": "Юридический адрес",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "actual_address",
+      "title": "Фактический адрес",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "correspondence_address",
+      "title": "Почтовый адрес",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "contactinfo",
+      "title": "Контактные данные",
+      "valueType": "STRING"
+    },
+    {
+      "name": "url_address",
+      "title": "Сайт",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "director",
+      "title": "Генеральный директор",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "phone",
+      "title": "Телефон",
+      "valueType": "STRING"
+    },
+    {
+      "name": "email",
+      "title": "Адрес эл. почты",
+      "valueType": "STRING"
+    },
+    {
+      "name": "inn",
+      "title": "ИНН",
+      "valueType": "STRING"
+    },
+    {
+      "name": "kpp",
+      "title": "КПП",
+      "valueType": "STRING"
+    },
+    {
+      "name": "okved",
+      "title": "Код ОКВЭД2",
+      "valueType": "STRING"
+    },
+    {
+      "name": "okato",
+      "title": "Код по ОКАТО",
+      "valueType": "STRING"
+    },
+    {
+      "name": "orgn",
+      "title": "ОГРН",
+      "valueType": "STRING"
+    },
+    {
+      "name": "bank",
+      "title": "Наименование банка",
+      "valueType": "STRING"
+    },
+    {
+      "name": "pay_account",
+      "title": "Расчетный счет",
+      "valueType": "STRING"
+    },
+    {
+      "name": "corr_account",
+      "title": "Корреспондентский счет",
+      "valueType": "STRING"
+    },
+    {
+      "name": "description",
+      "title": "Дополнительная информация",
+      "maxLength": 600,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "asTitle": true,
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Карточка организации для ГИСОГД",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "full_title"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "legal_address"
+        },
+        {
+          "name": "actual_address"
+        },
+        {
+          "name": "correspondence_address"
+        },
+        {
+          "name": "contactinfo"
+        },
+        {
+          "name": "url_address"
+        },
+        {
+          "name": "director"
+        },
+        {
+          "name": "phone"
+        },
+        {
+          "name": "email"
+        },
+        {
+          "name": "inn"
+        },
+        {
+          "name": "kpp"
+        },
+        {
+          "name": "okved"
+        },
+        {
+          "name": "okato"
+        },
+        {
+          "name": "orgn"
+        },
+        {
+          "name": "bank"
+        },
+        {
+          "name": "pay_account"
+        },
+        {
+          "name": "corr_account"
+        },
+        {
+          "name": "description"
+        },
+        {
+          "name": "organization_opf"
+        },
+        {
+          "name": "organization_reg_number"
+        },
+        {
+          "name": "is_resident"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "last_modified"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

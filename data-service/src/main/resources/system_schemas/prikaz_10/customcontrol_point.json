@@ -1,0 +1,246 @@
+{
+  "name": "customcontrol_point",
+  "title": "Пункт пропуска через Государственную границу",
+  "styleName": "customcontrol_point_123",
+  "tableName": "customcontrol_point",
+  "originName": "CustomControl",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Пункт пропуска через Государственную границу",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Пункт пропуска через Государственную границу",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Пункт пропуска через Государственную границу",
+          "value": "602031501"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "Код ОКТМО",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "required": true,
+      "maxLength": 11,
+      "minLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "int_trn_t",
+      "title": "Тип пунктов пропуска по виду международного сообщения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Морские",
+          "value": "1"
+        },
+        {
+          "title": "Речные (озерные)",
+          "value": "2"
+        },
+        {
+          "title": "Воздушные",
+          "value": "3"
+        },
+        {
+          "title": "Автомобильные",
+          "value": "4"
+        },
+        {
+          "title": "Железнодорожные",
+          "value": "5"
+        },
+        {
+          "title": "Пешеходные",
+          "value": "6"
+        },
+        {
+          "title": "Смешанные",
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "name": "int_trf_t",
+      "title": "Тип пунктов пропуска по характеру международного сообщения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Пассажирский",
+          "value": "1"
+        },
+        {
+          "title": "Грузовой",
+          "value": "2"
+        },
+        {
+          "title": "Грузо-пассажирский",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "ctm_time_t",
+      "title": "Тип пунктов пропуска по режиму работы",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Постоянный",
+          "value": "1"
+        },
+        {
+          "title": "Временный",
+          "value": "2"
+        },
+        {
+          "title": "Сезонный",
+          "value": "3"
+        },
+        {
+          "title": "Работающий на нерегулярной основе",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "ctm_use_t",
+      "title": "Тип пунктов пропуска по характеру использования",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Многосторонний",
+          "value": "1"
+        },
+        {
+          "title": "Двусторонний",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    }
+  ]
+}

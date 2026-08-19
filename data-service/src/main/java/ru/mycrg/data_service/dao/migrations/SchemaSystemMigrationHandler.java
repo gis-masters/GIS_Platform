@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Service
@@ -42,9 +43,14 @@ public class SchemaSystemMigrationHandler {
     /**
      * Синхронизирует системные шаблоны схем из JSON с таблицей data.schemas.
      *
-     * <p>Создаёт новые, обновляет существующие (только from_json = true) и удаляет
-     * устаревшие записи с from_json = true. Если в БД уже есть схема с тем же именем
-     * и from_json = false, синхронизация прерывается с ошибкой.
+     * <p>Источник истины для системных шаблонов — JSON-файлы в каталоге system_schemas.
+     * Создаёт отсутствующие по имени, обновляет только существующие с is_system = true
+     * и удаляет устаревшие только среди записей с is_system = true, имени которых нет в JSON.
+     * Схема задач tasks_schema_v1 не удаляется: она создаётся механизмом специализации
+     * и после создания организации не управляется из system_schemas.
+     * Пользовательские и несистемные схемы (is_system = false или null) не обновляются,
+     * не помечаются системными и при удалении не затрагиваются. При совпадении имени
+     * с JSON конфликт логируется, sync продолжается.
      *
      * <p>При пустом каталоге JSON delete не выполняется (защита от сбоя чтения ресурсов).
      */
@@ -115,12 +121,12 @@ public class SchemaSystemMigrationHandler {
 
     private Map<String, Boolean> loadExistingSchemas(Connection connection) throws Exception {
         Map<String, Boolean> existing = new HashMap<>();
-        String query = "SELECT name, COALESCE(from_json, false) AS from_json FROM data.schemas";
+        String query = "SELECT name, COALESCE(is_system, false) AS is_system FROM data.schemas";
 
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                existing.put(resultSet.getString("name"), resultSet.getBoolean("from_json"));
+                existing.put(resultSet.getString("name"), resultSet.getBoolean("is_system"));
             }
         }
 
@@ -138,30 +144,33 @@ public class SchemaSystemMigrationHandler {
                                                .collect(Collectors.toSet());
 
         Set<String> schemasToUpdate = new HashSet<>();
+        Set<String> schemasInConflict = new HashSet<>();
         for (String name: jsonNames) {
             if (!existingNames.contains(name)) {
                 continue;
             }
 
-            if (!Boolean.TRUE.equals(existingSchemas.get(name))) {
-                throw new DataServiceException(
-                        ("Схема '%s' уже существует в БД и не управляется из JSON (from_json = false). "
-                                + "Переименуйте JSON-схему или добавьте имя в M21__markJsonManagedSchemas.sql")
-                                .formatted(name));
+            if (Boolean.TRUE.equals(existingSchemas.get(name))) {
+                schemasToUpdate.add(name);
+            } else {
+                schemasInConflict.add(name);
             }
-
-            schemasToUpdate.add(name);
         }
 
         Set<String> schemasToDelete = existingSchemas.entrySet().stream()
                                                      .filter(entry -> Boolean.TRUE.equals(entry.getValue()))
                                                      .map(Map.Entry::getKey)
                                                      .filter(name -> !jsonNames.contains(name))
+                                                     .filter(name -> !TASKS_SCHEMA.equals(name))
                                                      .collect(Collectors.toCollection(HashSet::new));
 
         log.info("Схем для создания: {}", schemasToCreate.size());
         log.info("Схем-кандидатов на обновление: {}", schemasToUpdate.size());
         log.info("Схем для удаления: {}", schemasToDelete.size());
+        if (!schemasInConflict.isEmpty()) {
+            log.warn("Пропущены пользовательские схемы с именами из JSON (не обновляются): {}",
+                     schemasInConflict);
+        }
 
         for (String name: schemasToDelete) {
             deleteSchema(connection, name);
@@ -187,8 +196,8 @@ public class SchemaSystemMigrationHandler {
     private void insertSchema(Connection connection, String name, String classRuleJson) throws Exception {
         String sql = """
                 INSERT INTO data.schemas
-                    (name, class_rule, is_system, from_json, created_by, created_at, modified_by, last_modified)
-                VALUES (?, ?::json, true, true, ?, ?, ?, ?)
+                    (name, class_rule, is_system, created_by, created_at, modified_by, last_modified)
+                VALUES (?, ?::json, true, ?, ?, ?, ?)
                 """;
 
         LocalDateTime now = LocalDateTime.now();
@@ -207,7 +216,8 @@ public class SchemaSystemMigrationHandler {
     }
 
     /**
-     * Обновляет схему только если изменился class_rule или флаг is_system.
+     * Обновляет системную схему только если изменился class_rule.
+     * Пользовательские записи (is_system = false или null) не затрагиваются.
      *
      * @return true если запись была обновлена
      */
@@ -216,14 +226,11 @@ public class SchemaSystemMigrationHandler {
                 UPDATE data.schemas
                 SET class_rule = ?::json,
                     is_system = true,
-                    from_json = true,
                     modified_by = ?,
                     last_modified = ?
                 WHERE name = ?
-                  AND (
-                    class_rule::jsonb IS DISTINCT FROM ?::jsonb
-                    OR COALESCE(is_system, false) = false
-                  )
+                  AND COALESCE(is_system, false) = true
+                  AND class_rule::jsonb IS DISTINCT FROM ?::jsonb
                 """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -246,7 +253,7 @@ public class SchemaSystemMigrationHandler {
     }
 
     private void deleteSchema(Connection connection, String name) throws Exception {
-        String sql = "DELETE FROM data.schemas WHERE name = ? AND from_json = true";
+        String sql = "DELETE FROM data.schemas WHERE name = ? AND COALESCE(is_system, false) = true";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);

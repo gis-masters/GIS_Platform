@@ -1,0 +1,18 @@
+{
+  "styleName": "zone_c",
+  "tags": ["system", "ГИСОГД"],
+  "name": "zone_c",
+  "title": "Зона В",
+  "tableName": "zone_c",
+  "originName": "zone_c",
+  "description": "Зона В",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

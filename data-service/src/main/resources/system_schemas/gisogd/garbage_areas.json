@@ -1,0 +1,58 @@
+{
+  "styleName": "garbage_areas",
+  "tags": ["system", "ГИСОГД"],
+  "name": "garbage_areas",
+  "title": "Зоны уборки ",
+  "tableName": "garbage_areas",
+  "originName": "garbage_areas",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Зоны уборки",
+          "value": "50102001"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер зоны",
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "maxLength": 2,
+      "valueType": "STRING"
+    },
+    {
+      "name": "respons",
+      "title": "Ответственное лицо",
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "phonenumb",
+      "title": "Телефон ответственного",
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "notes",
+      "title": "Примечания",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

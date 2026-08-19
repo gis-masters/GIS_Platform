@@ -1,0 +1,168 @@
+{
+  "name": "dl_data_universal_for_document",
+  "title": "Документы зеленых насаждений",
+  "tags": ["system", "Библиотека", "Зеленые насаждения"],
+  "tableName": "dl_data_universal_for_document",
+  "description": "Документы зеленых насаждений",
+  "originName": "dl_data_universal_for_document",
+  "styleName": "dl_data_universal_for_document",
+  "properties": [
+    {
+      "name": "id",
+      "title": "№",
+      "description": "Уникальный номер документа",
+      "minWidth": 150,
+      "valueType": "INT"
+    },
+    {
+      "name": "is_folder",
+      "title": "Признак раздела",
+      "description": "Папка или Документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "maxLength": 522,
+      "minWidth": 250,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "valueType": "CHOICE",
+      "hidden": true,
+      "minWidth": 150,
+      "maxLength": 50,
+      "enumerations": [
+        {
+          "value": "doc",
+          "title": "Документ"
+        },
+        {
+          "value": "folder",
+          "title": "Папка"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "minWidth": 300,
+      "required": true,
+      "maxLength": 500
+    },
+    {
+      "name": "status_type",
+      "title": "Статус документа",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "value": "Проектный",
+          "title": "Проектный"
+        },
+        {
+          "value": "Действующий",
+          "title": "Действующий"
+        },
+        {
+          "value": "Архивный",
+          "title": "Архивный"
+        }
+      ]
+    },
+    {
+      "name": "doc_num",
+      "title": "Номер документа",
+      "minWidth": 150,
+      "valueType": "STRING",
+      "required": true
+    },
+    {
+      "name": "approve_date",
+      "title": "Дата утверждения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "files",
+      "title": "Файлы",
+      "valueType": "FILE",
+      "multiple": true,
+      "maxSize": 50000000
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "library": "dl_data_universal_for_document",
+      "minWidth": 200,
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "guiddocpreviousversion",
+      "title": "Версии",
+      "valueType": "DOCUMENT",
+      "multiple": true,
+      "description": "Предыдущие версии документа",
+      "libraries": ["dl_data_universal_for_document"],
+      "maxDocuments": 10
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "minWidth": 250,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "display": "multiline"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата документа",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc",
+      "type": "DOCUMENT",
+      "title": "Документ",
+      "icon": "GPZU",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "folder",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование раздела"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    }
+  ]
+}

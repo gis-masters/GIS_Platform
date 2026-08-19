@@ -1,0 +1,115 @@
+{
+  "name": "transpsanitarygapzone",
+  "title": "Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
+  "styleName": "transpsanitarygapzone_123",
+  "tableName": "transpsanitarygapzone",
+  "originName": "TranspSanitaryGapZone",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Санитарный разрыв автомагистралей",
+          "value": "603010201"
+        },
+        {
+          "title": "Санитарный разрыв линий железнодорожного транспорта",
+          "value": "603010202"
+        },
+        {
+          "title": "Санитарный разрыв линий метрополитена",
+          "value": "603010203"
+        },
+        {
+          "title": "Санитарный разрыв вдоль стандартных маршрутов полета в зоне взлета и посадки воздушных судов",
+          "value": "603010204"
+        },
+        {
+          "title": "Санитарный разрыв от сооружений для хранения легкового автотранспорта до объектов застройки",
+          "value": "603010205"
+        }
+      ]
+    },
+    {
+      "name": "zone_desc",
+      "title": "Описание зоны",
+      "valueType": "STRING"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование объекта (для которого устанавливается зона)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "numberzoit",
+      "title": "Учетный номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "reestrzoit",
+      "title": "Реестровый номер зоны, внесенный в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "dateegrn",
+      "title": "Дата внесения зон с особыми условиями использования территории в ЕГРН",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

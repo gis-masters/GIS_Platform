@@ -1,0 +1,84 @@
+{
+  "styleName": "terzone",
+  "tags": ["system", "ГИСОГД"],
+  "name": "terzone",
+  "title": "Территориальные зоны",
+  "tableName": "terzone",
+  "originName": "terzone",
+  "description": "Территориальные зоны",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "objectname",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "objectcode",
+      "title": "Код зоны",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape_area",
+      "title": "Площадь, кв.м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "admemr",
+      "title": "Муниципальный район",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admemo",
+      "title": "Муниципальное образование",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admenp",
+      "title": "Населённый пункт",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "datereglam",
+      "title": "Дата утверждения регламента",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "link",
+      "title": "Правила землепользования и застройки",
+      "required": true,
+      "valueType": "URL",
+      "displayMode": "in_popup"
+    },
+    {
+      "name": "reg_exsist",
+      "title": "Регламент существует",
+      "hidden": true,
+      "length": 1,
+      "maxLength": 1,
+      "valueType": "STRING"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "styleName": "vegetation",
+  "tags": ["system", "Топоплан 2000"],
+  "name": "vegetation_topo_2000",
+  "title": "Растительность площадные",
+  "tableName": "vegetation_topo_2000",
+  "originName": "vegetation_topo_2000",
+  "description": "Класс объектов «Растительность площадные»",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "desc1",
+      "title": "Описание",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "code",
+      "title": "КОД",
+      "required": true,
+      "maxLength": 9,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape_leng",
+      "title": "Периметр",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape_area",
+      "title": "Площадь",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Line"]
+    }
+  ]
+}

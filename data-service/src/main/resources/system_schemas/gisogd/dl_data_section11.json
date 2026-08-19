@@ -1,0 +1,808 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_section11",
+  "title": "11. Материалы по надземным и подземным коммуникациям",
+  "tableName": "dl_data_section11",
+  "originName": "dl_data_section11",
+  "description": "11. Материалы по надземным и подземным коммуникациям",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 300,
+      "required": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "required": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Материалы по надземным и подземным коммуникациям",
+          "value": "doc_11.01"
+        },
+        {
+          "title": "Папка",
+          "value": "folder_v1"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "regnum",
+      "title": "Регистрационный номер",
+      "minWidth": 200,
+      "readOnly": true,
+      "valueType": "STRING",
+      "description": "Регистрационный номер в ГИСОГД РК"
+    },
+    {
+      "name": "regdate",
+      "title": "Дата регистрации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата регистрации документа в ГИСОГД РК"
+    },
+    {
+      "name": "fias",
+      "title": "Населённый пункт",
+      "minWidth": 400,
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "minWidth": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "Код ФИАС",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "orgname",
+      "title": "Наименование органа",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING",
+      "description": "Наименование органа,утвердившего документ"
+    },
+    {
+      "name": "docname",
+      "title": "Наименование данных",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "docnum",
+      "title": "Номер документа",
+      "valueType": "STRING",
+      "description": "При наличии утверждаемых документов указывается номер утверждающего документа"
+    },
+    {
+      "name": "docdate",
+      "title": "Дата документа",
+      "valueType": "DATETIME",
+      "description": "При наличии утверждаемых документов указывается дата утверждающего документа"
+    },
+    {
+      "name": "docstatus",
+      "title": "Статус действия",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "0С.1"
+        },
+        {
+          "title": "Недействующий",
+          "value": "0С.2"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "guiddocpreviousversion",
+      "title": "Версии",
+      "multiple": true,
+      "libraries": ["dl_data_section11"],
+      "valueType": "DOCUMENT",
+      "description": "Предыдущая версия данных",
+      "maxDocuments": 5
+    },
+    {
+      "name": "supplier_data_connection",
+      "title": "Организация",
+      "multiple": true,
+      "libraries": ["dl_data_supplier"],
+      "valueType": "DOCUMENT",
+      "description": "Наименование органа,утвердившего документ",
+      "maxDocuments": 10
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа,утвердившего документ",
+      "multiple": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "territorykey",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1: power_lines_100436_3865",
+          "scratch_database_1: pipeline_100436_749c",
+          "scratch_database_1: water_disposal_object_100436_f614",
+          "scratch_database_1: water_disposal_object_point_100436_07b6",
+          "scratch_database_1: water_supply_object_100436_0378",
+          "scratch_database_1: water_supply_object_point_100436_a875",
+          "scratch_database_1: gas_suply_object_100436_d6dc",
+          "scratch_database_1: gas_suply_object_point_100436_921a",
+          "scratch_database_1: oil_supply_object_100436_fb4f",
+          "scratch_database_1: oil_supply_object_point_100436_d12a",
+          "scratch_database_1: communication_object_100436_773a",
+          "scratch_database_1: communication_object_point_100436_8053",
+          "scratch_database_1: heat_supply_object_100436_4e19",
+          "scratch_database_1: heat_supply_object_point_100436_ce2f",
+          "scratch_database_1: electric_power_object_100436_e453",
+          "scratch_database_1: electric_power_object_point_100436_c5d5",
+          "scratch_database_1: gas_pipeline_100436_e87b",
+          "scratch_database_1: water_disposal_network_100436_0cdf",
+          "scratch_database_1: water_supply_network_100436_8c0d",
+          "scratch_database_1: heat_supply_network_100436_2f57",
+          "scratch_database_1: telecom_network_100436_ef49",
+          "scratch_database_1: utility_connection_point_100436_cd78",
+          "scratch_database_1: liquid_pipeline_100436_ec57"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "power_lines",
+      "title": "Линии электропередачи",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: power_lines_100436_3865"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "pipeline",
+      "title": "Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов,нефтепроводы и нефтепродуктопроводы,аммиакопроводы",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: pipeline_100436_749c"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "is_public",
+      "title": "Публичный документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "water_disposal_object",
+      "title": "Объекты водоотведения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: water_disposal_object_100436_f614"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "water_disposal_object_point",
+      "title": "Объекты водоотведения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1: water_disposal_object_point_100436_07b6"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "water_supply_object",
+      "title": "Объекты водоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: water_supply_object_100436_0378"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "water_supply_object_point",
+      "title": "Объекты водоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: water_supply_object_point_100436_a875"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "gas_suply_object",
+      "title": "Объекты газоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: gas_suply_object_100436_d6dc"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "gas_suply_object_point",
+      "title": "Объекты газоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: gas_suply_object_point_100436_921a"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "oil_supply_object",
+      "title": "Объекты добычи и транспортировки жидких углеродов",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: oil_supply_object_100436_fb4f"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "oil_supply_object_point",
+      "title": "Объекты добычи и транспортировки жидких углеродов",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: oil_supply_object_point_100436_d12a"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "communication_object",
+      "title": "Объекты связи",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: communication_object_100436_773a"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "communication_object_point",
+      "title": "Объекты связи",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1: communication_object_point_100436_8053"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "heat_supply_object",
+      "title": "Объекты теплоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: heat_supply_object_100436_4e19"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "heat_supply_object_point",
+      "title": "Объекты теплоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: heat_supply_object_point_100436_ce2f"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "electric_power_object",
+      "title": "Объекты электроснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: electric_power_object_100436_e453"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "electric_power_object_point",
+      "title": "Объекты электроснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": [
+          "scratch_database_1: electric_power_object_point_100436_c5d5"
+        ],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "gas_pipeline",
+      "title": "Распределительные трубопроводы для транспортировки газа,газораспределительные сети",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: gas_pipeline_100436_e87b"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "water_disposal_network",
+      "title": "Сети водоотведения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: water_disposal_network_100436_0cdf"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "water_supply_network",
+      "title": "Сети водоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: water_supply_network_100436_8c0d"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "heat_supply_network",
+      "title": "Сети теплоснабжения",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: heat_supply_network_100436_2f57"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "telecom_network",
+      "title": "Сети связи",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: telecom_network_100436_ef49"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "utility_connection_point",
+      "title": "Точка подключения к инженерным сетям",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: utility_connection_point_100436_cd78"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "liquid_pipeline",
+      "title": "Трубопроводы жидких углеводородов,нефтепроводы и нефтепродуктопроводы,аммиакопроводы",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: liquid_pipeline_100436_ec57"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "change_date",
+      "title": "Дата внесения изменений или исправлений",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "file",
+      "title": "Выбор файла",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inbox_data_key_data_connection",
+      "title": "Входящие документы",
+      "multiple": true,
+      "libraries": ["dl_data_inbox_data"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "asTitle": true,
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "readOnly": true,
+      "minWidth": 300,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "type",
+      "title": "Тип файла",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_11.01",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Материалы по надземным и подземным коммуникациям",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_11.01"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "orgname",
+          "description": "Наименование органа,утвердившего документ"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "docname"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file",
+          "title": "Выбор файла",
+          "maxSize": 100000000,
+          "maxFiles": 10,
+          "multiple": true,
+          "required": true,
+          "valueType": "FILE"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true,
+          "valueType": "FIAS",
+          "searchMode": "oktmo"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "note",
+          "title": "Примечание",
+          "display": "multiline",
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

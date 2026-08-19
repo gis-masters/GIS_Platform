@@ -1,0 +1,299 @@
+{
+  "name": "oilfacility",
+  "title": "Объекты добычи, перекачки, учета и хранения жидких углеводородов",
+  "styleName": "oilfacility_point_123",
+  "tableName": "oilfacility",
+  "originName": "OilFacility",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Объекты добычи и транспортировки жидких углеводородов",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Фонд скважин",
+          "value": "602040701"
+        },
+        {
+          "title": "Пункт подготовки нефти (ППН)",
+          "value": "602040702"
+        },
+        {
+          "title": "Цех добычи нефти",
+          "value": "602040703"
+        },
+        {
+          "title": "Головная перекачивающая станция (ГПС)",
+          "value": "602040704"
+        },
+        {
+          "title": "Промежуточная (дожимная) перекачивающая станция (ППС)",
+          "value": "602040705"
+        },
+        {
+          "title": "Пункт учета нефти (нефтепродуктов)",
+          "value": "602040706"
+        },
+        {
+          "title": "Пункт сливо-наливной",
+          "value": "602040707"
+        },
+        {
+          "title": "Нефтехранилище (резервуарный парк)",
+          "value": "602040708"
+        },
+        {
+          "title": "Нефтебаза (склад нефти или нефтепродуктов)",
+          "value": "602040709"
+        },
+        {
+          "title": "Кустовая насосная станция (КНС)",
+          "value": "602040710"
+        },
+        {
+          "title": "Дожимная насосная станция (ДНС)",
+          "value": "602040711"
+        },
+        {
+          "title": "Установка предварительного сброса воды (УПСВ)",
+          "value": "602040712"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "Код ОКТМО",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "required": true,
+      "maxLength": 11,
+      "minLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "ground_pos",
+      "title": "Расположение объекта относительно уровня земли",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Наземное",
+          "value": "1"
+        },
+        {
+          "title": "Надземное",
+          "value": "2"
+        },
+        {
+          "title": "Подземное",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "wear_prcnt",
+      "title": "Процент износа, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "fact_use",
+      "title": "Фактическое использование объекта, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "output",
+      "title": "Производительность, т/сут",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "volume",
+      "title": "Объем, куб. м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "hzrd_cat",
+      "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Объекты, оказывающие значительное негативное воздействие на окружающую среду и относящиеся к областям применения наилучших доступных технологий, - объекты I категории",
+          "value": "1"
+        },
+        {
+          "title": "Объекты, оказывающие умеренное негативное воздействие на окружающую среду, - объекты II категории",
+          "value": "2"
+        },
+        {
+          "title": "Объекты, оказывающие незначительное негативное воздействие на окружающую среду, - объекты III категории",
+          "value": "3"
+        },
+        {
+          "title": "Объекты, оказывающие минимальное негативное воздействие на окружающую среду, - объекты IV категории",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "szz_size",
+      "title": "Размер санитарно-защитной зоны, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "zone_size",
+      "title": "Размер охранной зоны, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "kadastroks",
+      "title": "Кадастровый номер ОКС",
+      "valueType": "STRING"
+    },
+    {
+      "name": "kadastrzu",
+      "title": "Кадастровый номер земельного участка, на котором расположен объект",
+      "valueType": "STRING"
+    },
+    {
+      "name": "namedocosn",
+      "title": "Наименование документа основания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "datedocosn",
+      "title": "Дата документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "numberdocosn",
+      "title": "Номер документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

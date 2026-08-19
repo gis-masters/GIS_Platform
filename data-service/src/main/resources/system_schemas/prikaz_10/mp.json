@@ -1,0 +1,121 @@
+{
+  "name": "mp",
+  "title": "Образуемые земельные участки",
+  "styleName": "mp_123",
+  "tableName": "mp",
+  "originName": "mp",
+  "tags": ["system", "Приказ 10"],
+  "description": "Образуемые земельные участки",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "reason",
+      "title": "Вид кадастровых работ",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "cadastralblock",
+      "title": "Номер кадастрового квартала",
+      "required": true,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "prevcadastralnumbers",
+      "title": "Кадастровые номера земельных участков, из которых образован данный участок",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь земельного участка, м.кв.",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "address",
+      "title": "Адрес (местоположение) участка",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "category",
+      "title": "Категория земель",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Земли сельскохозяйственного назначения",
+          "value": "003001000000"
+        },
+        {
+          "title": "Земли населенных пунктов",
+          "value": "003002000000"
+        },
+        {
+          "title": "Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения",
+          "value": "003003000000"
+        },
+        {
+          "title": "Земли особо охраняемых территорий и объектов",
+          "value": "003004000000"
+        },
+        {
+          "title": "Земли лесного фонда",
+          "value": "003005000000"
+        },
+        {
+          "title": "Земли водного фонда",
+          "value": "003006000000"
+        },
+        {
+          "title": "Земли запаса",
+          "value": "003007000000"
+        },
+        {
+          "title": "Категория не установлена",
+          "value": "003008000000"
+        }
+      ]
+    },
+    {
+      "name": "bydoc",
+      "title": "Вид разрешенного использования участка по документу",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "objectsrealty",
+      "title": "Сведения об объектах недвижимости, расположенных на образуемом земельном участке",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "conclusion",
+      "title": "Заключение кадастрового инженера",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

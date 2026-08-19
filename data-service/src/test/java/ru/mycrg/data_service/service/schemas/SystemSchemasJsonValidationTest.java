@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 
 class SystemSchemasJsonValidationTest {
 
@@ -97,6 +98,18 @@ class SystemSchemasJsonValidationTest {
         assertThat(failures)
                 .as("Ошибки в system_schemas")
                 .isEmpty();
+    }
+
+    @Test
+    void systemSchemaJsonFiles_shouldNotBeNamedTasksSchema() throws IOException {
+        Path schemasDir = resolveSchemasDir();
+        List<Path> jsonFiles = findJsonFiles(schemasDir);
+        String forbiddenFileName = TASKS_SCHEMA + ".json";
+
+        assertThat(jsonFiles)
+                .as("Файлы системных схем не должны называться %s: схема задач создаётся механизмом специализации",
+                    forbiddenFileName)
+                .noneMatch(file -> forbiddenFileName.equals(file.getFileName().toString()));
     }
 
     private static Path resolveSchemasDir() {

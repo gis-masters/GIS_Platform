@@ -1,0 +1,656 @@
+{
+  "tags": ["system", "Библиотека", "Электронный архив"],
+  "name": "dl_cad_work",
+  "title": "4. Кадастровые работы",
+  "tableName": "dl_cad_work",
+  "originName": "dl_cad_work",
+  "description": "4. Кадастровые работы",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Виды работ",
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Работы в отношении ЗУ",
+          "value": "Работы в отношении ЗУ"
+        },
+        {
+          "title": "Работы в отношении ОКС",
+          "value": "Работы в отношении ОКС"
+        },
+        {
+          "title": "Схема расположения ЗУ на кадастровом плане территории",
+          "value": "Схема расположения ЗУ на кадастровом плане территории"
+        },
+        {
+          "title": "Акт обследования",
+          "value": "Акт обследования"
+        },
+        {
+          "title": "Карта (план) объекта",
+          "value": "Карта (план) объекта"
+        },
+        {
+          "title": "Описание местоположения границ",
+          "value": "Описание местоположения границ"
+        }
+      ]
+    },
+    {
+      "name": "type",
+      "title": "Типы работ",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Вы не должны это видеть",
+          "value": "Вы не должны это видеть"
+        }
+      ]
+    },
+    {
+      "name": "map_place",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Cвяжите папку на карте с объектом в слое кадастровых работ",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_21: geolan_proj_cad_57_7343"],
+        "property": "cadastr_library",
+        "projectId": 1371
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "cad_num_old",
+      "title": "Кадастровый номер",
+      "valueType": "STRING",
+      "description": "Заполняется при наличии кадастрового номера в начале работ"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "description": "Должно соответствовать названию в Битрикс"
+    },
+    {
+      "name": "niko_path",
+      "title": "Путь на niko",
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Местоположение",
+      "required": true,
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "id",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "if_contract_approved",
+      "title": "Акт приёмки работ",
+      "valueType": "CHOICE",
+      "description": "Заполняется ГИП-ом",
+      "enumerations": [
+        {
+          "title": "Передан заказчику",
+          "value": "Передан заказчику"
+        },
+        {
+          "title": "Передан в бухгалтерию после подписи заказчика",
+          "value": "Передан в бухгалтерию после подписи заказчика"
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "files",
+      "title": "Выбор файла",
+      "maxSize": 100000000,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE",
+      "description": "Все элементы zip архива"
+    },
+    {
+      "name": "gdz_library",
+      "title": "Геодезические работы",
+      "multiple": true,
+      "libraries": ["dl_data_1_surveys"],
+      "valueType": "DOCUMENT",
+      "description": "Заполняется если геодезические работы выполнялись Геопланом",
+      "maxDocuments": 5
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Работы в отношении ЗУ",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Работы в отношении ЗУ",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "Работы в отношении ЗУ"
+        },
+        {
+          "name": "title",
+          "readOnly": true,
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type",
+          "options": [
+            {
+              "title": "МП по образованию земельного участка из земель",
+              "value": "МП по образованию земельного участка из земель"
+            },
+            {
+              "title": "МП по образованию земельного участка путем раздела",
+              "value": "МП по образованию земельного участка путем раздела"
+            },
+            {
+              "title": "МП по образованию земельного участка путем раздела с сохранением исходного в изменённых границах",
+              "value": "МП по образованию земельного участка путем раздела с сохранением исходного в изменённых границах"
+            },
+            {
+              "title": "МП по образованию земельного участка путем объединения",
+              "value": "МП по образованию земельного участка путем объединения"
+            },
+            {
+              "title": "МП по образованию земельного участка путем перераспределения",
+              "value": "МП по образованию земельного участка путем перераспределения"
+            },
+            {
+              "title": "МП по образованию земельного участка путем перераспределения с землями",
+              "value": "МП по образованию земельного участка путем перераспределения с землями"
+            },
+            {
+              "title": "МП по уточнению границ земельного участка",
+              "value": "МП по уточнению границ земельного участка"
+            },
+            {
+              "title": "МП по исправлению реестровой ошибки",
+              "value": "МП по исправлению реестровой ошибки"
+            },
+            {
+              "title": "МП по выделу доли",
+              "value": "МП по выделу доли"
+            }
+          ]
+        },
+        {
+          "name": "cad_num_old",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "map_place"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "files"
+        }
+      ]
+    },
+    {
+      "id": "Работы в отношении ОКС",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Работы в отношении ОКС",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "Работы в отношении ОКС"
+        },
+        {
+          "name": "title",
+          "readOnly": true,
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type",
+          "options": [
+            {
+              "title": "ТП здания",
+              "value": "ТП здания"
+            },
+            {
+              "title": "ТП сооружения",
+              "value": "ТП сооружения"
+            },
+            {
+              "title": "ТП помещения",
+              "value": "ТП помещения"
+            },
+            {
+              "title": "ТП машино-места",
+              "value": "ТП машино-места"
+            },
+            {
+              "title": "ТП единого недвижимого комплекса",
+              "value": "ТП единого недвижимого комплекса"
+            },
+            {
+              "title": "ТП объекта незавершенного строительства",
+              "value": "ТП объекта незавершенного строительства"
+            }
+          ]
+        },
+        {
+          "name": "cad_num_old",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "map_place"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "files"
+        }
+      ]
+    },
+    {
+      "id": "Схема расположения ЗУ на кадастровом плане территории",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Схема расположения ЗУ на кадастровом плане территории",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "Схема расположения ЗУ на кадастровом плане территории"
+        },
+        {
+          "name": "title",
+          "readOnly": true,
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type",
+          "options": [
+            {
+              "title": "Схема расположения ЗУ на кадастровом плане территории",
+              "value": "Схема расположения ЗУ на кадастровом плане территории"
+            }
+          ],
+          "readOnly": true,
+          "defaultValue": "Схема расположения ЗУ на кадастровом плане территории"
+        },
+        {
+          "name": "cad_num_old",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "map_place"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "files"
+        }
+      ]
+    },
+    {
+      "id": "Акт обследования",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Акт обследования",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "Акт обследования"
+        },
+        {
+          "name": "title",
+          "readOnly": true,
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type",
+          "options": [
+            {
+              "title": "Акт обследования",
+              "value": "Акт обследования"
+            }
+          ],
+          "readOnly": true,
+          "defaultValue": "Акт обследования"
+        },
+        {
+          "name": "cad_num_old",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "map_place"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "files"
+        }
+      ]
+    },
+    {
+      "id": "Карта (план) объекта",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карта (план) объекта",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "Карта (план) объекта"
+        },
+        {
+          "name": "title",
+          "readOnly": true,
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type",
+          "options": [
+            {
+              "title": "Карта (план) объекта",
+              "value": "Карта (план) объекта"
+            }
+          ],
+          "readOnly": true,
+          "defaultValue": "Карта (план) объекта"
+        },
+        {
+          "name": "cad_num_old",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "map_place"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "files"
+        }
+      ]
+    },
+    {
+      "id": "Описание местоположения границ",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Описание местоположения границ",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "defaultValue": "Описание местоположения границ"
+        },
+        {
+          "name": "title",
+          "readOnly": true,
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type",
+          "options": [
+            {
+              "title": "Описание местоположения границ",
+              "value": "Описание местоположения границ"
+            }
+          ],
+          "readOnly": true,
+          "defaultValue": "Описание местоположения границ"
+        },
+        {
+          "name": "cad_num_old",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "map_place"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "files"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "title": "Папку сделки",
+      "children": [
+        {
+          "contentType": "Работы в отношении ЗУ"
+        },
+        {
+          "contentType": "Работы в отношении ОКС"
+        },
+        {
+          "contentType": "Схема расположения ЗУ на кадастровом плане территории"
+        },
+        {
+          "contentType": "Акт обследования"
+        },
+        {
+          "contentType": "Карта (план) объекта"
+        },
+        {
+          "contentType": "Описание местоположения границ"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "required": true
+        },
+        {
+          "name": "cad_num_old"
+        },
+        {
+          "name": "map_place",
+          "description": "Перейдите в проект Карта работ Геоплан и прикрепите папку к слою кадастровых работ"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "if_contract_approved"
+        },
+        {
+          "name": "niko_path"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "gdz_library"
+        }
+      ]
+    },
+    {
+      "id": "folder_root",
+      "type": "FOLDER",
+      "title": "Папка руут",
+      "children": [
+        {
+          "contentType": "folder_v1"
+        }
+      ],
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

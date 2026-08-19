@@ -1,0 +1,167 @@
+{
+  "name": "heritagearea",
+  "title": "Границы территорий объектов культурного наследия и историко-культурных заповедников",
+  "styleName": "heritagearea_698",
+  "tableName": "heritagearea",
+  "originName": "HeritageArea",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Границы территорий объектов культурного наследия",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Граница территории объекта культурного наследия",
+          "value": "604010201"
+        },
+        {
+          "title": "Граница историко-культурного заповедника",
+          "value": "604010202"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер объекта культурного наследия на карте",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "Код ОКТМО",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "required": true,
+      "maxLength": 11,
+      "minLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "reg_number",
+      "title": "Регистрационный номер объекта в едином государственном реестре объектов культурного наследия",
+      "valueType": "STRING"
+    },
+    {
+      "name": "specific",
+      "title": "Вид, видовая принадлежность объекта культурного наследия",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Памятник",
+          "value": "1"
+        },
+        {
+          "title": "Ансамбль",
+          "value": "2"
+        },
+        {
+          "title": "Достопримечательное место",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "hist_cat",
+      "title": "Категория историко-культурного значения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение",
+          "value": "3"
+        },
+        {
+          "title": "Без категории - выявленный объект культурного наследия",
+          "value": "4"
+        },
+        {
+          "title": "Без категории - объект, обладающий признаками объекта культурного наследия",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "name": "hist_out",
+      "title": "Объекты выдающейся культурной ценности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Особо ценный объект культурного наследия народов Российской Федерации",
+          "value": "1"
+        },
+        {
+          "title": "Объект всемирного наследия ЮНЕСКО",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "styleName": "garbage_responsible",
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "garbage_responsible",
+  "title": "Ответственные по уборке ",
+  "tableName": "garbage_responsible",
+  "originName": "garbage_responsible",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта»",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "МУП Аванград",
+          "value": "50103001"
+        },
+        {
+          "title": "МУП Железнодорожный ЖС",
+          "value": "50103002"
+        },
+        {
+          "title": "МУП Киевский ЖС",
+          "value": "50103003"
+        },
+        {
+          "title": "МУП Центральный ЖС",
+          "value": "50103004"
+        },
+        {
+          "title": "МБУ Город",
+          "value": "50103005"
+        },
+        {
+          "title": "ТСЖ и прочие",
+          "value": "50103006"
+        }
+      ]
+    },
+    {
+      "name": "cleantime",
+      "title": "Время уборки",
+      "maxLength": 30,
+      "valueType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "jannumb",
+      "title": "Количество дворников",
+      "maxLength": 2,
+      "valueType": "STRING"
+    },
+    {
+      "name": "location",
+      "title": "Местоположение, адресное описание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "compname",
+      "title": "Наименование управляющей компании",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "supervisor",
+      "title": "Начальник на участке",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "yardkeeper",
+      "title": "Ответственное лицо",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cleanrange",
+      "title": "Периодичность уборки",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Ежедневно",
+          "value": "1"
+        },
+        {
+          "title": "1 раз в год",
+          "value": "2"
+        },
+        {
+          "title": "1 раз в месяц",
+          "value": "3"
+        },
+        {
+          "title": "1 раз в неделю",
+          "value": "4"
+        },
+        {
+          "title": "2 раза в год",
+          "value": "5"
+        },
+        {
+          "title": "2 раза в месяц",
+          "value": "6"
+        },
+        {
+          "title": "2 раза в неделю",
+          "value": "7"
+        },
+        {
+          "title": "3 раза в месяц",
+          "value": "8"
+        },
+        {
+          "title": "3 раза в неделю",
+          "value": "9"
+        },
+        {
+          "title": "4 раза в месяц",
+          "value": "10"
+        },
+        {
+          "title": "4 раза в неделю",
+          "value": "11"
+        },
+        {
+          "title": "5 раз в неделю",
+          "value": "12"
+        },
+        {
+          "title": "6 раз в год",
+          "value": "13"
+        },
+        {
+          "title": "Не установлена",
+          "value": "14"
+        }
+      ]
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв.м.",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "length",
+      "title": "Протяженность, м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "cleanmet",
+      "title": "Способ уборки",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Ручная",
+          "value": "1"
+        },
+        {
+          "title": "Механическая",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "population",
+      "title": "Численность населения",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "notes",
+      "title": "Примечания",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    }
+  ]
+}

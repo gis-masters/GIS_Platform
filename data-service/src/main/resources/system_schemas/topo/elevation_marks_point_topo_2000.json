@@ -1,0 +1,47 @@
+{
+  "styleName": "elevation_marks_point",
+  "tags": ["system", "Топоплан 2000"],
+  "name": "elevation_marks_point_topo_2000",
+  "title": "Отметки высот",
+  "tableName": "elevation_marks_point_topo_2000",
+  "originName": "elevation_marks_point_topo_2000",
+  "description": "Класс объектов «Отметки высот»",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "code",
+      "title": "Код",
+      "required": true,
+      "maxLength": 9,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "desc1",
+      "title": "Описание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "z",
+      "title": "Относительная высота",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    }
+  ]
+}

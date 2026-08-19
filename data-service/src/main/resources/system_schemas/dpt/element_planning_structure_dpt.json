@@ -1,0 +1,134 @@
+{
+  "name": "element_planning_structure_dpt",
+  "title": "Вид элемента планировочной структуры",
+  "tags": ["system", "ДПТ"],
+  "tableName": "element_planning_structure_dpt",
+  "description": "Вид элемента планировочной структуры",
+  "originName": "element_planning_structure_dpt",
+  "styleName": "element_planning_structure_dpt",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "class",
+      "title": "Вид элемента планировочной структуры",
+      "valueType": "CHOICE",
+      "required": true,
+      "asTitle": true,
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7А.1",
+          "title": "Район"
+        },
+        {
+          "value": "7А.2",
+          "title": "Микрорайон"
+        },
+        {
+          "value": "7А.3",
+          "title": "Квартал"
+        },
+        {
+          "value": "7А.4",
+          "title": "Территория общего пользования"
+        },
+        {
+          "value": "7А.5",
+          "title": "Территория садоводческого, огороднического или дачного некоммерческого объединения граждан"
+        },
+        {
+          "value": "7А.6",
+          "title": "Территория транспортно-пересадочного узла"
+        },
+        {
+          "value": "7А.7",
+          "title": "Территория, занятая линейным объектом и (или) предназначенная для размещения линейного объекта"
+        },
+        {
+          "value": "7А.8",
+          "title": "Улично-дорожная сеть"
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "valueType": "CHOICE",
+      "required": true,
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "7В.1",
+          "title": "Существующий"
+        },
+        {
+          "value": "7В.2",
+          "title": "Планируемый"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер элемента планировочной структуры",
+      "valueType": "INT",
+      "required": true
+    },
+    {
+      "name": "area",
+      "title": "Площадь общая, кв. м.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING",
+      "display": "multiline",
+      "maxLength": 500
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "description": "Пользователь создавший объект (Заполняется автоматически)",
+      "valueType": "STRING",
+      "readOnly": true
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "description": "Дата создания объекта (Заполняется автоматически)",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата редактирования",
+      "valueType": "DATETIME",
+      "description": "Дата последнего редактирования объекта (Заполняется автоматически)",
+      "readOnly": true
+    },
+    {
+      "name": "updated_by",
+      "title": "Редактор",
+      "valueType": "STRING",
+      "description": "Пользователь редактировавший объект последним (Заполняется автоматически)",
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "INT",
+      "hidden": true
+    }
+  ]
+}

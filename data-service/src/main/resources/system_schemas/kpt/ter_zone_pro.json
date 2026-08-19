@@ -1,0 +1,134 @@
+{
+  "tags": ["system", "КПТ"],
+  "name": "ter_zone_pro",
+  "title": "Территориальные зоны",
+  "styleName": "terzone_kpt",
+  "tableName": "ter_zone_pro",
+  "description": "Территориальные зоны",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "number",
+      "title": "Номер",
+      "valueType": "STRING"
+    },
+    {
+      "name": "zonetype",
+      "title": "Вид зоны",
+      "maxLength": 100,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Жилая зона",
+          "value": "Жилая зона"
+        },
+        {
+          "title": "Производственная зона, зона инженерной и транспортной инфраструктур",
+          "value": "Производственная зона, зона инженерной и транспортной инфраструктур"
+        },
+        {
+          "title": "Общественно-деловая зона",
+          "value": "Общественно-деловая зона"
+        },
+        {
+          "title": "Зона сельскохозяйственного использования",
+          "value": "Зона сельскохозяйственного использования"
+        },
+        {
+          "title": "Зона рекреационного назначения",
+          "value": "Зона рекреационного назначения"
+        },
+        {
+          "title": "Зона специального назначения",
+          "value": "Зона специального назначения"
+        },
+        {
+          "title": "Иная зона",
+          "value": "Иная зона"
+        }
+      ]
+    },
+    {
+      "name": "name_by_doc",
+      "title": "Название зоны",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "regnumbord",
+      "title": "Реестровый номер границы",
+      "asTitle": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "registrati",
+      "title": "Дата постановки на учет",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "boundary_1",
+      "title": "Вид объекта реестра границ",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "description": "Дата импорта XML в слой",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "hidden": true,
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "acsept_at",
+      "title": "Дата",
+      "hidden": true,
+      "valueType": "DATETIME",
+      "description": "Дата приёма данных из  АИС УМС"
+    },
+    {
+      "name": "source_doc",
+      "title": "Документ источник",
+      "multiple": true,
+      "libraries": ["dl_data_kpt"],
+      "valueType": "DOCUMENT",
+      "description": "Отсылка к документу из которого получен объект",
+      "maxDocuments": 5
+    }
+  ]
+}

@@ -110,9 +110,7 @@
       "title": "Геометрия",
       "valueType": "GEOMETRY",
       "hidden": true,
-      "allowedValues": [
-        "Polygon"
-      ]
+      "allowedValues": ["Polygon"]
     }
   ]
 }

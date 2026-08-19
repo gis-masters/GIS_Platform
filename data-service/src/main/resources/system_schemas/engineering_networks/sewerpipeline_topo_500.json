@@ -1,0 +1,173 @@
+{
+  "tags": ["system", "Топография 500 Инженерные сети"],
+  "name": "sewerpipeline_topo_500",
+  "title": "Сети водоотведения",
+  "styleName": "sewerpipeline_topo_500",
+  "tableName": "sewerpipeline_topo_500",
+  "originName": "sewerpipeline_topo_500",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "asTitle": true,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Канализация (без подразделений)",
+          "value": "1"
+        },
+        {
+          "title": "Канализация бытовая",
+          "value": "2"
+        },
+        {
+          "title": "Канализация дренажная",
+          "value": "3"
+        },
+        {
+          "title": "Канализация ливневая",
+          "value": "4"
+        },
+        {
+          "title": "Канализация напорная",
+          "value": "5"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "pline_type",
+      "title": "Вид расположения трубопровода",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Наземная",
+          "value": "1"
+        },
+        {
+          "title": "Подземная",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "pline_cnt",
+      "title": "Количество труб",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "d_pline",
+      "title": "Диаметр трубопровода, мм",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "1"
+        },
+        {
+          "title": "Не действующий",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "length",
+      "title": "Протяженность, м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 0
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "balance_holder",
+      "title": "Принадлежность сети",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ГУПС «Водоканал»",
+          "value": "1"
+        },
+        {
+          "title": "Сети пребывающие в индивидуальной собственности абонентов водоотведения",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "sew_type",
+      "title": "Тип сети водоотведения",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Самотечная",
+          "value": "1"
+        },
+        {
+          "title": "Напорная",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

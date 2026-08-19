@@ -1,0 +1,141 @@
+{
+  "tags": ["system", "Топография 500 Инженерные сети"],
+  "name": "thermalpipeline_topo_500",
+  "title": "Сети теплоснабжения",
+  "styleName": "thermalpipeline_topo_500",
+  "tableName": "thermalpipeline_topo_500",
+  "originName": "thermalpipeline_topo_500",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Теплосеть",
+          "value": "1"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "pline_type",
+      "title": "Вид расположения трубопровода",
+      "asTitle": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Наземный",
+          "value": "1"
+        },
+        {
+          "title": "Подземный",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "pline_cnt",
+      "title": "Количество труб",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "d_pline",
+      "title": "Диаметр трубопровода, мм",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "1"
+        },
+        {
+          "title": "Не действующий",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "length",
+      "title": "Протяженность сооружения, м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 0
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "balabce_holder",
+      "title": "Принадлежность сети",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ГУПС «Севтеплоэнерго»",
+          "value": "1"
+        },
+        {
+          "title": "Сети пребывающие в индивидуальной собственности абонентов теплоснабжения ",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

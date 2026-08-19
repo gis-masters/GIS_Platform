@@ -115,12 +115,12 @@
       "totalDigits": 38,
       "fractionDigits": 4
     },
-       {
+    {
       "name": "cost_application_date",
       "title": "Дата применения стоимости",
       "valueType": "DATETIME"
     },
-     {
+    {
       "name": "cost_approvement_date",
       "title": "Дата утверждения стоимости",
       "valueType": "DATETIME"
@@ -235,9 +235,7 @@
       "title": "Геометрия",
       "valueType": "GEOMETRY",
       "hidden": true,
-      "allowedValues": [
-        "Polygon"
-      ]
+      "allowedValues": ["Polygon"]
     }
   ]
 }

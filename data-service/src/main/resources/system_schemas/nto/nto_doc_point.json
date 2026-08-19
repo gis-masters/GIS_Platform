@@ -1,0 +1,777 @@
+{
+  "tags": ["system", "НТО"],
+  "name": "nto_doc_point",
+  "title": "Нестационарные торговые объекты c документами",
+  "styleName": "polygon_nto",
+  "tableName": "nto_doc_point",
+  "originName": "nto_doc_point",
+  "description": "Нестационарные торговые объекты c документами",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Вид объекта",
+      "asTitle": true,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Автосервис",
+          "value": "311550000"
+        },
+        {
+          "title": "Бахчевые культуры",
+          "value": "311430000"
+        },
+        {
+          "title": "Бытовые услуги",
+          "value": "311530000"
+        },
+        {
+          "title": "Горячие напитки со спец. аппарата",
+          "value": "311370000"
+        },
+        {
+          "title": "Живая рыба",
+          "value": "311410000"
+        },
+        {
+          "title": "Живые цветы",
+          "value": "311440000"
+        },
+        {
+          "title": "Иные нестационарные объекты",
+          "value": "311510000"
+        },
+        {
+          "title": "Квас",
+          "value": "311390000"
+        },
+        {
+          "title": "Квас, мороженое",
+          "value": "311400000"
+        },
+        {
+          "title": "Колбасные изделия",
+          "value": "311350000"
+        },
+        {
+          "title": "Кондитерские изделия",
+          "value": "311310000"
+        },
+        {
+          "title": "Лекарственные средства",
+          "value": "311560000"
+        },
+        {
+          "title": "Мед и продукция пчеловодства",
+          "value": "311420000"
+        },
+        {
+          "title": "Молочная продукция",
+          "value": "311470000"
+        },
+        {
+          "title": "Напитки, мороженое",
+          "value": "311380000"
+        },
+        {
+          "title": "Непродовольственные товары",
+          "value": "311520000"
+        },
+        {
+          "title": "Общественное питание",
+          "value": "311490000"
+        },
+        {
+          "title": "Общественный туалет",
+          "value": "311480000"
+        },
+        {
+          "title": "Питьевая вода",
+          "value": "311500000"
+        },
+        {
+          "title": "Продовольственные товары",
+          "value": "311340000"
+        },
+        {
+          "title": "Сельскохозяйственная продукция",
+          "value": "311320000"
+        },
+        {
+          "title": "Хвойные насаждения",
+          "value": "311450000"
+        },
+        {
+          "title": "Хлебобулочные изделия",
+          "value": "311360000"
+        },
+        {
+          "title": "Хлебобулочные и кондитерские изделия",
+          "value": "311460000"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер на схеме",
+      "required": true,
+      "valueType": "INT",
+      "description": "Уникальный номер места на карте"
+    },
+    {
+      "name": "location",
+      "title": "Место положение",
+      "required": true,
+      "maxLength": 400,
+      "valueType": "STRING",
+      "description": "Адресное описание"
+    },
+    {
+      "name": "nto_type",
+      "title": "Тип НТО",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "автолавка",
+          "value": "автолавка"
+        },
+        {
+          "title": "киоск",
+          "value": "киоск"
+        },
+        {
+          "title": "открытое кафе",
+          "value": "открытое кафе"
+        },
+        {
+          "title": "бар",
+          "value": "бар"
+        },
+        {
+          "title": "павильон",
+          "value": "павильон"
+        },
+        {
+          "title": "кафе-киоск",
+          "value": "кафе-киоск"
+        },
+        {
+          "title": "бахчевой развал",
+          "value": "бахчевой развал"
+        },
+        {
+          "title": "торговый павильон",
+          "value": "торговый павильон"
+        },
+        {
+          "title": "автомагазин",
+          "value": "автомагазин"
+        },
+        {
+          "title": "торговый автомат",
+          "value": "торговый автомат"
+        },
+        {
+          "title": "торговая палатка",
+          "value": "торговая палатка"
+        },
+        {
+          "title": "торговая галерея",
+          "value": "торговая галерея"
+        },
+        {
+          "title": "елочный базар",
+          "value": "елочный базар"
+        },
+        {
+          "title": "палатка",
+          "value": "палатка"
+        },
+        {
+          "title": "киоск - малый модуль",
+          "value": "киоск - малый модуль"
+        },
+        {
+          "title": "лоток",
+          "value": "лоток"
+        },
+        {
+          "title": "автокафе",
+          "value": "автокафе"
+        },
+        {
+          "title": "презентационная стойка",
+          "value": "презентационная стойка"
+        }
+      ]
+    },
+    {
+      "name": "specialty",
+      "title": "Специализация",
+      "valueType": "STRING",
+      "description": "Описание специализации торгового объекта"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Функционирующий ",
+          "value": "Функционирующий "
+        },
+        {
+          "title": "Не сезон",
+          "value": "Не сезон"
+        },
+        {
+          "title": "Свободный",
+          "value": "Свободный"
+        },
+        {
+          "title": "Планируемый",
+          "value": "Планируемый"
+        },
+        {
+          "title": "Незаконный",
+          "value": "Незаконный"
+        }
+      ]
+    },
+    {
+      "name": "season",
+      "title": "Период функционирования НТО",
+      "valueType": "STRING",
+      "description": "Период функционирования НТО"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь, м.кв.",
+      "valueType": "DOUBLE",
+      "description": "Площадь по документам",
+      "fractionDigits": 6
+    },
+    {
+      "name": "photo",
+      "title": "Фотоматериалы существующего НТО",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Фотоматериалы существующего НТО"
+    },
+    {
+      "name": "owner",
+      "title": "Арендатор",
+      "valueType": "STRING"
+    },
+    {
+      "name": "passport",
+      "title": "Паспорт НТО",
+      "maxSize": 50000000,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "lease_contract",
+      "title": "Договор",
+      "maxSize": 50000000,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "files",
+      "title": "Прочие",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Прочие"
+    },
+    {
+      "name": "timetable",
+      "title": "График работы",
+      "valueType": "STRING"
+    },
+    {
+      "name": "ownership",
+      "title": "Тип собственности",
+      "readOnly": false,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная",
+          "value": "Государственная"
+        },
+        {
+          "title": "Частная",
+          "value": "Частная"
+        },
+        {
+          "title": "Муниципальная",
+          "value": "Муниципальная"
+        }
+      ]
+    },
+    {
+      "name": "date_reg",
+      "title": "Дата начала",
+      "required": true,
+      "valueType": "DATETIME",
+      "description": "Дата начала действия договора"
+    },
+    {
+      "name": "date_end",
+      "title": "Дата прекращения",
+      "required": true,
+      "valueType": "DATETIME",
+      "description": "Дата окончания договора"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "notes",
+      "title": "Примечания",
+      "valueType": "STRING"
+    }
+  ],
+  "views": [
+    {
+      "id": "viewsId1",
+      "title": "Свободный",
+      "styleName": "polygon_nto",
+      "attributes": [
+        {
+          "name": "classid"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "nto_type"
+        },
+        {
+          "name": "specialty"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "season"
+        },
+        {
+          "name": "area_doc"
+        },
+        {
+          "name": "area_fact"
+        },
+        {
+          "name": "photo"
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "passport"
+        },
+        {
+          "name": "lease_contract"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "timetable"
+        },
+        {
+          "name": "ownership"
+        },
+        {
+          "name": "date_reg"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "created_by"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "updated_by"
+        },
+        {
+          "name": "shape"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "viewsId1",
+      "title": "Функционирующий",
+      "styleName": "polygon_nto",
+      "attributes": [
+        {
+          "name": "classid"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "nto_type"
+        },
+        {
+          "name": "specialty"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "season"
+        },
+        {
+          "name": "area_doc"
+        },
+        {
+          "name": "area_fact"
+        },
+        {
+          "name": "photo"
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "passport"
+        },
+        {
+          "name": "lease_contract"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "timetable"
+        },
+        {
+          "name": "ownership"
+        },
+        {
+          "name": "date_reg"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "created_by"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "updated_by"
+        },
+        {
+          "name": "shape"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "viewsId1",
+      "title": "Планируемый",
+      "styleName": "polygon_nto",
+      "attributes": [
+        {
+          "name": "classid"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "nto_type"
+        },
+        {
+          "name": "specialty"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "season"
+        },
+        {
+          "name": "area_doc"
+        },
+        {
+          "name": "area_fact"
+        },
+        {
+          "name": "photo"
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "passport"
+        },
+        {
+          "name": "lease_contract"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "timetable"
+        },
+        {
+          "name": "ownership"
+        },
+        {
+          "name": "date_reg"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "created_by"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "updated_by"
+        },
+        {
+          "name": "shape"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "viewsId1",
+      "title": "Незаконный",
+      "styleName": "polygon_nto",
+      "attributes": [
+        {
+          "name": "classid"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "nto_type"
+        },
+        {
+          "name": "specialty"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "season"
+        },
+        {
+          "name": "area_doc"
+        },
+        {
+          "name": "area_fact"
+        },
+        {
+          "name": "photo"
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "passport"
+        },
+        {
+          "name": "lease_contract"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "timetable"
+        },
+        {
+          "name": "ownership"
+        },
+        {
+          "name": "date_reg"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "created_by"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "updated_by"
+        },
+        {
+          "name": "shape"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "viewsId1",
+      "title": "Не сезон",
+      "styleName": "polygon_nto",
+      "attributes": [
+        {
+          "name": "classid"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "nto_type"
+        },
+        {
+          "name": "specialty"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "season"
+        },
+        {
+          "name": "area_doc"
+        },
+        {
+          "name": "area_fact"
+        },
+        {
+          "name": "photo"
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "passport"
+        },
+        {
+          "name": "lease_contract"
+        },
+        {
+          "name": "files"
+        },
+        {
+          "name": "timetable"
+        },
+        {
+          "name": "ownership"
+        },
+        {
+          "name": "date_reg"
+        },
+        {
+          "name": "date_end"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "created_by"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "updated_by"
+        },
+        {
+          "name": "shape"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "name": "greeneryplanting",
+  "title": "Территории зеленого фонда городских и сельских поселений ",
+  "styleName": "greeneryplanting_698",
+  "tableName": "greeneryplanting",
+  "originName": "GreeneryPlanting",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Территории зеленого фонда городских и сельских поселений",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Лесопарковая зона",
+          "value": "705010100"
+        },
+        {
+          "title": "Зеленая зона",
+          "value": "705010200"
+        },
+        {
+          "title": "Озелененные территории общего пользования",
+          "value": "705010300"
+        },
+        {
+          "title": "Озелененные территории ограниченного пользования",
+          "value": "705010400"
+        },
+        {
+          "title": "Озелененные территории специального назначения",
+          "value": "705010500"
+        },
+        {
+          "title": "Иные озеленённые территории в соответствии с региональным законодательством и актами местного самоуправления",
+          "value": "705010600"
+        },
+        {
+          "title": "Границы ключевых орнитологических территорий (КОТР)",
+          "value": "705010800"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "obj_desc",
+      "title": "Описание объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "ozsn_type",
+      "title": "Тип озелененной территории специального назначения",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Питомники садово-паркового хозяйства, цветочно-оранжерейные хозяйства",
+          "value": "1"
+        },
+        {
+          "title": "Озелененные территории санитарно-защитных, водоохранных, защитно-мелиоративных зон",
+          "value": "2"
+        },
+        {
+          "title": "Насаждения вдоль автомобильных и железных дорог",
+          "value": "3"
+        },
+        {
+          "title": "Иные озелененные территории специального назначения",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "area",
+      "title": "Площадь, га",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Существующий",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

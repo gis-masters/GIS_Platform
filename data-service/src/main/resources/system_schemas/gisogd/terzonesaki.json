@@ -1,0 +1,57 @@
+{
+  "styleName": "terzonesaki",
+  "tags": ["system", "ГИСОГД"],
+  "name": "terzonesaki",
+  "title": "Территориальные зоны",
+  "readOnly": true,
+  "tableName": "terzonesaki",
+  "originName": "terzonesaki",
+  "description": "Территориальные зоны",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "objectname",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "objectcode",
+      "title": "Код зоны",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "admemr",
+      "title": "Муниципальный район",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "datereglam",
+      "title": "Дата утверждения регламента",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "link",
+      "title": "Правила землепользования и застройки",
+      "required": true,
+      "valueType": "URL",
+      "displayMode": "in_popup"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

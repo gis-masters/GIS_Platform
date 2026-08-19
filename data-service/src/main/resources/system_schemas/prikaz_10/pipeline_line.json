@@ -1,0 +1,254 @@
+{
+  "name": "pipeline_line",
+  "title": "Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов",
+  "styleName": "pipeline_line_123",
+  "tableName": "pipeline_line",
+  "originName": "Pipeline",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Магистральный нефтепровод",
+          "value": "602040401"
+        },
+        {
+          "title": "Магистральный нефтепродуктопровод",
+          "value": "602040402"
+        },
+        {
+          "title": "Магистральный газопровод",
+          "value": "602040403"
+        },
+        {
+          "title": "Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа",
+          "value": "602040404"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "pline_type",
+      "title": "Тип трубопровода",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Надземный",
+          "value": "1"
+        },
+        {
+          "title": "Подземный",
+          "value": "2"
+        },
+        {
+          "title": "Подземный в тоннеле, коллекторе",
+          "value": "3"
+        },
+        {
+          "title": "Наземный",
+          "value": "4"
+        },
+        {
+          "title": "Подводный",
+          "value": "5"
+        },
+        {
+          "title": "Морской",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "name": "length",
+      "title": "Протяженность сооружения, км",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "wear_prcnt",
+      "title": "Процент износа, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "pline_cnt",
+      "title": "Количество ниток",
+      "valueType": "INT"
+    },
+    {
+      "name": "d_pline",
+      "title": "Диаметр трубопровода, мм",
+      "valueType": "INT"
+    },
+    {
+      "name": "cat_main",
+      "title": "Категория магистральных газопроводов по давлению",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "I (св. 2,5 до 10,0 МПа включ.)",
+          "value": "1"
+        },
+        {
+          "title": "II (св. 1,2 до 2,5 МПа включ.)",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "pressure",
+      "title": "Рабочее давление в трубопроводе, МПа",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "zmr_size",
+      "title": "Размер зоны минимальных расстояний, м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "zone_size",
+      "title": "Размер охранной зоны, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "namedocosn",
+      "title": "Наименование документа основания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "datedocosn",
+      "title": "Дата документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "numberdocosn",
+      "title": "Номер документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_oks_property_yugip_schema",
+  "title": "ОКС для выкупа",
+  "tableName": "dl_data_oks_property_yugip",
+  "originName": "dl_data_oks_property_yugip",
+  "description": "Добавить ОКС ",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "title",
+      "title": "Наименование объекта",
+      "maxLength": 300,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "minWidth": 100,
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Адрес",
+      "minWidth": 250,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв.м.",
+      "minWidth": 230,
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "cost",
+      "title": "Цена объекта, руб.",
+      "valueType": "DOUBLE",
+      "totalDigits": 15,
+      "fractionDigits": 0
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "minWidth": 300,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "doc",
+      "title": "Выписка ЕГРН",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 20
+    },
+    {
+      "name": "ghostylink",
+      "title": "Перейти к объекту на карте",
+      "readOnly": true,
+      "valueType": "URL",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_11:obj_property_yugip_1431_d46c"],
+        "property": "doc",
+        "projectId": 1431
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "oks_property",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "ghostyLink"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "cad_num"
+        },
+        {
+          "name": "address"
+        },
+        {
+          "name": "area"
+        },
+        {
+          "name": "cost"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "doc"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Добавить папку",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Земельный участок",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

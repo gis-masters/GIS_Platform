@@ -1,0 +1,215 @@
+{
+  "name": "sewerpipeline_line",
+  "title": "Сети водоотведения",
+  "styleName": "sewerpipeline_line_123",
+  "tableName": "sewerpipeline_line",
+  "originName": "SewerPipeline",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Сети водоотведения",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Сети водоотведения",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Канализация самотечная",
+          "value": "602041401"
+        },
+        {
+          "title": "Канализация напорная",
+          "value": "602041402"
+        },
+        {
+          "title": "Канализация дождевая напорная",
+          "value": "602041403"
+        },
+        {
+          "title": "Канализация дождевая самотечная закрытая",
+          "value": "602041404"
+        },
+        {
+          "title": "Канализация дождевая самотечная открытая",
+          "value": "602041405"
+        },
+        {
+          "title": "Дренаж",
+          "value": "602041406"
+        },
+        {
+          "title": "Выпуски и ливнеотводы",
+          "value": "602041407"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "pline_type",
+      "title": "Вид расположения трубопровода",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Надземный",
+          "value": "1"
+        },
+        {
+          "title": "Подземный",
+          "value": "2"
+        },
+        {
+          "title": "Подземный в тоннеле, коллекторе",
+          "value": "3"
+        },
+        {
+          "title": "Наземный",
+          "value": "4"
+        },
+        {
+          "title": "Подводный",
+          "value": "5"
+        },
+        {
+          "title": "Морской",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "name": "length",
+      "title": "Протяженность сооружения, км",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "wear_prcnt",
+      "title": "Процент износа, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "pline_cnt",
+      "title": "Количество труб",
+      "valueType": "INT"
+    },
+    {
+      "name": "d_pline",
+      "title": "Диаметр трубопровода, мм",
+      "valueType": "INT"
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

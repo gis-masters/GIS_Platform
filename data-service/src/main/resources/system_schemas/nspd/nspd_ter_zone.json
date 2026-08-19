@@ -42,7 +42,7 @@
       "title": "Наименование",
       "valueType": "STRING",
       "maxLength": 5000,
-       "asTitle": true
+      "asTitle": true
     },
     {
       "name": "content_restrict_encumbrances",
@@ -109,9 +109,7 @@
       "title": "Геометрия",
       "valueType": "GEOMETRY",
       "hidden": true,
-      "allowedValues": [
-        "Polygon"
-      ]
+      "allowedValues": ["Polygon"]
     }
   ]
 }

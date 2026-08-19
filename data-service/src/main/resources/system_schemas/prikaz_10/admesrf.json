@@ -1,0 +1,97 @@
+{
+  "name": "admesrf",
+  "title": "Территория субъекта Российской Федерации",
+  "styleName": "admesrf_123",
+  "tableName": "admesrf",
+  "originName": "AdmeSRF",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Территория субъекта Российской Федерации",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Территория субъекта Российской Федерации",
+          "value": "601020200"
+        }
+      ]
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type_subj",
+      "title": "Тип субъекта Российской Федерации",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Республика",
+          "value": "1"
+        },
+        {
+          "title": "Край",
+          "value": "2"
+        },
+        {
+          "title": "Область",
+          "value": "3"
+        },
+        {
+          "title": "Город федерального значения",
+          "value": "4"
+        },
+        {
+          "title": "Автономная область",
+          "value": "5"
+        },
+        {
+          "title": "Автономный округ",
+          "value": "6"
+        },
+        {
+          "title": "Федеральная территория",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "population",
+      "title": "Численность населения, тыс. чел.",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

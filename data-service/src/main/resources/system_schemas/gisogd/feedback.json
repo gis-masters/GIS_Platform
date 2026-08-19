@@ -1,0 +1,69 @@
+{
+  "styleName": "feedback",
+  "tags": ["system", "ГИСОГД"],
+  "name": "feedback",
+  "title": "Замечания",
+  "tableName": "feedback",
+  "originName": "feedback",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "address_no",
+      "title": "Адрес участка",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Ожидает",
+          "value": "62030000001"
+        },
+        {
+          "title": "Выполнено",
+          "value": "63030000001"
+        },
+        {
+          "title": "В работе",
+          "value": "64030000001"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "respondent",
+      "title": "Ответственный",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "required": true,
+      "valueType": "TEXT",
+      "asTitle": true
+    },
+    {
+      "name": "documents",
+      "title": "Документы",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

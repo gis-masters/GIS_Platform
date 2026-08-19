@@ -1,0 +1,163 @@
+{
+  "styleName": "oks_krymtel",
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "oks_krymtel",
+  "title": "Здания",
+  "relations": [
+    {
+      "type": "document",
+      "title": "Помещения в составе ОКС",
+      "library": "dl_data_premises_and_apartments",
+      "property": "cad_oks"
+    },
+    {
+      "type": "feature",
+      "title": "Перейти к ЗУ",
+      "layers": ["scratch_database_18: zu_krymtel_1422_9ab3"],
+      "property": "cad_zu",
+      "projectId": 1422,
+      "targetProperty": "cad_zu"
+    }
+  ],
+  "tableName": "oks_krymtel",
+  "originName": "oks_krymtel",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "cad_zu",
+      "title": "Кадастровый номер земельного участка",
+      "required": true,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_oks",
+      "title": "Кадастровый номер объекта недвижимости",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Сформированный",
+          "value": "Сформированный"
+        },
+        {
+          "title": "Несформированный",
+          "value": "Несформированный"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Адрес",
+      "required": true,
+      "maxLength": 300,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "type_oks",
+      "title": "Вид ОКС",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Здание",
+          "value": "Здание"
+        },
+        {
+          "title": "Сооружение",
+          "value": "Сооружение"
+        },
+        {
+          "title": "Объект незавершенного строительства",
+          "value": "объект незавершенного строительства"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение по ЕГРН",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Жилой дом",
+          "value": "Жилой дом"
+        },
+        {
+          "title": "Нежилое здание ",
+          "value": "Нежилое здание "
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование по ЕГРН",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name_bti",
+      "title": "Наименование по БТИ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь ЕГРН, м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "active",
+      "title": "Используется в производственной деятельности",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ЕГРН",
+          "value": "ЕГРН"
+        },
+        {
+          "title": "Выявленный при обследовании",
+          "value": "Выявленный при обследовании"
+        },
+        {
+          "title": "БТИ",
+          "value": "БТИ"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "doc_egrn",
+      "title": "Выписка ЕГРН",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 25
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

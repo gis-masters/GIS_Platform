@@ -1,0 +1,87 @@
+{
+  "styleName": "undeveloped_lease",
+  "tags": ["system", "ГИСОГД"],
+  "name": "undeveloped_lease",
+  "title": "Неосвоенная аренда",
+  "tableName": "undeveloped_lease",
+  "originName": "undeveloped_lease",
+  "description": "Неосвоенная аренда",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "num",
+      "title": "Номер п/п",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "owner",
+      "title": "Землепользователь",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Место расположение земельного участка",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "landuse",
+      "title": "ВРИ/Цель предоставления",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "agreement_d",
+      "title": "№ и дата договора аренды в РФ",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "tz_gp",
+      "title": "ТЗ по генеральному плану",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type_parcel",
+      "title": "Тип участка",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape_area",
+      "title": "Площадь, кв.м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 0
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "styleName": "park_structures",
+  "tags": ["system", "Зеленые насаждения"],
+  "name": "park_structures",
+  "title": "Защитные сооружения",
+  "tableName": "park_structures",
+  "originName": "park_structures",
+  "description": "Защитные сооружения",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "maxLength": 50,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "length",
+      "title": "Протяженность, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "styleName": "labels_line",
+  "tags": ["system", "Топоплан 2000"],
+  "name": "labels_line_topo_2000",
+  "title": "Подписи",
+  "tableName": "labels_line_topo_2000",
+  "originName": "labels_line_topo_2000",
+  "description": "Класс объектов «Подписи»",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "textstring",
+      "title": "TextString",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "fontname",
+      "title": "FontName",
+      "valueType": "STRING"
+    },
+    {
+      "name": "fontsize",
+      "title": "FontSize",
+      "hidden": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "angle",
+      "title": "Angle",
+      "hidden": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape_leng",
+      "title": "Периметр",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape_area",
+      "title": "Площадь",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    }
+  ]
+}

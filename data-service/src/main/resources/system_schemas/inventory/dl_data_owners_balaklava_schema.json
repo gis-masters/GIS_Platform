@@ -1,0 +1,283 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_data_owners_balaklava_schema",
+  "title": "Права",
+  "readOnly": true,
+  "tableName": "dl_data_owners_balaklava",
+  "originName": "dl_data_owners_balaklava",
+  "description": "Правообладатель",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "title",
+      "title": "Кадастровый номер",
+      "minWidth": 150,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "type_own",
+      "title": "Тип собственности",
+      "minWidth": 100,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Квартиры",
+          "value": "Квартиры"
+        },
+        {
+          "title": "ОКС",
+          "value": "ОКС"
+        },
+        {
+          "title": "ЗУ",
+          "value": "ЗУ"
+        },
+        {
+          "title": "Помещение",
+          "value": "Помещение"
+        },
+        {
+          "title": "Апартаменты",
+          "value": "Апартаменты"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "reg_number",
+      "title": "Номер гос. регистрации права",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "reg_date",
+      "title": "Дата гос. регистрации права",
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "dateFormat": "LL"
+    },
+    {
+      "name": "close_date",
+      "title": "Дата закрытия гос. регистрации",
+      "minWidth": 180,
+      "valueType": "DATETIME",
+      "dateFormat": "LL"
+    },
+    {
+      "name": "proprietor",
+      "title": "Собственник",
+      "minWidth": 350,
+      "maxLength": 800,
+      "valueType": "STRING"
+    },
+    {
+      "name": "contact_phone",
+      "title": "Номер телфона",
+      "minWidth": 180,
+      "valueType": "STRING"
+    },
+    {
+      "name": "contact_email",
+      "title": "Электронная почта",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "contact_adress",
+      "title": "Адрес проживания",
+      "minWidth": 350,
+      "valueType": "STRING"
+    },
+    {
+      "name": "legal_reason",
+      "title": "Основание гос. регистрации",
+      "minWidth": 650,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "series",
+      "title": "Серия",
+      "minWidth": 80,
+      "maxLength": 10,
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_legal_reason",
+      "title": "Номер основания",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_legal_reason",
+      "title": "Дата основания",
+      "minWidth": 150,
+      "valueType": "STRING"
+    },
+    {
+      "name": "organization",
+      "title": "Исполнительный орган",
+      "minWidth": 700,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "file",
+      "title": "Документы",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "shape",
+      "title": "тайтл",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "owner",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Правообладатель",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Кадастровый номер"
+        },
+        {
+          "name": "type_own"
+        },
+        {
+          "name": "reg_number"
+        },
+        {
+          "name": "reg_date"
+        },
+        {
+          "name": "close_date"
+        },
+        {
+          "name": "proprietor"
+        },
+        {
+          "name": "contact_phone"
+        },
+        {
+          "name": "contact_email"
+        },
+        {
+          "name": "contact_adress"
+        },
+        {
+          "name": "legal_reason"
+        },
+        {
+          "name": "series"
+        },
+        {
+          "name": "num_legal_reason"
+        },
+        {
+          "name": "date_legal_reason"
+        },
+        {
+          "name": "organization"
+        },
+        {
+          "name": "is_folder"
+        },
+        {
+          "name": "file",
+          "title": "Документы",
+          "maxSize": 50000000,
+          "maxFiles": 10,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

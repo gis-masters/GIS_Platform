@@ -1,0 +1,18 @@
+{
+  "styleName": "zone_d",
+  "tags": ["system", "ГИСОГД"],
+  "name": "zone_d",
+  "title": "Зона Г",
+  "tableName": "zone_d",
+  "originName": "zone_d",
+  "description": "Зона Г",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "styleName": "soils",
+  "tags": ["system", "ГИСОГД"],
+  "name": "soils",
+  "title": "Почвы",
+  "readOnly": true,
+  "tableName": "soils",
+  "originName": "soils",
+  "description": "Почвы",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "location",
+      "title": "Месторасположение",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "group_soil",
+      "title": "Агрогруппа",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "name_soil",
+      "title": "Наименование почвы",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "podstil_po",
+      "title": "Подстилающая поверхность",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gumus",
+      "title": "Гумусовый горизонт",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gumus_pr",
+      "title": "Содержание гумуса",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "under_wate",
+      "title": "Глубина залегания грунтовых вод",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "washed_awa",
+      "title": "Степень смытости",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "reclaimed",
+      "title": "Степень намытости",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "mechanical",
+      "title": "Механический состав",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "skeletalne",
+      "title": "Скелетность",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "deflation",
+      "title": "Степень дефляции",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "namber_soi",
+      "title": "Номер по Классификатору почв",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "shape_area",
+      "title": "Площадь, кв.м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

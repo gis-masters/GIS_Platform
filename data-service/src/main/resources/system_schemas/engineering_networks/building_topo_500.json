@@ -1,0 +1,143 @@
+{
+  "styleName": "building_topo_500",
+  "tags": ["system", "Топография 500 Инженерные сети"],
+  "name": "building_topo_500",
+  "title": "Здания и сооружения",
+  "tableName": "building_topo_500",
+  "originName": "building_topo_500",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Здание",
+          "value": "1"
+        },
+        {
+          "title": "Сооружение",
+          "value": "2"
+        },
+        {
+          "title": "Объект незавершенного строительства",
+          "value": "3"
+        }
+      ],
+      "asTitle": true
+    },
+    {
+      "name": "type_z",
+      "title": "Вид здания (назначение)",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "жилое здание",
+          "value": "1"
+        },
+        {
+          "title": "нежилое здание",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "type_s",
+      "title": "Вид сооружения (назначение)",
+      "valueType": "STRING"
+    },
+    {
+      "name": "index",
+      "title": "Индекс",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Д",
+          "value": "1"
+        },
+        {
+          "title": "ДН",
+          "value": "2"
+        },
+        {
+          "title": "К",
+          "value": "3"
+        },
+        {
+          "title": "КЖ",
+          "value": "4"
+        },
+        {
+          "title": "КН",
+          "value": "5"
+        },
+        {
+          "title": "М",
+          "value": "6"
+        },
+        {
+          "title": "МБ",
+          "value": "7"
+        },
+        {
+          "title": "МН",
+          "value": "8"
+        },
+        {
+          "title": "Н",
+          "value": "9"
+        },
+        {
+          "title": "СМ",
+          "value": "10"
+        },
+        {
+          "title": "Т",
+          "value": "11"
+        },
+        {
+          "title": "Ц",
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "name": "built_area",
+      "title": "Площадь застройки, кв. м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area",
+      "title": "Общая площадь, кв. м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "floor",
+      "title": "Этажность",
+      "maxLength": 2,
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

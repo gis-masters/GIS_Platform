@@ -1,0 +1,46 @@
+{
+  "name": "advertising_zone_simf_2025",
+  "tags": ["system", "advertising"],
+  "title": "Зоны возможного размещения рекламных конструкций города Симферополь",
+  "readOnly": true,
+  "styleName": "advertising_zone_simf_2025",
+  "tableName": "advertising_zone_simf_2025",
+  "originName": "advertising_zone_simf_2025",
+  "description": "Зоны возможного размещения рекламных конструкций города Симферополь",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "objectid",
+      "title": "№",
+      "readOnly": true,
+      "valueType": "INT",
+      "description": "Идентификатор объекта (Заполняется автоматически)"
+    },
+    {
+      "name": "objectname",
+      "title": "Наименование",
+      "required": true,
+      "valueType": "STRING",
+      "objectIdentityOnUi": true
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв. м.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

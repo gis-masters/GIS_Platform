@@ -1,0 +1,322 @@
+{
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "buildings_valuation",
+  "title": "Здания. Инвентарный план",
+  "relations": [
+    {
+      "type": "document",
+      "title": "Квартиры и помещения в составе ОКС",
+      "library": "dl_data_flats_balaklava",
+      "property": "cad_oks"
+    },
+    {
+      "type": "document",
+      "title": "Ограничения и обременения на ОКС",
+      "library": "dl_data_limits_balaklava",
+      "property": "cad_oks",
+      "targetProperty": "title"
+    },
+    {
+      "type": "document",
+      "title": "Зарегистрированные права на ОКС",
+      "library": "dl_data_owners_balaklava",
+      "property": "cad_oks",
+      "targetProperty": "title"
+    }
+  ],
+  "styleName": "buildings_valuation",
+  "tableName": "buildings_valuation",
+  "originName": "buildings_valuation",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "n_ter",
+      "title": "Номер территории",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "kod",
+      "title": "Номер на плане",
+      "required": true,
+      "maxLength": 8,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_zu",
+      "title": "Кадастровый номер земельного участка",
+      "asTitle": true,
+      "required": true,
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type_oks",
+      "title": "Вид ОКС",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Здание",
+          "value": "Здание"
+        },
+        {
+          "title": "Сооружение",
+          "value": "Сооружение"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "cad_oks",
+      "title": "Кадастровый номер объекта недвижимости",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Адрес",
+      "required": true,
+      "maxLength": 300,
+      "valueType": "STRING"
+    },
+    {
+      "name": "okn",
+      "title": "Объект культурного наследия",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Является ОКН",
+          "value": "да"
+        },
+        {
+          "title": "Не является ОКН",
+          "value": "нет"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение по ЕГРН",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Многоквартирный дом",
+          "value": "МКД"
+        },
+        {
+          "title": "Жилой дом",
+          "value": "ИЖС"
+        },
+        {
+          "title": "Нежилое",
+          "value": "Н"
+        },
+        {
+          "title": "Садовый дом",
+          "value": "СД"
+        },
+        {
+          "title": "Иные",
+          "value": "Иные"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Фактическое назначение",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "t_ppt",
+      "title": "Тип ОКС для ППТ",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Многоквартирная жилая застройка",
+          "value": "1"
+        },
+        {
+          "title": "Индивидуальная жилая застройка",
+          "value": "2"
+        },
+        {
+          "title": "Общественно-делового назначения ",
+          "value": "3"
+        },
+        {
+          "title": "Социального и коммунально-бытового обслуживания",
+          "value": "4"
+        },
+        {
+          "title": "Производственного и коммунально-складского назначения",
+          "value": "5"
+        },
+        {
+          "title": "Инженерной инфраструктуры",
+          "value": "6"
+        },
+        {
+          "title": "Транспортной инфраструктуры",
+          "value": "7"
+        },
+        {
+          "title": "Гостиничного обслуживания ",
+          "value": "8"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "t_own",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральная",
+          "value": "1"
+        },
+        {
+          "title": "Государственная",
+          "value": "2"
+        },
+        {
+          "title": "Частная",
+          "value": "3"
+        },
+        {
+          "title": "Хозяйственное ведение",
+          "value": "4"
+        },
+        {
+          "title": "Принят на учет как бесхозяйный объект недвижимого имущества",
+          "value": "5"
+        },
+        {
+          "title": "Оперативное управление",
+          "value": "6"
+        },
+        {
+          "title": "Данные отсутствуют",
+          "value": "7"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь ЕГРН, м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_fact",
+      "title": "Площадь фактическая, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_bti",
+      "title": "Площадь помещений общая (БТИ), м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "total_fl",
+      "title": "Количество жилых помещений (квартир)",
+      "valueType": "INT"
+    },
+    {
+      "name": "a_rooms_fl",
+      "title": "Площадь жилых помещений (для МКД), м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "total_n",
+      "title": "Количество нежилых помещений",
+      "valueType": "INT"
+    },
+    {
+      "name": "a_rooms_n",
+      "title": "Площадь нежилых помещений (для МКД/ОЗ), м.кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "floor_gr",
+      "title": "Количество этажей в т.ч. подземных, мансарда",
+      "valueType": "INT"
+    },
+    {
+      "name": "floor_und",
+      "title": "Количество подземных этажей",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ЕГРН",
+          "value": "ЕГРН"
+        },
+        {
+          "title": "Выявленный при обследовании",
+          "value": "Выявленный при обследовании"
+        },
+        {
+          "title": "БТИ",
+          "value": "БТИ"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация",
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE",
+      "maxDocuments": 20
+    },
+    {
+      "name": "doc_egrn",
+      "title": "Выписка ЕГРН",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 25
+    },
+    {
+      "name": "doc_bti",
+      "title": "Инвентарное дело БТИ",
+      "maxSize": 50000000,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "шейп",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

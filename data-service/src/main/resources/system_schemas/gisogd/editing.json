@@ -1,0 +1,93 @@
+{
+  "styleName": "editing",
+  "tags": ["system", "ГИСОГД"],
+  "name": "editing",
+  "title": "Схема расположения земельного участка",
+  "tableName": "editing",
+  "originName": "editing",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "result",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Отказано",
+          "value": "65030000001"
+        },
+        {
+          "title": "Согласовано",
+          "value": "66030000001"
+        },
+        {
+          "title": "В работе",
+          "value": "67030000001"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "address_no",
+      "title": "Адрес участка",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "respondent",
+      "title": "Ответственный",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inbox",
+      "title": "Входящий №",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inbox_date",
+      "title": "Дата вход.",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "outgoing",
+      "title": "Исходящий №",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "outgoing_date",
+      "title": "Дата исх.",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "required": true,
+      "valueType": "TEXT",
+      "asTitle": true
+    },
+    {
+      "name": "documents",
+      "title": "Документы",
+      "valueType": "LOOKUP",
+      "resourcePath": "/api/data/document-libraries/dl_default"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

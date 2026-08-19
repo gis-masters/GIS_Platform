@@ -1,0 +1,72 @@
+{
+  "name": "reestr_outgoing_schema",
+  "tags": ["system", "Реестры"],
+  "title": "Реестр исходящих сообщений",
+  "description": "Схема, описывающая реестр исходящих сообщений. Версия 0.1",
+  "readOnly": true,
+  "tableName": "reestr_outgoing",
+  "originName": "reestr_outgoing",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "valueType": "UUID"
+    },
+    {
+      "name": "system",
+      "title": "Система",
+      "valueType": "STRING"
+    },
+    {
+      "name": "user_to",
+      "title": "Получатель",
+      "valueType": "STRING",
+      "maxLength": 100
+    },
+    {
+      "name": "body",
+      "title": "Тело сообщения",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "date_out",
+      "title": "Дата отправки",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "valueType": "STRING",
+      "maxLength": 20
+    },
+    {
+      "name": "response_to",
+      "title": "Ответ на",
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создано",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последнего изменения",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Модифицировано",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

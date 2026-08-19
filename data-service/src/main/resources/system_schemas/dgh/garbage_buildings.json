@@ -1,0 +1,42 @@
+{
+  "styleName": "garbage_buildings",
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "garbage_buildings",
+  "title": "Здания",
+  "tableName": "garbage_buildings",
+  "originName": "garbage_buildings",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта»",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Здания",
+          "value": "50102022"
+        }
+      ],
+      "asTitle": true
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв.м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 0
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

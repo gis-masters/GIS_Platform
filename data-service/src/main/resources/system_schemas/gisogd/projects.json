@@ -1,0 +1,162 @@
+{
+  "styleName": "projects",
+  "tags": ["system", "ГИСОГД"],
+  "name": "projects",
+  "title": "Проекты",
+  "tableName": "projects",
+  "originName": "projects",
+  "description": "Проекты",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "name",
+      "title": "Наименование проекта",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "shape",
+      "required": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "state",
+      "title": "Статус проекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Не выполнялось",
+          "value": "2"
+        },
+        {
+          "title": "Готов",
+          "value": "1"
+        },
+        {
+          "title": "Загружены растровые ПЗЗ",
+          "value": "3"
+        },
+        {
+          "title": "Данные устарели",
+          "value": "4"
+        },
+        {
+          "title": "Прозрачность",
+          "value": "6"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "project",
+      "title": "Ссылка на проект",
+      "required": true,
+      "maxLength": 500,
+      "valueType": "URL"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "proj_date",
+      "title": "Дата формирования проекта",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_apd",
+      "title": "Дата последнего обновления данных",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "contact",
+      "title": "Контактное лицо",
+      "valueType": "STRING"
+    },
+    {
+      "name": "phone_numb",
+      "title": "Телефон",
+      "valueType": "STRING"
+    },
+    {
+      "name": "usage",
+      "title": "Использование",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Доступ предоставлен",
+          "value": "1"
+        },
+        {
+          "title": "Доступ не предоставлен",
+          "value": "1"
+        },
+        {
+          "title": "Активное пользование",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "acces_date",
+      "title": "Дата предоставления доступа к проекту",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "note",
+      "title": "Комментарий к проекту",
+      "valueType": "STRING"
+    },
+    {
+      "name": "creator",
+      "title": "Исполнитель",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Соколова",
+          "value": "Соколова"
+        },
+        {
+          "title": "Лютикова",
+          "value": "Лютикова"
+        },
+        {
+          "title": "Матвеева",
+          "value": "Матвеева"
+        },
+        {
+          "title": "Куклина",
+          "value": "Куклина"
+        },
+        {
+          "title": "Машталер",
+          "value": "Машталер"
+        },
+        {
+          "title": "Мушинская",
+          "value": "Мушинская"
+        },
+        {
+          "title": "Горбань",
+          "value": "Горбань"
+        },
+        {
+          "title": "Косенко",
+          "value": "Косенко"
+        },
+        {
+          "title": "Соловьев",
+          "value": "Соловьев"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    }
+  ]
+}

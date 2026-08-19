@@ -1,0 +1,47 @@
+{
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "building",
+  "title": "Здания",
+  "styleName": "building",
+  "tableName": "building",
+  "description": "Здания",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "address",
+      "title": "Адрес",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "name",
+      "title": "Номер дома",
+      "valueType": "STRING"
+    },
+    {
+      "name": "notes",
+      "title": "Примечание",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "area_doc_2",
+      "title": "Площадь фактическая, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

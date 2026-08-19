@@ -1,0 +1,56 @@
+{
+  "styleName": "responsible",
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "responsible",
+  "title": "Ответственные",
+  "tableName": "responsible",
+  "originName": "responsible",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "responsi_1",
+      "title": "Отвественный",
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "landuser",
+      "title": "Землепользователь",
+      "valueType": "STRING"
+    },
+    {
+      "name": "tenant",
+      "title": "Арендатор",
+      "valueType": "STRING"
+    },
+    {
+      "name": "usage",
+      "title": "Вид разрешенного использования",
+      "valueType": "STRING"
+    },
+    {
+      "name": "usefact",
+      "title": "Фактическое использование",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь м. кв.",
+      "maxLength": 3,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "styleName": "red_lines_2019",
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "red_lines_2019",
+  "title": "Красные линии 2019",
+  "tableName": "red_lines_2019",
+  "originName": "red_lines_2019",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    }
+  ]
+}

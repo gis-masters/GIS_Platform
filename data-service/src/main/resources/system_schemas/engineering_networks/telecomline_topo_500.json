@@ -1,0 +1,143 @@
+{
+  "tags": ["system", "Топография 500 Инженерные сети"],
+  "name": "telecomline_topo_500",
+  "title": "Линии связи",
+  "styleName": "telecomline_topo_500",
+  "tableName": "telecomline_topo_500",
+  "originName": "telecomline_topo_500",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "asTitle": true,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Линии связи и технических средств управления",
+          "value": "1"
+        },
+        {
+          "title": "Телефонная канализация",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "line_type",
+      "title": "Вид расположения трубопровода",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Наземный",
+          "value": "1"
+        },
+        {
+          "title": "Подземный",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "line_cnt",
+      "title": "Количество кабелей",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "1"
+        },
+        {
+          "title": "Не действующий",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "length",
+      "title": "Протяженность, м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 0
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "balabce_holder",
+      "title": "Принадлежность сети",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "АО «Севастополь телеком»",
+          "value": "1"
+        },
+        {
+          "title": "ООО «Миранда-медиа»",
+          "value": "2"
+        },
+        {
+          "title": "Воинская часть 40136 ",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "INTEGER"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

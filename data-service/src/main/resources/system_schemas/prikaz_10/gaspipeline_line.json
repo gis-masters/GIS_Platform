@@ -1,0 +1,284 @@
+{
+  "name": "gaspipeline_line",
+  "title": "Распределительный трубопровода для транспортировки газа",
+  "styleName": "gaspipeline_line_123",
+  "tableName": "gaspipeline_line",
+  "originName": "GasPipeline",
+  "tags": ["system", "Приказ 10"],
+  "description": "Класс объектов Трубопроводы для транспортировки газа",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Распределительные трубопроводы для транспортировки газа",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Газопровод распределительный высокого давления",
+          "value": "602040601"
+        },
+        {
+          "title": "Газопровод распределительный среднего давления",
+          "value": "602040602"
+        },
+        {
+          "title": "Газопровод распределительный низкого давления",
+          "value": "602040603"
+        },
+        {
+          "title": "Газопровод промысловый (газопровод подключения)",
+          "value": "602040604"
+        },
+        {
+          "title": "Газопровод соединительный (газопровод-перемычка)",
+          "value": "602040605"
+        },
+        {
+          "title": "Конденсато-продукто-этанолопровод",
+          "value": "602040606"
+        },
+        {
+          "title": "Этиленопровод",
+          "value": "602040607"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно положению о территориальном планировании",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "minLength": 1,
+      "valueType": "STRING"
+    },
+    {
+      "name": "pline_type",
+      "title": "Вид расположения трубопровода",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Надземный",
+          "value": "1"
+        },
+        {
+          "title": "Подземный",
+          "value": "2"
+        },
+        {
+          "title": "Подземный в тоннеле, коллекторе",
+          "value": "3"
+        },
+        {
+          "title": "Наземный",
+          "value": "4"
+        },
+        {
+          "title": "Подводный",
+          "value": "5"
+        },
+        {
+          "title": "Морской",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "name": "length",
+      "title": "Протяженность сооружения, км",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "wear_prcnt",
+      "title": "Процент износа, %",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "pline_cnt",
+      "title": "Количество ниток",
+      "valueType": "INT"
+    },
+    {
+      "name": "d_pline",
+      "title": "Диаметр трубопровода, мм",
+      "valueType": "INT"
+    },
+    {
+      "name": "cat_distr",
+      "title": "Категория распределительных газопроводов по давлению",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "I-а (Высокое, св. 1,2 МПа)",
+          "value": "1"
+        },
+        {
+          "title": "I (Высокое, св. 0,6 до 1,2 МПа включительно (для СУГ до 1,6 МПа включительно))",
+          "value": "2"
+        },
+        {
+          "title": "II (Высокое, св. 0,3 до 0,6 МПа включительно)",
+          "value": "3"
+        },
+        {
+          "title": "III (Среднее, св. 0,1 до 0,3 МПа включительно)",
+          "value": "4"
+        },
+        {
+          "title": "IV (Низкое, до 0,1 МПа включительно)",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "name": "pressure",
+      "title": "Рабочее давление в трубопроводе, МПа",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "szz_size",
+      "title": "Размер санитарно-защитной зоны, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "zmr_size",
+      "title": "Размер зоны минимальных расстояний, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "zone_size",
+      "title": "Размер охранной зоны, м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "namedocosn",
+      "title": "Наименование документа основания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "datedocosn",
+      "title": "Дата документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "numberdocosn",
+      "title": "Номер документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+    }
+  ]
+}

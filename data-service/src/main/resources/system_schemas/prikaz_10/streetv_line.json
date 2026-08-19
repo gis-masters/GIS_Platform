@@ -1,0 +1,226 @@
+{
+  "name": "streetv_line",
+  "title": "Улично-дорожная сеть сельского населенного пункта",
+  "styleName": "streetv_line_698",
+  "tableName": "streetv_line",
+  "originName": "StreetV",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Улично-дорожная сеть сельского поселения",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Поселковая дорога",
+          "value": "602030501"
+        },
+        {
+          "title": "Главная улица",
+          "value": "602030502"
+        },
+        {
+          "title": "Улица в жилой застройке",
+          "value": "602030503"
+        },
+        {
+          "title": "Хозяйственный проезд, скотопрогон",
+          "value": "602030504"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно Положению о территориальном планировании",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "str_type",
+      "title": "Тип улиц в жилой застройке",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Основная",
+          "value": "1"
+        },
+        {
+          "title": "Второстепенная (переулок)",
+          "value": "2"
+        },
+        {
+          "title": "Проезд",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "surface_exist",
+      "title": "Вид покрытия (существующий)",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Усовершенствованный",
+          "value": "1"
+        },
+        {
+          "title": "Переходный",
+          "value": "2"
+        },
+        {
+          "title": "Низший",
+          "value": "3"
+        },
+        {
+          "title": "Без покрытия",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "surface_plan",
+      "title": "Вид покрытия (проектный)",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Усовершенствованный",
+          "value": "1"
+        },
+        {
+          "title": "Переходный",
+          "value": "2"
+        },
+        {
+          "title": "Низший",
+          "value": "3"
+        },
+        {
+          "title": "Без покрытия",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "length",
+      "title": "Протяженность сооружения, км",
+      "required": true,
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий, реконструируемый, строящийся",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый к размещению",
+          "value": "2"
+        },
+        {
+          "title": "Планируемый к реконструкции",
+          "value": "3"
+        },
+        {
+          "title": "Планируемый к ликвидации",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    }
+  ]
+}

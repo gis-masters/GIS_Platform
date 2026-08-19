@@ -1,0 +1,254 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_initial",
+  "title": "Исходные данные",
+  "tableName": "dl_initial",
+  "originName": "dl_initial",
+  "description": "Исходные данные",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 400,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "minWidth": 300,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Инженерные изыскания",
+          "value": "doc_tif"
+        },
+        {
+          "title": "Папка",
+          "value": "folder_v1"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Территория изысканий",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "minWidth": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "Код ФИАС",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "native_crs",
+      "title": "Система координат",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Pulkovo 1942 / Gauss-Kruger zone 6",
+          "value": "EPSG: 28406"
+        },
+        {
+          "title": "Pulkovo 1942 / CS63 ZONE X5",
+          "value": "EPSG: 7829"
+        },
+        {
+          "title": "WGS 84 / Pseudo-Mercator",
+          "value": "EPSG: 3857"
+        },
+        {
+          "title": "Отсутствует",
+          "value": "EPSG: null"
+        }
+      ]
+    },
+    {
+      "name": "scale",
+      "title": "Номинальный масштаб",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "25000",
+          "value": "25000"
+        },
+        {
+          "title": "10000",
+          "value": "10000"
+        },
+        {
+          "title": "5000",
+          "value": "5000"
+        },
+        {
+          "title": "2000",
+          "value": "2000"
+        },
+        {
+          "title": "1000",
+          "value": "1000"
+        },
+        {
+          "title": "500",
+          "value": "500"
+        }
+      ]
+    },
+    {
+      "name": "engineerorg",
+      "title": "Организация",
+      "valueType": "STRING",
+      "description": "Организация,выполнившая подготовку материалов"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "minWidth": 400,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "file",
+      "title": "Выбор файла",
+      "maxSize": 90000000,
+      "maxFiles": 20,
+      "multiple": true,
+      "required": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_tif",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Инженерные изыскания",
+      "attributes": [
+        {
+          "name": "title",
+          "description": "Полное наименование документа"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        },
+        {
+          "name": "note",
+          "title": "Примечание",
+          "display": "multiline",
+          "valueType": "TEXT"
+        }
+      ]
+    }
+  ]
+}

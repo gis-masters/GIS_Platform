@@ -9,6 +9,9 @@
   "*.json": [
     "prettier --write --parser json"
   ],
+  "../data-service/src/main/resources/system_schemas/**/*.json": [
+    "prettier --write --parser json"
+  ],
   "*.{css,scss}": [
     "prettier --write",
     "stylelint --fix"

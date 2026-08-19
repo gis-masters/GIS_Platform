@@ -1,0 +1,139 @@
+{
+  "styleName": "buildings_construction_electro",
+  "tags": ["system", "Инвентаризация недвижимости"],
+  "name": "buildings_construction_electro",
+  "title": "Здания и сооружения",
+  "tableName": "buildings_construction_electro",
+  "originName": "buildings_construction_electro",
+  "description": "Здания и сооружения",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер ОКС",
+      "maxLength": 25,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "objecttype",
+      "title": "Вид ОКС",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Здание",
+          "value": "Здание"
+        },
+        {
+          "title": "Сооружение",
+          "value": "Сооружение"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "readablead",
+      "title": "Адрес",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Учтен",
+          "value": "Учтен"
+        },
+        {
+          "title": "Учтен без уточнения границ",
+          "value": "Учтен без уточнения границ"
+        },
+        {
+          "title": "Не поставлен на учет",
+          "value": "Не поставлен на учет"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ЕГРН",
+          "value": "ЕГРН"
+        },
+        {
+          "title": "Геодезическая съемка",
+          "value": "Геодезическая съемка"
+        },
+        {
+          "title": "Проектная документация",
+          "value": "Проектная документация"
+        },
+        {
+          "title": "Выявленный при обследовании",
+          "value": "Выявленный при обследовании"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "owner",
+      "title": "Правообладатель",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь фактическая, м. кв.",
+      "readOnly": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация",
+      "maxSize": 50000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 20
+    },
+    {
+      "name": "doc",
+      "title": "Документы",
+      "library": "dl_doc_library",
+      "minWidth": 0,
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "maxDocuments": 50
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "required": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    }
+  ]
+}

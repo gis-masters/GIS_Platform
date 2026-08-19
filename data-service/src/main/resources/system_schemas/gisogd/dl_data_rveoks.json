@@ -1,0 +1,390 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_rveoks",
+  "title": "Разрешение на ввод в эксплуатацию ОКС",
+  "tableName": "dl_data_rveoks",
+  "description": "13.18 Разрешение на ввод ОКС в эксплуатацию",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "dl_data_section13_data_connection",
+      "title": "13.18 Разрешение на ввод ОКС в эксплуатацию",
+      "multiple": true,
+      "required": true,
+      "libraries": ["dl_data_section13"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 5
+    },
+    {
+      "name": "address_assignment_doc",
+      "title": "Реквизит документа о присвоении адреса",
+      "valueType": "STRING"
+    },
+    {
+      "name": "building_address",
+      "title": "Строительный адрес",
+      "valueType": "STRING"
+    },
+    {
+      "name": "building_volume_total_pr",
+      "title": "Строительный объем - всего (проектный), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_volume_total_fa",
+      "title": "Строительный объем - всего (фактический), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_volume_total_above_ground_pr",
+      "title": "в том числе надземной части (проектный), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "building_volume_total_above_ground_fa",
+      "title": "в том числе надземной части (фактический), куб.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "total_area_pr",
+      "title": "Общая площадь (проектная), кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "total_area_living_pr",
+      "title": "Площадь нежилых помещений (проектная), кв.м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "built_in_area_pr",
+      "title": "Площадь  встроенно-пристроенных помещений (проектная), кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "built_in_area_fa",
+      "title": "Площадь  встроенно-пристроенных помещений (фактическая), кв.м",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "number_buildings_pr",
+      "title": "Количество зданий, сооружений (проектное)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_buildings_fa",
+      "title": "Количество зданий, сооружений (фактическое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_place_pr",
+      "title": "Количество мест (проектное)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_place_fa",
+      "title": "Количество мест (фактическое)",
+      "valueType": "INT"
+    },
+    {
+      "name": "number_room_pr",
+      "title": "Количество помещений (проектное)",
+      "valueType": "INT"
+    },
+    {
+      "name": "capacity_pr",
+      "title": "Вместимость (проектная)",
+      "valueType": "INT"
+    },
+    {
+      "name": "living_area",
+      "title": "Площадь жилых помещений кв.м.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "tech_plan_title",
+      "title": "Наименование (номер) технчиеского план",
+      "valueType": "STRING"
+    },
+    {
+      "name": "full_name_cadastre_engineer",
+      "title": "ФИО кадастрового инженера",
+      "valueType": "STRING"
+    },
+    {
+      "name": "dl_data_rsoks_data_connection",
+      "title": "Разрешение на строительство",
+      "multiple": true,
+      "libraries": ["dl_data_rsoks"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "dl_data_tech_plan_data_connection",
+      "title": "Технический план",
+      "multiple": true,
+      "libraries": ["dl_data_tech_plan"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа, утвердившего документ",
+      "multiple": true,
+      "readOnly": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "minWidth": 200,
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "minWidth": 200,
+      "asTitle": true,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Карточка документа",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "dl_data_section13_data_connection"
+        },
+        {
+          "name": "address_assignment_doc"
+        },
+        {
+          "name": "building_address"
+        },
+        {
+          "name": "building_volume_total_pr"
+        },
+        {
+          "name": "building_volume_total_fa"
+        },
+        {
+          "name": "building_volume_total_above_ground_pr"
+        },
+        {
+          "name": "building_volume_total_above_ground_fa"
+        },
+        {
+          "name": "total_area_pr"
+        },
+        {
+          "name": "total_area_living_pr"
+        },
+        {
+          "name": "built_in_area_pr"
+        },
+        {
+          "name": "built_in_area_fa"
+        },
+        {
+          "name": "number_buildings_pr"
+        },
+        {
+          "name": "number_buildings_fa"
+        },
+        {
+          "name": "number_place_pr"
+        },
+        {
+          "name": "number_place_fa"
+        },
+        {
+          "name": "number_room_pr"
+        },
+        {
+          "name": "capacity_pr"
+        },
+        {
+          "name": "living_area"
+        },
+        {
+          "name": "tech_plan_title"
+        },
+        {
+          "name": "full_name_cadastre_engineer"
+        },
+        {
+          "name": "dl_data_rsoks_data_connection"
+        },
+        {
+          "name": "dl_data_tech_plan_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "last_modified"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}

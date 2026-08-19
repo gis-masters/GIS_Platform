@@ -1,0 +1,106 @@
+{
+  "styleName": "frames",
+  "tags": ["system", "ГИСОГД"],
+  "name": "frames",
+  "title": "Разграфка планшетов",
+  "tableName": "frames",
+  "originName": "frames",
+  "description": "Класс объектов «Разграфка планшетов»",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "desc1",
+      "title": "Описание",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "l_coordsys",
+      "title": "Система координат",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_title",
+      "title": "L_Title",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_seclabel",
+      "title": "L_SecLabel",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_surtype",
+      "title": "L_SurType",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_year",
+      "title": "L_Year",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_hisys",
+      "title": "L_HiSys",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_horiz",
+      "title": "L_Horiz",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_enterpri",
+      "title": "L_Enterpri",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "l_countreg",
+      "title": "L_CountReg",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape_leng",
+      "title": "Периметр",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape_area",
+      "title": "Площадь",
+      "valueType": "DOUBLE",
+      "totalDigits": 18,
+      "fractionDigits": 11
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Line"]
+    }
+  ]
+}

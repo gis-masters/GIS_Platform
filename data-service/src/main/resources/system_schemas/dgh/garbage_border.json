@@ -1,0 +1,30 @@
+{
+  "tags": ["system", "Сан. очистка (ДГХ)"],
+  "name": "garbage_border",
+  "title": "Граница",
+  "styleName": "garbage_border",
+  "tableName": "garbage_border",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "name",
+      "title": "Наименование",
+      "maxLength": 50,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

@@ -1,0 +1,732 @@
+{
+  "tags": ["system", "Библиотека", "Электронный архив"],
+  "name": "dl_data_projects_geoplan_schema",
+  "title": "Документы по работам Геоплан",
+  "tableName": "dl_data_projects_geoplan",
+  "originName": "dl_data_projects_geoplan",
+  "description": "Документы по работам Геоплан",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Текстовые",
+          "value": "text_doc"
+        },
+        {
+          "title": "Растровые",
+          "value": "graphic_rasters"
+        },
+        {
+          "title": "Векторные",
+          "value": "graphic_vectors"
+        },
+        {
+          "title": "GeoTIFF",
+          "value": "doc_tiff"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Название документа",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gip",
+      "title": "Руководитель проекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "customer",
+      "title": "Заказчик",
+      "valueType": "STRING"
+    },
+    {
+      "name": "project",
+      "title": "Проект",
+      "maxLength": 150,
+      "valueType": "URL"
+    },
+    {
+      "name": "id_proj",
+      "title": "ID работы",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Название проекта",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "stage",
+      "title": "Этап работ",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Рабочие материалы",
+          "value": "2"
+        },
+        {
+          "title": "Выпускаемые материалы",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "type_of_work",
+      "title": "Вид работ",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ИГДИ",
+          "value": "1"
+        },
+        {
+          "title": "ИГМИ",
+          "value": "2"
+        },
+        {
+          "title": "ИГИ",
+          "value": "3"
+        },
+        {
+          "title": "ИЗИ",
+          "value": "4"
+        },
+        {
+          "title": "Дендрология",
+          "value": "5"
+        },
+        {
+          "title": "Иные",
+          "value": "0"
+        },
+        {
+          "title": "ППТ",
+          "value": "6"
+        },
+        {
+          "title": "ПМТ",
+          "value": "7"
+        },
+        {
+          "title": "Концепции",
+          "value": "8"
+        },
+        {
+          "title": "Визуализация",
+          "value": "8"
+        },
+        {
+          "title": "Создание ортофотплана",
+          "value": "9"
+        },
+        {
+          "title": "Топосъемка 1: 2000 >",
+          "value": "8"
+        },
+        {
+          "title": "Техпланы",
+          "value": "8"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "В работе",
+          "value": "1"
+        },
+        {
+          "title": "Завершен",
+          "value": "2"
+        },
+        {
+          "title": "Актуализация",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "performer",
+      "title": "Исполнитель",
+      "valueType": "STRING"
+    },
+    {
+      "name": "responsible",
+      "title": "Ответственный",
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Населенный пункт",
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "id",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "completion_date",
+      "title": "Дата окончания работ",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "beginning_date",
+      "title": "Дата начала работ",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "date_of_doc",
+      "title": "Год создания документа",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "d_actual",
+      "title": "Дата актуализации",
+      "valueType": "DATETIME",
+      "description": "Если проводилась"
+    },
+    {
+      "name": "value_of_doc",
+      "title": "Значение документа",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Утверждаемая часть",
+          "value": "UCH"
+        },
+        {
+          "title": "Материалы по обоснованию",
+          "value": "MO"
+        }
+      ]
+    },
+    {
+      "name": "file",
+      "title": "Выбор документов",
+      "maxSize": 500000000,
+      "maxFiles": 500,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "native_crs",
+      "title": "Система координат",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Pulkovo 1942 CS63 zone X4",
+          "value": "EPSG: 7828"
+        },
+        {
+          "title": "Pulkovo 1942 CS63 zone X5",
+          "value": "EPSG: 7829"
+        }
+      ]
+    },
+    {
+      "name": "project",
+      "title": "Проект",
+      "maxLength": 150,
+      "valueType": "URL"
+    },
+    {
+      "name": "name_of_work",
+      "title": "Наименование работы",
+      "valueType": "STRING",
+      "description": "Должно соответствовать названию в Битрикс"
+    },
+    {
+      "name": "description",
+      "title": "Описание раздела",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "accuracy",
+      "title": "Детализация",
+      "valueType": "STRING",
+      "description": "Для ортофотопланов"
+    },
+    {
+      "name": "scale",
+      "title": "Номинальный масштаб",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "500000",
+          "value": "500000"
+        },
+        {
+          "title": "200000",
+          "value": "200000"
+        },
+        {
+          "title": "100000",
+          "value": "100000"
+        },
+        {
+          "title": "50000",
+          "value": "50000"
+        },
+        {
+          "title": "25000",
+          "value": "25000"
+        },
+        {
+          "title": "10000",
+          "value": "10000"
+        },
+        {
+          "title": "5000",
+          "value": "5000"
+        },
+        {
+          "title": "2000",
+          "value": "2000"
+        },
+        {
+          "title": "1000",
+          "value": "1000"
+        },
+        {
+          "title": "500",
+          "value": "500"
+        },
+        {
+          "title": "200",
+          "value": "200"
+        }
+      ]
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "text_doc",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Текстовые документы",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "id_proj",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "value_of_doc"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "graphic_rasters",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Графические материалы в растровом формате",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "id_proj",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "value_of_doc"
+        },
+        {
+          "name": "status",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "graphic_vectors",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Графические векторные материалы",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "id_proj",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "value_of_doc"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "doc_tiff",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Документы в формате geotiff",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "id_proj",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "value_of_doc"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "accuracy"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Добавить раздел",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "description"
+        }
+      ]
+    },
+    {
+      "id": "folder_v2",
+      "icon": "FOLDER",
+      "type": "FOLDER",
+      "title": "Добавить новую работу",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "name_of_work"
+        },
+        {
+          "name": "id_proj"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "type_of_work"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer"
+        },
+        {
+          "name": "responsible"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "customer"
+        },
+        {
+          "name": "beginning_date"
+        },
+        {
+          "name": "completion_date"
+        },
+        {
+          "name": "d_actual"
+        }
+      ]
+    }
+  ]
+}

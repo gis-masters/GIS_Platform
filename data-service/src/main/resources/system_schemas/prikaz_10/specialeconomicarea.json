@@ -1,0 +1,183 @@
+{
+  "name": "specialeconomicarea",
+  "title": "Особые экономические зоны",
+  "styleName": "specialeconomicarea_698",
+  "tableName": "specialeconomicarea",
+  "originName": "SpecialEconomicArea",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Перечень объектов в классе Особые экономические зоны",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Промышленно-производственная экономическая зона",
+          "value": "607010101"
+        },
+        {
+          "title": "Технико-внедренческая экономическая зона",
+          "value": "607010102"
+        },
+        {
+          "title": "Туристско-рекреационная особая экономическая зона",
+          "value": "607010103"
+        },
+        {
+          "title": "Портовая особая экономическая зона",
+          "value": "607010104"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "title": "Номер согласно Положению о территориальном планировании",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "main_activ",
+      "title": "Основная специализация, вид деятельности",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "add_activ",
+      "title": "Дополнительные виды деятельности",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Общая площадь территории зоны, га",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "bld_area",
+      "title": "Общая площадь здания, комплекса зданий, кв. м",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "wrk_count",
+      "title": "Оценка количества рабочих мест, единиц",
+      "valueType": "INT"
+    },
+    {
+      "name": "function",
+      "title": "Назначение объекта",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "Срок реализации",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Справочник: Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "reg_status",
+      "title": "Справочник: Значение объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Федеральное значение",
+          "value": "1"
+        },
+        {
+          "title": "Региональное значение",
+          "value": "2"
+        },
+        {
+          "title": "Местное значение муниципального района",
+          "value": "3"
+        },
+        {
+          "title": "Местное значение городского округа",
+          "value": "4"
+        },
+        {
+          "title": "Местное значение поселения",
+          "value": "5"
+        },
+        {
+          "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+          "value": "6"
+        },
+        {
+          "title": "Местное значение муниципального округа",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "okved",
+      "title": "Вид деятельности по ОКВЭД",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+    }
+  ]
+}

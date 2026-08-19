@@ -1,0 +1,95 @@
+{
+  "name": "site_planning_dpt",
+  "title": "Планировка территории",
+  "tags": ["system", "ДПТ"],
+  "tableName": "site_planning_dpt",
+  "description": "Планировка территории",
+  "originName": "site_planning_dpt",
+  "styleName": "site_planning_dpt",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "name",
+      "title": "Наименование",
+      "valueType": "STRING"
+    },
+    {
+      "name": "doctype",
+      "title": "Вид документа",
+      "valueType": "CHOICE",
+      "asTitle": true,
+      "foreignKeyType": "STRING",
+      "enumerations": [
+        {
+          "value": "01",
+          "title": "Проект межевания территории"
+        },
+        {
+          "value": "02",
+          "title": "Проект планировки территории"
+        },
+        {
+          "value": "03",
+          "title": "ПМТ и ППТ"
+        }
+      ]
+    },
+    {
+      "name": "area",
+      "title": "Площадь, кв. м.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING",
+      "display": "multiline",
+      "maxLength": 500
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "description": "Пользователь создавший объект (Заполняется автоматически)",
+      "valueType": "STRING",
+      "readOnly": true
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "description": "Дата создания объекта (Заполняется автоматически)",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата редактирования",
+      "valueType": "DATETIME",
+      "description": "Дата последнего редактирования объекта (Заполняется автоматически)",
+      "readOnly": true
+    },
+    {
+      "name": "updated_by",
+      "title": "Редактор",
+      "valueType": "STRING",
+      "description": "Пользователь редактировавший объект последним (Заполняется автоматически)",
+      "readOnly": true,
+      "maxLength": 50
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "hidden": true,
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "INT",
+      "hidden": true
+    }
+  ]
+}

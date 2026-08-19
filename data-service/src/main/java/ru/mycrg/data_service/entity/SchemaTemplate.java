@@ -36,9 +36,6 @@ public class SchemaTemplate {
     @Column(name = "is_system")
     private Boolean isSystem;
 
-    @Column(name = "from_json")
-    private Boolean fromJson;
-
     @Column(name = "created_by")
     private String createdBy;
 
@@ -102,14 +99,6 @@ public class SchemaTemplate {
 
     public void setIsSystem(Boolean isSystem) {
         this.isSystem = isSystem;
-    }
-
-    public Boolean getFromJson() {
-        return fromJson;
-    }
-
-    public void setFromJson(Boolean fromJson) {
-        this.fromJson = fromJson;
     }
 
     public String getCreatedBy() {

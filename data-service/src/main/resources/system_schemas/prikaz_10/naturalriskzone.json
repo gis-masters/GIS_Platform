@@ -1,0 +1,266 @@
+{
+  "name": "naturalriskzone",
+  "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
+  "styleName": "naturalriskzone_698",
+  "tableName": "naturalriskzone",
+  "originName": "NaturalRiskZone",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
+          "value": "606010101"
+        },
+        {
+          "title": "Территории, подверженные опасным геологическим процессам",
+          "value": "606010102"
+        },
+        {
+          "title": "Территории, подверженные опасным гидрологическим процессам",
+          "value": "606010103"
+        },
+        {
+          "title": "Территории, подверженные опасным метеорологическим процессам",
+          "value": "606010104"
+        },
+        {
+          "title": "Сейсмоопасные территории",
+          "value": "606010106"
+        }
+      ]
+    },
+    {
+      "name": "eme_source",
+      "title": "Источник природной чрезвычайной ситуации",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Землетрясение",
+          "value": "1"
+        },
+        {
+          "title": "Вулканическое извержение",
+          "value": "2"
+        },
+        {
+          "title": "Оползень",
+          "value": "3"
+        },
+        {
+          "title": "Обвал",
+          "value": "4"
+        },
+        {
+          "title": "Сель",
+          "value": "5"
+        },
+        {
+          "title": "Карст",
+          "value": "6"
+        },
+        {
+          "title": "Просадка в лессовых грунтах",
+          "value": "7"
+        },
+        {
+          "title": "Эрозия",
+          "value": "8"
+        },
+        {
+          "title": "Переработка берегов",
+          "value": "9"
+        },
+        {
+          "title": "Цунами",
+          "value": "10"
+        },
+        {
+          "title": "Лавина",
+          "value": "11"
+        },
+        {
+          "title": "Наводнение",
+          "value": "12"
+        },
+        {
+          "title": "Половодье",
+          "value": "13"
+        },
+        {
+          "title": "Паводок",
+          "value": "14"
+        },
+        {
+          "title": "Подтопление",
+          "value": "15"
+        },
+        {
+          "title": "Затор",
+          "value": "16"
+        },
+        {
+          "title": "Штормовой нагон воды",
+          "value": "17"
+        },
+        {
+          "title": "Сильный ветер",
+          "value": "18"
+        },
+        {
+          "title": "Смерч",
+          "value": "19"
+        },
+        {
+          "title": "Ураган",
+          "value": "20"
+        },
+        {
+          "title": "Пыльная буря",
+          "value": "21"
+        },
+        {
+          "title": "Суховей",
+          "value": "22"
+        },
+        {
+          "title": "Сильные осадки",
+          "value": "23"
+        },
+        {
+          "title": "Засуха",
+          "value": "24"
+        },
+        {
+          "title": "Заморозки",
+          "value": "25"
+        },
+        {
+          "title": "Туман",
+          "value": "26"
+        },
+        {
+          "title": "Гроза",
+          "value": "27"
+        },
+        {
+          "title": "Продолжительные дожди (ливни)",
+          "value": "28"
+        },
+        {
+          "title": "Снегопад",
+          "value": "29"
+        },
+        {
+          "title": "Град",
+          "value": "30"
+        },
+        {
+          "title": "Гололед",
+          "value": "31"
+        },
+        {
+          "title": "Мерзлотные процессы",
+          "value": "32"
+        },
+        {
+          "title": "Природный пожар",
+          "value": "33"
+        }
+      ]
+    },
+    {
+      "name": "risk_cat",
+      "title": "Категория опасности процесса",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Чрезвычайно опасный (катастрофический)",
+          "value": "1"
+        },
+        {
+          "title": "Весьма опасный",
+          "value": "2"
+        },
+        {
+          "title": "Опасный",
+          "value": "3"
+        },
+        {
+          "title": "Умеренно опасный",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "eme_class",
+      "title": "Классификация чрезвычайной ситуации",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Локального характера",
+          "value": "1"
+        },
+        {
+          "title": "Муниципального характера",
+          "value": "2"
+        },
+        {
+          "title": "Межмуниципального характера",
+          "value": "3"
+        },
+        {
+          "title": "Регионального характера",
+          "value": "4"
+        },
+        {
+          "title": "Межрегионального характера",
+          "value": "5"
+        },
+        {
+          "title": "Федерального характера",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "name": "other",
+      "title": "Иной параметр и его единицы измерения",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ]
+}

@@ -1,0 +1,392 @@
+{
+  "tags": ["system", "Библиотека", "Инвентаризация недвижимости"],
+  "name": "dl_flats",
+  "title": "Помещения",
+  "relations": [
+    {
+      "type": "feature",
+      "title": "Помещение в составе ОКС",
+      "layers": [
+        "scratch_database_26: object_oks_23_ece5",
+        "scratch_database_26: object_oks_line_23_28db"
+      ],
+      "property": "cadnum_oks",
+      "projectId": 1500,
+      "targetProperty": "cadnum_oks"
+    }
+  ],
+  "tableName": "dl_flats",
+  "description": "Помещения",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "minWidth": 400,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид объекта",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Помещение",
+          "value": "doc"
+        },
+        {
+          "title": "Папка",
+          "value": "folder_v1"
+        }
+      ]
+    },
+    {
+      "name": "cad_status",
+      "title": "Статус кадастровых работ",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Не требуются",
+          "value": "Не требуются"
+        },
+        {
+          "title": "В работе Геоплана",
+          "value": "В работе Геоплана"
+        },
+        {
+          "title": "Направлен в ведомства",
+          "value": "Направлен в ведомства"
+        },
+        {
+          "title": "Получена выписка ЕГРН",
+          "value": "Получена выписка ЕГРН"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "function",
+      "title": "Назначение",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Жилое",
+          "value": "Жилое"
+        },
+        {
+          "title": "Нежилое",
+          "value": "Нежилое"
+        }
+      ]
+    },
+    {
+      "name": "cadnum_oks",
+      "title": "Кадастровый номер здания",
+      "required": true,
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cadnum_flat",
+      "title": "Кадастровый номер помещения",
+      "maxLength": 25,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Месторасположение",
+      "minWidth": 400,
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "minWidth": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "Код ФИАС",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "area_egrn",
+      "title": "Площадь по данным ЕГРН,м. кв.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_bti",
+      "title": "Площадь по материалам БТИ,м. кв.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_cad",
+      "title": "Площадь по результатам кадработ,м. кв.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "БТИ",
+          "value": "БТИ"
+        },
+        {
+          "title": "ЕГРН",
+          "value": "ЕГРН"
+        },
+        {
+          "title": "Выявленно при обследовании",
+          "value": "Выявленно при обследовании"
+        }
+      ]
+    },
+    {
+      "name": "date",
+      "title": "Дата постановки на кадастровый учёт",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "rent",
+      "title": "Помещение передано в аренду",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Передано",
+          "value": "Передано"
+        },
+        {
+          "title": "Не передано",
+          "value": "Не передано"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "library",
+      "title": "Материалы библиотеки",
+      "library": "dl_rentobject",
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "description": "Библиотека: Аренда объектов недвижимости",
+      "maxDocuments": 20
+    },
+    {
+      "name": "doc_egrn",
+      "title": "Выписка ЕГРН",
+      "maxSize": 90000000,
+      "maxFiles": 5,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "doc_tp",
+      "title": "Техплан",
+      "maxSize": 90000000,
+      "maxFiles": 5,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "photo",
+      "title": "Фотофиксация",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "doc_other",
+      "title": "Иные документы",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "INT"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "fl",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Добавить помещение",
+      "relations": [
+        {
+          "type": "feature",
+          "title": "Помещение в составе ОКС",
+          "layers": [
+            "scratch_database_26: object_oks_23_ece5",
+            "scratch_database_26: object_oks_line_23_28db"
+          ],
+          "property": "cadnum_oks",
+          "projectId": 1500,
+          "targetProperty": "cadnum_oks"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "readOnly": true,
+          "defaultValue": "Помещение"
+        },
+        {
+          "name": "cad_status"
+        },
+        {
+          "name": "function"
+        },
+        {
+          "name": "cadnum_oks",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "cadnum_flat"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "area_egrn"
+        },
+        {
+          "name": "area_bti"
+        },
+        {
+          "name": "area_cad"
+        },
+        {
+          "name": "source"
+        },
+        {
+          "name": "rent"
+        },
+        {
+          "name": "library"
+        },
+        {
+          "name": "date"
+        },
+        {
+          "name": "doc_egrn"
+        },
+        {
+          "name": "doc_tp"
+        },
+        {
+          "name": "doc_other"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        },
+        {
+          "name": "cadnum_oks"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        }
+      ]
+    }
+  ]
+}

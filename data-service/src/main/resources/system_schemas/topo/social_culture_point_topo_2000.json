@@ -1,0 +1,39 @@
+{
+  "styleName": "social_culture_point",
+  "tags": ["system", "Топоплан 2000"],
+  "name": "social_culture_point_topo_2000",
+  "title": "Соцкульт и сельхоз точечные",
+  "tableName": "social_culture_point_topo_2000",
+  "originName": "social_culture_point_topo_2000",
+  "description": "Класс объектов «Соцкульт и сельхоз точечные»",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "hidden": true,
+      "pattern": "(urn: uuid: )?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "valueType": "STRING"
+    },
+    {
+      "name": "desc1",
+      "title": "Описание",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "code",
+      "title": "КОД",
+      "required": true,
+      "maxLength": 9,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Line"]
+    }
+  ]
+}

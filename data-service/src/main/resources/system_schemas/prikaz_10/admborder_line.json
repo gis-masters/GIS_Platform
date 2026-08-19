@@ -1,0 +1,102 @@
+{
+  "name": "admborder_line",
+  "title": "Границы единиц административно-территориального деления Российской Федерации",
+  "styleName": "admborder_line_698",
+  "tableName": "admborder_line",
+  "originName": "AdmBorder",
+  "tags": ["system", "Приказ 10"],
+  "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
+    },
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная граница Российской Федерации",
+          "value": "601010100"
+        },
+        {
+          "title": "Граница субъекта Российской Федерации",
+          "value": "601010200"
+        },
+        {
+          "title": "Граница муниципального района",
+          "value": "601010301"
+        },
+        {
+          "title": "Граница городского округа",
+          "value": "601010302"
+        },
+        {
+          "title": "Граница городского округа с внутригородским делением",
+          "value": "601010303"
+        },
+        {
+          "title": "Граница внутригородской территории (внутригородского муниципального образования) города федерального значения",
+          "value": "601010304"
+        },
+        {
+          "title": "Граница внутригородского района",
+          "value": "601010305"
+        },
+        {
+          "title": "Граница городского поселения",
+          "value": "601010306"
+        },
+        {
+          "title": "Граница сельского поселения",
+          "value": "601010307"
+        },
+        {
+          "title": "Граница населенного пункта",
+          "value": "601010400"
+        }
+      ]
+    },
+    {
+      "name": "source",
+      "title": "Источник данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status_adm",
+      "title": "Статус границы единицы административно-территориального деления Российской Федерации",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "hidden": true,
+      "title": "Геомметрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    }
+  ]
+}

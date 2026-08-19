@@ -68,6 +68,5 @@ public class CreateSchemaTemplateRequestHandler implements IRequestHandler<Creat
         newSchemaTemplate.setLastModified(now);
 
         newSchemaTemplate.setIsSystem(Boolean.FALSE);
-        newSchemaTemplate.setFromJson(Boolean.FALSE);
     }
 }

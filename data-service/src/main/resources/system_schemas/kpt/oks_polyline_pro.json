@@ -1,0 +1,182 @@
+{
+  "tags": ["system", "КПТ"],
+  "name": "oks_polyline_pro",
+  "title": "Объекты капитального строительства",
+  "styleName": "oks_polyline_pro",
+  "tableName": "oks_polyline_pro",
+  "geometryType": "MultiLineString",
+  "properties": [
+    {
+      "name": "cadastralnum",
+      "title": "Кадастровый номер",
+      "asTitle": true,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cad_num",
+      "title": "Кадастровый номер",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "num_oks",
+      "title": "Номер ОКС",
+      "required": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "objecttype",
+      "title": "Тип объекта недвижимости",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Объект незавершенного строительства",
+          "value": "Объект незавершенного строительства"
+        },
+        {
+          "title": "Сооружение",
+          "value": "Сооружение"
+        },
+        {
+          "title": "Здание",
+          "value": "Здание"
+        }
+      ]
+    },
+    {
+      "name": "readablead",
+      "title": "Адрес в соответствии с ФИАС",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение здания",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "cost",
+      "title": "Кадастровая стоимость, р.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "lenght",
+      "title": "Протяженность вычисляемая, м. кв.",
+      "valueType": "DOUBLE",
+      "description": "Протяженность вычисляемая",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "calculatedValueWellKnownFormula": "st_length"
+    },
+    {
+      "name": "lenght_doc",
+      "title": "Протяженность по документу, м. кв.",
+      "valueType": "DOUBLE",
+      "description": "Протяженность указанная в КПТ",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area",
+      "title": "Протяженность, м.",
+      "hidden": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_doc_2",
+      "title": "Протяженность вычисляемая, м. кв.",
+      "hidden": true,
+      "valueType": "DOUBLE",
+      "description": "Протяженность вычисляемая",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "area_kpt",
+      "title": "Протяженность по документу, м. кв.",
+      "hidden": true,
+      "valueType": "DOUBLE",
+      "description": "Протяженность указанная в КПТ",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "created_at",
+      "title": "Дата",
+      "hidden": true,
+      "description": "Дата импорта XML в слой",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["LineString"]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "aisums_property_type",
+      "title": "Тип собственности АИС УМС",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "aisums_number",
+      "title": "Номер АИС УМС",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "acsept_at",
+      "title": "Дата",
+      "hidden": true,
+      "valueType": "DATETIME",
+      "description": "Дата приёма данных из АИС УМС"
+    },
+    {
+      "name": "source_doc",
+      "title": "Документ источник",
+      "multiple": true,
+      "libraries": ["dl_data_kpt"],
+      "valueType": "DOCUMENT",
+      "description": "Отсылка к документу из которого получен объект",
+      "maxDocuments": 5
+    }
+  ]
+}

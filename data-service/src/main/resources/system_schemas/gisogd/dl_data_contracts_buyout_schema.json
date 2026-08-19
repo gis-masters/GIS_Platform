@@ -1,0 +1,243 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_contracts_buyout_schema",
+  "title": "Договора по выкупу",
+  "relations": [
+    {
+      "type": "feature",
+      "title": "Переход к объекту на карте",
+      "layers": [
+        "scratch_database_11: zu2_1193_e69c",
+        "scratch_database_11: oks_1193_1377",
+        "scratch_database_11: oks_constructions_polyline_1193_53a7"
+      ],
+      "property": "cad",
+      "projectId": 1193,
+      "targetProperty": "cad_num"
+    },
+    {
+      "type": "feature",
+      "title": "Переход к объекту на карте",
+      "layers": ["scratch_database_11: obj_buyout_1193_7d8a"],
+      "property": "title",
+      "projectId": 1193,
+      "targetProperty": "n_contract"
+    }
+  ],
+  "tableName": "dl_data_contracts_buyout",
+  "originName": "dl_data_contracts_buyout",
+  "description": "Договора по выкупу",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "title",
+      "title": "Номер договора",
+      "required": true,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "cad",
+      "title": "Кадастровый номер",
+      "maxLength": 20,
+      "valueType": "STRING"
+    },
+    {
+      "name": "obj_type",
+      "title": "Тип объекта",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "ЗУ",
+          "value": "1"
+        },
+        {
+          "title": "ОКС",
+          "value": "2"
+        },
+        {
+          "title": "Сооружение",
+          "value": "3"
+        },
+        {
+          "title": "ОНС",
+          "value": "4"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "В собственности",
+          "value": "1"
+        },
+        {
+          "title": "Предварительный договор купли-продажи",
+          "value": "2"
+        },
+        {
+          "title": "Планируется заключение договора купли-продажи",
+          "value": "3"
+        },
+        {
+          "title": "Переговоры",
+          "value": "4"
+        },
+        {
+          "title": "Рассмотрение необходимости и возможности приобретения",
+          "value": "5"
+        },
+        {
+          "title": "Приостановка рассмотрения",
+          "value": "6"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь по материалам ЕГРН, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 10,
+      "fractionDigits": 2
+    },
+    {
+      "name": "cost",
+      "title": "Стоимость объектов договора по оценке",
+      "maxLength": 15,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Документы",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "contracts_buyout",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Договора по выкупу",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "cad"
+        },
+        {
+          "name": "obj_type"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "area"
+        },
+        {
+          "name": "cost"
+        },
+        {
+          "name": "file",
+          "title": "Договор",
+          "maxSize": 50000000,
+          "maxFiles": 10,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "maxLength": 500,
+          "valueType": "STRING"
+        }
+      ]
+    }
+  ]
+}

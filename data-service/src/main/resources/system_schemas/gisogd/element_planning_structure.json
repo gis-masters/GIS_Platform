@@ -1,0 +1,211 @@
+{
+  "tags": ["system", "ГИСОГД"],
+  "name": "element_planning_structure",
+  "title": "07. Вид элемента планировочной структуры",
+  "styleName": "element_planning_structure",
+  "tableName": "element_planning_structure",
+  "originName": "element_planning_structure",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "guid_element_planning_structure",
+      "title": "guid_element_planning_structure",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "class",
+      "title": "Вид элемента планировочной структуры",
+      "asTitle": true,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Район",
+          "value": "7А.1"
+        },
+        {
+          "title": "Микрорайон",
+          "value": "7А.2"
+        },
+        {
+          "title": "Квартал",
+          "value": "7А.3"
+        },
+        {
+          "title": "Территория общего пользования",
+          "value": "7А.4"
+        },
+        {
+          "title": "Территория садоводческого, огороднического или дачного некоммерческого объединения граждан",
+          "value": "7А.5"
+        },
+        {
+          "title": "Территория транспортно-пересадочного узла",
+          "value": "7А.6"
+        },
+        {
+          "title": "Территория, занятая линейным объектом и (или) предназначенная для размещения линейного объекта",
+          "value": "7А.7"
+        },
+        {
+          "title": "Улично-дорожная сеть",
+          "value": "7А.8"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Существующий",
+          "value": "7В.1"
+        },
+        {
+          "title": "Планируемый",
+          "value": "7В.2"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "number",
+      "title": "Номер элемента планировочной структуры",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "area",
+      "title": "Площадь общая, кв. м.",
+      "required": true,
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Материалы библиотеки данных",
+      "library": "dl_data_section7",
+      "multiple": true,
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME",
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "readOnly": true,
+      "minWidth": 300,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Polygon"]
+    },
+    {
+      "name": "is_deleted",
+      "title": "Удален/Не удален",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "INT"
+    }
+  ]
+}

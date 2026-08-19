@@ -1,0 +1,1201 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "dl_data_section3",
+  "title": "03.Документы территориального планирования муниципальных образований",
+  "tableName": "dl_data_section3",
+  "description": "03. Документы территориального планирования муниципальных образований",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "minWidth": 300,
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "СТП муниципальных районов",
+          "value": "doc_3.01"
+        },
+        {
+          "title": "Генеральный план поселений",
+          "value": "doc_3.02"
+        },
+        {
+          "title": "Генеральный план городских округов",
+          "value": "doc_3.03"
+        },
+        {
+          "title": "Папка",
+          "value": "folder_v1"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "Класс данных",
+      "minWidth": 300,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Схема территориального планирования Российской Федерации",
+          "value": "1.01"
+        },
+        {
+          "title": "Схема территориального планирования двух и более субъектов Российской Федерации",
+          "value": "2.01"
+        },
+        {
+          "title": "Схемы территориального планирования субъекта Российской Федерации",
+          "value": "2.02"
+        },
+        {
+          "title": "Схема территориального планирования муниципального района",
+          "value": "3.01"
+        },
+        {
+          "title": "Генеральный план поселения",
+          "value": "3.02"
+        },
+        {
+          "title": "Генеральный план городского округа,муниципального округа",
+          "value": "3.03"
+        },
+        {
+          "title": "Региональные нормативы градостроительного проектирования",
+          "value": "4.01"
+        },
+        {
+          "title": "Местные нормативы градостроительного проектирования поселения",
+          "value": "4.02"
+        },
+        {
+          "title": "Местные нормативы градостроительного проектирования муниципального района",
+          "value": "4.03"
+        },
+        {
+          "title": "Местные нормативы градостроительного проектирования городского округа,муниципального округа",
+          "value": "4.04"
+        },
+        {
+          "title": "Правила землепользования и застройки",
+          "value": "5.01"
+        },
+        {
+          "title": "Правила благоустройства территории",
+          "value": "6.01"
+        },
+        {
+          "title": "Проект планировки территории",
+          "value": "7.01"
+        },
+        {
+          "title": "Проект межевания территории",
+          "value": "7.02"
+        },
+        {
+          "title": "Материалы и результаты инженерных изысканий",
+          "value": "8.01"
+        },
+        {
+          "title": "Разрешение на создание искусственного земельного участка",
+          "value": "9.01"
+        },
+        {
+          "title": "Разрешение на проведение работ по созданию искусственного земельного участка",
+          "value": "9.02"
+        },
+        {
+          "title": "Разрешение на ввод искусственно созданного земельного участка в эксплуатацию",
+          "value": "9.03"
+        },
+        {
+          "title": "Решение об установлении зоны с особыми условиями использования территории",
+          "value": "10.01"
+        },
+        {
+          "title": "Решение о прекращении существования зоны с особыми условиями использования территории",
+          "value": "10.02"
+        },
+        {
+          "title": "Материалы по надземным и подземным коммуникациям",
+          "value": "11.01"
+        },
+        {
+          "title": "Решение об изъятии земельного участка для государственных нужд",
+          "value": "12.01"
+        },
+        {
+          "title": "Решение о резервировании земель для государственных нужд",
+          "value": "12.02"
+        },
+        {
+          "title": "Решение об изъятии земельного участка для муниципальных нужд",
+          "value": "12.03"
+        },
+        {
+          "title": "Решение о резервировании земель для муниципальных нужд",
+          "value": "12.04"
+        },
+        {
+          "title": "Градостроительный план земельного участка",
+          "value": "13.01"
+        },
+        {
+          "title": "Заключение государственной историко-культурной экспертизы",
+          "value": "13.02"
+        },
+        {
+          "title": "Заключение государственной экологической экспертизы",
+          "value": "13.03"
+        },
+        {
+          "title": "Разрешение на строительство",
+          "value": "13.04"
+        },
+        {
+          "title": "Решение о прекращении действия разрешения на строительство",
+          "value": "13.05"
+        },
+        {
+          "title": "Решение о внесении изменений в разрешение на строительство",
+          "value": "13.06"
+        },
+        {
+          "title": "Сведения об экспертизе проектной документации",
+          "value": "13.07"
+        },
+        {
+          "title": "Заключения о соответствии предмету охраны исторического поселения и установленным градостроительным регламентом требованиям к архитектурным решениям объектов капитального строительства",
+          "value": "13.08"
+        },
+        {
+          "title": "Схема,отображающая расположение построенного,реконструированного объекта капитального строительства,расположение сетей инженерно-технического обеспечения в границах земельного участка и планировочную организацию земельного участка",
+          "value": "13.09"
+        },
+        {
+          "title": "Результаты инженерных изысканий",
+          "value": "13.10"
+        },
+        {
+          "title": "Решение на отклонение от предельных параметров разрешенного строительства,реконструкции объекта капитального строительства",
+          "value": "13.11"
+        },
+        {
+          "title": "Решение органа местного самоуправления о предоставлении разрешения на условно разрешенный вид использования",
+          "value": "13.12"
+        },
+        {
+          "title": "Заключение органа государственного строительного надзора",
+          "value": "13.14"
+        },
+        {
+          "title": "Разрешение на ввод объекта в эксплуатацию",
+          "value": "13.18"
+        },
+        {
+          "title": "Технический план объекта капитального строительства",
+          "value": "13.19"
+        },
+        {
+          "title": "Уведомление о несоответствии указанных в уведомлении о планируемом строительстве параметров объекта индивидуального жилищного строительства или садового дома",
+          "value": "13.23"
+        },
+        {
+          "title": "Уведомление об окончании строительства",
+          "value": "13.27"
+        },
+        {
+          "title": "Уведомление о несоответствии построенных или реконструированных объекта индивидуального жилищного строительства или садового дома",
+          "value": "13.29"
+        },
+        {
+          "title": "Результаты и материалы обследования объекта капитального строительства,подлежащего сносу",
+          "value": "13.31"
+        },
+        {
+          "title": "Проект организации работ по сносу",
+          "value": "13.32"
+        },
+        {
+          "title": "Инвестиционная программа организации коммунального комплекса",
+          "value": "14.03"
+        },
+        {
+          "title": "Акт,подтверждающий соответствие параметров построенного,реконструированного объекта капитального строительства проектной документации,в том числе требованиям энергетической эффективности и требованиям оснащенности объекта капитального строительства приборами учета используемых энергетических ресурсов",
+          "value": "13.13"
+        },
+        {
+          "title": "Уведомление о соответствии описания внешнего облика объекта предмету охраны исторического поселения и установленным градостроительным регламентом требованиям к архитектурным решениям объекта капитального строительства",
+          "value": "13.25"
+        },
+        {
+          "title": "Уведомление о соответствии построенных или реконструированных объекта индивидуального жилищного строительства или садового дома",
+          "value": "13.28"
+        },
+        {
+          "title": "Решение о присвоении,аннулировании изменении адреса",
+          "value": "13.34"
+        },
+        {
+          "title": "Разрешение на использование земель или земельных участков",
+          "value": "13.35"
+        },
+        {
+          "title": "Программа мероприятий по реализации документов территориального планирования",
+          "value": "14.01"
+        },
+        {
+          "title": "Программа комплексного развития социальной инфраструктуры;",
+          "value": "14.05"
+        },
+        {
+          "title": "Сведения,документы,материалы,не размещенные в иных разделах информационной системы",
+          "value": "18.01"
+        },
+        {
+          "title": "Заключение органа федерального государственного экологического надзора",
+          "value": "13.16"
+        },
+        {
+          "title": "Акт проверки соответствия многоквартирного дома требованиям энергетической эффективности с указанием класса его энергетической эффективности",
+          "value": "13.17"
+        },
+        {
+          "title": "Уведомление о соответствии указанных в уведомлении о планируемом строительстве параметров объекта индивидуального жилищного строительства или садового дома",
+          "value": "13.22"
+        },
+        {
+          "title": "Уведомление о несоответствии описания внешнего облика объекта предмету охраны исторического поселения и установленным градостроительным регламентом требованиям к архитектурным решениям объекта капитального строительства",
+          "value": "13.26"
+        },
+        {
+          "title": "Уведомление о планируемом строительстве или реконструкции объекта индивидуального жилищного строительства или садового дома",
+          "value": "13.20"
+        },
+        {
+          "title": "Соглашение о сервитуте",
+          "value": "13.36"
+        },
+        {
+          "title": "Программа комплексного развития транспортной инфраструктуры;",
+          "value": "14.04"
+        },
+        {
+          "title": "Программа комплексного развития систем коммунальной инфраструктуры",
+          "value": "14.06"
+        },
+        {
+          "title": "Уведомление об изменении параметров планируемого строительства или реконструкции объекта индивидуального жилищного строительства или садового дома",
+          "value": "13.21"
+        },
+        {
+          "title": "Описание внешнего облика объекта индивидуального жилищного строительства или садового дома",
+          "value": "13.24"
+        },
+        {
+          "title": "Уведомление о планируемом сносе объекта капитального строительства",
+          "value": "13.30"
+        },
+        {
+          "title": "Уведомление о завершении сноса",
+          "value": "13.33"
+        },
+        {
+          "title": "Решение об установлении публичного сервитута",
+          "value": "13.37"
+        },
+        {
+          "title": "Иные документы и материалы",
+          "value": "13.38"
+        },
+        {
+          "title": "Инвестиционная программа субъекта естественных монополий",
+          "value": "14.02"
+        },
+        {
+          "title": "Положение об особо охраняемой природной территории",
+          "value": "15.01"
+        },
+        {
+          "title": "Лесохозяйственный регламент",
+          "value": "16.01"
+        },
+        {
+          "title": "Проект освоения лесов",
+          "value": "16.02"
+        },
+        {
+          "title": "Проектная документация лесных участков",
+          "value": "16.03"
+        },
+        {
+          "title": "Информационная модель объекта капитального строительства",
+          "value": "17.01"
+        }
+      ]
+    },
+    {
+      "name": "regnum",
+      "title": "Регистрационный номер",
+      "minWidth": 200,
+      "readOnly": true,
+      "valueType": "STRING",
+      "description": "Регистрационный номер в ГИСОГД РК"
+    },
+    {
+      "name": "regdate",
+      "title": "Дата регистрации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата регистрации в ГИСОГД РК"
+    },
+    {
+      "name": "territorykey",
+      "title": "Территория действия",
+      "readOnly": true,
+      "valueType": "URL",
+      "description": "Объект на карте",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_1: section1_100436_c4d6"],
+        "property": "file",
+        "projectId": 789,
+        "includeParents": true
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "docnum",
+      "title": "Номер  документа",
+      "minWidth": 200,
+      "required": true,
+      "valueType": "STRING",
+      "description": "При наличии утверждаемых документов указывается номер утверждающего документа"
+    },
+    {
+      "name": "doc_name",
+      "title": "Наименование данных",
+      "valueType": "STRING"
+    },
+    {
+      "name": "docdate",
+      "title": "Дата  документа",
+      "required": true,
+      "valueType": "DATETIME",
+      "description": "При наличии утверждаемых документов указывается дата утверждающего документа"
+    },
+    {
+      "name": "doc_mean",
+      "title": "Значение документа",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Утверждаемая часть",
+          "value": "DM.1"
+        },
+        {
+          "title": "Материалы обоснования",
+          "value": "DM.2"
+        }
+      ]
+    },
+    {
+      "name": "docstatus",
+      "title": "Статус действия",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Действующий",
+          "value": "0С.1"
+        },
+        {
+          "title": "Недействующий",
+          "value": "0С.2"
+        },
+        {
+          "title": "Проект",
+          "value": "0С.3"
+        }
+      ]
+    },
+    {
+      "name": "scale",
+      "title": "Номинальный масштаб",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "500000",
+          "value": "500000"
+        },
+        {
+          "title": "200000",
+          "value": "200000"
+        },
+        {
+          "title": "100000",
+          "value": "100000"
+        },
+        {
+          "title": "50000",
+          "value": "50000"
+        },
+        {
+          "title": "25000",
+          "value": "25000"
+        },
+        {
+          "title": "10000",
+          "value": "10000"
+        },
+        {
+          "title": "5000",
+          "value": "5000"
+        },
+        {
+          "title": "2000",
+          "value": "2000"
+        },
+        {
+          "title": "1000",
+          "value": "1000"
+        },
+        {
+          "title": "500",
+          "value": "500"
+        }
+      ]
+    },
+    {
+      "name": "native_crs",
+      "title": "Система координат",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Pulkovo 1942 / Gauss-Kruger zone 6",
+          "value": "EPSG: 28406"
+        },
+        {
+          "title": "Pulkovo 1942 / Gauss-Kruger zone 7",
+          "value": "EPSG: 28407"
+        },
+        {
+          "title": "Pulkovo 1942 / CS63 ZONE X5",
+          "value": "EPSG: 7829"
+        },
+        {
+          "title": "Pulkovo 1942 / CS63 ZONE X4",
+          "value": "EPSG: 7828"
+        },
+        {
+          "title": "WGS 84 / Pseudo-Mercator",
+          "value": "EPSG: 3857"
+        },
+        {
+          "title": "Отсутствует",
+          "value": "EPSG: null"
+        }
+      ]
+    },
+    {
+      "name": "orgname",
+      "title": "Наименование органа",
+      "minWidth": 200,
+      "required": true,
+      "valueType": "STRING",
+      "description": "Наименование органа,утвердившего документ"
+    },
+    {
+      "name": "doc_type",
+      "title": "Нормативный документ",
+      "valueType": "CHOICE",
+      "description": "Тип утвержденного документа",
+      "enumerations": [
+        {
+          "title": "Приказ",
+          "value": "DT.1"
+        },
+        {
+          "title": "Распоряжение",
+          "value": "DT.2"
+        },
+        {
+          "title": "Решение",
+          "value": "DT.3"
+        },
+        {
+          "title": "Постановление",
+          "value": "DT.4"
+        }
+      ]
+    },
+    {
+      "name": "validuntil",
+      "title": "Дата прекращения",
+      "valueType": "DATETIME",
+      "description": "Срок действия документа"
+    },
+    {
+      "name": "engineerorg",
+      "title": "Организация",
+      "required": true,
+      "valueType": "STRING",
+      "description": "Наименование органа,утвердившего документ"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "supplier_data_connection",
+      "title": "Организация",
+      "multiple": true,
+      "libraries": ["dl_data_supplier"],
+      "valueType": "DOCUMENT",
+      "description": "Наименование органа,утвердившего документ",
+      "maxDocuments": 10
+    },
+    {
+      "name": "inbox_data_key_data_connection",
+      "title": "Реестр учета сведений",
+      "multiple": true,
+      "required": true,
+      "libraries": ["dl_data_inbox_data"],
+      "valueType": "DOCUMENT",
+      "description": "Реестр учета сведений,документов,материалов,поступивших на размещение в информационную систему,и результатов их рассмотрения",
+      "maxDocuments": 10
+    },
+    {
+      "name": "change_date",
+      "title": "Дата внесения изменений или исправлений",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "doc_type_p",
+      "title": "Тип документа",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "CHOICE",
+      "description": "Тип документа в составе ДТП",
+      "enumerations": [
+        {
+          "title": "Положение о территориальном планировании",
+          "value": "DC.1"
+        },
+        {
+          "title": "Карта планируемого размещения объектов местного значения поселения",
+          "value": "DC.2"
+        },
+        {
+          "title": "Карта границ населенных пунктов (в том числе границ образуемых населенных пунктов),входящих в состав поселения",
+          "value": "DC.3"
+        },
+        {
+          "title": "Карта функциональных зон поселения ",
+          "value": "DC.4"
+        },
+        {
+          "title": "Сведения о границах НП (в т.ч. границах образуемых НП),содержащих графическое описание и перечень координат",
+          "value": "DC.5"
+        },
+        {
+          "title": "Нормативные правовые акты,которыми утверждены документы территориального планирования муниципальных образований",
+          "value": "DC.6"
+        },
+        {
+          "title": "Нормативные правовые акты,которыми внесены изменения в документы территориального планирования муниципальных образований",
+          "value": "DC.7"
+        },
+        {
+          "title": "Карта разногласий",
+          "value": "DC.8"
+        },
+        {
+          "title": "Материалы по обоснованию",
+          "value": "DC.9"
+        }
+      ]
+    },
+    {
+      "name": "fias",
+      "title": "Населённый пункт",
+      "required": true,
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "id",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "is_public",
+      "title": "Публичный документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "file",
+      "title": "Выбор файла",
+      "maxSize": 90000000,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "guiddocpreviousversion",
+      "title": "Версии",
+      "multiple": true,
+      "libraries": ["dl_data_section3"],
+      "valueType": "DOCUMENT",
+      "description": "Предыдущая версия данных",
+      "maxDocuments": 10
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "multiple": true,
+      "libraries": ["dl_data_section3"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "supplieremploey_data_connection",
+      "title": "Ответственный сотрудник органа,утвердившего документ",
+      "multiple": true,
+      "libraries": ["users_after_trigger"],
+      "valueType": "DOCUMENT",
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "minWidth": 200,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "minWidth": 200,
+      "asTitle": true,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_3.01",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "СТП муниципальных районов",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_3.01"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "doc_mean"
+        },
+        {
+          "name": "doc_type_p",
+          "required": true
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "doc_type"
+        },
+        {
+          "name": "doc_name"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "file",
+          "required": true
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_3.02",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Генеральный план поселений",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_3.02"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "doc_mean"
+        },
+        {
+          "name": "doc_type_p",
+          "required": true
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "doc_type"
+        },
+        {
+          "name": "doc_name"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "file",
+          "required": true
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "doc_3.03",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Генеральный план городских округов",
+      "attributes": [
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "defaultValue": "doc_3.03"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "description": "Полное наименование документа",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "doc_mean"
+        },
+        {
+          "name": "doc_type_p",
+          "required": true
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "doc_type"
+        },
+        {
+          "name": "doc_name"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "engineerorg"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "file",
+          "required": true
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "gisogdrf_response"
+        },
+        {
+          "name": "relations"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование",
+          "required": true,
+          "maxLength": 500
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true,
+          "valueType": "FIAS",
+          "searchMode": "oktmo"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "docdate",
+          "title": "Дата утверждения",
+          "defaultValueWellKnownFormula": "inherit"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "styleName": "trading_point",
+  "tags": ["system", "ГИСОГД"],
+  "name": "trading_point",
+  "title": "Торговые конструкции",
+  "tableName": "trading_point",
+  "originName": "trading_point",
+  "description": "Класс объектов «Торговые конструкции точечные»",
+  "geometryType": "Point",
+  "properties": [
+    {
+      "name": "classid",
+      "title": "Код объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Кондитерские изделия ",
+          "value": "311310000"
+        },
+        {
+          "title": "Сельскохозяйственная продукция ",
+          "value": "311320000"
+        },
+        {
+          "title": "Яйцо ",
+          "value": "311330000"
+        },
+        {
+          "title": "Продовольственные товары ",
+          "value": "311340000"
+        },
+        {
+          "title": "Колбасные изделия ",
+          "value": "311350000"
+        },
+        {
+          "title": "Хлебобулочные изделия ",
+          "value": "311360000"
+        },
+        {
+          "title": "Горячие напитки со спец. аппарата ",
+          "value": "311370000"
+        },
+        {
+          "title": "Напитки, мороженое ",
+          "value": "311380000"
+        },
+        {
+          "title": "Квас ",
+          "value": "311390000"
+        },
+        {
+          "title": "Квас, мороженое ",
+          "value": "311400000"
+        },
+        {
+          "title": "Живая рыба ",
+          "value": "311410000"
+        },
+        {
+          "title": "Мед и продукция пчеловодства ",
+          "value": "311420000"
+        },
+        {
+          "title": "Бахчевые культуры ",
+          "value": "311430000"
+        },
+        {
+          "title": "Живые цветы ",
+          "value": "311440000"
+        },
+        {
+          "title": "Хвойные насаждения ",
+          "value": "311450000"
+        },
+        {
+          "title": "Хлебобулочные и кондитерские изделия ",
+          "value": "311460000"
+        },
+        {
+          "title": "Молочная продукция ",
+          "value": "311470000"
+        },
+        {
+          "title": "Общественный туалет ",
+          "value": "311480000"
+        },
+        {
+          "title": "Общественное питание ",
+          "value": "311490000"
+        },
+        {
+          "title": "Питьевая вода ",
+          "value": "311500000"
+        },
+        {
+          "title": "Иные нестационарные объекты ",
+          "value": "311510000"
+        },
+        {
+          "title": "Непродовольственные товары ",
+          "value": "311520000"
+        },
+        {
+          "title": "Бытовые услуги ",
+          "value": "311530000"
+        },
+        {
+          "title": "Автосервис ",
+          "value": "311550000"
+        },
+        {
+          "title": "Лекарственные средства ",
+          "value": "311560000"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "trade_numb",
+      "title": "Номер в схеме",
+      "required": true,
+      "valueType": "STRING",
+      "asTitle": true
+    },
+    {
+      "name": "address",
+      "title": "Местоположение, адресное описание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "trade_type",
+      "title": "Тип торгового объекта",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Палатка",
+          "value": "tent_1"
+        },
+        {
+          "title": "Специализированная автомашина",
+          "value": "specific_car_1"
+        },
+        {
+          "title": "Автомашина",
+          "value": "car_1"
+        },
+        {
+          "title": "Фургон",
+          "value": "van_1"
+        },
+        {
+          "title": "Иные нестационарные ообъекты",
+          "value": "other_1"
+        },
+        {
+          "title": "Трейлер",
+          "value": "trailer_1"
+        },
+        {
+          "title": "Металлоконструкция",
+          "value": "met_construction_1"
+        },
+        {
+          "title": "Конструкция для реализации напитков, мороженого",
+          "value": "construction_ice_1"
+        },
+        {
+          "title": "Конструкция для реализации кваса",
+          "value": "construction_quass_1"
+        },
+        {
+          "title": "Торговый прицеп",
+          "value": "cart_1"
+        },
+        {
+          "title": "Оборудованное ограждением торговое место",
+          "value": "tradeplace_1"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "trade_seas",
+      "title": "Период функционирования",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "trade_area",
+      "title": "Торговая площадь, кв. м",
+      "required": true,
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 8
+    },
+    {
+      "name": "time_work",
+      "title": "Режим работы",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "doc_holder",
+      "title": "Наименование юридического лица или индивидуального предпринимателя",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "document",
+      "title": "Документ-основание",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "date_start",
+      "title": "Дата выдачи лицензии",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "date_close",
+      "title": "Дата окончания лицензии",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "tel",
+      "title": "Контакты (телефон)",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечания",
+      "required": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY",
+      "allowedValues": ["Point"]
+    }
+  ]
+}

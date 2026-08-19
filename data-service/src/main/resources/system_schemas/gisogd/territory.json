@@ -1,0 +1,209 @@
+{
+  "tags": ["system", "Библиотека", "ГИСОГД"],
+  "name": "territory",
+  "title": "Реестр территорий",
+  "tableName": "territory",
+  "description": "Реестр территорий",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "UUID"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь,отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "readOnly": true,
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата модификации конкретно этой записи"
+    },
+    {
+      "name": "last_modified_from_layers",
+      "title": "Дата модификации слоя",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации слоя на карте"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "readOnly": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Уникальный индефекатор территории",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "name_from_layer",
+      "title": "Название слоя",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape_as_text",
+      "title": "Местоположение в системе координат WGS-84",
+      "readOnly": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_response",
+      "title": "Ответ ГИСОГД",
+      "readOnly": true,
+      "valueType": "TEXT"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "gisogdrf_audit_datetime",
+      "title": "Дата аудита в ГИСОГД",
+      "readOnly": true,
+      "valueType": "DATETIME",
+      "minWidth": 200,
+      "description": "Время ответа Аудита ГИСОГД РФ"
+    },
+    {
+      "name": "gisogdrf_sync_status",
+      "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
+      "minWidth": 200,
+      "asTitle": true,
+      "readOnly": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Синхронизация завершилась ошибкой",
+          "value": "Синхронизация завершилась ошибкой"
+        },
+        {
+          "title": "Синхронизация завершилась предупреждением",
+          "value": "Синхронизация завершилась предупреждением"
+        },
+        {
+          "title": "Синхронизирован",
+          "value": "Синхронизирован"
+        },
+        {
+          "title": "Объект не найден в ГИСОГД РФ",
+          "value": "Объект не найден в ГИСОГД РФ"
+        },
+        {
+          "title": "В процессе синхронизации",
+          "value": "В процессе синхронизации"
+        },
+        {
+          "title": "Не синхронизирован",
+          "value": "Не синхронизирован"
+        }
+      ]
+    },
+    {
+      "name": "gisogdrf_publication_datetime",
+      "title": "Дата последней отправки в ГИСОГД РФ",
+      "minWidth": 300,
+      "readOnly": true,
+      "valueType": "DATETIME"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "какая-то геометрия не меняй меня или сломаешь поле guid 686",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "shape_as_text"
+        },
+        {
+          "name": "name_from_layer"
+        },
+        {
+          "name": "last_modified_from_layers"
+        },
+        {
+          "name": "gisogdrf_audit_datetime"
+        },
+        {
+          "name": "gisogdrf_sync_status"
+        },
+        {
+          "name": "gisogdrf_publication_datetime"
+        },
+        {
+          "name": "gisogdrf_response"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "childOnly": true,
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Наименование"
+        }
+      ]
+    }
+  ]
+}

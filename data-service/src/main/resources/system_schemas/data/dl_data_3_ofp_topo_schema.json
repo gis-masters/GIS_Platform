@@ -1,0 +1,680 @@
+{
+  "tags": ["system", "Библиотека", "Электронный архив"],
+  "name": "dl_data_3_ofp_topo_schema",
+  "title": "3. Картографические работы",
+  "tableName": "dl_data_3_ofp_topo",
+  "originName": "dl_data_3_ofp_topo",
+  "description": "1. Изыскания",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "hidden": true,
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "minWidth": 300,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Текстовые документы",
+          "value": "text_doc"
+        },
+        {
+          "title": "Графические материалы в растровом формате",
+          "value": "graphic_rasters"
+        },
+        {
+          "title": "Графические материалы в векторном формате",
+          "value": "graphic_vectors"
+        },
+        {
+          "title": "Документы в формате geotiff",
+          "value": "doc_tiff"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "hidden": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "hidden": true,
+      "minWidth": 250,
+      "maxLength": 100,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "minWidth": 250,
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "hidden": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "hidden": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "customer",
+      "title": "Заказчик",
+      "minWidth": 170,
+      "valueType": "STRING"
+    },
+    {
+      "name": "number",
+      "title": "ID сделки",
+      "minWidth": 150,
+      "valueType": "STRING",
+      "description": "Должно соответствовать id в Битрикс"
+    },
+    {
+      "name": "name",
+      "title": "Название проекта",
+      "minWidth": 250,
+      "maxLength": 500,
+      "valueType": "STRING",
+      "description": "Должно соответствовать названию в Битрикс"
+    },
+    {
+      "name": "type_of_work",
+      "title": "Вид работ",
+      "minWidth": 150,
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Топоплан",
+          "value": "1"
+        },
+        {
+          "title": "ОФП",
+          "value": "2"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "В работе",
+          "value": "1"
+        },
+        {
+          "title": "Завершен",
+          "value": "2"
+        },
+        {
+          "title": "Актуализация",
+          "value": "3"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "performer",
+      "title": "Исполнитель",
+      "valueType": "STRING"
+    },
+    {
+      "name": "responsible",
+      "title": "Ответственный",
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Населенный пункт",
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "id",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "completion_date",
+      "title": "Дата окончания работ",
+      "minWidth": 170,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "beginning_date",
+      "title": "Дата начала работ",
+      "minWidth": 150,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "date_of_doc",
+      "title": "Год создания документа",
+      "minWidth": 150,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "d_actual",
+      "title": "Дата актуализации",
+      "valueType": "DATETIME",
+      "description": "Если проводилась"
+    },
+    {
+      "name": "file",
+      "title": "Выбор документов",
+      "maxSize": 500000000,
+      "maxFiles": 500,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
+      "name": "accuracy",
+      "title": "Детализация",
+      "valueType": "STRING",
+      "description": "Для ортофотопланов"
+    },
+    {
+      "name": "native_crs",
+      "title": "Система координат",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Pulkovo 1942 CS63 zone X4",
+          "value": "EPSG: 7828"
+        },
+        {
+          "title": "Pulkovo 1942 CS63 zone X5",
+          "value": "EPSG: 7829"
+        }
+      ]
+    },
+    {
+      "name": "description",
+      "title": "Описание",
+      "maxLength": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "ghostylink",
+      "title": "Переход на Карту проектов",
+      "readOnly": true,
+      "valueType": "URL",
+      "valueFormulaParams": {
+        "layers": ["scratch_database_21: igdi_1371_b568"],
+        "property": "doc",
+        "projectId": 1371
+      },
+      "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+    },
+    {
+      "name": "scale",
+      "title": "Номинальный масштаб",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "500000",
+          "value": "500000"
+        },
+        {
+          "title": "200000",
+          "value": "200000"
+        },
+        {
+          "title": "100000",
+          "value": "100000"
+        },
+        {
+          "title": "50000",
+          "value": "50000"
+        },
+        {
+          "title": "25000",
+          "value": "25000"
+        },
+        {
+          "title": "10000",
+          "value": "10000"
+        },
+        {
+          "title": "5000",
+          "value": "5000"
+        },
+        {
+          "title": "2000",
+          "value": "2000"
+        },
+        {
+          "title": "1000",
+          "value": "1000"
+        },
+        {
+          "title": "500",
+          "value": "500"
+        },
+        {
+          "title": "200",
+          "value": "200"
+        }
+      ]
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "text_doc",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Текстовые документы",
+      "attributes": [
+        {
+          "name": "ghostyLink"
+        },
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "readOnly": "true",
+          "defaultValue": "text_doc"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "number",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "graphic_rasters",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Графические материалы в растровом формате",
+      "attributes": [
+        {
+          "name": "ghostyLink"
+        },
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "readOnly": "true",
+          "defaultValue": "graphic_rasters"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "number",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "status",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "graphic_vectors",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Графические векторные материалы",
+      "attributes": [
+        {
+          "name": "ghostyLink"
+        },
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "readOnly": "true",
+          "defaultValue": "graphic_vectors"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "number",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "doc_tiff",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Документы в формате geotiff",
+      "attributes": [
+        {
+          "name": "ghostyLink"
+        },
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "readOnly": "true",
+          "defaultValue": "doc_tiff"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "number",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "name",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "type_of_work",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "responsible",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias",
+          "readOnly": "true",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "scale"
+        },
+        {
+          "name": "native_crs"
+        },
+        {
+          "name": "date_of_doc"
+        },
+        {
+          "name": "file",
+          "title": "Выбор документов",
+          "maxSize": 500000000,
+          "maxFiles": 100,
+          "multiple": true,
+          "valueType": "FILE"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Добавить раздел",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "description"
+        }
+      ]
+    },
+    {
+      "id": "folder_v2",
+      "icon": "FOLDER",
+      "type": "FOLDER",
+      "title": "Добавить новую работу",
+      "attributes": [
+        {
+          "name": "ghostyLink"
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "type_of_work"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "performer"
+        },
+        {
+          "name": "responsible"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "customer"
+        },
+        {
+          "name": "beginning_date"
+        },
+        {
+          "name": "completion_date"
+        },
+        {
+          "name": "d_actual"
+        }
+      ]
+    }
+  ]
+}
