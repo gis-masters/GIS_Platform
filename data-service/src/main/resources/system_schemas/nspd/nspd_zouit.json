@@ -1,6 +1,6 @@
 {
   "name": "nspd_zouit",
-  "title": "Зоны с особыми условиями использования территорий",
+  "title": "Зоны с особыми условиями использования территорий НСПД",
   "tableName": "nspd_zouit",
   "styleName": "nspd_zouit",
   "originName": "nspd_zouit",
@@ -15,8 +15,7 @@
     {
       "name": "type_zone",
       "title": "Тип зоны",
-      "valueType": "STRING",
-      "asTitle": true
+      "valueType": "STRING"
     },
     {
       "name": "registration_date",
@@ -26,7 +25,8 @@
     {
       "name": "reg_numb_border",
       "title": "Реестровый номер границы",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "asTitle": true
     },
     {
       "name": "cadastral_district",

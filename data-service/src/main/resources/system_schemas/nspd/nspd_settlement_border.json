@@ -1,6 +1,6 @@
 {
   "name": "nspd_settlement_border",
-  "title": "Границы населённых пунктов",
+  "title": "Границы населённых пунктов НСПД",
   "tableName": "nspd_settlement_border",
   "styleName": "nspd_settlement_border",
   "originName": "nspd_settlement_border",
@@ -10,57 +10,72 @@
     {
       "name": "type",
       "title": "Вид",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "brd_nmb",
       "title": "Реестровый номер",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "asTitle": true
     },
     {
       "name": "registration_date",
       "title": "Дата постановки на учет / регистрации",
-      "valueType": "DATETIME"
+      "valueType": "DATETIME",
+      "hidden": true
     },
     {
       "name": "reg_code",
       "title": "Идентификационный номер",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "name",
       "title": "Наименование",
       "valueType": "STRING",
       "maxLength": 5000,
-      "asTitle": true
+      "hidden": true
     },
     {
       "name": "doc",
       "title": "Реквизиты правовых актов о согласовании и об утверждении изменения границ",
       "valueType": "STRING",
-      "maxLength": 5000
+      "maxLength": 5000,
+      "hidden": true
     },
     {
       "name": "document_name",
       "title": "Документ",
       "valueType": "STRING",
-      "maxLength": 5000
+      "maxLength": 5000,
+      "hidden": true
     },
     {
       "name": "document_number",
       "title": "Номер",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "document_date",
       "title": "Дата",
-      "valueType": "DATETIME"
+      "valueType": "DATETIME",
+      "hidden": true
     },
     {
       "name": "document_issuer",
       "title": "Орган власти, организация выдавшие документ",
       "valueType": "STRING",
-      "maxLength": 5000
+      "maxLength": 5000,
+      "hidden": true
+    },
+    {
+      "name": "subcat",
+      "title": "Категория",
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "created_by",

@@ -68,7 +68,7 @@ export const nspdKnownLayers: NspdKnownLayer[] = [
   {
     title: 'Объекты незавершенного строительства',
     resourceId: 'nspd_unfinished_construction',
-    schemaName: 'nspd_oks',
+    schemaName: 'nspd_oks_unfinished',
     url: 'https://nspd.gov.ru/api/aeggis/v4/36329/wms?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=36329&RANDOM=0.834313794645712&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857'
   },
   {
@@ -110,33 +110,37 @@ export const nspdKnownLayers: NspdKnownLayer[] = [
   {
     title: 'Красные линии',
     resourceId: 'nspd_red_lines',
-    schemaName: 'nspd_border',
+    schemaName: 'nspd_red_line',
     url: 'https://nspd.gov.ru/api/aeggis/v4/37293/wms?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=37293&RANDOM=0.7310366414914704&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857'
   },
   {
     title: 'Особо охраняемые природные территории',
     resourceId: 'nspd_protected_nature',
+    schemaName: 'nspd_specially_protected_natural_areas',
     url: 'https://nspd.gov.ru/api/aeggis/v4/36317/wms?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=36317&RANDOM=0.5912670370674582&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857'
   },
   {
     title: 'Охотничьи угодья',
     resourceId: 'nspd_hunting_grounds',
+    schemaName: 'nspd_hunting_grounds',
     url: 'https://nspd.gov.ru/api/aeggis/v4/36311/wms?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=36311&RANDOM=0.019540767635586542&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857'
   },
   {
     title: 'Лесничества',
     resourceId: 'nspd_forestry',
+    schemaName: 'nspd_forestry',
     url: 'https://nspd.gov.ru/api/aeggis/v4/36314/wms?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=36314&RANDOM=0.12410972233783313&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857'
   },
   {
     title: 'Граница лесопарка',
     resourceId: 'nspd_forest_park_boundary',
-    schemaName: 'nspd_border',
+    schemaName: 'nspd_forest_park_boundary',
     url: 'https://nspd.gov.ru/api/aeggis/v4/843763/wms?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=843763&RANDOM=0.37206686456087157&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857'
   },
   {
     title: 'Территории объектов культурного наследия',
     resourceId: 'nspd_cultural_heritage_territories',
+    schemaName: 'nspd_cultural_heritage_territories',
     url: 'https://nspd.gov.ru/api/aeggis/v4/36316/wms?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=36316&RANDOM=0.9834870149351826&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857'
   }
 ];

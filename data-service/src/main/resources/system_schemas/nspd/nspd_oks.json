@@ -1,6 +1,6 @@
 {
   "name": "nspd_oks",
-  "title": "Объекты капитального строительства",
+  "title": "Здания НСПД",
   "tableName": "nspd_oks",
   "styleName": "nspd_oks",
   "originName": "nspd_oks",
@@ -8,24 +8,14 @@
   "geometryType": "MultiPolygon",
   "properties": [
     {
-      "name": "build_record_type_value",
-      "title": "Вид объекта недвижимости",
-      "valueType": "STRING"
-    },
-    {
-      "name": "build_record_registration_date",
-      "title": "Дата присвоения",
-      "valueType": "DATETIME"
-    },
-    {
       "name": "cad_num",
       "title": "Кадастровый номер",
       "valueType": "STRING",
       "asTitle": true
     },
     {
-      "name": "quarter_cad_number",
-      "title": "Кадастровый квартал",
+      "name": "permitted_use_name",
+      "title": "Разрешенное использование",
       "valueType": "STRING"
     },
     {
@@ -35,24 +25,8 @@
       "maxLength": 5000
     },
     {
-      "name": "building_name",
-      "title": "Наименование",
-      "valueType": "STRING",
-      "maxLength": 5000
-    },
-    {
-      "name": "purpose",
-      "title": "Назначение",
-      "valueType": "STRING"
-    },
-    {
-      "name": "right_type",
-      "title": "Тип права",
-      "valueType": "STRING"
-    },
-    {
       "name": "build_record_area",
-      "title": "Площадь общая",
+      "title": "Площадь общая, м. кв.",
       "valueType": "DOUBLE",
       "totalDigits": 38,
       "fractionDigits": 2
@@ -82,13 +56,49 @@
       "foreignKeyType": "STRING"
     },
     {
+      "name": "build_record_type_value",
+      "title": "Вид объекта недвижимости",
+      "valueType": "STRING"
+    },
+    {
+      "name": "build_record_registration_date",
+      "title": "Дата присвоения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "quarter_cad_number",
+      "title": "Кадастровый квартал",
+      "valueType": "STRING"
+    },
+    {
+      "name": "building_name",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "maxLength": 5000
+    },
+    {
+      "name": "purpose",
+      "title": "Назначение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "right_type",
+      "title": "Тип права",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
       "name": "ownership_type",
       "title": "Форма собственности",
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Государственная",
-          "value": "Государственная"
+          "title": "Государственная федеральная",
+          "value": "Государственная федеральная"
+        },
+        {
+          "title": "Государственная субъекта РФ",
+          "value": "Государственная субъекта РФ"
         },
         {
           "title": "Муниципальная",
@@ -110,7 +120,7 @@
     },
     {
       "name": "cost_index",
-      "title": "Удельный показатель кадастровой стоимости",
+      "title": "Удельный показатель кадастровой стоимости, р.",
       "valueType": "DOUBLE",
       "totalDigits": 38,
       "fractionDigits": 4
@@ -123,7 +133,7 @@
     {
       "name": "cost_approvement_date",
       "title": "Дата утверждения стоимости",
-      "valueType": "DATETIME"
+      "valueType": "STRING"
     },
     {
       "name": "cost_determination_date",
@@ -161,18 +171,13 @@
       "valueType": "STRING"
     },
     {
-      "name": "permitted_use_name",
-      "title": "Разрешенное использование",
-      "valueType": "STRING"
-    },
-    {
       "name": "previously_posted",
       "title": "Предыдущий статус",
       "valueType": "STRING",
       "hidden": true
     },
     {
-      "name": "united_cad_numbers",
+      "name": "united_cad_number",
       "title": "Объединенные кадастровые номера",
       "valueType": "STRING"
     },
@@ -192,9 +197,116 @@
       "valueType": "STRING"
     },
     {
+      "name": "common_data_status",
+      "title": "Вид объекта",
+      "valueType": "STRING"
+    },
+    {
       "name": "cultural_heritage_val",
       "title": "Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
       "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "depth",
+      "title": "Глубина",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "height",
+      "title": "Высота",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "volume",
+      "title": "Объем",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "extension",
+      "title": "Расширение",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "type_value",
+      "title": "Тип объекта",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "built_up_area",
+      "title": "Площадь застроенной территории, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "hidden": true
+    },
+    {
+      "name": "occurence_depth",
+      "title": "Глубина залегания",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "hidden": true
+    },
+    {
+      "name": "degree_readiness",
+      "title": "Степень готовности",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "registration_date",
+      "title": "Дата регистрации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "object_under_construction_record_name",
+      "title": "Наименование строящегося объекта",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "object_under_construction_record_record_area",
+      "title": "Площадь строящегося объекта, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "hidden": true
+    },
+    {
+      "name": "object_under_construction_record_record_type_value",
+      "title": "Тип строящегося объекта",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "united_cad_numbers",
+      "title": "Объединенный кадастровый номер",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "cultural_heritage_object",
+      "title": "Объект культурного наследия",
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "created_by",

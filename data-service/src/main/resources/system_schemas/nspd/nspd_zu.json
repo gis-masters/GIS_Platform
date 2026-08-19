@@ -1,6 +1,6 @@
 {
   "name": "nspd_zu",
-  "title": "Земельные участки",
+  "title": "Земельные участки НСПД",
   "tableName": "nspd_zu",
   "styleName": "nspd_zu",
   "originName": "nspd_zu",
@@ -8,29 +8,14 @@
   "geometryType": "MultiPolygon",
   "properties": [
     {
-      "name": "land_record_type",
-      "title": "Вид объекта недвижимости",
-      "valueType": "STRING"
-    },
-    {
-      "name": "land_record_subtype",
-      "title": "Вид земельного участка",
-      "valueType": "STRING"
-    },
-    {
-      "name": "land_record_reg_date",
-      "title": "Дата присвоения",
-      "valueType": "DATETIME"
-    },
-    {
       "name": "cad_num",
       "title": "Кадастровый номер",
       "valueType": "STRING",
       "asTitle": true
     },
     {
-      "name": "quarter_cad_number",
-      "title": "Кадастровый квартал",
+      "name": "permitted_use_established_by_document",
+      "title": "Вид разрешенного использования",
       "valueType": "STRING"
     },
     {
@@ -40,30 +25,9 @@
       "maxLength": 5000
     },
     {
-      "name": "land_record_area",
-      "title": "Площадь по учету",
-      "valueType": "STRING"
-    },
-    {
       "name": "specified_area",
-      "title": "Площадь уточненная",
+      "title": "Площадь уточненная, м. кв.",
       "valueType": "STRING"
-    },
-    {
-      "name": "declared_area",
-      "title": "Площадь декларированная",
-      "valueType": "STRING"
-    },
-    {
-      "name": "area",
-      "title": "Площадь",
-      "valueType": "STRING"
-    },
-    {
-      "name": "previously_posted",
-      "title": "Предыдущий статус",
-      "valueType": "STRING",
-      "hidden": true
     },
     {
       "name": "status",
@@ -84,24 +48,24 @@
           "value": "Земли сельскохозяйственного назначения"
         },
         {
-          "title": "Промышленные земли",
-          "value": "Промышленные земли"
+          "title": "Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения",
+          "value": "Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения"
         },
         {
           "title": "Земли лесного фонда",
           "value": "Земли лесного фонда"
         },
         {
-          "title": "Особо охраняемые природные территории",
-          "value": "Особо охраняемые природные территории"
+          "title": "Земли особо охраняемых территорий и объектов",
+          "value": "Земли особо охраняемых территорий и объектов"
         },
         {
           "title": "Земли водного фонда",
           "value": "Земли водного фонда"
         },
         {
-          "title": "Земли государственного запаса",
-          "value": "Земли государственного запаса"
+          "title": "Земли запаса",
+          "value": "Земли запаса"
         },
         {
           "value": "Категория не установлена",
@@ -111,23 +75,17 @@
       "foreignKeyType": "STRING"
     },
     {
-      "name": "permitted_use_established_by_document",
-      "title": "Вид разрешенного использования",
-      "valueType": "STRING"
-    },
-    {
-      "name": "right_type",
-      "title": "Тип права",
-      "valueType": "STRING"
-    },
-    {
       "name": "ownership_type",
       "title": "Форма собственности",
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Государственная",
-          "value": "Государственная"
+          "title": "Государственная федеральная",
+          "value": "Государственная федеральная"
+        },
+        {
+          "title": "Государственная субъекта РФ",
+          "value": "Государственная субъекта РФ"
         },
         {
           "title": "Муниципальная",
@@ -141,6 +99,39 @@
       "foreignKeyType": "STRING"
     },
     {
+      "name": "land_record_type",
+      "title": "Вид объекта недвижимости",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "land_record_subtype",
+      "title": "Вид земельного участка",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "land_record_reg_date",
+      "title": "Дата присвоения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "quarter_cad_number",
+      "title": "Кадастровый квартал",
+      "valueType": "STRING"
+    },
+    {
+      "name": "previously_posted",
+      "title": "Предыдущий статус",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "right_type",
+      "title": "Тип права",
+      "valueType": "STRING"
+    },
+    {
       "name": "cost_value",
       "title": "Кадастровая стоимость, р.",
       "valueType": "DOUBLE",
@@ -149,7 +140,7 @@
     },
     {
       "name": "cost_index",
-      "title": "Удельный показатель кадастровой стоимости",
+      "title": "Удельный показатель кадастровой стоимости, р.",
       "valueType": "DOUBLE",
       "totalDigits": 38,
       "fractionDigits": 4
@@ -162,7 +153,8 @@
     {
       "name": "cost_approvement_date",
       "title": "Дата утверждения стоимости",
-      "valueType": "DATETIME"
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "cost_determination_date",
@@ -177,6 +169,21 @@
     {
       "name": "determination_couse",
       "title": "Основание определения стоимости",
+      "valueType": "STRING"
+    },
+    {
+      "name": "land_record_area",
+      "title": "Площадь по учету, м. кв.",
+      "valueType": "STRING"
+    },
+    {
+      "name": "declared_area",
+      "title": "Площадь декларированная, м. кв.",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, м. кв.",
       "valueType": "STRING"
     },
     {

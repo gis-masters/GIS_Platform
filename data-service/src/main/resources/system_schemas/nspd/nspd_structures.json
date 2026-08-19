@@ -1,6 +1,6 @@
 {
   "name": "nspd_structures",
-  "title": "Сооружения",
+  "title": "Сооружения НСПД",
   "tableName": "nspd_structures",
   "styleName": "nspd_structures",
   "originName": "nspd_structures",
@@ -10,18 +10,13 @@
     {
       "name": "cad_number",
       "title": "Кадастровый номер",
-      "valueType": "STRING"
-    },
-    {
-      "name": "quarter_cad_number",
-      "title": "Кадастровый квартал",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_name",
-      "title": "Наименование",
       "valueType": "STRING",
       "asTitle": true
+    },
+    {
+      "name": "permitted_use_name",
+      "title": "Разрешенное использование",
+      "valueType": "STRING"
     },
     {
       "name": "address_readable_address",
@@ -30,24 +25,170 @@
       "maxLength": 5000
     },
     {
-      "name": "registration_date",
-      "title": "Дата регистрации",
-      "valueType": "DATETIME"
+      "name": "params_built_up_area",
+      "title": "Площадь общая, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
+    },
+    {
+      "name": "params_name",
+      "title": "Наименование объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "params_depth",
+      "title": "Глубина",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_floors",
+      "title": "Этажность",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_height",
+      "title": "Высота",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_volume",
+      "title": "Объем",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_purpose",
+      "title": "Назначение",
+      "valueType": "STRING"
+    },
+    {
+      "name": "params_extension",
+      "title": "Расширение",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "object_type_value",
+      "title": "Тип объекта",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_year_built",
+      "title": "Возраст сооружения",
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "permitted_uses_name",
-      "title": "Вид разрешенного использования",
+      "title": "Имя",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_occurence_depth",
+      "title": "Параметры глубины",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "object_previously_posted",
+      "title": "Учтенный/Не учтенный",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_year_commisioning",
+      "title": "Параметры ввода в эксплуатацию",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_underground_floors",
+      "title": "Параметры цоколя",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "params_area",
+      "title": "Параметры площади",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "united_cad_number",
+      "title": "Кад. номер",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "facility_cad_number",
+      "title": "Кад. номер",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Учтенный",
+          "value": "Учтенный"
+        },
+        {
+          "title": "Ранее учтенный",
+          "value": "Ранее учтенный"
+        },
+        {
+          "title": "Временный",
+          "value": "Временный"
+        },
+        {
+          "title": "Архивный",
+          "value": "Архивный"
+        }
+      ],
+      "foreignKeyType": "STRING"
+    },
+    {
+      "name": "quarter_cad_number",
+      "title": "Кадастровый квартал",
       "valueType": "STRING"
     },
     {
       "name": "right_type",
       "title": "Тип права",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "hidden": true
     },
     {
-      "name": "status",
-      "title": "Статус",
-      "valueType": "STRING"
+      "name": "ownership_type",
+      "title": "Форма собственности",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Государственная федеральная",
+          "value": "Государственная федеральная"
+        },
+        {
+          "title": "Государственная субъекта РФ",
+          "value": "Государственная субъекта РФ"
+        },
+        {
+          "title": "Муниципальная",
+          "value": "Муниципальная"
+        },
+        {
+          "title": "Частная",
+          "value": "Частная"
+        }
+      ],
+      "foreignKeyType": "STRING"
     },
     {
       "name": "cost_value",
@@ -58,7 +199,7 @@
     },
     {
       "name": "cost_index",
-      "title": "Удельный показатель кадастровой стоимости",
+      "title": "Удельный показатель кадастровой стоимости, р.",
       "valueType": "DOUBLE",
       "totalDigits": 38,
       "fractionDigits": 4
@@ -71,7 +212,7 @@
     {
       "name": "cost_approvement_date",
       "title": "Дата утверждения стоимости",
-      "valueType": "DATETIME"
+      "valueType": "STRING"
     },
     {
       "name": "cost_determination_date",
@@ -89,95 +230,104 @@
       "valueType": "STRING"
     },
     {
-      "name": "facility_cad_number",
-      "title": "Кадастровый номер сооружения",
+      "name": "cultural_heritage_val",
+      "title": "Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
       "valueType": "STRING"
     },
     {
-      "name": "object_type_value",
-      "title": "Вид объекта недвижимости",
-      "valueType": "STRING"
+      "name": "area",
+      "title": "Площадь, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2
     },
     {
-      "name": "ownership_type",
-      "title": "Форма собственности",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_purpose",
-      "title": "Назначение",
-      "valueType": "STRING"
-    },
-    {
-      "name": "object_previously_posted",
-      "title": "Предыдущий статус",
+      "name": "depth",
+      "title": "Глубина",
       "valueType": "STRING",
       "hidden": true
     },
     {
-      "name": "params_area",
-      "title": "Площадь",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_built_up_area",
-      "title": "Площадь застроенной территории",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_depth",
-      "title": "Глубина",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_extension",
-      "title": "Протяженность",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_volume",
-      "title": "Объем",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_height",
+      "name": "height",
       "title": "Высота",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "volume",
+      "title": "Объем",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "extension",
+      "title": "Расширение",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "type_value",
+      "title": "Тип объекта",
       "valueType": "STRING"
     },
     {
-      "name": "params_year_built",
-      "title": "Завершение строительства",
-      "valueType": "STRING"
+      "name": "built_up_area",
+      "title": "Площадь застроенной территории, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "hidden": true
     },
     {
-      "name": "params_year_commisioning",
-      "title": "Ввод в эксплуатацию",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_floors",
-      "title": "Количество этажей (в том числе подземных)",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_underground_floors",
-      "title": "Количество подземных этажей",
-      "valueType": "STRING"
-    },
-    {
-      "name": "params_occurence_depth",
+      "name": "occurence_depth",
       "title": "Глубина залегания",
-      "valueType": "STRING"
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "hidden": true
+    },
+    {
+      "name": "degree_readiness",
+      "title": "Степень готовности",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "registration_date",
+      "title": "Дата регистрации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "object_under_construction_record_name",
+      "title": "Наименование строящегося объекта",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "object_under_construction_record_record_area",
+      "title": "Площадь строящегося объекта, м. кв.",
+      "valueType": "DOUBLE",
+      "totalDigits": 38,
+      "fractionDigits": 2,
+      "hidden": true
+    },
+    {
+      "name": "object_under_construction_record_record_type_value",
+      "title": "Тип строящегося объекта",
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "united_cad_numbers",
-      "title": "Объединенные кадастровые номера",
-      "valueType": "STRING"
+      "title": "Объединенный кадастровый номер",
+      "valueType": "STRING",
+      "hidden": true
     },
     {
-      "name": "cultural_heritage_val",
-      "title": "Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
-      "valueType": "STRING"
+      "name": "cultural_heritage_object",
+      "title": "Объект культурного наследия",
+      "valueType": "STRING",
+      "hidden": true
     },
     {
       "name": "created_by",
