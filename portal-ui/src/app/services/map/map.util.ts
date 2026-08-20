@@ -1,5 +1,8 @@
+import type ImageWrapper from 'ol/Image';
+import type Tile from 'ol/Tile';
+
 import { extractFeatureId } from '../geoserver/featureType/featureType.util';
-import { type MapPosition } from './map.models';
+import { type CrgAdditionalLayerInfo, type MapPosition } from './map.models';
 
 declare const browser: { options: { baseUrl: string } }; //для автотестов
 
@@ -52,4 +55,27 @@ export function buildFeaturesUrlFragment(
   }
 
   featuresUrlFragment[datasetIdentifier][tableIdentifier].push(...featureIds);
+}
+
+export function matchesUserLayerIdentity(crgInfo?: CrgAdditionalLayerInfo, id?: string): boolean {
+  if (!id || !crgInfo) {
+    return false;
+  }
+
+  if (crgInfo.complexName) {
+    return crgInfo.complexName === id;
+  }
+
+  return crgInfo.resourceId === id;
+}
+
+/** Как в доке OL ImageTile: revoke после того, как браузер успел прочитать blob. */
+export const TILE_BLOB_URL_REVOKE_DELAY_MS = 5000;
+
+export function assignTileBlobUrl(tile: Tile | ImageWrapper, blob: Blob): void {
+  const objectUrl = URL.createObjectURL(blob);
+  ((tile as ImageWrapper).getImage() as HTMLImageElement).src = objectUrl;
+  window.setTimeout(() => {
+    URL.revokeObjectURL(objectUrl);
+  }, TILE_BLOB_URL_REVOKE_DELAY_MS);
 }

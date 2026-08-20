@@ -1,11 +1,10 @@
 import { reaction } from 'mobx';
 import { debounce } from 'lodash';
-import { Map, View } from 'ol';
+import { type Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
 import { type Extent, getTopLeft, getWidth } from 'ol/extent';
 import type Feature from 'ol/Feature';
 import { type SimpleGeometry } from 'ol/geom';
-import type ImageWrapper from 'ol/Image';
 import { DoubleClickZoom } from 'ol/interaction';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import type BaseLayer from 'ol/layer/Base';
@@ -16,13 +15,11 @@ import type ImageSource from 'ol/source/Image';
 import type TileSource from 'ol/source/Tile';
 import { type Options as TileWMSOptions } from 'ol/source/TileWMS';
 import { type ServerType } from 'ol/source/wms';
-import type Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
 import { extractFeatureIdsFromAttributesFilter } from '../../components/Attributes/Attributes.utils';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
-import { mapStore } from '../../stores/Map.store';
 import { route } from '../../stores/Route.store';
 import { Emitter } from '../common/Emitter';
 import { communicationService } from '../communication.service';
@@ -34,9 +31,9 @@ import { applyView } from '../data/schema/utils/applyView';
 import { GeometryType, type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
 import { wmsClient } from '../geoserver/wms/wms.client';
-import { getMap } from '../geoserver/wms/wms.service';
 import { type CrgExternalLayer, type CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
+import { MapWithBasemapPriority } from '../ol/MapWithBasemapPriority';
 import { ScaleLine } from '../ol/ScaleLine';
 import { services } from '../services';
 import { transformExtent } from '../util/coordinates-transform.util';
@@ -45,6 +42,12 @@ import { concatCql } from '../util/cql/concatCql';
 import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { mapDrawService } from './draw/map-draw.service';
+import { crgLayersLoadFunction } from './loaders/crg-layers-load';
+import {
+  externalGisMapServerLoadFunction,
+  resetExternalTileRetryQueue,
+  setExternalTileRetryMapGetter
+} from './loaders/external-tile-load';
 import {
   type CrgAdditionalLayerInfo,
   type CrgWmsParams,
@@ -52,6 +55,7 @@ import {
   type LayerAdditionalProps,
   type MapPosition
 } from './map.models';
+import { matchesUserLayerIdentity } from './map.util';
 
 class MapService {
   private static _instance: MapService;
@@ -148,19 +152,22 @@ class MapService {
 
     this.scaleLine = new ScaleLine({ bar: true, text: true, minWidth: 100 });
 
-    this.map = new Map({
-      target: 'fiz-openLayer-map',
-      view: this.view,
-      controls: defaultControls().extend([this.scaleLine]),
-      layers: [
-        this.basemapLayer,
-        new VectorLayer({
-          source: this.markersSource,
-          zIndex: this.MARKERS_LAYER_ZINDEX,
-          properties: { name: 'markers' }
-        })
-      ]
-    });
+    this.map = new MapWithBasemapPriority(
+      {
+        target: 'fiz-openLayer-map',
+        view: this.view,
+        controls: defaultControls().extend([this.scaleLine]),
+        layers: [
+          this.basemapLayer,
+          new VectorLayer({
+            source: this.markersSource,
+            zIndex: this.MARKERS_LAYER_ZINDEX,
+            properties: { name: 'markers' }
+          })
+        ]
+      },
+      this.basemapLayer
+    );
 
     // Удалим с карты событие зума по-умоланию по двойному клику(DoubleClickZoom).
     const interactions = this.map.getInteractions();
@@ -184,6 +191,7 @@ class MapService {
 
     this.view.on('change:resolution', this.debouncedZoomEvent);
     this.debouncedZoomEvent();
+    setExternalTileRetryMapGetter(() => this._map);
     this.mapCreated.emit();
   }
 
@@ -194,6 +202,10 @@ class MapService {
     communicationService.beforeMapDestroy.emit();
     mapDrawService.drawOff();
     this.map.unset('target');
+    resetExternalTileRetryQueue();
+    setExternalTileRetryMapGetter((): Map | undefined => {
+      return;
+    });
     delete this._map;
     delete this.view;
   }
@@ -214,7 +226,11 @@ class MapService {
     this.throwIfMapNotCreated();
 
     const { resourceId, transparency = 100, dataSourceUri } = extLayer;
-    const layerOnMap = this.getLayerByResourceId(resourceId);
+    if (!resourceId) {
+      throw new Error('Некорректный слой, не задан: resourceId');
+    }
+
+    const layerOnMap = this.getUserLayerByIdentity(resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity(transparency / 100);
@@ -243,14 +259,14 @@ class MapService {
 
     const layer: ImageLayer<ImageSource> = new ImageLayer({
       source: new ImageWMS({
-        imageLoadFunction: this.externalGisMapServerLoadFunction,
+        imageLoadFunction: externalGisMapServerLoadFunction,
         ...commonWMSParams,
         ratio: 1
       }),
       ...commonLayerParams
     });
 
-    const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
+    const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true, resourceId } };
 
     layer.setProperties(props);
 
@@ -261,7 +277,11 @@ class MapService {
     this.throwIfMapNotCreated();
 
     const { resourceId, transparency, dataSourceUri } = layer;
-    const layerOnMap = this.getLayerByResourceId(layer.resourceId);
+    if (!resourceId) {
+      throw new Error('Некорректный слой, не задан: resourceId');
+    }
+
+    const layerOnMap = this.getUserLayerByIdentity(resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity((transparency ?? 100) / 100);
@@ -276,7 +296,7 @@ class MapService {
         params: {
           LAYERS: resourceId
         },
-        tileLoadFunction: this.externalGisMapServerLoadFunction
+        tileLoadFunction: externalGisMapServerLoadFunction
       }),
       visible: true,
       opacity: (transparency ?? 100) / 100,
@@ -284,7 +304,7 @@ class MapService {
     });
 
     const props: LayerAdditionalProps = {
-      crgInfo: { isUserLayer: true }
+      crgInfo: { isUserLayer: true, resourceId }
     };
 
     tileLayer.setProperties(props);
@@ -300,7 +320,7 @@ class MapService {
       throw new Error('Некорректный слой, не задан: resourceId');
     }
 
-    const layerOnMap = this.getLayerByResourceId(resourceId);
+    const layerOnMap = this.getUserLayerByIdentity(resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity((transparency ?? 100) / 100);
@@ -325,7 +345,7 @@ class MapService {
         url: dataSourceUri,
         params: sourceParams,
         // blob URL через fetch — иначе cross-origin тайлы травят canvas при печати
-        tileLoadFunction: this.externalGisMapServerLoadFunction
+        tileLoadFunction: externalGisMapServerLoadFunction
       }),
       visible: true,
       opacity: (transparency ?? 100) / 100,
@@ -333,7 +353,7 @@ class MapService {
     });
 
     const props: LayerAdditionalProps = {
-      crgInfo: { isUserLayer: true }
+      crgInfo: { isUserLayer: true, resourceId }
     };
 
     tileLayer.setProperties(props);
@@ -401,17 +421,17 @@ class MapService {
 
     const olLayer: ImageLayer<ImageSource> | TileLayer<TileSource> = this.isTiledWms
       ? new TileLayer({
-          source: new TileWMS({ tileLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams }),
+          source: new TileWMS({ tileLoadFunction: crgLayersLoadFunction, ...commonWMSParams }),
           ...commonLayerParams
         })
       : new ImageLayer({
-          source: new ImageWMS({ imageLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams, ratio: 1 }),
+          source: new ImageWMS({ imageLoadFunction: crgLayersLoadFunction, ...commonWMSParams, ratio: 1 }),
           ...commonLayerParams
         });
 
-    const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
+    const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true, resourceId, complexName } };
 
-    const oldLayer = this.getLayerByResourceId(complexName);
+    const oldLayer = this.getUserLayerByIdentity(complexName);
     if (oldLayer) {
       this.map.removeLayer(oldLayer);
     }
@@ -439,7 +459,7 @@ class MapService {
         return;
       }
 
-      source.setTileLoadFunction(this.externalGisMapServerLoadFunction);
+      source.setTileLoadFunction(externalGisMapServerLoadFunction);
       source.refresh();
     });
   }
@@ -533,54 +553,12 @@ class MapService {
     }
   }
 
-  private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
-    mapStore.enrollLoadingStart();
-    let data: Blob = new Blob();
-
-    try {
-      data = await getMap(url);
-    } catch (error) {
-      services.logger.error(error);
-    }
-    const blob = new Blob([data], { type: Mime.VND_JPEG_PNG8 });
-    ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
-
-    mapStore.enrollLoadingFinish();
-  }
-
-  private getLayerByResourceId(resourceId: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
+  private getUserLayerByIdentity(id: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
     return this.getUserLayers().find(layer => {
-      const source = layer.getSource() as TileWMS;
+      const crgInfo = (layer.getProperties() as LayerAdditionalProps).crgInfo;
 
-      return source && (source.getParams() as CrgWmsParams).LAYERS === resourceId;
+      return matchesUserLayerIdentity(crgInfo, id);
     });
-  }
-
-  private async externalGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
-    mapStore.enrollLoadingStart();
-    let data: Blob = new Blob();
-    let replacedUrl = url
-      .replace('256%2C256', '1024%2C1024')
-      .replace('DPI=90', 'DPI=360')
-      .replace('BBOXSR=3857', 'bboxSR=102100')
-      .replace('IMAGESR=3857', 'imageSR=102100');
-
-    if (url.includes('nspd.gov.ru')) {
-      replacedUrl = url;
-    }
-
-    try {
-      const response = await fetch(replacedUrl);
-      if (response.ok) {
-        data = await response.blob();
-      }
-    } catch (error) {
-      services.logger.error(error);
-    }
-
-    const blob = new Blob([data], { type: Mime.VND_JPEG_PNG8 });
-    ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
-    mapStore.enrollLoadingFinish();
   }
 
   /**
@@ -640,7 +618,7 @@ class MapService {
     }
 
     return new WMTS({
-      tileLoadFunction: this.externalGisMapServerLoadFunction,
+      tileLoadFunction: externalGisMapServerLoadFunction,
       url: basemap.url,
       tileGrid: new WMTSTileGrid({
         origin: getTopLeft(projectionExtent),
@@ -686,7 +664,7 @@ class MapService {
     }
 
     return new WMTS({
-      tileLoadFunction: this.crgLayersLoadFunction,
+      tileLoadFunction: crgLayersLoadFunction,
       urls: [basemap.url],
       tileGrid: new WMTSTileGrid({
         origin: getTopLeft(projectionExtent),

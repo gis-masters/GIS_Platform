@@ -126,6 +126,8 @@ export interface CrgWmsParams {
 
 export interface CrgAdditionalLayerInfo {
   isUserLayer: boolean;
+  resourceId?: string;
+  complexName?: string;
 }
 
 export interface LayerAdditionalProps {
