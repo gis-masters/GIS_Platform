@@ -1,6 +1,6 @@
-import { SyntheticController } from '../masterController';
-import { FiasApiItem } from '../../../../src/app/services/data/fias/fias.models';
+import { type FiasApiItem } from '../../../../src/app/services/data/fias/fias.models';
 import { fiasOktmo } from '../../data/fias';
+import { type SyntheticController } from '../masterController';
 
 class FiasOktmoSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/integration\/fias\/oktmo$/;

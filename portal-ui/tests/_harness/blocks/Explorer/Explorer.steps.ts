@@ -1,6 +1,7 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
 import { getDocumentsLibraryByTitle } from '../../commands/docLibrary/getDocLibraryByTitle';
+import { blPage } from '../../pages/BL.page';
 import { dataManagementPage } from '../../pages/DataManagement.page';
 import { type ScenarioScope } from '../../ScenarioScope';
 import { ExplorerBlock } from './Explorer.block';
@@ -27,6 +28,66 @@ When('в explorer я захожу внутрь элемента с назван�
   const explorerBlock = new ExplorerBlock();
   await explorerBlock.openExplorerItem(folder);
 });
+
+When('я открываю explorer по ссылке на несуществующий элемент внутри набора {string}', async (datasetTitle: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await blPage.openExampleWithQuery(
+    'explorer--regular',
+    explorerBlock.buildStoryQueryForNonexistentItemInDataset(datasetTitle)
+  );
+});
+
+When('я открываю explorer по ссылке на второй элемент третьей страницы раздела "Наборы данных"', async () => {
+  const explorerBlock = new ExplorerBlock();
+  await blPage.openExampleWithQuery(
+    'explorer--regular',
+    explorerBlock.buildStoryQueryForSecondItemOnThirdPageOfDatasetsSection()
+  );
+});
+
+When(
+  'я открываю explorer по ссылке на второй элемент раздела "Наборы данных" с номером страницы, на которой этого элемента нет',
+  async () => {
+    const explorerBlock = new ExplorerBlock();
+    await blPage.openExampleWithQuery(
+      'explorer--regular',
+      explorerBlock.buildStoryQueryForSecondItemOnWrongPageOfDatasetsSection()
+    );
+  }
+);
+
+When(
+  'я открываю explorer по ссылке на второй элемент раздела "Наборы данных" с номером несуществующей страницы',
+  async () => {
+    const explorerBlock = new ExplorerBlock();
+    await blPage.openExampleWithQuery(
+      'explorer--regular',
+      explorerBlock.buildStoryQueryForSecondItemOnNonexistentPageOfDatasetsSection()
+    );
+  }
+);
+
+When(
+  'я открываю explorer по ссылке на раздел "Наборы данных" с размером страницы 5 и сортировкой по названию',
+  async () => {
+    const explorerBlock = new ExplorerBlock();
+    await blPage.openExampleWithQuery(
+      'explorer--regular',
+      explorerBlock.buildStoryQueryForDatasetsSectionWithTitleSortAndPageSize()
+    );
+  }
+);
+
+When(
+  'я открываю explorer по ссылке на элемент раздела "Наборы данных" с настроенными фильтром, сортировкой и размером страницы',
+  async () => {
+    const explorerBlock = new ExplorerBlock();
+    await blPage.openExampleWithQuery(
+      'explorer--regular',
+      explorerBlock.buildStoryQueryForDatasetsItemWithFilterSortAndPageSize()
+    );
+  }
+);
 
 When('в explorer я захожу внутрь созданного документа', async function (this: ScenarioScope) {
   const explorerBlock = new ExplorerBlock();
@@ -144,3 +205,51 @@ Then(
     expect(await explorerBlock.getListTitles()).toContain(doc);
   }
 );
+
+Then('в адресной строке нет данных об элементах Explorer', async () => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.assertNoExplorerStateInUrl();
+});
+
+Then(
+  'в адресной строке отображается путь к разделу {string} с выбранным первым элементом',
+  async (sectionTitle: string) => {
+    const explorerBlock = new ExplorerBlock();
+    await explorerBlock.waitForUrlPathToSectionWithFirstItem(sectionTitle);
+  }
+);
+
+Then('в адресной строке последний пункт пути соответствует элементу {string}', async (title: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForUrlLastPathItem(title);
+});
+
+Then('в explorer выделен элемент {string}', async (title: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForSelectedItem(title);
+});
+
+Then('в explorer открыта страница {int}', async (pageNumber: number) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForCurrentPage(pageNumber);
+});
+
+Then('в explorer фильтр заполнен значением {string}', async (value: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForFilterValue(value);
+});
+
+Then('в explorer выбрана сортировка {string}', async (label: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForSortLabel(label);
+});
+
+Then('в explorer направление сортировки {string}', async (label: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForSortDirection(label);
+});
+
+Then('в explorer размер страницы {int}', async (pageSize: number) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForPageSize(pageSize);
+});

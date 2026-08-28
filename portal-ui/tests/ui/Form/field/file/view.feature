@@ -37,3 +37,43 @@ Feature: Поле file
   Scenario: Внешний вид не собранного набора файлов в режиме редактирования
     Given я на странице "form-field-file--multiple-not-completed-compound-editable" библиотеки блоков
     Then блок FormControlTypeFile вариант "not-completed-compound-file-editable" выглядит как положено
+
+  Scenario: Внешний вид одиночного редактируемого поля
+    Given я на странице "form-field-file--single-editable" библиотеки блоков
+    Then блок FormControlTypeFile вариант "single-editable" выглядит как положено
+
+  Scenario: Внешний вид пустого одиночного редактируемого поля
+    Given я на странице "form-field-file--single-editable-empty" библиотеки блоков
+    Then блок FormControlTypeFile вариант "single-editable-empty" выглядит как положено
+
+  Scenario: Внешний вид множественного поля
+    Given я на странице "form-field-file--multiple-editable" библиотеки блоков
+    Then блок FormControlTypeFile вариант "multiple-editable" выглядит как положено
+
+  Scenario: Внешний вид множественного поля с переполнением
+    Given я на странице "form-field-file--multiple-editable-scroll" библиотеки блоков
+    Then блок FormControlTypeFile вариант "multiple-editable-scroll" выглядит как положено
+
+  Scenario: Внешний вид пустого множественного поля
+    Given я на странице "form-field-file--multiple-editable-empty" библиотеки блоков
+    Then блок FormControlTypeFile вариант "multiple-editable-empty" выглядит как положено
+
+  Scenario: Внешний вид в режиме чтения
+    Given я на странице "form-field-file--single-view" библиотеки блоков
+    Then блок FormViewTypeFile вариант "single-view" выглядит как положено
+
+  Scenario: Внешний вид пустого поля в режиме чтения
+    Given я на странице "form-field-file--single-view-empty" библиотеки блоков
+    Then блок FormViewTypeFile вариант "single-view-empty" выглядит как положено
+
+  Scenario: Внешний вид множественного поля в режиме чтения
+    Given я на странице "form-field-file--multiple-view" библиотеки блоков
+    Then блок FormViewTypeFile вариант "multiple-view" выглядит как положено
+
+  Scenario: Внешний вид множественного поля в режиме чтения с переполнением
+    Given я на странице "form-field-file--multiple-view-scroll" библиотеки блоков
+    Then блок FormViewTypeFile вариант "multiple-view-scroll" выглядит как положено
+
+  Scenario: Внешний вид пустого множественного поля в режиме чтения
+    Given я на странице "form-field-file--multiple-view-empty" библиотеки блоков
+    Then блок FormViewTypeFile вариант "multiple-view-empty" выглядит как положено

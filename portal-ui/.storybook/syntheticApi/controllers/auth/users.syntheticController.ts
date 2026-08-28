@@ -1,11 +1,11 @@
-import { InternalAxiosRequestConfig } from 'axios';
+import { type InternalAxiosRequestConfig } from 'axios';
 
-import { CrgUserRaw } from '../../../../src/app/services/auth/users/users.models';
+import { type CrgUserRaw } from '../../../../src/app/services/auth/users/users.models';
 import { queryObjects } from '../../../../src/app/services/util/queryObjects';
+import { type PageableResources } from '../../../../src/server-types/common-contracts';
 import { users } from '../../data/users';
-import { SyntheticController } from '../masterController';
 import { err404, parsePageOptions } from '../../utils';
-import { PageableResources } from '../../../../src/server-types/common-contracts';
+import { type SyntheticController } from '../masterController';
 
 class UsersSyntheticController implements SyntheticController {
   pattern = /^.*\/users$/;

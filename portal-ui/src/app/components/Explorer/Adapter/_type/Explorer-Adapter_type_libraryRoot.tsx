@@ -8,6 +8,7 @@ import {
   getLibrariesWithParticularOne,
   getLibrary
 } from '../../../../services/data/library/library.service';
+import { isLibrary } from '../../../../services/data/library/library.typeguards';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -127,5 +128,13 @@ export class ExplorerAdapterTypeLibraryRoot {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<Library>>[] {
     return [communicationService.libraryUpdated];
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    if (!isLibrary(data)) {
+      return;
+    }
+
+    return { type: ExplorerItemType.LIBRARY, payload: data };
   }
 }

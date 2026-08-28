@@ -31,7 +31,6 @@ export interface CreateLibraryRecordItemProps extends IClassNameProps {
   parent?: LibraryRecord;
   ButtonComponent?: ComponentType<CreateLibraryRecordItemSingleButtonProps>;
   single?: boolean;
-  onCreate(record: LibraryRecord, isFolder: boolean): void;
 }
 
 const icons: Record<string, SvgIconComponent> = {
@@ -99,7 +98,7 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
 
   @boundMethod
   private async create(formValue: LibraryRecord) {
-    const { library, contentType, onCreate } = this.props;
+    const { library } = this.props;
 
     const newRecord = this.fillSystemAttributes(
       cleanCalculatedValues<LibraryRecord>(formValue, this.preparedSchema.properties)
@@ -108,8 +107,7 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
     this.setLoading(true);
 
     try {
-      const createdRecord = await createLibraryRecord(newRecord, library.table_name);
-      onCreate(createdRecord, contentType.type === 'FOLDER');
+      await createLibraryRecord(newRecord, library.table_name);
       this.closeDialog();
     } catch (error) {
       this.setLoading(false);

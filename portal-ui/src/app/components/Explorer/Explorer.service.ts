@@ -3,37 +3,28 @@ import { cloneDeep, debounce, type DebouncedFunc } from 'lodash';
 
 import { type DataChangeEventDetail } from '../../services/communication.service';
 import { type FilterQuery } from '../../services/util/filters/filters.models';
-import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
+import { getChildren, getChildrenWithParticularOne, getId, wrapCreatedChild } from './Adapter/Explorer-Adapter';
 import { emptyItem, type ExplorerItemData, ExplorerItemType } from './Explorer.models';
 import { type ExplorerStore } from './Explorer.store';
 
 export class ExplorerService {
   private store: ExplorerStore;
   private gettingChildrenOperationId?: symbol;
-  refreshItems: DebouncedFunc<(e?: CustomEvent<DataChangeEventDetail<unknown>>) => Promise<void>>;
+  private debouncedRefreshItems: DebouncedFunc<() => Promise<void>>;
 
   constructor(store: ExplorerStore) {
     this.store = store;
-    this.refreshItems = debounce(this._refreshItems.bind(this), 50);
+    this.debouncedRefreshItems = debounce(this._refreshItems.bind(this), 50);
   }
 
-  private async _refreshItems(e?: CustomEvent<DataChangeEventDetail<unknown>>): Promise<void> {
-    if (e?.detail?.type === 'delete') {
-      const deletingItemId = getId(
-        {
-          type: this.store.selectedItem.type,
-          payload: e.detail.data
-        } as ExplorerItemData,
-        this.store
-      );
-      if (deletingItemId === getId(this.store.selectedItem, this.store)) {
-        const selectedItemIndex = this.store.items.findIndex(item => getId(item, this.store) === deletingItemId);
-        this.store.selectItem(
-          this.store.items[selectedItemIndex + 1] || this.store.items[selectedItemIndex - 1] || emptyItem
-        );
-      }
-    }
+  @boundMethod
+  refreshItems(e?: CustomEvent<DataChangeEventDetail<unknown>>): ReturnType<DebouncedFunc<() => Promise<void>>> {
+    this.applyChangeEvent(e);
 
+    return this.debouncedRefreshItems();
+  }
+
+  private async _refreshItems(): Promise<void> {
     const { selectedItem, openedItem, pageSize, sort, sortOrder, filter } = this.store;
     let { page } = this.store;
     let children: ExplorerItemData[] = [];
@@ -134,5 +125,49 @@ export class ExplorerService {
     }
 
     return filterCopy || undefined;
+  }
+
+  private applyChangeEvent(e?: CustomEvent<DataChangeEventDetail<unknown>>): void {
+    const detail = e?.detail;
+    if (!detail) {
+      return;
+    }
+
+    const selectedBefore = this.store.selectedItem;
+
+    if (detail.type === 'delete') {
+      this.applyDeletedItem(detail.data);
+    } else if (detail.type === 'create') {
+      this.applyCreatedItem(detail.data);
+    }
+
+    if (this.store.selectedItem !== selectedBefore) {
+      this.gettingChildrenOperationId = Symbol();
+    }
+  }
+
+  private applyDeletedItem(data: unknown): void {
+    const deletingItemId = getId(
+      {
+        type: this.store.selectedItem.type,
+        payload: data
+      } as ExplorerItemData,
+      this.store
+    );
+    if (deletingItemId !== getId(this.store.selectedItem, this.store)) {
+      return;
+    }
+
+    const selectedItemIndex = this.store.items.findIndex(item => getId(item, this.store) === deletingItemId);
+    this.store.selectItem(
+      this.store.items[selectedItemIndex + 1] || this.store.items[selectedItemIndex - 1] || emptyItem
+    );
+  }
+
+  private applyCreatedItem(data: unknown): void {
+    const created = wrapCreatedChild(this.store.openedItem, data, this.store);
+    if (created) {
+      this.store.selectItem(created);
+    }
   }
 }

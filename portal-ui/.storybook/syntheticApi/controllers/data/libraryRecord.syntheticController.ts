@@ -1,13 +1,13 @@
-import { InternalAxiosRequestConfig } from 'axios';
+import { type InternalAxiosRequestConfig } from 'axios';
 
-import { LibraryRecordRaw } from '../../../../src/app/services/data/library/library.models';
+import { type LibraryRecordRaw } from '../../../../src/app/services/data/library/library.models';
 import { Role } from '../../../../src/app/services/permissions/permissions.models';
 import { libraryRecords } from '../../data/libraryRecords';
-import { SyntheticController } from '../masterController';
 import { err404 } from '../../utils';
+import { type SyntheticController } from '../masterController';
 
 class LibraryRecordSyntheticController implements SyntheticController {
-  pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records\/(\d*)$/;
+  pattern = /^.*\/api\/data\/document-libraries\/([^?/#]*)\/records\/(\d*)$/;
 
   get(config: InternalAxiosRequestConfig): LibraryRecordRaw {
     const match = config.url?.match(this.pattern);

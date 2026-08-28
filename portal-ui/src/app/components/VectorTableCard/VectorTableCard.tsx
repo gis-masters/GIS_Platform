@@ -5,7 +5,7 @@ import { HomeOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { type VectorTable, vectorTableSchema } from '../../services/data/vectorData/vectorData.models';
+import { getVectorTableSchema, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../services/data/vectorData/vectorData.service';
 import { formatDate } from '../../services/util/date.util';
 import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
@@ -58,7 +58,11 @@ export class VectorTableCard extends Component<VectorTableCardProps> {
 
             <div className={cnVectorTableCard('Card')}>
               {vectorTable && (
-                <ViewContentWidget schema={vectorTableSchema} data={vectorTable} title='Свойства источника данных' />
+                <ViewContentWidget
+                  schema={getVectorTableSchema()}
+                  data={vectorTable}
+                  title='Свойства источника данных'
+                />
               )}
             </div>
           </>

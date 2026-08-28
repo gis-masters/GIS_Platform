@@ -1,7 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { FolderOutlined } from '@mui/icons-material';
 
-import { type CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { services } from '../../../../services/services';
@@ -20,6 +19,7 @@ import {
 } from '../../Explorer.models';
 import { type ExplorerService } from '../../Explorer.service';
 import { type ExplorerStore } from '../../Explorer.store';
+import { wrapCreatedProjectChild } from './Explorer-Adapter_type_projectsRoot';
 
 export function assertExplorerItemDataTypeProjectFolder(
   item: ExplorerItemData
@@ -170,21 +170,21 @@ export class ExplorerAdapterTypeProjectFolder {
     });
   }
 
-  static getToolbarActions(item: ExplorerItemData, store: ExplorerStore): ReactNode {
+  static getToolbarActions(item: ExplorerItemData): ReactNode {
     assertExplorerItemDataTypeProjectFolder(item);
-
-    const handleCreate = (record: CrgProject) => {
-      store.selectItem({ payload: record, type: ExplorerItemType.PROJECT });
-    };
 
     return organizationSettings.createProject ? (
       <>
-        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
-        <CreateProject currentProjectFolderId={item.payload.id} onCreate={handleCreate} />
-        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
-        <CreateProject currentProjectFolderId={item.payload.id} folder onCreate={handleCreate} />
+        <CreateProject currentProjectFolderId={item.payload.id} />
+        <CreateProject currentProjectFolderId={item.payload.id} folder />
       </>
     ) : null;
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    assertExplorerItemDataTypeProjectFolder(item);
+
+    return wrapCreatedProjectChild(data, item.payload.id);
   }
 
   static getChildrenSortItems(): SortItem[] {

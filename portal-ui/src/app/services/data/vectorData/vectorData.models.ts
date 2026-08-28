@@ -4,7 +4,7 @@ import { type CrgLayer } from '../../gis/layers/layers.models';
 import { type CrgProject } from '../../gis/projects/projects.models';
 import { type Role } from '../../permissions/permissions.models';
 import { getProjectionCode } from '../projections/projections.util';
-import { PropertyType, type Schema, type SimpleSchema } from '../schema/schema.models';
+import { type PropertyOption, PropertyType, type Schema, type SimpleSchema } from '../schema/schema.models';
 import { type OldSchema } from '../schema/schemaOld.models';
 
 export enum DataEntityType {
@@ -158,59 +158,64 @@ const vectorTableSchemaBase: SimpleSchema = {
   ]
 };
 
-export const vectorTableSchema: SimpleSchema = {
-  properties: [
-    {
-      name: 'title',
-      title,
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'crs',
-      title: 'Координатная система',
-      readOnly: true,
-      propertyType: PropertyType.CHOICE,
-      options: projectionsStore.favoriteProjections.map(projection => ({
-        title: projection.title,
-        value: getProjectionCode(projection)
-      }))
-    },
-    ...vectorTableSchemaBase.properties
-  ]
-};
+function getCrsChoiceOptions(): PropertyOption[] {
+  return projectionsStore.favoriteProjections.map(projection => ({
+    title: projection.title,
+    value: getProjectionCode(projection)
+  }));
+}
 
-export const emptyVectorTableSchema: SimpleSchema = {
-  properties: [
-    {
-      name: 'title',
-      title,
-      required: true,
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'crs',
-      title: 'Координатная система',
-      required: true,
-      propertyType: PropertyType.CHOICE,
-      defaultValue: projectionsStore.defaultProjection
-        ? getProjectionCode(projectionsStore.defaultProjection)
-        : undefined,
-      options: projectionsStore.favoriteProjections.map(projection => ({
-        title: projection.title,
-        value: getProjectionCode(projection)
-      }))
-    },
-    {
-      name: 'schemaId',
-      title: 'Схема',
-      required: true,
-      propertyType: PropertyType.CUSTOM,
-      onlyWithGeometry: true,
-      ControlComponent: SelectSchemaControl
-    },
-    ...vectorTableSchemaBase.properties
-  ]
-};
+export function getVectorTableSchema(): SimpleSchema {
+  return {
+    properties: [
+      {
+        name: 'title',
+        title,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'crs',
+        title: 'Координатная система',
+        readOnly: true,
+        propertyType: PropertyType.CHOICE,
+        options: getCrsChoiceOptions()
+      },
+      ...vectorTableSchemaBase.properties
+    ]
+  };
+}
+
+export function getEmptyVectorTableSchema(): SimpleSchema {
+  return {
+    properties: [
+      {
+        name: 'title',
+        title,
+        required: true,
+        propertyType: PropertyType.STRING
+      },
+      {
+        name: 'crs',
+        title: 'Координатная система',
+        required: true,
+        propertyType: PropertyType.CHOICE,
+        defaultValue: projectionsStore.defaultProjection
+          ? getProjectionCode(projectionsStore.defaultProjection)
+          : undefined,
+        options: getCrsChoiceOptions()
+      },
+      {
+        name: 'schemaId',
+        title: 'Схема',
+        required: true,
+        propertyType: PropertyType.CUSTOM,
+        onlyWithGeometry: true,
+        ControlComponent: SelectSchemaControl
+      },
+      ...vectorTableSchemaBase.properties
+    ]
+  };
+}
 
 export interface VectorTableConnection {
   layer: CrgLayer;

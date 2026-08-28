@@ -179,6 +179,18 @@ Given('я на странице {string} библиотеки блоков', asy
   await blPage.openExample(story);
 });
 
+When('я перезагружаю страницу библиотеки блоков', async () => {
+  await blPage.refresh();
+});
+
+When('я нажимаю Назад в браузере', async () => {
+  await blPage.goBack();
+});
+
+When('я нажимаю Вперёд в браузере', async () => {
+  await blPage.goForward();
+});
+
 // data management
 
 When('я открываю страницу библиотек в управлении данными', async () => {

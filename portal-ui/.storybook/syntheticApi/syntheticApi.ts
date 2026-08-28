@@ -1,11 +1,11 @@
-import { AxiosAdapter, AxiosError } from 'axios';
+import { type AxiosAdapter, AxiosError } from 'axios';
 
 import { http } from '../../src/app/services/api/http.service';
 import { sleep } from '../../src/app/services/util/sleep';
-import { SyntheticController, selectController } from './controllers/masterController';
+import { selectController, type SyntheticController } from './controllers/masterController';
 
-export function initSyntheticApi() {
-  http.axios.interceptors.request.use(async config => {
+export function initSyntheticApi(): void {
+  http.axios.interceptors.request.use(config => {
     config.adapter = (async config => {
       if (!config.url) {
         throw new AxiosError('not found', 'forbidden', config, null, {
@@ -31,8 +31,6 @@ export function initSyntheticApi() {
           statusText: 'ok',
           config
         };
-
-        console.log('api', config.method, config.url, result);
 
         return result;
       }

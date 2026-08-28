@@ -320,6 +320,18 @@ export function getRefreshEmitters(
   return adapters[item.type].getRefreshEmitters?.(item, store) || [];
 }
 
+export function wrapCreatedChild(
+  item: ExplorerItemData,
+  data: unknown,
+  store: ExplorerStore
+): ExplorerItemData | undefined {
+  if (store.adaptersOverride[item.type]?.wrapCreatedChild) {
+    return store.adaptersOverride[item.type].wrapCreatedChild?.(item, data, store);
+  }
+
+  return adapters[item.type].wrapCreatedChild?.(item, data, store);
+}
+
 export function getActions(item: ExplorerItemData, store: ExplorerStore): ReactNode | undefined {
   if (store.adaptersOverride[item.type]?.getActions) {
     return store.adaptersOverride[item.type].getActions?.(item, store);

@@ -1,14 +1,13 @@
-import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
-import { queryObjects } from '../../../../src/app/services/util/queryObjects';
-import { projects } from '../../data/projects';
-import { SyntheticController } from '../masterController';
-import { err404, parsePageOptions } from '../../utils';
-import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
+import { type PropertySchemaString, PropertyType } from '../../../../src/app/services/data/schema/schema.models';
+import { type CrgProject, type NewCrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 import { Role } from '../../../../src/app/services/permissions/permissions.models';
 import { validateFieldValue } from '../../../../src/app/services/util/form/formValidation.utils';
-import { PropertySchemaString, PropertyType } from '../../../../src/app/services/data/schema/schema.models';
-import { PageableResources } from '../../../../src/server-types/common-contracts';
+import { type PageableResources } from '../../../../src/server-types/common-contracts';
+import { projects } from '../../data/projects';
+import { err404, getQueryParams, parseBody, parsePageOptions, toPageable } from '../../utils';
+import { type SyntheticController } from '../masterController';
 
 class ProjectsSyntheticController implements SyntheticController {
   pattern = /^.*\/projects$/;
@@ -19,23 +18,25 @@ class ProjectsSyntheticController implements SyntheticController {
     }
 
     const pageOptions = parsePageOptions(config);
-    const result: CrgProject[] = queryObjects(projects, pageOptions);
-    const totalPages =
-      Math.floor(projects.length / pageOptions.pageSize) + Number(Boolean(projects.length % pageOptions.pageSize));
+    const params = getQueryParams(config);
+    const parent = typeof params.parent === 'string' || typeof params.parent === 'number' ? params.parent : undefined;
+    const source =
+      parent === undefined || parent === ''
+        ? projects.filter(project => project.parentId == null)
+        : projects.filter(project => String(project.parentId) === String(parent));
 
-    return {
-      content: result,
-      page: {
-        size: pageOptions.pageSize,
-        totalElements: projects.length,
-        totalPages,
-        number: pageOptions.page
-      }
-    };
+    if (typeof params.name === 'string' && params.name) {
+      pageOptions.filter = {
+        ...pageOptions.filter,
+        name: { $ilike: `%${params.name}%` }
+      };
+    }
+
+    return toPageable(source, pageOptions);
   }
 
   post(config: InternalAxiosRequestConfig): CrgProject {
-    const data = JSON.parse(config.data) as { name: string };
+    const data = parseBody<NewCrgProject>(config.data);
     const property: PropertySchemaString = {
       title: 'title',
       propertyType: PropertyType.STRING,
@@ -61,15 +62,17 @@ class ProjectsSyntheticController implements SyntheticController {
       });
     }
 
-    const project = {
+    const project: CrgProject = {
       id: Math.max(...projects.map(({ id }) => id)) + 1,
       name: data.name,
-      internalName: 'workspace_1427',
+      description: data.description,
+      bbox: data.bbox,
       organizationId: 1,
-      createdAt: '2022-11-11T12:27:11.238515',
+      createdAt: new Date().toISOString(),
       role: Role.OWNER,
-      folder: false,
-      default: false
+      folder: Boolean(data.folder),
+      default: false,
+      parentId: data.parentId
     };
 
     projects.push(project);

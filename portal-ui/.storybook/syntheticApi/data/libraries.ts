@@ -1,12 +1,12 @@
+import { type LibraryRaw } from '../../../src/app/services/data/library/library.models';
+import { type OldSchema } from '../../../src/app/services/data/schema/schemaOld.models';
 import { DataEntityType } from '../../../src/app/services/data/vectorData/vectorData.models';
-import { LibraryRaw } from '../../../src/app/services/data/library/library.models';
 import { schemas } from './schemas';
-import { OldSchema } from '../../../src/app/services/data/schema/schemaOld.models';
 
 function getSchema(schemaName: string): OldSchema {
   const schema = schemas.find(({ name }) => name === schemaName);
   if (!schema) {
-    console.log(`Не найдена схема: ${schemaName}`);
+    console.warn(`Не найдена схема: ${schemaName}`);
 
     return schemas[0];
   }

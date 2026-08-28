@@ -1,7 +1,7 @@
 import { isObject } from 'lodash';
 
 import { isArray } from '../../util/typeGuards/isArray';
-import { type PropertySchema, PropertyType } from './schema.models';
+import { type PropertySchema, PropertyType, type Schema } from './schema.models';
 
 export function isPropertyType(value: unknown): value is PropertyType {
   return Object.values(PropertyType).includes(value as PropertyType);
@@ -21,4 +21,16 @@ export function isPropertySchema(obj: unknown): obj is PropertySchema {
 
 export function isPropertySchemaArray(arr: unknown): arr is PropertySchema[] {
   return isArray(arr) && arr.every(isPropertySchema);
+}
+
+export function isSchema(obj: unknown): obj is Schema {
+  return (
+    isObject(obj) &&
+    'name' in obj &&
+    typeof obj.name === 'string' &&
+    'title' in obj &&
+    typeof obj.title === 'string' &&
+    'properties' in obj &&
+    isArray(obj.properties)
+  );
 }

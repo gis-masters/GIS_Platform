@@ -19,10 +19,9 @@ const cnCreateProject = cn('CreateProject');
 interface CreateProjectProps {
   folder?: boolean;
   currentProjectFolderId?: number;
-  onCreate(project: CrgProject): void;
 }
 
-export const CreateProject = observer(({ folder, currentProjectFolderId, onCreate }: CreateProjectProps) => {
+export const CreateProject = observer(({ folder, currentProjectFolderId }: CreateProjectProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -43,11 +42,9 @@ export const CreateProject = observer(({ folder, currentProjectFolderId, onCreat
         project.parentId = currentProjectFolderId;
       }
 
-      const newProject = await projectsService.create(project);
-
-      onCreate(newProject);
+      await projectsService.create(project);
     },
-    [currentProjectFolderId, folder, onCreate]
+    [currentProjectFolderId, folder]
   );
 
   return (

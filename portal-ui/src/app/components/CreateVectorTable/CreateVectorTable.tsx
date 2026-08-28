@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import {
   type Dataset,
-  emptyVectorTableSchema,
+  getEmptyVectorTableSchema,
   type NewVectorTable,
   type VectorTable
 } from '../../services/data/vectorData/vectorData.models';
@@ -39,7 +39,7 @@ export class CreateVectorTable extends Component<CreateVectorTableProps> {
         <FormDialog<Partial<VectorTable>>
           className={cnCreateVectorTableDialog()}
           open={this.dialogOpen}
-          schema={emptyVectorTableSchema}
+          schema={getEmptyVectorTableSchema()}
           actionFunction={this.create}
           actionButtonProps={{
             startIcon: <SaveOutlined className={cnCreateVectorTableDialogYes()} />,

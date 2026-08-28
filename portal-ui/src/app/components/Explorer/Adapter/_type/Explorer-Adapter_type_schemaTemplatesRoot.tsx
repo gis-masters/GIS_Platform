@@ -4,11 +4,13 @@ import { SchemaOutlined } from '@mui/icons-material';
 import { type Emitter } from '../../../../services/common/Emitter';
 import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
 import { type Schema } from '../../../../services/data/schema/schema.models';
+import { isSchema } from '../../../../services/data/schema/schema.typeguards';
 import { type SchemaTemplate } from '../../../../services/data/schemaTemplate/schemaTemplate.models';
 import { schemaTemplateService } from '../../../../services/data/schemaTemplate/schemaTemplate.service';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { filterObjects } from '../../../../services/util/filters/filterObjects';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { CreateSchema } from '../../../CreateSchema/CreateSchema';
 import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
 
@@ -168,5 +170,29 @@ export class ExplorerAdapterTypeSchemaTemplatesRoot {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<Schema>>[] {
     return [communicationService.schemaUpdated];
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    if (!isSchema(data)) {
+      return;
+    }
+
+    const payload: SchemaTemplate = {
+      id: 0,
+      name: data.name,
+      classRule: data,
+      customRule: '',
+      calculatedFields: '',
+      system: false,
+      createdBy: currentUser.login,
+      createdAt: '',
+      lastModified: '',
+      modifiedBy: currentUser.login
+    };
+
+    return {
+      type: ExplorerItemType.SCHEMA_TEMPLATE,
+      payload
+    };
   }
 }

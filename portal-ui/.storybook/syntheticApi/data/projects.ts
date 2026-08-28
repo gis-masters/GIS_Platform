@@ -1,7 +1,46 @@
+import { type CrgProject } from '../../../src/app/services/gis/projects/projects.models';
 import { Role } from '../../../src/app/services/permissions/permissions.models';
-import { CrgProject } from '../../../src/app/services/gis/projects/projects.models';
 
 export const projects: CrgProject[] = [
+  {
+    id: 90_001,
+    name: 'Крым',
+    organizationId: 1,
+    createdAt: '2024-12-01T08:00:00.000',
+    role: Role.OWNER,
+    folder: true,
+    default: false
+  },
+  {
+    id: 90_002,
+    name: 'Тестовые проекты',
+    organizationId: 1,
+    createdAt: '2024-11-15T09:00:00.000',
+    role: Role.OWNER,
+    folder: true,
+    default: false
+  },
+  {
+    id: 90_003,
+    name: 'Ялта центр',
+    organizationId: 1,
+    createdAt: '2024-12-02T11:20:00.000',
+    role: Role.OWNER,
+    folder: false,
+    default: false,
+    parentId: 90_001,
+    bbox: '[3771289.7,5571392.4,3795816.0,5599526.2]'
+  },
+  {
+    id: 90_004,
+    name: 'Песочница',
+    organizationId: 1,
+    createdAt: '2024-11-16T15:40:00.000',
+    role: Role.OWNER,
+    folder: false,
+    default: false,
+    parentId: 90_002
+  },
   {
     id: 3,
     name: 'Восток Крыма',

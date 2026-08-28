@@ -21,7 +21,8 @@ export class XTableBlock extends Block {
     rows: '.XTable-Row',
     firstColCellContent: '.XTable .XTable-Cell:first-child .XTable-CellContent',
     firstColCellTitle: '.XTable .XTable-Head .MuiTableRow-head .XTable-HeadCell:first-child .XTable-HeadCellTitle',
-    secondColCellContent: '.XTable-Row .XTable-Cell:nth-child(2) .XTable-CellContent'
+    secondColCellContent: '.XTable-Row .XTable-Cell:nth-child(2) .XTable-CellContent',
+    pageSize: '.XTable-PageSize'
   };
 
   async focusFirstColTitle(): Promise<void> {
@@ -152,6 +153,48 @@ export class XTableBlock extends Block {
     } else {
       throw new Error('Unsupported direction: ' + direction);
     }
+  }
+
+  async toggleColumnSort(title: string): Promise<void> {
+    await this.waitForLoading();
+
+    const $headCellTitle = await this.getHeadCellTitle(title);
+    await $headCellTitle.waitForClickable();
+    await $headCellTitle.click();
+    await this.waitForLoading();
+  }
+
+  async getColumnSortDirection(title: string): Promise<SortOrder | undefined> {
+    const $headCell = await this.getHeadCell(title);
+    const $sortLabel = await $headCell.$('.MuiTableSortLabel-root').getElement();
+
+    if (!(await hasClass($sortLabel, 'Mui-active'))) {
+      return undefined;
+    }
+
+    if (await hasClass($sortLabel, 'MuiTableSortLabel-directionDesc')) {
+      return SortOrder.DESC;
+    }
+
+    if (await hasClass($sortLabel, 'MuiTableSortLabel-directionAsc')) {
+      return SortOrder.ASC;
+    }
+  }
+
+  async setPageSize(size: number): Promise<void> {
+    await this.waitForLoading();
+
+    const $pageSize = await this.findBySelector('pageSize');
+    const select = new MuiSelectBlock($pageSize);
+    await select.selectOptionByTitle(String(size));
+    await this.waitForLoading();
+  }
+
+  async getPageSize(): Promise<string> {
+    const $pageSize = await this.findBySelector('pageSize');
+    const select = new MuiSelectBlock($pageSize);
+
+    return select.getText();
   }
 
   async filterNumerableColumn(colTitle: string, lte: string, gte: string): Promise<void> {

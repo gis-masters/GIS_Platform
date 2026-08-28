@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
-import { type VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
+import { getVectorTableSchema, type VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
 import { permissionsClient } from '../../../../services/permissions/permissions.client';
 import { Role } from '../../../../services/permissions/permissions.models';
@@ -60,7 +60,7 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
           <>
             <ExplorerInfoDescItem multiline>
               <ViewContentWidget
-                schema={vectorTableSchema}
+                schema={getVectorTableSchema()}
                 data={this.currentTable}
                 title='Свойства источника данных'
               />

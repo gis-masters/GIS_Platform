@@ -1,6 +1,6 @@
-import { SyntheticController } from '../masterController';
-import { FiasApiItem } from '../../../../src/app/services/data/fias/fias.models';
+import { type FiasApiItem } from '../../../../src/app/services/data/fias/fias.models';
 import { fiasAddress } from '../../data/fias';
+import { type SyntheticController } from '../masterController';
 
 class FiasAddressSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/integration\/fias\/fulladdress$/;

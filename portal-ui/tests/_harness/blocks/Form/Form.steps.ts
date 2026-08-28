@@ -81,6 +81,11 @@ When('в форме в поле {string} типа string я ввожу текс�
   await formBlock.setStringValue(title, text);
 });
 
+Then('в форме в поле {string} типа string значение {string}', async (title: string, value: string) => {
+  const formBlock = new FormBlock();
+  expect(await formBlock.getStringValue(title)).toBe(value);
+});
+
 Then('блок FormControlTypeString вариант {string} выглядит как положено', async (variant: string) => {
   await formControlTypeStringBlock.assertSelfie(variant);
 });

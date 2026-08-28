@@ -213,6 +213,7 @@ export interface Adapter {
     full: boolean
   ): Promise<ReactNode> | ReactNode;
   getRefreshEmitters?(item: ExplorerItemData, store: ExplorerStore): Emitter<DataChangeEventDetail<unknown>>[];
+  wrapCreatedChild?(item: ExplorerItemData, data: unknown, store: ExplorerStore): ExplorerItemData | undefined;
   getActions?(item: ExplorerItemData, store: ExplorerStore): ReactNode;
   hasSearch?(item: ExplorerItemData, store: ExplorerStore): boolean;
 }

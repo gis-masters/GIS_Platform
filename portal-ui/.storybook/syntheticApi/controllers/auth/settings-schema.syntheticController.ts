@@ -1,8 +1,8 @@
-import { InternalAxiosRequestConfig } from 'axios';
+import { type InternalAxiosRequestConfig } from 'axios';
 
-import { SyntheticController } from '../masterController';
+import { PropertyType, type Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { err404 } from '../../utils';
-import { PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { type SyntheticController } from '../masterController';
 
 class SettingsSchemaSyntheticController implements SyntheticController {
   pattern = /^.*\/organizations\/settings\/schema$/;

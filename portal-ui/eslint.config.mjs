@@ -506,6 +506,14 @@ export default defineConfig([globalIgnores([
         "@typescript-eslint/consistent-type-imports": "off",
     },
 }, {
+    files: [".storybook/main.ts"],
+
+    languageOptions: {
+        globals: {
+            ...globals.node,
+        },
+    },
+}, {
     files: ["**/*.js"],
 
     rules: {

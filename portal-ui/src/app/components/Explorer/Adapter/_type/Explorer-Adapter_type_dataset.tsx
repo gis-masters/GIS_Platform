@@ -10,6 +10,7 @@ import {
   getVectorTablesInDataset,
   getVectorTablesWithParticularOne
 } from '../../../../services/data/vectorData/vectorData.service';
+import { isVectorTable } from '../../../../services/data/vectorData/vectorData.typeguards';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { formatDate } from '../../../../services/util/date.util';
@@ -184,5 +185,15 @@ export class ExplorerAdapterTypeDataset {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<VectorTable>>[] {
     return [communicationService.vectorTableUpdated];
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    assertExplorerItemDataTypeDataset(item);
+
+    if (!isVectorTable(data) || data.dataset !== item.payload.identifier) {
+      return;
+    }
+
+    return { type: ExplorerItemType.TABLE, payload: data };
   }
 }

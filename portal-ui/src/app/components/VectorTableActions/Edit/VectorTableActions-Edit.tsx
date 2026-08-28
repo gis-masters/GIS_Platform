@@ -6,7 +6,7 @@ import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { type VectorTable, vectorTableSchema } from '../../../services/data/vectorData/vectorData.models';
+import { getVectorTableSchema, type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { updateVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
@@ -44,7 +44,7 @@ export class VectorTableActionsEdit extends Component<VectorTableActionsEditProp
 
         <FormDialog
           open={this.dialogOpen}
-          schema={vectorTableSchema}
+          schema={getVectorTableSchema()}
           value={vectorTable}
           actionFunction={this.update}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}

@@ -47,6 +47,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   singleLineContent?: boolean;
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
+  defaultPageSize?: number;
   secondarySortField?: keyof T;
   filterable?: boolean;
   loading?: boolean;
@@ -109,6 +110,9 @@ export default class XTable<T> extends Component<XTableProps<T>> {
     makeObservable(this);
 
     this.reset();
+    if (typeof props.defaultPageSize === 'number') {
+      this.pageSize = props.defaultPageSize;
+    }
     if (props.id) {
       this.restoreColsSettings(props.id);
     }

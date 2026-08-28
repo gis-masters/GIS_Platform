@@ -5,6 +5,7 @@ import { type Emitter } from '../../../../services/common/Emitter';
 import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
 import { type CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
+import { isCrgProject } from '../../../../services/gis/projects/projects.typeguards';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
@@ -12,6 +13,21 @@ import { CreateProject } from '../../../CreateProject/CreateProject';
 import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
 import { type ExplorerService } from '../../Explorer.service';
 import { type ExplorerStore } from '../../Explorer.store';
+
+export function wrapCreatedProjectChild(data: unknown, parentId = 0): ExplorerItemData | undefined {
+  if (!isCrgProject(data)) {
+    return;
+  }
+
+  if ((data.parentId || 0) !== parentId) {
+    return;
+  }
+
+  return {
+    type: data.folder ? ExplorerItemType.PROJECT_FOLDER : ExplorerItemType.PROJECT,
+    payload: data
+  };
+}
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProjectsRoot {
@@ -146,20 +162,18 @@ export class ExplorerAdapterTypeProjectsRoot {
     return [communicationService.projectUpdated];
   }
 
-  static getToolbarActions(item: ExplorerItemData, store: ExplorerStore): ReactNode {
-    const handleCreate = (record: CrgProject) => {
-      store.selectItem({ payload: record, type: ExplorerItemType.PROJECT });
-    };
-
+  static getToolbarActions(item: ExplorerItemData): ReactNode {
     const parentId = Number((item.payload as CrgProject)?.id) || undefined;
 
     return organizationSettings.createProject ? (
       <>
-        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
-        <CreateProject currentProjectFolderId={parentId} onCreate={handleCreate} />
-        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
-        <CreateProject currentProjectFolderId={parentId} folder onCreate={handleCreate} />
+        <CreateProject currentProjectFolderId={parentId} />
+        <CreateProject currentProjectFolderId={parentId} folder />
       </>
     ) : null;
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    return wrapCreatedProjectChild(data);
   }
 }

@@ -10,6 +10,8 @@ import {
   getLibraryRecords,
   getLibraryRecordsWithParticularOne
 } from '../../../../services/data/library/library.service';
+import { isLibraryRecord } from '../../../../services/data/library/library.typeguards';
+import { type ContentType } from '../../../../services/data/schema/schema.models';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { formatDate } from '../../../../services/util/date.util';
@@ -40,6 +42,24 @@ export function assertExplorerItemDataTypeLibrary(
   if (item.type !== ExplorerItemType.LIBRARY) {
     throw itemTypeError;
   }
+}
+
+export function wrapCreatedLibraryRecordChild(
+  data: unknown,
+  libraryTableName: string,
+  expectedPath: string,
+  contentTypes: ContentType[] | undefined
+): ExplorerItemData | undefined {
+  if (!isLibraryRecord(data) || data.libraryTableName !== libraryTableName || data.path !== expectedPath) {
+    return;
+  }
+
+  const contentType = contentTypes?.find(cType => cType.id === data.content_type_id);
+
+  return {
+    type: contentType?.type === ContentTypeTypes.FOLDER ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT,
+    payload: data
+  };
 }
 
 @staticImplements<Adapter>()
@@ -215,10 +235,6 @@ export class ExplorerAdapterTypeLibrary {
     const recordCreationAllowed =
       !!organizationSettings.createLibraryItem && !!currentItem.role && currentItem.role !== Role.VIEWER;
 
-    const handleCreate = (record: LibraryRecord, isFolder: boolean) => {
-      store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
-    };
-
     return (
       store.explorerRole === 'dm' && (
         <>
@@ -232,8 +248,7 @@ export class ExplorerAdapterTypeLibrary {
               <LibraryKptRequest library={item.payload} />
             </>
           )}
-          {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
-          {full && recordCreationAllowed && <CreateLibraryRecord library={item.payload} onCreate={handleCreate} />}
+          {full && recordCreationAllowed && <CreateLibraryRecord library={item.payload} />}
           <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
         </>
@@ -255,5 +270,11 @@ export class ExplorerAdapterTypeLibrary {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {
     return [communicationService.libraryRecordUpdated];
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    assertExplorerItemDataTypeLibrary(item);
+
+    return wrapCreatedLibraryRecordChild(data, item.payload.table_name, '/root', item.payload.schema.contentTypes);
   }
 }

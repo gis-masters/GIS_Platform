@@ -8,6 +8,7 @@ import {
   getBasemaps,
   getBasemapsWithParticularOne
 } from '../../../../services/data/basemaps/basemaps.service';
+import { isBasemap } from '../../../../services/data/basemaps/basemaps.typeguards';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -106,5 +107,13 @@ export class ExplorerAdapterTypeBasemapsRoot {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<Basemap>>[] {
     return [communicationService.basemapUpdated];
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    if (!isBasemap(data)) {
+      return;
+    }
+
+    return { type: ExplorerItemType.BASEMAP, payload: data };
   }
 }

@@ -1,22 +1,19 @@
-import { InternalAxiosRequestConfig } from 'axios';
+import { type InternalAxiosRequestConfig } from 'axios';
 
-import { OldSchema } from '../../../../src/app/services/data/schema/schemaOld.models';
-import { SyntheticController } from '../masterController';
+import { type OldSchema } from '../../../../src/app/services/data/schema/schemaOld.models';
 import { schemas } from '../../data/schemas';
-import { err404 } from '../../utils';
+import { parseBody } from '../../utils';
+import { type SyntheticController } from '../masterController';
 
 class SchemasSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/schemas$/;
 
-  get(config: InternalAxiosRequestConfig): OldSchema[] {
-    const names = config.params?.schemaIds?.split(',');
-    const result = schemas.filter(({ name }) => names?.includes(name));
+  post(config: InternalAxiosRequestConfig): OldSchema {
+    const schema = parseBody<OldSchema>(config.data);
 
-    if (!result.length) {
-      throw err404(config);
-    }
+    schemas.push(schema);
 
-    return result;
+    return schema;
   }
 }
 

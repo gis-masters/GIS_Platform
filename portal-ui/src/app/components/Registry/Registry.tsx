@@ -8,7 +8,6 @@ import { type PageOptions, SortOrder } from '../../services/models';
 import { services } from '../../services/services';
 import { type FilterQuery } from '../../services/util/filters/filters.models';
 import { type SortParams } from '../../services/util/sortObjects';
-import { route } from '../../stores/Route.store';
 import { XTable, type XTableProps } from '../XTable/XTable';
 import { type XTableColumn } from '../XTable/XTable.models';
 
@@ -43,6 +42,8 @@ export interface RegistryProps<T> {
 @observer
 export class Registry<T> extends Component<RegistryProps<T>> {
   private defaultFilter: FilterQuery = {};
+  private urlSort?: SortParams<T>;
+  private urlPageSize?: number;
   private unsubscribe$: Subject<void> = new Subject<void>();
   private tableInvoke: XTableProps<T>['invoke'] = {};
   private selfInitedNavigationIds: number[] = [];
@@ -52,6 +53,8 @@ export class Registry<T> extends Component<RegistryProps<T>> {
     makeObservable(this);
 
     this.setDefaultFilter();
+    this.setUrlSort();
+    this.setUrlPageSize();
   }
 
   componentDidMount() {
@@ -76,6 +79,11 @@ export class Registry<T> extends Component<RegistryProps<T>> {
           const filter = this.getFilterFromUrl();
           if (this.tableInvoke?.setFilter && filter) {
             this.tableInvoke.setFilter(filter);
+          }
+
+          const pageSize = this.getPageSizeFromUrl();
+          if (this.tableInvoke?.setPageSize && pageSize) {
+            this.tableInvoke.setPageSize(pageSize);
           }
         }
       });
@@ -104,7 +112,8 @@ export class Registry<T> extends Component<RegistryProps<T>> {
         id={id}
         getData={getData}
         counter={counter}
-        defaultSort={defaultSort}
+        defaultSort={this.urlSort || defaultSort}
+        defaultPageSize={this.urlPageSize}
         filtersAlwaysEnabled
         showFiltersPanel
         customActionFirst={customActionFirst}
@@ -127,7 +136,7 @@ export class Registry<T> extends Component<RegistryProps<T>> {
       this.props.onPageOptionsChange(pageOptions);
     }
 
-    const { sort, sortOrder: sortDir, filter } = pageOptions;
+    const { sort, sortOrder: sortDir, filter, pageSize } = pageOptions;
     const encodedSort = JSON.stringify([sort, sortDir]);
     const encodedFilter = JSON.stringify(filter);
 
@@ -135,7 +144,8 @@ export class Registry<T> extends Component<RegistryProps<T>> {
       void services.router.navigate([location.pathname], {
         queryParams: {
           sort: encodedSort,
-          filter: encodedFilter
+          filter: encodedFilter,
+          pageSize: pageSize === undefined ? undefined : String(pageSize)
         },
         queryParamsHandling: 'merge',
         replaceUrl: true
@@ -148,9 +158,23 @@ export class Registry<T> extends Component<RegistryProps<T>> {
     });
   }
 
+  private getQueryParam(name: string): string | null {
+    const match = new RegExp(`[?&]${name}=([^&]*)`).exec(window.location.search);
+    if (!match?.[1]) {
+      return null;
+    }
+
+    const raw = match[1].replaceAll('+', ' ');
+    try {
+      return decodeURIComponent(raw);
+    } catch {
+      return raw;
+    }
+  }
+
   private getSortFromUrl(): SortParams<T> | undefined {
     try {
-      const queryParamsSort = route.queryParams?.sort;
+      const queryParamsSort = this.getQueryParam('sort');
       const sort = queryParamsSort && (JSON.parse(queryParamsSort) as string[]);
 
       if (sort) {
@@ -163,7 +187,7 @@ export class Registry<T> extends Component<RegistryProps<T>> {
 
   private getFilterFromUrl(): FilterQuery | undefined {
     try {
-      const queryParamsFilter = route.queryParams?.filter;
+      const queryParamsFilter = this.getQueryParam('filter');
       if (queryParamsFilter) {
         return JSON.parse(queryParamsFilter) as FilterQuery;
       }
@@ -183,5 +207,33 @@ export class Registry<T> extends Component<RegistryProps<T>> {
     if (this.props.urlChangeEnabled && filter) {
       this.defaultFilter = filter;
     }
+  }
+
+  private setUrlSort() {
+    if (!this.props.urlChangeEnabled) {
+      return;
+    }
+
+    this.urlSort = this.getSortFromUrl();
+  }
+
+  private getPageSizeFromUrl(): number | undefined {
+    const raw = this.getQueryParam('pageSize');
+    if (!raw) {
+      return;
+    }
+
+    const size = Number(raw);
+    if (Number.isInteger(size) && size > 0) {
+      return size;
+    }
+  }
+
+  private setUrlPageSize() {
+    if (!this.props.urlChangeEnabled) {
+      return;
+    }
+
+    this.urlPageSize = this.getPageSizeFromUrl();
   }
 }

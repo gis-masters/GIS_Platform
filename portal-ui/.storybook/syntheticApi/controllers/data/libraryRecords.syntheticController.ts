@@ -1,14 +1,14 @@
-import { InternalAxiosRequestConfig } from 'axios';
+import { type InternalAxiosRequestConfig } from 'axios';
 
-import { LibraryRecordRaw } from '../../../../src/app/services/data/library/library.models';
+import { type LibraryRecordRaw } from '../../../../src/app/services/data/library/library.models';
 import { queryObjects } from '../../../../src/app/services/util/queryObjects';
+import { type PageableResources } from '../../../../src/server-types/common-contracts';
 import { libraryRecords } from '../../data/libraryRecords';
-import { SyntheticController } from '../masterController';
 import { parsePageOptions } from '../../utils';
-import { PageableResources } from '../../../../src/server-types/common-contracts';
+import { type SyntheticController } from '../masterController';
 
 class LibraryRecordsSyntheticController implements SyntheticController {
-  pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records.*$/;
+  pattern = /^.*\/api\/data\/document-libraries\/([^?/#]*)\/records.*$/;
 
   get(config: InternalAxiosRequestConfig): PageableResources<{ content: LibraryRecordRaw }> {
     const match = config.url?.match(this.pattern);

@@ -13,25 +13,17 @@ interface CreateLibraryRecordButtonProps {
   contentTypes: ContentType[];
   library: Library;
   parent: LibraryRecord | undefined;
-  onCreate(record: LibraryRecord, isFolder: boolean): void;
 }
 
 export const CreateLibraryRecordButton: FC<CreateLibraryRecordButtonProps> = ({
   icon,
   contentTypes,
   library,
-  parent,
-  onCreate
+  parent
 }) => (
   <MenuIconButton className={cnCreateLibraryRecordButton()} icon={icon} keepMounted>
     {contentTypes.map((contentType, i) => (
-      <CreateLibraryRecordItem
-        contentType={contentType}
-        library={library}
-        parent={parent}
-        key={i}
-        onCreate={onCreate}
-      />
+      <CreateLibraryRecordItem contentType={contentType} library={library} parent={parent} key={i} />
     ))}
   </MenuIconButton>
 );

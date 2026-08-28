@@ -8,6 +8,7 @@ import {
   getDatasets,
   getDatasetsWithParticularOne
 } from '../../../../services/data/vectorData/vectorData.service';
+import { isDataset } from '../../../../services/data/vectorData/vectorData.typeguards';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { CreateDataset } from '../../../CreateDataset/CreateDataset';
@@ -123,5 +124,13 @@ export class ExplorerAdapterTypeDatasetRoot {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<Dataset>>[] {
     return [communicationService.datasetUpdated];
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown): ExplorerItemData | undefined {
+    if (!isDataset(data)) {
+      return;
+    }
+
+    return { type: ExplorerItemType.DATASET, payload: data };
   }
 }

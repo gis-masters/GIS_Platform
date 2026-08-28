@@ -1,4 +1,4 @@
-import { OldSchema, ValueType } from '../../../src/app/services/data/schema/schemaOld.models';
+import { type OldSchema, ValueType } from '../../../src/app/services/data/schema/schemaOld.models';
 import { GeometryType } from '../../../src/app/services/geoserver/wfs/wfs.models';
 
 export const schemas: OldSchema[] = [
@@ -15,7 +15,7 @@ export const schemas: OldSchema[] = [
         valueType: ValueType.STRING,
         maxLength: 254
       },
-      // @ts-ignore - в реальной схеме нет title
+      // @ts-expect-error в реальной схеме нет title
       {
         name: 'shape',
         required: true,
@@ -531,7 +531,7 @@ export const schemas: OldSchema[] = [
         maxLength: 254,
         minWidth: 0
       },
-      // @ts-ignore - в реальной схеме нет title
+      // @ts-expect-error в реальной схеме нет title
       {
         name: 'shape',
         required: false,
@@ -1344,7 +1344,7 @@ export const schemas: OldSchema[] = [
         multiple: true,
         valueType: ValueType.FILE,
         minWidth: 0,
-        maxSize: 50000000,
+        maxSize: 50_000_000,
         maxFiles: 10
       },
       {
@@ -1357,7 +1357,7 @@ export const schemas: OldSchema[] = [
         maxLength: 254,
         minWidth: 0
       },
-      // @ts-ignore - в реальной схеме нет title
+      // @ts-expect-error в реальной схеме нет title
       {
         name: 'shape',
         required: false,
@@ -1416,7 +1416,7 @@ export const schemas: OldSchema[] = [
           {
             name: 'any_field_name',
             title: 'Выбор файла',
-            maxSize: 50000000,
+            maxSize: 50_000_000,
             maxFiles: 10,
             multiple: true,
             valueType: ValueType.FILE
@@ -1476,7 +1476,7 @@ export const schemas: OldSchema[] = [
           {
             name: 'any_field_name',
             title: 'Выбор файла',
-            maxSize: 50000000,
+            maxSize: 50_000_000,
             maxFiles: 10,
             multiple: true,
             valueType: ValueType.FILE

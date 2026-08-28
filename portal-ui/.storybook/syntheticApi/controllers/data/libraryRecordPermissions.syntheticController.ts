@@ -1,12 +1,12 @@
-import { InternalAxiosRequestConfig } from 'axios';
+import { type InternalAxiosRequestConfig } from 'axios';
 
-import { RoleAssignmentBody } from '../../../../src/app/services/permissions/permissions.models';
+import { type RoleAssignmentBody } from '../../../../src/app/services/permissions/permissions.models';
+import { type PageableResources } from '../../../../src/server-types/common-contracts';
 import { err404, parsePageOptions } from '../../utils';
-import { SyntheticController } from '../masterController';
-import { PageableResources } from '../../../../src/server-types/common-contracts';
+import { type SyntheticController } from '../masterController';
 
 class LibraryRecordPermissionsSyntheticController implements SyntheticController {
-  pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records\/(\d*)\/roleAssignment$/;
+  pattern = /^.*\/api\/data\/document-libraries\/([^?/#]*)\/records\/(\d*)\/roleAssignment$/;
 
   get(config: InternalAxiosRequestConfig): PageableResources<RoleAssignmentBody> {
     if (!config.url) {

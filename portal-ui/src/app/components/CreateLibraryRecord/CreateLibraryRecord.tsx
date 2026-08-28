@@ -16,7 +16,6 @@ const cnCreateLibraryRecord = cn('CreateLibraryRecord');
 interface CreateLibraryRecordProps {
   library: Library;
   parent?: LibraryRecord;
-  onCreate(record: LibraryRecord, isFolder: boolean): void;
 }
 
 @observer
@@ -27,7 +26,7 @@ export class CreateLibraryRecord extends Component<CreateLibraryRecordProps> {
   }
 
   render() {
-    const { library, parent, onCreate } = this.props;
+    const { library, parent } = this.props;
 
     return (
       <div className={cnCreateLibraryRecord()}>
@@ -36,7 +35,6 @@ export class CreateLibraryRecord extends Component<CreateLibraryRecordProps> {
             contentType={this.contentTypesWithoutFolder[0]}
             library={library}
             parent={parent}
-            onCreate={onCreate}
             single
           />
         )}
@@ -47,18 +45,11 @@ export class CreateLibraryRecord extends Component<CreateLibraryRecordProps> {
             icon={<NoteAddOutlined />}
             library={library}
             parent={parent}
-            onCreate={onCreate}
           />
         )}
 
         {this.folderContentTypes.length === 1 && (
-          <CreateLibraryRecordItem
-            contentType={this.folderContentTypes[0]}
-            library={library}
-            parent={parent}
-            onCreate={onCreate}
-            single
-          />
+          <CreateLibraryRecordItem contentType={this.folderContentTypes[0]} library={library} parent={parent} single />
         )}
 
         {this.folderContentTypes.length > 1 && (
@@ -67,7 +58,6 @@ export class CreateLibraryRecord extends Component<CreateLibraryRecordProps> {
             icon={<CreateNewFolderOutlined />}
             library={library}
             parent={parent}
-            onCreate={onCreate}
           />
         )}
       </div>

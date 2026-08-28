@@ -34,6 +34,7 @@ import { type ExplorerService } from '../../Explorer.service';
 import { type ExplorerStore } from '../../Explorer.store';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
+import { wrapCreatedLibraryRecordChild } from './Explorer-Adapter_type_library';
 
 function assertExplorerItemDataTypeFolder(
   item: ExplorerItemData
@@ -218,9 +219,6 @@ export class ExplorerAdapterTypeFolder {
       !!organizationSettings.createLibraryItem &&
       !!currentItem.role &&
       [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role);
-    const handleCreate = (record: LibraryRecord, isFolder: boolean) => {
-      store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
-    };
     const library = store.path.find(({ type }) => type === ExplorerItemType.LIBRARY)?.payload as Library;
     const path = store?.path
       .filter(({ type }) => type === ExplorerItemType.FOLDER)
@@ -240,8 +238,7 @@ export class ExplorerAdapterTypeFolder {
             <LibraryKptRequest library={library} />
           </>
         )}
-        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
-        {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={handleCreate} />}
+        {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} />}
         {store.explorerRole === 'dm' && (
           <>
             <LibraryDeletedDocumentsSwitch library={library} />
@@ -266,5 +263,21 @@ export class ExplorerAdapterTypeFolder {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {
     return [communicationService.libraryRecordUpdated];
+  }
+
+  static wrapCreatedChild(item: ExplorerItemData, data: unknown, store: ExplorerStore): ExplorerItemData | undefined {
+    assertExplorerItemDataTypeFolder(item);
+
+    const libraryItem = store.path.find(({ type }) => type === ExplorerItemType.LIBRARY);
+    if (!libraryItem || libraryItem.type !== ExplorerItemType.LIBRARY) {
+      return;
+    }
+
+    return wrapCreatedLibraryRecordChild(
+      data,
+      item.payload.libraryTableName,
+      `${item.payload.path}/${item.payload.id}`,
+      libraryItem.payload.schema.contentTypes
+    );
   }
 }
