@@ -74,8 +74,12 @@ class AuthClient extends Client {
     return http.post(this.getRestorePasswordUrl(), { email, origin });
   }
 
-  async changePassword(token: string, password?: string): Promise<void> {
+  async changePassword(token: string, password: string): Promise<void> {
     return http.post(this.getChangePasswordUrl(), { token, password });
+  }
+
+  async checkPasswordResetToken(token: string): Promise<void> {
+    return http.get(this.getChangePasswordUrl(), { params: { token }, cache: { disabled: true } });
   }
 }
 

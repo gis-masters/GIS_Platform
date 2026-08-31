@@ -89,13 +89,13 @@ class AuthService {
 
   async isTokenExpired(token: string): Promise<boolean> {
     try {
-      await authClient.changePassword(token);
+      await authClient.checkPasswordResetToken(token);
 
       return false;
     } catch (error) {
       const err = error as AxiosError;
 
-      return Number(err.status) === 404;
+      return Number(err.status) === 404 || err.response?.status === 404;
     }
   }
 }

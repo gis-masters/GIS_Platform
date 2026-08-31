@@ -74,7 +74,7 @@ public class PasswordResetService {
     public String activateToken(PasswordResetDto dto) {
         Optional<PasswordResetToken> oResetToken = tokenRepository.findByToken(dto.getToken());
         if (oResetToken.isEmpty()) {
-            throw new BadRequestException("Token invalid or expired");
+            throw new BadRequestException("Токен не корректен или его срок действия истёк");
         }
 
         PasswordResetToken token = oResetToken.get();

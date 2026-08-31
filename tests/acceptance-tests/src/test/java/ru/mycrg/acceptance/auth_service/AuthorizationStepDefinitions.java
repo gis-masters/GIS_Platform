@@ -215,7 +215,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         String error = response.jsonPath().get("message");
 
         assertNotNull(error);
-        assertEquals("Token invalid or expired", error);
+        assertEquals("Токен не корректен или его срок действия истёк", error);
     }
 
     private void resetPassRequest(String body) {
