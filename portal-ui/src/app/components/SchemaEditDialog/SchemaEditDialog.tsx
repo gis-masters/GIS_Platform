@@ -15,7 +15,9 @@ import {
   schemaForSchema
 } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
+import { applyAsTitleToSchema } from '../../services/data/schema/utils/applyAsTitleToSchema';
 import { ensureGeometryTypeOption } from '../../services/data/schema/utils/ensureGeometryTypeOption';
+import { isReadableProperty } from '../../services/data/schema/utils/isReadableProperty';
 import { DataEntityType, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { updateVectorTableSchema } from '../../services/data/vectorData/vectorData.service';
 import { GeometryType, type SupportedGeometryType } from '../../services/geoserver/wfs/wfs.models';
@@ -67,6 +69,7 @@ function isSchemaSaveFieldError(value: unknown): value is { field?: string; mess
 
 function getSchemaSaveErrorMessage(error: unknown, properties?: PropertySchema[]): string {
   const data = isAxiosError(error) ? error.response?.data : undefined;
+
   if (!isRecordStringUnknown(data)) {
     return 'Ошибка сохранения схемы';
   }
@@ -156,7 +159,9 @@ type SchemaCreateFormValue = Pick<
   | 'geometryType'
   | 'styleName'
   | 'tags'
->;
+> & {
+  asTitle?: string;
+};
 
 const ensureShapeProperty = (
   properties: PropertySchema[] = [],
@@ -179,7 +184,11 @@ const ensureShapeProperty = (
   ];
 };
 
-const createSchemaFields: PropertySchema[] = [
+const getAsTitlePropertyName = (properties: PropertySchema[] = []): string | undefined => {
+  return properties.find(property => property.asTitle === true)?.name;
+};
+
+const createSchemaFields = (properties: PropertySchema[] = []): PropertySchema[] => [
   {
     name: 'name',
     title: 'Идентификатор',
@@ -261,6 +270,16 @@ const createSchemaFields: PropertySchema[] = [
     propertyType: PropertyType.CHOICE
   },
   {
+    name: 'asTitle',
+    title: 'Заголовок объекта',
+    description: 'Показывать значение выбранного поля как заголовок для объекта',
+    options: properties.filter(isReadableProperty).map(property => ({
+      title: property.title || property.name,
+      value: property.name
+    })),
+    propertyType: PropertyType.CHOICE
+  },
+  {
     name: 'properties',
     title: 'Свойства',
     description: 'Набор полей для хранения сведений — значимых характеристик объектов',
@@ -295,24 +314,31 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
     setIsCreateMode(isCreateMode) {
       this.isCreateMode = isCreateMode;
     },
+
     setLoading(loading) {
       this.loading = loading;
     },
+
     setJsonMode(jsonMode) {
       this.jsonMode = jsonMode;
     },
+
     setCurrentSchema(currentSchema) {
       this.currentSchema = currentSchema;
     },
+
     setSchemaString(schemaString) {
       this.schemaString = schemaString;
     },
+
     setError(error) {
       this.error = error;
     },
+
     setWarnings(warnings) {
       this.warnings = warnings;
     },
+
     setIsSchemaChanged(isSchemaChanged) {
       this.isSchemaChanged = isSchemaChanged;
     }
@@ -329,6 +355,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
       void (async () => {
         try {
           const next = await schemaService.getSchemaWarnings(s);
+
           if (runId === schemaWarningRunIdRef.current) {
             state.setWarnings(next);
           }
@@ -374,6 +401,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
 
   useEffect(() => {
     const debounced = debouncedSchemaWarningsRef.current;
+
     if (!debounced) {
       return;
     }
@@ -388,6 +416,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
 
     schemaWarningRunIdRef.current += 1;
     const runId = schemaWarningRunIdRef.current;
+
     debounced(state.currentSchema, runId);
 
     return () => {
@@ -423,11 +452,12 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
   }, [onClose]);
 
   const handleSetCurrentSchema = useCallback(
-    (schema: Schema) => {
-      state.setCurrentSchema(schema);
+    (nextSchema: Schema) => {
+      state.setCurrentSchema(nextSchema);
       state.setIsSchemaChanged(true);
+
       if (!state.jsonMode) {
-        state.setSchemaString(JSON.stringify(schema, null, 2));
+        state.setSchemaString(JSON.stringify(nextSchema, null, 2));
       }
     },
     [state]
@@ -441,21 +471,21 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
   );
 
   const updateSchema = useCallback(
-    async (schema: Schema) => {
+    async (nextSchema: Schema) => {
       if (!explorerItem) {
-        await schemaService.updateSchema(schema);
+        await schemaService.updateSchema(nextSchema);
 
         return;
       }
 
       if (explorerItem.type === DataEntityType.LIBRARY) {
-        await updateLibrarySchema(explorerItem, schema);
+        await updateLibrarySchema(explorerItem, nextSchema);
 
         return;
       }
 
       if (explorerItem.type === DataEntityType.TABLE) {
-        await updateVectorTableSchema(explorerItem, schema);
+        await updateVectorTableSchema(explorerItem, nextSchema);
       }
     },
     [explorerItem]
@@ -515,6 +545,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
 
       try {
         const parsedSchema = JSON.parse(schemaJson) as Schema;
+
         state.setCurrentSchema(parsedSchema);
         state.setIsSchemaChanged(true);
       } catch {
@@ -527,35 +558,50 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
 
   const handleCreateFormChange = useCallback(
     (value: SchemaCreateFormValue) => {
-      const nextValue = { ...value };
+      const { asTitle, ...schemaValue } = value;
+
+      const nextValue = {
+        ...schemaValue,
+        properties: value.properties ?? state.currentSchema?.properties ?? schema.properties
+      };
 
       if (value.name) {
         nextValue.tableName = value.name;
         nextValue.originName = value.name;
       }
 
-      handleSetCurrentSchema({
-        ...state.currentSchema,
-        ...nextValue
-      } as Schema);
+      handleSetCurrentSchema(
+        applyAsTitleToSchema(
+          {
+            ...state.currentSchema,
+            ...nextValue
+          } as Schema,
+          asTitle
+        )
+      );
     },
-    [handleSetCurrentSchema, state]
+    [handleSetCurrentSchema, schema.properties, state]
   );
 
   const createSchema = useCallback(
     async (value: SchemaCreateFormValue) => {
-      const nextSchema: Schema = {
-        ...schema,
-        ...state.currentSchema,
-        ...value,
-        tableName: value.tableName || value.name,
-        originName: value.originName || value.name,
-        tags: parseTags(value.tags),
-        properties: ensureShapeProperty(
-          value.properties ?? state.currentSchema?.properties ?? schema.properties,
-          value.geometryType
-        )
-      };
+      const { asTitle, ...schemaValue } = value;
+
+      const nextSchema: Schema = applyAsTitleToSchema(
+        {
+          ...schema,
+          ...state.currentSchema,
+          ...schemaValue,
+          tableName: value.tableName || value.name,
+          originName: value.originName || value.name,
+          tags: parseTags(value.tags),
+          properties: ensureShapeProperty(
+            value.properties ?? state.currentSchema?.properties ?? schema.properties,
+            value.geometryType
+          )
+        },
+        asTitle ?? getAsTitlePropertyName(value.properties ?? state.currentSchema?.properties)
+      );
 
       state.setCurrentSchema(nextSchema);
 
@@ -605,6 +651,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
           {line}
         </div>
       ))}
+
       {state.error && <div className={cnSchemaEditDialog('Error')}>{state.error}</div>}
     </div>
   );
@@ -614,8 +661,17 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
       <FormDialog<SchemaCreateFormValue>
         open={open}
         title={title}
-        schema={{ properties: createSchemaFields }}
-        value={state.currentSchema}
+        schema={{
+          properties: createSchemaFields(state.currentSchema?.properties ?? [])
+        }}
+        value={
+          state.currentSchema
+            ? {
+                ...state.currentSchema,
+                asTitle: getAsTitlePropertyName(state.currentSchema.properties)
+              }
+            : undefined
+        }
         actionFunction={createSchemaFromForm}
         onFormChange={handleCreateFormChange}
         actionButtonProps={{ children: 'Создать' }}
@@ -693,6 +749,7 @@ export const SchemaEditDialog = observer((props: SchemaEditDialogProps) => {
             {state.jsonMode ? 'Редактировать в интерфейсе' : 'Редактировать в JSON'}
           </Button>
         )}
+
         <Button onClick={closeDialog}>Отмена</Button>
       </DialogActions>
     </Dialog>

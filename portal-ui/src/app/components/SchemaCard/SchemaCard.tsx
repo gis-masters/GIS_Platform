@@ -25,9 +25,12 @@ import {
   PropertyType,
   type Schema
 } from '../../services/data/schema/schema.models';
+import { applyAsTitleToSchema } from '../../services/data/schema/utils/applyAsTitleToSchema';
 import { applyContentType } from '../../services/data/schema/utils/applyContentType';
 import { applyView } from '../../services/data/schema/utils/applyView';
 import { appendIncomingGeometryTypeOption } from '../../services/data/schema/utils/ensureGeometryTypeOption';
+import { getEffectiveAsTitle } from '../../services/data/schema/utils/getEffectiveAsTitle';
+import { isReadableProperty } from '../../services/data/schema/utils/isReadableProperty';
 import {
   GeometryType,
   type SupportedGeometryType,
@@ -51,6 +54,7 @@ import './SchemaCard.scss';
 
 const EMPTY = '~~~empty_value~~~';
 const NO_GEOMETRY = '~~~no_geometry~~~';
+const NO_AS_TITLE = '~~~no_as_title~~~';
 const WRONG_VALUE = 'Некорректное значение поля';
 
 export const cnSchemaCard = cn('SchemaCard');
@@ -90,12 +94,12 @@ export class SchemaCard extends Component<SchemaCardProps> {
           <Card className={cnSchemaCard()}>
             <CardRow>
               <CardRowTitle>Наименование:</CardRowTitle>
-
               {this.schemaWithAppliedType.name}
             </CardRow>
 
             <CardRow>
               <CardRowTitle>Название:</CardRowTitle>
+
               {readonly && this.schemaWithAppliedType.title}
 
               {!readonly && (
@@ -106,6 +110,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
             {this.schemaWithAppliedType.description && (
               <CardRow>
                 <CardRowTitle>Описание:</CardRowTitle>
+
                 {!this.editableDescription && (
                   <CardDescription>{this.schemaWithAppliedType.description}</CardDescription>
                 )}
@@ -123,18 +128,17 @@ export class SchemaCard extends Component<SchemaCardProps> {
 
             <CardRow>
               <CardRowTitle>Наименование таблицы:</CardRowTitle>
-
               {this.schemaWithAppliedType.tableName}
             </CardRow>
 
             <CardRow>
               <CardRowTitle>Идентификатор:</CardRowTitle>
-
               {this.schemaWithAppliedType.originName}
             </CardRow>
 
             <CardRow>
               <CardRowTitle>Только для чтения:</CardRowTitle>
+
               {readonly && (this.schemaWithAppliedType.readOnly ? 'да' : 'нет')}
 
               {!readonly && (
@@ -145,7 +149,9 @@ export class SchemaCard extends Component<SchemaCardProps> {
             {this.schemaWithAppliedType.styleName || this.schemaWithAppliedType.styleName === '' ? (
               <CardRow>
                 <CardRowTitle>Стиль:</CardRowTitle>
+
                 {readonly && this.schemaWithAppliedType.styleName}
+
                 {!readonly && this.schemaWithAppliedType.geometryType && (
                   <Input fullWidth value={this.schemaWithAppliedType.styleName} onChange={this.editSchemaStyleName} />
                 )}
@@ -229,6 +235,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
             {this.schemaWithAppliedType.views?.length ? (
               <CardRow>
                 <CardRowTitle>Представление:</CardRowTitle>
+
                 <Select options={this.viewsOptions} onChange={this.handleViewChange} value={this.selectedViewId} />
               </CardRow>
             ) : null}
@@ -236,6 +243,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
             {this.schemaWithAppliedType.contentTypes?.length ? (
               <CardRow>
                 <CardRowTitle>Тип документа:</CardRowTitle>
+
                 <Select
                   options={this.contentTypesOptions}
                   onChange={this.handleContentTypeChange}
@@ -243,6 +251,22 @@ export class SchemaCard extends Component<SchemaCardProps> {
                 />
               </CardRow>
             ) : null}
+
+            <CardRow>
+              <CardRowTitle>Заголовок объекта:</CardRowTitle>
+
+              {readonly ? (
+                <CardValue>{this.selectedAsTitleTitle}</CardValue>
+              ) : (
+                <CardValue>
+                  <Select
+                    options={this.asTitleOptions}
+                    value={this.selectedAsTitle}
+                    onChange={this.handleAsTitleChange}
+                  />
+                </CardValue>
+              )}
+            </CardRow>
 
             {this.schemaWithAppliedType && (
               <CardRow alignBlock>
@@ -351,6 +375,37 @@ export class SchemaCard extends Component<SchemaCardProps> {
     return isArray(this.schemaWithAppliedType.tags) ? this.schemaWithAppliedType.tags : [];
   }
 
+  @computed
+  private get asTitleOptions(): PropertyOption[] {
+    return [
+      {
+        title: 'Не выбрано',
+        value: NO_AS_TITLE
+      },
+      ...this.schemaWithAppliedType.properties.filter(isReadableProperty).map(property => ({
+        title: property.title || property.name,
+        value: property.name
+      }))
+    ];
+  }
+
+  @computed
+  private get selectedAsTitle(): string {
+    const viewId = this.selectedViewId === EMPTY ? undefined : this.selectedViewId;
+    const contentTypeId = this.selectedContentTypeId === EMPTY ? undefined : this.selectedContentTypeId;
+
+    return getEffectiveAsTitle(this.props.schema, contentTypeId, viewId) ?? NO_AS_TITLE;
+  }
+
+  @computed
+  private get selectedAsTitleTitle(): string {
+    if (this.selectedAsTitle === NO_AS_TITLE) {
+      return 'Не выбрано';
+    }
+
+    return this.asTitleOptions.find(option => option.value === this.selectedAsTitle)?.title ?? this.selectedAsTitle;
+  }
+
   private get geometryTypeOptions(): PropertyOption[] {
     return appendIncomingGeometryTypeOption(
       [
@@ -385,9 +440,13 @@ export class SchemaCard extends Component<SchemaCardProps> {
     if (geometryType) {
       if (isLinear(geometryType)) {
         return 'линейный';
-      } else if (isPoint(geometryType)) {
+      }
+
+      if (isPoint(geometryType)) {
         return 'точечный';
-      } else if (isPolygonal(geometryType)) {
+      }
+
+      if (isPolygonal(geometryType)) {
         return 'полигональный';
       }
 
@@ -402,9 +461,10 @@ export class SchemaCard extends Component<SchemaCardProps> {
       return [];
     }
 
-    return types.map(el => {
-      return { title: el.title || el.id, value: el.id };
-    });
+    return types.map(el => ({
+      title: el.title || el.id,
+      value: el.id
+    }));
   }
 
   @boundMethod
@@ -444,6 +504,27 @@ export class SchemaCard extends Component<SchemaCardProps> {
     }
 
     this.editSchemaInfo({ tags });
+  }
+
+  @boundMethod
+  private handleAsTitleChange(event: SelectChangeEvent<unknown>) {
+    if (typeof event.target.value !== 'string') {
+      throw new TypeError(WRONG_VALUE);
+    }
+
+    const propertyName = event.target.value === NO_AS_TITLE ? undefined : event.target.value;
+
+    this.editAsTitle(propertyName);
+  }
+
+  @boundMethod
+  private editAsTitle(propertyName?: string) {
+    this.props.onError('');
+
+    const viewId = this.selectedViewId === EMPTY ? undefined : this.selectedViewId;
+    const contentTypeId = this.selectedContentTypeId === EMPTY ? undefined : this.selectedContentTypeId;
+
+    this.props.onSchemaChange(applyAsTitleToSchema(this.props.schema, propertyName, contentTypeId, viewId));
   }
 
   @boundMethod
@@ -687,7 +768,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
   }
 
   private propertiesWithoutShape<T extends Partial<PropertySchema>>(properties: T[] = []): T[] {
-    return properties.filter((property): property is T => property.name !== 'shape');
+    return properties.filter(property => property.name !== 'shape');
   }
 
   private ensureShapeProperty(properties: PropertySchema[], geometryType?: SupportedGeometryType): PropertySchema[];
@@ -831,7 +912,12 @@ export class SchemaCard extends Component<SchemaCardProps> {
 
     if (this.selectedViewId && this.selectedViewId !== EMPTY) {
       newSchema.views = newSchema.views?.map(view =>
-        view.id === this.selectedViewId ? { ...view, properties: removeProperty(view.properties) } : view
+        view.id === this.selectedViewId
+          ? {
+              ...view,
+              properties: removeProperty(view.properties)
+            }
+          : view
       );
 
       this.props.onSchemaChange(newSchema);
@@ -842,7 +928,10 @@ export class SchemaCard extends Component<SchemaCardProps> {
     if (this.selectedContentTypeId && this.selectedContentTypeId !== EMPTY) {
       newSchema.contentTypes = newSchema.contentTypes?.map(contentType =>
         contentType.id === this.selectedContentTypeId
-          ? { ...contentType, properties: removeProperty(contentType.properties) }
+          ? {
+              ...contentType,
+              properties: removeProperty(contentType.properties)
+            }
           : contentType
       );
 
