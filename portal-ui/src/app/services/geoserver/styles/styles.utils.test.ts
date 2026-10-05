@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
+import { PropertyType, type Schema } from '../../data/schema/schema.models';
 import { type CustomStyleDescription } from './styles.models';
 import { buildCustomSld, parseCustomStyle } from './styles.utils';
 
@@ -19,6 +20,29 @@ const lineBlue: CustomStyleDescription = {
   rule: {
     strokeColor: '#0000ff',
     strokeWidth: 2
+  }
+};
+
+const lineBlueWithChoiceLabel: CustomStyleDescription = {
+  type: 'line',
+  rule: {
+    strokeColor: '#0000ff',
+    strokeWidth: 2,
+    labelProperty: {
+      name: 'status',
+      title: 'Статус',
+      propertyType: PropertyType.CHOICE,
+      options: [
+        {
+          value: 'active',
+          title: 'Активный'
+        },
+        {
+          value: 'inactive',
+          title: 'Неактивный'
+        }
+      ]
+    }
   }
 };
 
@@ -86,11 +110,36 @@ const allTypesDefault: CustomStyleDescription = {
   ]
 };
 
+const choiceLabelSchema: Schema = {
+  name: 'dummy',
+  title: 'dummy',
+  properties: [
+    {
+      name: 'status',
+      title: 'Статус',
+      propertyType: PropertyType.CHOICE,
+      options: [
+        {
+          value: 'active',
+          title: 'Активный'
+        },
+        {
+          value: 'inactive',
+          title: 'Неактивный'
+        }
+      ]
+    }
+  ]
+};
+
 const pointRedCircleSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><ElseFilter></ElseFilter><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ff0000</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></Mark><Size>10</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 const lineBlueSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>1</Literal></PropertyIsEqualTo></Filter><LineSymbolizer><Stroke><SvgParameter name="stroke">#0000ff</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-linejoin">bevel</SvgParameter></Stroke></LineSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+
+const lineBlueWithChoiceLabelSld =
+  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>1</Literal></PropertyIsEqualTo></Filter><LineSymbolizer><Stroke><SvgParameter name="stroke">#0000ff</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-linejoin">bevel</SvgParameter></Stroke></LineSymbolizer><TextSymbolizer><Label><ogc:Function name="if_then_else"><ogc:Function name="isNull"><ogc:Function name="Recode"><ogc:PropertyName>status</ogc:PropertyName><ogc:Literal>active</ogc:Literal><ogc:Literal>Активный</ogc:Literal><ogc:Literal>inactive</ogc:Literal><ogc:Literal>Неактивный</ogc:Literal></ogc:Function></ogc:Function><ogc:PropertyName>status</ogc:PropertyName><ogc:Function name="Recode"><ogc:PropertyName>status</ogc:PropertyName><ogc:Literal>active</ogc:Literal><ogc:Literal>Активный</ogc:Literal><ogc:Literal>inactive</ogc:Literal><ogc:Literal>Неактивный</ogc:Literal></ogc:Function></ogc:Function></Label><Font><SvgParameter name="font-family">Arial</SvgParameter><SvgParameter name="font-size">10</SvgParameter><SvgParameter name="font-style">normal</SvgParameter><SvgParameter name="font-weight">bold</SvgParameter></Font><LabelPlacement><PointPlacement><AnchorPoint><AnchorPointX>2.5</AnchorPointX><AnchorPointY>2.5</AnchorPointY></AnchorPoint></PointPlacement></LabelPlacement><Halo><Radius>2</Radius><Fill><SvgParameter name="fill">#ffffff</SvgParameter></Fill></Halo><Fill><SvgParameter name="fill">#000000</SvgParameter></Fill><VendorOption name="autoWrap">150</VendorOption><VendorOption name="maxDisplacement">150</VendorOption></TextSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 const lineDashedSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>1</Literal></PropertyIsEqualTo></Filter><LineSymbolizer><Stroke><SvgParameter name="stroke">#00ff00</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-linejoin">bevel</SvgParameter><SvgParameter name="stroke-dasharray">4 4</SvgParameter></Stroke></LineSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
@@ -116,6 +165,10 @@ describe('утилита создания SLD-стилей buildCustomSld', () =
 
   test('синяя линия', () => {
     expect(buildCustomSld(dummyComplexName, lineBlue)).toEqual(lineBlueSld);
+  });
+
+  test('синяя линия с подписью CHOICE', () => {
+    expect(buildCustomSld(dummyComplexName, lineBlueWithChoiceLabel)).toEqual(lineBlueWithChoiceLabelSld);
   });
 
   test('прерывистая линия', () => {
@@ -146,6 +199,10 @@ describe('утилита чтения SLD-стилей parseCustomStyle', () => 
 
   test('синяя линия', () => {
     expect(parseCustomStyle(lineBlueSld)).toEqual(lineBlue);
+  });
+
+  test('синяя линия с подписью CHOICE', () => {
+    expect(parseCustomStyle(lineBlueWithChoiceLabelSld, choiceLabelSchema)).toEqual(lineBlueWithChoiceLabel);
   });
 
   test('прерывистая линия', () => {

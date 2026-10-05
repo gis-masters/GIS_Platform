@@ -78,7 +78,7 @@ export class CustomStyleControlLabelPropertySelect extends Component<CustomStyle
             property.propertyType === PropertyType.FLOAT ||
             property.propertyType === PropertyType.INT ||
             property.propertyType === PropertyType.DATETIME ||
-            property.propertyType === PropertyType.CHOICE ||
+            (property.propertyType === PropertyType.CHOICE && !property.multiple) ||
             property.propertyType === PropertyType.FIAS)
         ) {
           return {

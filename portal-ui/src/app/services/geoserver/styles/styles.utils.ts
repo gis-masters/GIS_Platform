@@ -49,7 +49,7 @@ export function parseCustomStyle(sld: string, schema?: Schema): CustomStyleDescr
   const pointSymbolizerNode = sldDocument.querySelector('PointSymbolizer');
   const textSymbolizerNode = sldDocument.querySelector('TextSymbolizer');
 
-  const labelProperty = textSymbolizerNode?.querySelector('PropertyName');
+  const labelProperty = textSymbolizerNode?.getElementsByTagNameNS('*', 'PropertyName')[0];
 
   if (pointSymbolizerNode && lineSymbolizerNode && polygonSymbolizerNode) {
     return {
@@ -236,7 +236,7 @@ function getCustomStyleAllRule(sldDocument: Document, schema?: Schema): [PointRu
 
   for (const rule of sldRules) {
     const textSymbolizerNode = rule.querySelector('TextSymbolizer');
-    const labelProperty = textSymbolizerNode?.querySelector('PropertyName');
+    const labelProperty = textSymbolizerNode?.getElementsByTagNameNS('*', 'PropertyName')[0];
 
     const pointSymbolizer = rule.querySelector('PointSymbolizer');
     if (pointSymbolizer) {

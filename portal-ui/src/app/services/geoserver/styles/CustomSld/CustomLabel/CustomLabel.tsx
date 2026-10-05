@@ -46,11 +46,35 @@ export const CustomLabel: FC<LabelProps> = ({ labelProperty }) => {
 
       break;
     }
+
     case PropertyType.DATETIME: {
       propertyName = (
         <OgcFunction name='dateFormat'>
           <OgcLiteral>dd.MM.yyyy</OgcLiteral>
           <OgcPropertyName>{labelProperty.name}</OgcPropertyName>
+        </OgcFunction>
+      );
+
+      break;
+    }
+
+    case PropertyType.CHOICE: {
+      const recode = (
+        <OgcFunction name='Recode'>
+          <OgcPropertyName>{labelProperty.name}</OgcPropertyName>
+
+          {labelProperty.options.flatMap(option => [
+            <OgcLiteral key={`value-${option.value}`}>{option.value}</OgcLiteral>,
+            <OgcLiteral key={`title-${option.value}`}>{option.title}</OgcLiteral>
+          ])}
+        </OgcFunction>
+      );
+
+      propertyName = (
+        <OgcFunction name='if_then_else'>
+          <OgcFunction name='isNull'>{recode}</OgcFunction>
+          <OgcPropertyName>{labelProperty.name}</OgcPropertyName>
+          {recode}
         </OgcFunction>
       );
 
