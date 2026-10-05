@@ -10,6 +10,11 @@ import { crimea } from './testFeatures/crimea';
 import { smallTriangle, triangleForFeatureExtractPrint } from './testFeatures/featuresForTests';
 import { forAttrEllipsis } from './testFeatures/forAttrEllipsis';
 import { forCopy } from './testFeatures/forCopy';
+import {
+  copyInvalidGeometrySelfIntersection,
+  copyInvalidGeometryValid1,
+  copyInvalidGeometryValid2
+} from './testFeatures/forCopyInvalidGeometry';
 import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
 import { forFiltering } from './testFeatures/forFiltering';
 import { forForm } from './testFeatures/forForm';
@@ -19,6 +24,7 @@ import { forLegendTest2 } from './testFeatures/forLegendTest2';
 import { forLegendTest3 } from './testFeatures/forLegendTest3';
 import { forOtherFiltering } from './testFeatures/forOtherFiltering';
 import { forOtherFiltering2 } from './testFeatures/forOtherFiltering2';
+import { forPartialCopyByLength } from './testFeatures/forPartialCopyByLength';
 import { forPhotoLayerWithMultipleObjects } from './testFeatures/forPhotoLayerWithMultipleObjects';
 import { forProkol } from './testFeatures/forProkol';
 import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
@@ -206,6 +212,18 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'для копирования (в том числе без геометрии)': {
       return forCopy;
+    }
+    case 'валидный-1 для копирования с некорректной геометрией': {
+      return [copyInvalidGeometryValid1];
+    }
+    case 'самопересечение для копирования с некорректной геометрией': {
+      return [copyInvalidGeometrySelfIntersection];
+    }
+    case 'валидный-2 для копирования с некорректной геометрией': {
+      return [copyInvalidGeometryValid2];
+    }
+    case 'для частичного копирования по длине строки': {
+      return forPartialCopyByLength;
     }
     case 'Чёрное море': {
       return blackSea;

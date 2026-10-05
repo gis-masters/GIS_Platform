@@ -6,7 +6,8 @@ class ToastBlock extends Block {
     moar: '.Toast-Moar',
     close: '.Toast-Close',
     details: '.Toast-Details',
-    title: '.Toast-Title'
+    title: '.Toast-Title',
+    error: '.Toast_type_error'
   };
 
   async clickMoar(): Promise<void> {
@@ -74,6 +75,62 @@ class ToastBlock extends Block {
     return await $title.getText();
   }
 
+  async assertToastWithTitle(msg: string): Promise<void> {
+    const msgNorm = normalizeToastText(msg);
+
+    await browser.waitUntil(
+      async () => {
+        const titles = await this.getTitleTexts();
+
+        return titles.includes(msgNorm);
+      },
+      {
+        timeoutMsg: `Не появилось уведомление "${msg}"`
+      }
+    );
+  }
+
+  async assertDetailsContain(fragment: string): Promise<void> {
+    const $details = await this.findBySelector('details');
+    await $details.waitForDisplayed();
+    const text = normalizeToastText(await $details.getText());
+
+    expect(text).toContain(fragment);
+  }
+
+  async assertNoErrorToast(timeout = 1000): Promise<void> {
+    let errorSeen = false;
+
+    try {
+      await browser.waitUntil(
+        async () => {
+          const $$errors = await this.findAllBySelector('error');
+          errorSeen = $$errors.length > 0;
+
+          return errorSeen;
+        },
+        { timeout }
+      );
+    } catch {
+      // окно истекло, тост ошибки не появился
+    }
+
+    if (errorSeen) {
+      throw new Error('Появилось уведомление об ошибке');
+    }
+  }
+
+  private async getTitleTexts(): Promise<string[]> {
+    const $$titles = await this.findAllBySelector('title');
+    const texts: string[] = [];
+
+    for (const $title of $$titles) {
+      texts.push(normalizeToastText(await $title.getText()));
+    }
+
+    return texts;
+  }
+
   /**
    * Убеждаемся, что за короткое окно не появился тост с данным заголовком
    */
@@ -110,6 +167,10 @@ class ToastBlock extends Block {
       throw new Error(`Не ожидали уведомление "${msg}", но оно отобразилось`);
     }
   }
+}
+
+function normalizeToastText(text: string): string {
+  return text.replaceAll(/\s+/g, ' ').trim();
 }
 
 export const toastBlock = new ToastBlock();

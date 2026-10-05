@@ -179,15 +179,25 @@ export async function findVectorTable(filter: FilterQuery): Promise<LiteVectorTa
 
 // feature
 
+interface CreateFeatureOptions {
+  notUpdateFeatures?: boolean;
+  skipGeometryValidation?: boolean;
+}
+
 export async function createFeature(
   datasetIdentifier: string,
   tableIdentifier: string,
   feature: NewWfsFeature | WfsFeature,
-  notUpdateFeatures?: boolean
+  { notUpdateFeatures, skipGeometryValidation }: CreateFeatureOptions = {}
 ): Promise<WfsFeature> {
   const newFeature: NewWfsFeature = { geometry: feature.geometry, type: feature.type, properties: feature.properties };
 
-  const response = await vectorDataClient.createFeature(datasetIdentifier, tableIdentifier, newFeature);
+  const response = await vectorDataClient.createFeature(
+    datasetIdentifier,
+    tableIdentifier,
+    newFeature,
+    skipGeometryValidation
+  );
   if (!notUpdateFeatures) {
     communicationService.featuresUpdated.emit({ type: 'create', data: response });
   }

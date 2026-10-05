@@ -58,9 +58,8 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
 
         featureProtector.throwIsEditNotAllowed(qualifier, schema);
 
-        //Если геометрия невалидная, мы никогда не внесём её через кнопку "Сохранить"
-        //но если геометрии нет, то и проверять нечего
-        if (feature.getGeometry() != null) {
+        //Геометрию проверяем всегда, кроме копирования - там самопересечения допустимы
+        if (feature.getGeometry() != null && !request.isSkipGeometryValidation()) {
             geometryValidationService.validateGeometry(feature, feature.getSrs());
         }
 

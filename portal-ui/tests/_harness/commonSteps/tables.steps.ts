@@ -9,6 +9,7 @@ import { getDatasetByTitle } from '../commands/datasets/getDatasetByTitle';
 import { addVectorTablePermissions } from '../commands/tables/addVectorTablePermissions';
 import { createVectorTableAs } from '../commands/tables/createVectorTableAs';
 import { getVectorTableInDatasetByTitle } from '../commands/tables/getVectorTableByTitle';
+import { insertRecordsViaWfsAsAdmin } from '../commands/tables/insertRecordsViaWfsAsAdmin';
 import { getTestFeatures } from '../commands/tables/testFeatures';
 import { createRecordsAsAdmin } from '../commands/tables/vectorTableRecordsManagement';
 import { type ScenarioScope } from '../ScenarioScope';
@@ -81,6 +82,12 @@ Given('таблица наполнена данными {string}', async functio
   this.latestFeatures = await getTestFeatures(key, this.latestSchema);
 
   await createRecordsAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, this.latestFeatures);
+});
+
+Given('объекты {string} добавлены через WFS', async function (this: ScenarioScope, key: string) {
+  const features = await getTestFeatures(key, this.latestSchema);
+
+  await insertRecordsViaWfsAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, features);
 });
 
 Given('таблица наполнена данными, c один файлом, для фотослоя', async function (this: ScenarioScope) {

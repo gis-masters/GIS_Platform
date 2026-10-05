@@ -3,6 +3,7 @@ import { allTypes } from './testSchemas/allTypes';
 import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { allTypesEditable } from './testSchemas/allTypesEditable';
 import { allTypesReadonly } from './testSchemas/allTypesReadonly';
+import { copyInvalidGeometry } from './testSchemas/copyInvalidGeometry';
 import { createDocumentsSource } from './testSchemas/createDocumentsSource';
 import { createDocumentsTarget } from './testSchemas/createDocumentsTarget';
 import { dlDataWithSimpleContentType } from './testSchemas/dlDataWithSimpleContentType';
@@ -13,6 +14,8 @@ import { forTestInteraction } from './testSchemas/forTestInteraction';
 import { forTestParcelsNew } from './testSchemas/forTestParcelsNew';
 import { forTestParcelsOld1 } from './testSchemas/forTestParcelsOld1';
 import { forTestTitles } from './testSchemas/forTestTitles';
+import { partialCopyNoteLong } from './testSchemas/partialCopyNoteLong';
+import { partialCopyNoteShort } from './testSchemas/partialCopyNoteShort';
 import { photoLayer } from './testSchemas/photoLayer';
 import { propertyWithAllCheckedAttributes } from './testSchemas/propertyWithAllCheckedAttributes';
 import { readonly } from './testSchemas/readonly';
@@ -43,6 +46,7 @@ const testSchemas: Schema[] = [
   allTypesChoiceAsString,
   allTypesEditable,
   allTypesReadonly,
+  copyInvalidGeometry,
   createDocumentsSource,
   createDocumentsTarget,
   dlDataWithSimpleContentType,
@@ -53,6 +57,8 @@ const testSchemas: Schema[] = [
   forTestParcelsNew,
   forTestParcelsOld1,
   forTestInteraction,
+  partialCopyNoteLong,
+  partialCopyNoteShort,
   photoLayer,
   propertyWithAllCheckedAttributes,
   readonly,

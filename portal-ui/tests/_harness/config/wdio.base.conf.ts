@@ -90,8 +90,8 @@ export const baseConfig: WebdriverIO.Config = {
       }
 
       const time = new Date().toISOString().split('T')[1].slice(0, 8).replaceAll(':', '-');
-      const scenarioName = scenario.name.replaceAll(/[^\dA-Za-zА-я]/g, '_').slice(0, 30);
-      const stepText = step.text.replaceAll(/[^\dA-Za-zА-я]/g, '_').slice(0, 30);
+      const scenarioName = scenario.name.replaceAll(/[^\dA-Za-zА-яЁё]/g, '_').slice(0, 30);
+      const stepText = step.text.replaceAll(/[^\dA-Za-zА-яЁё]/g, '_').slice(0, 30);
       const filename = `${time}_${scenarioName}_${stepText}.png`;
       const filepath = path.join(errorDir, filename);
 

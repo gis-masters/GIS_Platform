@@ -1,0 +1,24 @@
+import { PropertyType, type Schema } from '../../../../../src/app/services/data/schema/schema.models';
+import { GeometryType } from '../../../../../src/app/services/geoserver/wfs/wfs.models';
+import { systemProperties } from './_systemProperties';
+
+export const partialCopyNoteLong: Schema = {
+  name: 'partial_copy_note_long',
+  title: 'для частичного копирования длинная',
+  tableName: 'partial_copy_note_long',
+  styleName: 'generic',
+  properties: [
+    {
+      name: 'note',
+      title: 'Примечание',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'shape',
+      title: 'geometry',
+      propertyType: PropertyType.GEOMETRY
+    },
+    ...systemProperties
+  ],
+  geometryType: GeometryType.MULTI_POLYGON
+};

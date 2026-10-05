@@ -54,7 +54,7 @@ public class FtsDictionaryService {
     }
 
     private Set<FtsDictionaryItem> collectWords(String text) {
-        return Arrays.stream(text.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
+        return Arrays.stream(text.replaceAll("[^a-zA-Z0-9а-яА-ЯёЁ ]", " ").split(" "))
                      .filter(s -> !s.isBlank() && s.length() > 1)
                      .filter(notInStopWords)
                      .flatMap(word -> getOnlyAbsolute(ftsDictionaryDao.search(word, LIMIT)).stream())

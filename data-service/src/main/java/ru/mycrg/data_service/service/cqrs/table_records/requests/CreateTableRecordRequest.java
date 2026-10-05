@@ -30,15 +30,18 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
     private Feature feature;
     private ResourceQualifier rQualifier;
     private final boolean strictMode;
+    private final boolean skipGeometryValidation;
 
     public CreateTableRecordRequest(SchemaDto schemaDto,
                                     ResourceQualifier rQualifier,
                                     Feature feature,
-                                    boolean strictMode) {
+                                    boolean strictMode,
+                                    boolean skipGeometryValidation) {
         this.schema = schemaDto;
         this.rQualifier = rQualifier;
         this.feature = feature;
         this.strictMode = strictMode;
+        this.skipGeometryValidation = skipGeometryValidation;
     }
 
     @Override
@@ -103,5 +106,9 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
 
     public boolean isStrictMode() {
         return strictMode;
+    }
+
+    public boolean isSkipGeometryValidation() {
+        return skipGeometryValidation;
     }
 }

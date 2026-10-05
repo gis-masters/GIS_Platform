@@ -39,6 +39,18 @@ Then('появляется уведомление {string}', async (msg: string)
   expect(await toastBlock.getTitle()).toEqual(msg);
 });
 
+Then('появляется уведомление с заголовком {string}', async (msg: string) => {
+  await toastBlock.assertToastWithTitle(msg);
+});
+
+Then('в подробностях уведомления есть {string}', async (fragment: string) => {
+  await toastBlock.assertDetailsContain(fragment);
+});
+
+Then(/^не появляется уведомление об ошибке(?: в течение (\d+) мс)?$/, async (timeout?: string) => {
+  await toastBlock.assertNoErrorToast(timeout ? Number(timeout) : undefined);
+});
+
 When('я жду появления уведомления {string}', async (msg: string) => {
   await toastBlock.waitForVisible();
   expect(await toastBlock.getTitle()).toEqual(msg);

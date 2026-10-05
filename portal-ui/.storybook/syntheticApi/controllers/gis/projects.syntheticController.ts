@@ -42,7 +42,7 @@ class ProjectsSyntheticController implements SyntheticController {
       propertyType: PropertyType.STRING,
       minLength: 3,
       name: 'name',
-      regex: '^[a-zA-Zа-яА-Я0-9 ._-]*$',
+      regex: '^[a-zA-Zа-яА-ЯёЁ0-9 ._-]*$',
       regexErrorMessage: 'Должно начинаться с буквы. Затем может содержать: буквы, цифры и символы .-_'
     };
     const errors = validateFieldValue(data.name, property, data);

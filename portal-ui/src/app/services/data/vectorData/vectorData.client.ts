@@ -182,8 +182,16 @@ class VectorDataClient extends DataClient {
 
   // feature
 
-  async createFeature(datasetIdentifier: string, tableIdentifier: string, feature: NewWfsFeature): Promise<WfsFeature> {
-    return await http.post<WfsFeature>(this.getVectorTableRecordsUrl(datasetIdentifier, tableIdentifier), feature);
+  async createFeature(
+    datasetIdentifier: string,
+    tableIdentifier: string,
+    feature: NewWfsFeature,
+    skipGeometryValidation = false
+  ): Promise<WfsFeature> {
+    const url = this.getVectorTableRecordsUrl(datasetIdentifier, tableIdentifier);
+    const config = skipGeometryValidation ? { params: { skipGeometryValidation: 'true' } } : {};
+
+    return await http.post<WfsFeature>(url, feature, config);
   }
 
   async updateFeature(

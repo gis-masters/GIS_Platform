@@ -9,6 +9,11 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.geolatte.geom.ByteBuffer;
+import org.geolatte.geom.Geometry;
+import org.geolatte.geom.LinearRing;
+import org.geolatte.geom.Position;
+import org.geolatte.geom.codec.Wkb;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.JsonMapper;
 import ru.mycrg.acceptance.data_service.CurrentFilesManager;
@@ -26,15 +31,25 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.FeatureBuilder.prepareFeatures;
 import static ru.mycrg.acceptance.JsonMapper.asJson;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.tables.TableFeaturesStepsDefinitions.currentFeatureId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.isDataInMapsEqualsByRows;
+import static ru.mycrg.acceptance.utils.GeometryUtils.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
+
+    private static final List<List<List<Double>>> SELF_INTERSECTED_GEOMETRY_COORDINATES = List.of(
+            List.of(List.of(0.0, 0.0),
+                    List.of(2.0, 2.0),
+                    List.of(0.0, 2.0),
+                    List.of(2.0, 0.0),
+                    List.of(0.0, 0.0)));
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -64,8 +79,8 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .statusCode(201);
     }
 
-    @When("Пользователь пытается добавить сломанную геометрию в текущую таблицу")
-    public void createBrokenObjectInCurrentTable() {
+    @When("Пользователь пытается добавить сломанную геометрию в текущую таблицу с skipGeometryValidation = {string}")
+    public void createSelfIntersectedObject(String skipGeometryValidation) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("firstProperty", "any text here");
         properties.put("fiz", "any text here");
@@ -83,7 +98,31 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         feature.setGeometry(brokenPolygon);
 
         scenarioFeatures.add(feature);
-        createFeature(feature);
+        createFeature(feature, skipGeometryValidation);
+    }
+
+    @Then("В ответе та же сломанная геометрия")
+    public void checkSelfIntersectedGeometryInResponse() {
+        Object coordinates = response.jsonPath().get("geometry.coordinates");
+
+        assertEquals(SELF_INTERSECTED_GEOMETRY_COORDINATES, toDoubleCoordinates(coordinates));
+    }
+
+    @Then("созданная запись в текущей таблице содержит ту же сломанную геометрию")
+    public void checkCreatedFeatureHasSameBrokenGeometry() {
+        assertNotNull("Нет id созданной записи", currentFeatureId);
+
+        getFeatures(getLatestTable().getName(), List.of(String.valueOf(currentFeatureId)));
+
+        response.then()
+                .statusCode(200);
+
+        List<Map<String, Object>> properties = response.jsonPath().getList("properties");
+        assertEquals(1, properties.size());
+
+        Object shape = properties.getFirst().get(DEFAULT_GEOMETRY_COLUMN_NAME);
+        assertNotNull(shape);
+        assertEquals(SELF_INTERSECTED_GEOMETRY_COORDINATES.getFirst(), exteriorRing(shape.toString()));
     }
 
     @Then("Объект успешно сохранён в текущей таблице")
@@ -266,14 +305,27 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createFeature(Feature feature) {
+        createFeature(feature, "");
+    }
+
+    private void createFeature(Feature feature, String skipGeometryValidation) {
         TableCreateDto latestTable = getLatestTable();
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(asJson(feature)).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("/" + latestTable.getName() + "/records");
+        RequestSpecification request = getBaseRequestWithCurrentCookie()
+                                              .given()
+                                                      .body(asJson(feature))
+                                                      .contentType(ContentType.JSON);
+
+        if (!skipGeometryValidation.isBlank()) {
+            request = request.queryParam("skipGeometryValidation", skipGeometryValidation);
+        }
+
+        response = request.when()
+                          .post("/" + latestTable.getName() + "/records");
+
+        if (response.statusCode() == 201) {
+            currentFeatureId = extractEntityIdFromResponse(response);
+        }
     }
 
     private void getFeatures(String tableName, List<String> ids) {
@@ -297,6 +349,61 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
                         get("/" + tableName + "/records");
 
         return response;
+    }
+
+    private static List<List<Double>> exteriorRing(String shape) {
+        String hex = shape.trim();
+        Geometry<?> geometry = Wkb.newDecoder().decode(ByteBuffer.from(hexToBytes(hex)));
+
+        if (!(geometry instanceof org.geolatte.geom.Polygon)) {
+            throw new AssertionError("Ожидали полигон, получили: " + geometry.getGeometryType());
+        }
+
+        LinearRing<?> ring = ((org.geolatte.geom.Polygon<?>) geometry).getExteriorRing();
+        List<List<Double>> coordinates = new ArrayList<>();
+        for (int i = 0; i < ring.getNumPositions(); i++) {
+            Position position = ring.getPositionN(i);
+            coordinates.add(List.of(position.getCoordinate(0), position.getCoordinate(1)));
+        }
+
+        return coordinates;
+    }
+
+    private static byte[] hexToBytes(String hex) {
+        if (hex.length() % 2 != 0) {
+            throw new AssertionError("Геометрия shape не является hex EWKB: " + hex);
+        }
+
+        byte[] data = new byte[hex.length() / 2];
+        for (int i = 0; i < hex.length(); i += 2) {
+            int high = Character.digit(hex.charAt(i), 16);
+            int low = Character.digit(hex.charAt(i + 1), 16);
+            if (high < 0 || low < 0) {
+                throw new AssertionError("Геометрия shape не является hex EWKB: " + hex);
+            }
+            data[i / 2] = (byte) ((high << 4) + low);
+        }
+
+        return data;
+    }
+
+    private static List<List<List<Double>>> toDoubleCoordinates(Object coordinates) {
+        List<?> rings = (List<?>) coordinates;
+        List<List<List<Double>>> result = new ArrayList<>();
+
+        for (Object ring : rings) {
+            List<List<Double>> ringCoordinates = new ArrayList<>();
+            for (Object point : (List<?>) ring) {
+                List<Double> pointCoordinates = new ArrayList<>();
+                for (Object coordinate : (List<?>) point) {
+                    pointCoordinates.add(((Number) coordinate).doubleValue());
+                }
+                ringCoordinates.add(pointCoordinates);
+            }
+            result.add(ringCoordinates);
+        }
+
+        return result;
     }
 
     /**

@@ -61,6 +61,7 @@ public class TableRecordsController {
     public ResponseEntity<Feature> createTableRecord(@PathVariable String datasetId,
                                                      @PathVariable String tableId,
                                                      @RequestParam(required = false, defaultValue = "1") boolean strict,
+                                                     @RequestParam(required = false, defaultValue = "false") boolean skipGeometryValidation,
                                                      @RequestBody Feature feature) {
         ResourceQualifier qualifier = new ResourceQualifier(datasetId, tableId);
 
@@ -76,7 +77,7 @@ public class TableRecordsController {
         feature.setProperties(clearProps);
 
         Feature newFeature = mediator.execute(
-                new CreateTableRecordRequest(schema, qualifier, feature, strict));
+                new CreateTableRecordRequest(schema, qualifier, feature, strict, skipGeometryValidation));
 
         return new ResponseEntity<>(newFeature, CREATED);
     }

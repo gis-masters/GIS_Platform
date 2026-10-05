@@ -32,7 +32,7 @@ public interface IFullTextSearchEngine {
 
     default String getSearchedText(FtsRequest request) {
         return request.getFtsRequestDto().getText()
-                      .replaceAll("[^A-Za-zА-Яа-я0-9:]", " ").trim();
+                      .replaceAll("[^A-Za-zА-Яа-яёЁ0-9:]", " ").trim();
     }
 
     default boolean isCadastrNumber(String input) {
