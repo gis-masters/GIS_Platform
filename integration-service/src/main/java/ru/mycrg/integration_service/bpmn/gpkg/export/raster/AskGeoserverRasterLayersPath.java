@@ -5,6 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
@@ -16,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.ACTIVE;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.ERROR;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getLayerNameFromComplexName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
@@ -61,25 +64,30 @@ public class AskGeoserverRasterLayersPath implements JavaDelegate {
         String dbName = event.getDbName();
 
         for (LayerProjection layer: rasterLayers) {
-            getLayerNameFromComplexName(layer.getComplexName())
-                    .flatMap(geoLayerName -> geoServerSpeaker.getLayer(
-                            token,
-                            getScratchWorkspaceName(dbName),
-                            geoLayerName
-                    ))
-                    .map(geoLayer ->
-                                 geoLayer.getResource().getHref()
-                                         .split(COVERAGES)[0]
-                                         .split(COVERAGE_STORES)[1])
-                    .flatMap(coverageStore -> geoServerSpeaker.getCoverageStore(
-                            token,
-                            getScratchWorkspaceName(dbName),
-                            coverageStore
-                    ))
-                    .ifPresentOrElse(
-                            store -> resourceAndPath.put(layer.getResourceId(), store.getUrl()),
-                            () -> log.warn("Не смогли найти слой или coverage store для {}", layer.getResourceId())
-                    );
+            // Ошибка на одном слое не должна останавливать выгрузку остальных
+            try {
+                getLayerNameFromComplexName(layer.getComplexName())
+                        .flatMap(geoLayerName -> geoServerSpeaker.getLayer(
+                                token,
+                                getScratchWorkspaceName(dbName),
+                                geoLayerName
+                        ))
+                        .map(geoLayer ->
+                                     geoLayer.getResource().getHref()
+                                             .split(COVERAGES)[0]
+                                             .split(COVERAGE_STORES)[1])
+                        .flatMap(coverageStore -> geoServerSpeaker.getCoverageStore(
+                                token,
+                                getScratchWorkspaceName(dbName),
+                                coverageStore
+                        ))
+                        .ifPresentOrElse(
+                                store -> resourceAndPath.put(layer.getResourceId(), store.getUrl()),
+                                () -> log.warn("Не смогли найти слой или coverage store для {}", layer.getResourceId())
+                        );
+            } catch (Exception e) {
+                log.error("Ошибка получения пути к растру из GeoServer для {}", layer.getResourceId(), e);
+            }
         }
 
         if (resourceAndPath.isEmpty()) {
@@ -100,6 +108,17 @@ public class AskGeoserverRasterLayersPath implements JavaDelegate {
                                                               dbName,
                                                               TASK_DONE);
 
+        markTilesWithoutPath(event.getGpkgReport(), resourceAndPath);
         reportManager.updateTileReportWithResources(rabbitDto, event.getGpkgReport(), resourceAndPath);
+    }
+
+    private void markTilesWithoutPath(GpkgProcessReport report, Map<String, String> resourceAndPath) {
+        report.getPayload().getTiles().stream()
+              .filter(tile -> tile.getStatus() == ACTIVE)
+              .filter(tile -> !resourceAndPath.containsKey(tile.getResourceId()))
+              .forEach(tile -> {
+                  tile.setStatus(ERROR);
+                  tile.getMessages().add("Проблема с данными на геосервере. Невозможно выполнить экспорт");
+              });
     }
 }

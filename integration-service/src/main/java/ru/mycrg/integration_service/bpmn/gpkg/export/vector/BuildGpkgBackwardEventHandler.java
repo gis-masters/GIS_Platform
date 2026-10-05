@@ -41,9 +41,7 @@ public class BuildGpkgBackwardEventHandler implements IEventHandler {
                       event.getBusinessKey());
         } else {
             log.debug("При экспорте gpkg geo-wrapper вернул ошибку: [{}]", event.getDescription());
-            handleGpkgWrapperErrorEvent(event.getBusinessKey(),
-                                        event.getPayload().toString(),
-                                        event.getError());
+            handleGpkgWrapperErrorEvent(event.getBusinessKey(), event.getError());
         }
     }
 
@@ -60,10 +58,12 @@ public class BuildGpkgBackwardEventHandler implements IEventHandler {
                       .correlateWithResult();
     }
 
-    private void handleGpkgWrapperErrorEvent(String businessKey, String payload, String error) {
+    /**
+     * Путь к gpkg при ошибке не выставляем: geo-wrapper файл не создал, а payload в этом случае пустой.
+     */
+    private void handleGpkgWrapperErrorEvent(String businessKey, String error) {
         runtimeService.createMessageCorrelation("Mes_FromWrapperAboutGpkg")
                       .processInstanceBusinessKey(businessKey)
-                      .setVariable(EXPORT_GPKG_PATH_TO_GPKG, payload)
                       .setVariable(EXPORT_GPKG_FAIL_REASON, error)
                       .correlateWithResult();
     }

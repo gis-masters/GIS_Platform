@@ -12,6 +12,7 @@ import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.CHECK_STATUS_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EXPORT_GPKG_EVENT;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EXPORT_GPKG_PATH_TO_GPKG;
 
 @Service("finalizeRasterExport")
 public class FinalizeRasterExport implements JavaDelegate {
@@ -57,10 +58,23 @@ public class FinalizeRasterExport implements JavaDelegate {
             default:
                 delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "doneAllRasters");
         }
+
+        // Растры не выгрузились, но gpkg уже создан веткой вектора - процесс успешен, ошибки растров есть в отчёте
+        if (!"doneAllRasters".equals(delegateExecution.getVariable(CHECK_STATUS_VAR_NAME))
+                && isGpkgCreated(delegateExecution)) {
+            log.info("Растры не выгружены, но gpkg с векторными данными создан. Завершаем экспорт успешно.");
+            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "doneAllRasters");
+        }
         //Негативные сценарии мы покрыли в switch
         //Тут же можно детализировать и покрыть случае неожиданных Error насытить дополнительно отчёт и т.д.
         //Такой вот вспомогательный делегат для записи негатива в отчёт.
         //Основная идея в том что мы всё равно идём по процессу дальше потому что у нас отдельные делегаты завершения
         // процесса
+    }
+
+    private boolean isGpkgCreated(DelegateExecution delegateExecution) {
+        Object path = delegateExecution.getVariable(EXPORT_GPKG_PATH_TO_GPKG);
+
+        return path != null && !path.toString().isBlank();
     }
 }

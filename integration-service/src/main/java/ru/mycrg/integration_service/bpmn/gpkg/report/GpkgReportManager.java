@@ -521,6 +521,11 @@ public class GpkgReportManager {
 
         gpkgReport.getPayload().getTiles().forEach(tile -> {
             GpkgTile newTile = titleToTile.get(tile.getResourceId());
+            if (newTile == null) {
+                // Тайл не отправлялся в geo-wrapper (например, помечен ошибкой раньше) — оставляем как есть
+                return;
+            }
+
             tile.setStatus(newTile.getStatus());
             tile.getMessages().addAll(newTile.getMessages());
         });

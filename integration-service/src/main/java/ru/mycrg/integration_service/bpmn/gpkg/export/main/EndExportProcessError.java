@@ -44,7 +44,7 @@ public class EndExportProcessError implements JavaDelegate {
         }
 
         String status = (String) delegateExecution.getVariable(CHECK_STATUS_VAR_NAME);
-        String msg = "Невозможно успешно завершить экспорт GPKG. Причина: ";
+        String msg = "Невозможно совершить экспорт данных в GPKG в полном объеме. Причина: ";
 
         switch (status) {
             case "dontKnowHow":
@@ -55,6 +55,9 @@ public class EndExportProcessError implements JavaDelegate {
                 break;
             case "allResourcesUnavailable":
                 msg = msg + "Все указанные ресурсы НЕДОСТУПНЫ пользователю для экспорта.";
+                break;
+            case "allFilePathsBroken":
+                msg = msg + "Исходные данные растровых слоёв недоступны или повреждены.";
                 break;
             default:
                 msg = msg + "gpkg не был сформирован в течении 5 минут. Останавливаем процесс.";

@@ -25,7 +25,7 @@ public class UpdateTableReport implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        String gpkgPath = String.valueOf(delegateExecution.getVariable(EXPORT_GPKG_PATH_TO_GPKG));
+        String gpkgPath = (String) delegateExecution.getVariable(EXPORT_GPKG_PATH_TO_GPKG);
         if (gpkgPath == null || gpkgPath.isBlank()) {
             log.error("Geo-wrapper не вернул путь к файлу.");
 
