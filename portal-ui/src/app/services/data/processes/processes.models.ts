@@ -1,6 +1,7 @@
-import { type PageableResources } from '../../../../server-types/common-contracts';
+import { type GpkgProcessReport, type PageableResources } from '../../../../server-types/common-contracts';
 import {
   type GmlPlacementModel,
+  type GpkgPlacementModel,
   type ImportFeaturesFromShapeFileModel,
   type PlacementModelForFilesWithCrs
 } from '../file-placement/file-placement.models';
@@ -12,7 +13,7 @@ export interface Process {
   status: ProcessStatus;
   type: ProcessType;
   extra: unknown;
-  details: ProcessTasks | ImportShapeProcess | PageableResources<unknown> | PlaceFileProcess;
+  details: ProcessTasks | ImportShapeProcess | PageableResources<unknown> | PlaceFileProcess | GpkgProcessReport;
   message?: string;
 }
 
@@ -106,5 +107,5 @@ export interface ProcessResponse {
 
 export interface ProcessableModel {
   type: ProcessType;
-  payload: GmlPlacementModel | PlacementModelForFilesWithCrs | ImportFeaturesFromShapeFileModel;
+  payload: GmlPlacementModel | PlacementModelForFilesWithCrs | ImportFeaturesFromShapeFileModel | GpkgPlacementModel;
 }

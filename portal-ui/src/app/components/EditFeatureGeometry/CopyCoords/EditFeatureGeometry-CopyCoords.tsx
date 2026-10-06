@@ -9,6 +9,7 @@ import { type Coordinate } from 'ol/coordinate';
 
 import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { services } from '../../../services/services';
+import { copyToClipboard } from '../../../services/util/clipboard.util';
 import { IconButton } from '../../IconButton/IconButton';
 import { Toast } from '../../Toast/Toast';
 
@@ -45,14 +46,8 @@ export class EditFeatureGeometryCopyCoords extends Component<EditFeatureGeometry
     try {
       const coordsText = this.props.coordinates.map(this.formatCoordinate).join('\n');
 
-      // Проверяем поддержку Clipboard API
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(coordsText);
-        Toast.success('Координаты скопированы в буфер обмена');
-      } else {
-        // Fallback для старых браузеров или небезопасного контекста
-        this.fallbackCopyToClipboard(coordsText);
-      }
+      await copyToClipboard(coordsText);
+      Toast.success('Координаты скопированы в буфер обмена');
     } catch (error) {
       services.logger.error('Ошибка при копировании координат в буфер обмена:', {
         error,
@@ -76,31 +71,6 @@ export class EditFeatureGeometryCopyCoords extends Component<EditFeatureGeometry
   @boundMethod
   private handleMouseLeave(): void {
     coordinateHighlightService.setActiveGroup(null);
-  }
-
-  /**
-   * Fallback метод копирования для старых браузеров
-   */
-  private fallbackCopyToClipboard(text: string): void {
-    // Создаем временный textarea элемент
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.append(textArea);
-
-    // Выделяем и копируем текст
-    textArea.focus();
-    textArea.select();
-    const successful = document.execCommand('copy');
-
-    // Удаляем временный элемент
-    textArea.remove();
-
-    if (successful) {
-      Toast.success('Координаты скопированы в буфер обмена');
-    }
   }
 
   private formatCoordinate(coord: Coordinate): string {

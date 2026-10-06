@@ -5,7 +5,7 @@ import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 class TasksJournalActionsEditDialogBlock extends Block {
   selectors = {
     root: '.TasksJournalActions-EditDialog',
-    tasksJournalActionsEditDialogYes: '.TasksJournalActions-EditDialog .MuiButton-outlinedPrimary',
+    tasksJournalActionsEditDialogYes: '.TasksJournalActions-EditDialog .MuiButton-outlined.MuiButton-colorPrimary',
     error: '.TasksJournalActions-EditDialog .Form-Error',
     item: '.TasksJournalActions-EditDialog .Documents-Item'
   };

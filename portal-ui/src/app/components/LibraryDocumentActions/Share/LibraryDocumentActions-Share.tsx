@@ -34,11 +34,16 @@ export class LibraryDocumentActionsShare extends Component<LibraryDocumentAction
   }
 
   @boundMethod
-  private handleClick() {
+  private async handleClick() {
     const { document } = this.props;
-    copyToClipboard(
-      `${location.protocol}//${location.host}/data-management/library/${document.libraryTableName}/document/${document.id}`
-    );
-    Toast.success('Сохранено в буфер обмена');
+
+    try {
+      await copyToClipboard(
+        `${location.protocol}//${location.host}/data-management/library/${document.libraryTableName}/document/${document.id}`
+      );
+      Toast.success('Сохранено в буфер обмена');
+    } catch {
+      Toast.error('Не удалось скопировать в буфер обмена');
+    }
   }
 }

@@ -36,6 +36,36 @@ export class FormBlock extends Block {
     return await tableFieldValue.getValue();
   }
 
+  async pressBackspaceFromEndInStringField(title: string, times: number): Promise<void> {
+    const $tableFieldValueRoot = await this.getFieldInputRoot(title);
+    const inputBlock = new MuiInputBlock($tableFieldValueRoot);
+    await inputBlock.pressBackspaceFromEnd(times);
+  }
+
+  async setStringFieldCursor(title: string, position: number): Promise<void> {
+    const $tableFieldValueRoot = await this.getFieldInputRoot(title);
+    const inputBlock = new MuiInputBlock($tableFieldValueRoot);
+    await inputBlock.setCursorAt(position);
+  }
+
+  async pressBackspaceInStringField(title: string): Promise<void> {
+    const $tableFieldValueRoot = await this.getFieldInputRoot(title);
+    const inputBlock = new MuiInputBlock($tableFieldValueRoot);
+    await inputBlock.pressBackspace();
+  }
+
+  async typeAtCursorInStringField(title: string, value: string): Promise<void> {
+    const $tableFieldValueRoot = await this.getFieldInputRoot(title);
+    const inputBlock = new MuiInputBlock($tableFieldValueRoot);
+    await inputBlock.typeAtCursor(value);
+  }
+
+  async pasteInStringField(title: string, value: string): Promise<void> {
+    const $tableFieldValueRoot = await this.getFieldInputRoot(title);
+    const inputBlock = new MuiInputBlock($tableFieldValueRoot);
+    await inputBlock.pasteValue(value);
+  }
+
   async setChoiceValue(title: string, value: string): Promise<void> {
     const $inputRoot = await this.getFieldInputRoot(title);
     const select = new MuiSelectBlock($inputRoot);

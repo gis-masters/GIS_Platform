@@ -51,7 +51,7 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
   }
 
   @boundMethod
-  private handleClick() {
+  private async handleClick() {
     const { features, vectorTable } = this.props;
 
     let urlForClipboard = location.href;
@@ -76,8 +76,11 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
       urlForClipboard = `${window.location.origin}/data-management/dataset/${dataset}/vectorTable/${identifier}/registry`;
     }
 
-    copyToClipboard(urlForClipboard);
-
-    Toast.success('Сохранено в буфер обмена');
+    try {
+      await copyToClipboard(urlForClipboard);
+      Toast.success('Сохранено в буфер обмена');
+    } catch {
+      Toast.error('Не удалось скопировать в буфер обмена');
+    }
   }
 }

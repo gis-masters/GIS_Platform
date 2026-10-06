@@ -1,4 +1,9 @@
 .Toast {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  margin: 0 6px 0 0;
+
   color: rgb(0 0 0 / 87%);
 
   font-size: 14px;
@@ -38,6 +43,8 @@
 
   body &-Close {
     align-self: flex-start;
+
+    margin-top: 4px;
 
     outline: none;
   }

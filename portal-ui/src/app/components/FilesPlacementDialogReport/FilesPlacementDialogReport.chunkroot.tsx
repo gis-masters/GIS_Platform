@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { CircularProgress, List, ListItemButton, ListItemText } from '@mui/material';
-import { DoneOutlined, ErrorOutlined } from '@mui/icons-material';
+import { DoneOutlineOutlined, ErrorOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { type FilesPlacementReportStore } from '../FilesPlacementDialog/FilesPlacementDialog.store';
@@ -34,8 +34,8 @@ export default class FilesPlacementDialogReport extends Component<FilesPlacement
               <ListItemText primary={task.title} secondary={task.description || null} />
               <>
                 {task.status === 'PENDING' && <CircularProgress size={16} />}
-                {task.status === 'DONE' && <DoneOutlined color='success' />}
-                {task.status === 'ERROR' && <ErrorOutlined color='warning' />}
+                {task.status === 'DONE' && <DoneOutlineOutlined color='success' />}
+                {task.status === 'ERROR' && <ErrorOutlineOutlined color='warning' />}
               </>
             </ListItemButton>
           ))}

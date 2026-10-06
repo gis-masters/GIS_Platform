@@ -3,7 +3,7 @@ import { Block } from '../../classes/Block';
 class LibraryDocumentActionsDeleteDialogBlock extends Block {
   selectors = {
     root: '.LibraryDocumentActions-DeleteDialog',
-    delete: '.LibraryDocumentActions-DeleteDialog .MuiButton-outlinedPrimary'
+    delete: '.LibraryDocumentActions-DeleteDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async delete(): Promise<void> {

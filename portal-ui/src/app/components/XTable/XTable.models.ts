@@ -38,7 +38,7 @@ export interface XTableColumn<T> {
   >;
   sortable?: boolean;
   CellContent?: ComponentType<XTableCustomCellProps<T>>;
-  cellContentProps?: XTableCellContentProps<T>;
+  cellContentProps?: Partial<Omit<XTableCellContentProps<unknown>, 'col' | 'children'>>;
   BeforeCellContent?: ComponentType<XTableCustomCellProps<T>>;
   AfterCellContent?: ComponentType<XTableCustomCellProps<T>>;
   getIdBadge?(rowData: T): string | number;

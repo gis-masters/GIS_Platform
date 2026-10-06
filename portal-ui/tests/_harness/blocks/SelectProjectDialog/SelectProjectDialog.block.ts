@@ -6,7 +6,7 @@ import { SelectProjectionBlock } from '../SelectProjection/SelectProjection.bloc
 class SelectProjectDialogBlock extends Block {
   selectors = {
     root: '.SelectProjectDialog',
-    submit: '.SelectProjectDialog .MuiButton-outlinedPrimary',
+    submit: '.SelectProjectDialog .MuiButton-outlined.MuiButton-colorPrimary',
     projectRow: '.SelectProjectDialog .MuiTable-root .MuiTableRow-root',
     selectProjection: '.SelectProjectDialog .SelectProjection'
   };
@@ -26,7 +26,24 @@ class SelectProjectDialogBlock extends Block {
     await this.waitForVisible();
     const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
     await explorerBlock.waitForLoading();
-    await explorerBlock.selectExplorerItem(project);
+
+    await browser.waitUntil(
+      async () => {
+        try {
+          await explorerBlock.getExplorerItemByTitle(project);
+
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      { timeoutMsg: `В диалоговом окне выбора проекта не найден проект "${project}"` }
+    );
+
+    const $item = await explorerBlock.getExplorerItemByTitle(project);
+    const $title = await $item.$('.Explorer-ItemTitle').getElement();
+    await $title.waitForClickable();
+    await $title.click();
     await this.submit();
   }
 

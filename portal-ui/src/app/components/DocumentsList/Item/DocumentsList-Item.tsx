@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
-import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
+import { AssignmentOutlined, Delete, DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
@@ -74,7 +74,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
               {this.isDeleteDocumentDialogOpen ? (
                 <Delete color='action' fontSize='small' />
               ) : (
-                <DeleteOutline color='error' fontSize='small' />
+                <DeleteOutlined color='error' fontSize='small' />
               )}
             </IconButton>
           )}

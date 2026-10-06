@@ -1,6 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
-import { type VerifyEcpResponse } from '../../../../server-types/common-contracts';
+import { type GpkgFileMetadata, type VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { type FileConnection, type FileInfo } from './files.models';
@@ -86,6 +86,15 @@ class FilesClient extends Client {
 
   async getFileInfo(id: string): Promise<FileInfo> {
     return http.get<FileInfo>(this.getFileUrl(id));
+  }
+
+  /** Метаданные GeoPackage: содержимое `gpkg_contents` и связанные сведения (после загрузки файла на бек). */
+  async getGpkgFileMetadata(id: string): Promise<GpkgFileMetadata> {
+    return http.get<GpkgFileMetadata>(`${this.getFileUrl(id)}/metadata`);
+  }
+
+  async deleteFile(id: string): Promise<void> {
+    await http.delete(this.getFileUrl(id));
   }
 
   async getFile(id: string): Promise<string> {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { DragDropContext, type DragUpdate, Droppable, type DropResult } from '@hello-pangea/dnd';
 import { boundMethod } from 'autobind-decorator';
-import { DragDropContext, type DragUpdate, Droppable, type DropResult } from 'react-beautiful-dnd';
 
 import { type TreeItem } from '../../services/gis/projects/projects.models';
 import { setEnabledLayerToUrl } from '../../services/map/map-url.service';

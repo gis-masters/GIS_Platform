@@ -18,7 +18,9 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     private Long projectId;
     private String targetDatasetIdentifier;
     private String targetDatasetTitle;
+    private Long layerGroupId;
     private GpkgProcessReport gpkgProcessReport;
+    private boolean keepSourceFile;
 
     public ImportGpkgEvent() {
         super();
@@ -32,7 +34,9 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
                            Long projectId,
                            String targetDatasetIdentifier,
                            String targetDatasetTitle,
-                           GpkgProcessReport gpkgProcessReport) {
+                           GpkgProcessReport gpkgProcessReport,
+                           boolean keepSourceFile,
+                           Long layerGroupId) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.processId = processId;
@@ -44,6 +48,8 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.targetDatasetIdentifier = targetDatasetIdentifier;
         this.targetDatasetTitle = targetDatasetTitle;
         this.gpkgProcessReport = gpkgProcessReport;
+        this.keepSourceFile = keepSourceFile;
+        this.layerGroupId = layerGroupId;
     }
 
     public Long getProcessId() {
@@ -119,6 +125,22 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.gpkgProcessReport = gpkgProcessReport;
     }
 
+    public boolean isKeepSourceFile() {
+        return keepSourceFile;
+    }
+
+    public void setKeepSourceFile(boolean keepSourceFile) {
+        this.keepSourceFile = keepSourceFile;
+    }
+
+    public Long getLayerGroupId() {
+        return layerGroupId;
+    }
+
+    public void setLayerGroupId(Long layerGroupId) {
+        this.layerGroupId = layerGroupId;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -130,7 +152,9 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
                 "\"targetDatasetIdentifier\":" + (targetDatasetIdentifier == null ? "null" : "\"" + targetDatasetIdentifier + "\"") + ", " +
                 "\"targetDatasetTitle\":" + (targetDatasetTitle == null ? "null" : "\"" + targetDatasetTitle + "\"") + ", " +
-                "\"gpkgProcessReport\":" + (gpkgProcessReport == null ? "null" : gpkgProcessReport) +
+                "\"gpkgProcessReport\":" + (gpkgProcessReport == null ? "null" : gpkgProcessReport) + ", " +
+                "\"keepSourceFile\":" + keepSourceFile + ", " +
+                "\"layerGroupId\":" + (layerGroupId == null ? "null" : layerGroupId) +
                 "}";
     }
 }

@@ -10,7 +10,7 @@ import './XTable-Container.scss';
 const cnXTableContainer = cn('XTable', 'Container');
 
 export interface XTableContainerProps extends IClassNameProps, ChildrenProps {
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
   minHeight: number;
   containerProps: Partial<PaperProps & XTableContainerProps>;
 }

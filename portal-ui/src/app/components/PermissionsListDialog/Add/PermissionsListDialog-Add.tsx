@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { type Dataset, type VectorTable } from '../../../services/data/vectorData/vectorData.models';
@@ -46,7 +46,7 @@ export class PermissionsListDialogAdd extends Component<PermissionsListDialogAdd
       <>
         <Tooltip title={`Добавить ${entityTypeLabels[type]}`}>
           <IconButton className={cnPermissionsListDialogAdd()} onClick={this.openDialog}>
-            <AddCircleOutline />
+            <AddCircleOutlineOutlined />
           </IconButton>
         </Tooltip>
         <PermissionsAddDialog

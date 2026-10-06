@@ -1,5 +1,6 @@
 import { Block } from '../../classes/Block';
 import { ExplorerBlock } from '../Explorer/Explorer.block';
+import { selectProjectDialogBlock } from '../SelectProjectDialog/SelectProjectDialog.block';
 
 class FilesBlock extends Block {
   selectors = {
@@ -77,6 +78,30 @@ class FilesBlock extends Block {
     const explorerBlock = new ExplorerBlock();
     await explorerBlock.waitForExist();
 
+    await browser.waitUntil(
+      async () => {
+        try {
+          const $filePlacement = await this.getPlaceFileButton(fileName, field, explorerBlock);
+
+          return await $filePlacement.isDisplayed();
+        } catch {
+          return false;
+        }
+      },
+      { timeoutMsg: `Кнопка размещения файла "${fileName}" в поле "${field}" не появилась` }
+    );
+
+    const $filePlacement = await this.getPlaceFileButton(fileName, field, explorerBlock);
+    await $filePlacement.waitForClickable();
+    await $filePlacement.click();
+    await selectProjectDialogBlock.waitForVisible();
+  }
+
+  private async getPlaceFileButton(
+    fileName: string,
+    field: string,
+    explorerBlock: ExplorerBlock
+  ): Promise<WebdriverIO.Element> {
     const $field = await explorerBlock.getContentWidgetField(field);
     const $$items = await $field.$$('.Lookup-Item').getElements();
 
@@ -87,12 +112,11 @@ class FilesBlock extends Block {
       const itemExt = await $itemExt.getText();
 
       if (itemBaseName + itemExt === fileName) {
-        const $filePlacement = await $item.$('.Files-Placement').getElement();
-        await $filePlacement.click();
-
-        break;
+        return await $item.$('.Files-Placement').getElement();
       }
     }
+
+    throw new Error(`Файл "${fileName}" не найден`);
   }
 }
 

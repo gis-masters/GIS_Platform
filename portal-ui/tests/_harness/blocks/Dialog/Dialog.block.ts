@@ -5,7 +5,7 @@ export class DialogBlock extends Block {
     root: '.MuiDialog-paper',
     actions: '.MuiDialogActions-root',
     actionsButtons: '.MuiDialogActions-root .Button',
-    primaryAction: '.MuiDialogActions-root .MuiButton-outlinedPrimary'
+    primaryAction: '.MuiDialogActions-root .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   private async getButtonByTitle(buttonTitle: string): Promise<WebdriverIO.Element> {

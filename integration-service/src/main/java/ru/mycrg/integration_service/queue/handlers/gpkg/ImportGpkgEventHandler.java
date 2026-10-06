@@ -84,7 +84,8 @@ public class ImportGpkgEventHandler implements IEventHandler {
 
             messageBus.produce(new ImportGpkgClearTemplatesEvent(event.getDbName(),
                                                                  "empty",
-                                                                 event.getFileId()));
+                                                                 event.getFileId(),
+                                                                 event.isKeepSourceFile()));
 
             GpkgProcessContext processContext = new GpkgProcessContext(event.getProcessId(),
                                                                        event.getDbName(),

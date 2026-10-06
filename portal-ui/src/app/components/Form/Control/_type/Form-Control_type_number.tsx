@@ -35,10 +35,6 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
             name={name}
             fullWidth={!inSet}
             type='number'
-            InputProps={{
-              endAdornment: measureUnit ? <InputAdornment position='end'>{measureUnit}</InputAdornment> : undefined,
-              inputProps: { step, min: minValue, max: maxValue }
-            }}
             value={fieldValue === undefined || fieldValue === null ? '' : fieldValue}
             label={inSet ? title : undefined}
             onChange={this.handleNumberChange}
@@ -47,6 +43,12 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
             helperText={<FormErrors errors={errors} warnings={warnings} inHelperText />}
             onBlur={this.handleNeedValidate}
             variant={variant}
+            slotProps={{
+              input: {
+                endAdornment: measureUnit ? <InputAdornment position='end'>{measureUnit}</InputAdornment> : undefined
+              },
+              htmlInput: { step, min: minValue, max: maxValue }
+            }}
           />
         )}
 

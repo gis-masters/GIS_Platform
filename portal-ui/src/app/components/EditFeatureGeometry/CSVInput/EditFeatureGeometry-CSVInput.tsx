@@ -6,7 +6,7 @@ import './EditFeatureGeometry-CSVInput.scss';
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryCSVInputProps {
-  inputRef: RefObject<HTMLInputElement>;
+  inputRef: RefObject<HTMLInputElement | null>;
   onChange(e: ChangeEvent<HTMLInputElement>): void;
 }
 

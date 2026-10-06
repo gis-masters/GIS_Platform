@@ -1,7 +1,7 @@
 import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { IconButton } from '../../IconButton/IconButton';
@@ -16,7 +16,7 @@ export const EditFeatureGeometryAddNode: FC<EditFeatureGeometryAddNodeProps> = o
   <Tooltip title='Добавить вершину'>
     <span>
       <IconButton className={cnEditFeatureGeometryAddNode()} onClick={onClick} color='primary'>
-        <AddCircleOutline />
+        <AddCircleOutlineOutlined />
       </IconButton>
     </span>
   </Tooltip>

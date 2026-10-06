@@ -38,14 +38,16 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
             label={getChildrenFilterLabel(openedItem, this.props.store) || 'Поиск'}
             value={clearedValue || ''}
             onChange={this.handleFilterChange}
-            InputProps={{
-              endAdornment: (
-                <IconButton size='small'>
-                  <FilterAltOutlined />
-                </IconButton>
-              )
-            }}
             variant='standard'
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <IconButton size='small'>
+                    <FilterAltOutlined />
+                  </IconButton>
+                )
+              }
+            }}
           />
         </div>
       )

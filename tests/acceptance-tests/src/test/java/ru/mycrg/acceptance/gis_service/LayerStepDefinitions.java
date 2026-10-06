@@ -509,6 +509,26 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertThat(presentedData.get("parentId"), is(layerGroupId));
     }
 
+    @And("все слои текущего проекта имеют parentId текущей группы слоёв")
+    public void allLayersHaveCurrentLayerGroupAsParent() {
+        assertNotNull("Группа слоёв обязательно должна быть в контексте сценария!", layerGroupId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+
+        List<Map<String, Object>> layers = response.jsonPath().getList("");
+        assertFalse("В проекте нет слоёв", layers.isEmpty());
+
+        for (Map<String, Object> layer: layers) {
+            Object parentId = layer.get("parentId");
+            assertNotNull("У слоя отсутствует parentId", parentId);
+            assertEquals("parentId слоя должен совпадать с текущей группой слоёв",
+                         layerGroupId.longValue(),
+                         ((Number) parentId).longValue());
+        }
+    }
+
     @Then("У текущего слоя должно отсутствовать упоминание родительской группы")
     public void checkLayerIsNotInLayerGroup() {
         Map<String, Object> presentedData = response

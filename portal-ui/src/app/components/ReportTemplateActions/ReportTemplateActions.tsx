@@ -1,7 +1,7 @@
 import React, { type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { Delete, DeleteOutline, DownloadOutlined, EditOutlined } from '@mui/icons-material';
+import { Delete, DeleteOutlined, DownloadOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { doConfirm } from '../../services/answer-modals.service';
@@ -145,7 +145,7 @@ export const ReportTemplateActions: FC<ReportTemplateActionsProps> = observer(({
                 color='error'
                 disabled={deleteDisabled}
               >
-                {state.deleteDialogOpen ? <Delete /> : <DeleteOutline />}
+                {state.deleteDialogOpen ? <Delete /> : <DeleteOutlined />}
               </IconButton>
             </span>
           </Tooltip>

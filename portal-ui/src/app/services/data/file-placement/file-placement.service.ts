@@ -11,7 +11,16 @@ import { getFileBaseName } from '../files/files.util';
 import { type LibraryRecord } from '../library/library.models';
 import { type ProcessResponse, ProcessType } from '../processes/processes.models';
 import { createFileProcess, createProcess } from '../processes/processes.service';
-import { FilePlacementMode } from './file-placement.models';
+import { FilePlacementMode, type GpkgRasterLayerPlacement } from './file-placement.models';
+
+type PlaceGpkgParams = {
+  fileId: string;
+  projectId: number;
+  vectorLayers: string[];
+  rasterLayers?: GpkgRasterLayerPlacement[];
+  datasetIdentifier?: string;
+  layerGroupId?: number;
+};
 
 export async function placeGml(
   fileInfo: FileInfo,
@@ -25,6 +34,35 @@ export async function placeGml(
       fileId: fileInfo.id,
       projectId,
       invertedCoordinates: invertedCoordinates ?? undefined
+    }
+  });
+}
+
+export async function placeGpkg({
+  fileId,
+  projectId,
+  vectorLayers,
+  rasterLayers = [],
+  datasetIdentifier,
+  layerGroupId
+}: PlaceGpkgParams): Promise<ProcessResponse> {
+  return createProcess({
+    type: ProcessType.IMPORT,
+    payload: {
+      fileId,
+      projectId,
+      datasetIdentifier,
+      layerGroupId,
+      keepSourceFile: true,
+      layersPlacement: {
+        vectorLayers,
+        rasterLayers: rasterLayers.map(({ gpkgLayerTableName, libraryIdentifier, documentId, field }) => ({
+          gpkgLayerTableName,
+          libraryIdentifier,
+          documentId,
+          field
+        }))
+      }
     }
   });
 }

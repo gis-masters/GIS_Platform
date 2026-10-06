@@ -24,7 +24,7 @@ export const ProjectFolderPage: FC = observer(() => {
   const [project, setProject] = useState<CrgProject>();
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
-  const operationId = useRef<symbol>();
+  const operationId = useRef<symbol | undefined>(undefined);
 
   const init = async () => {
     setBusy(true);

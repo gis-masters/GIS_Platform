@@ -1,4 +1,4 @@
-import React, { type FC, useCallback, useRef } from 'react';
+import React, { type FC, type SyntheticEvent, useCallback, useRef } from 'react';
 import { runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Popover, Typography } from '@mui/material';
@@ -220,7 +220,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
   );
 
   const executeExport = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: SyntheticEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const layerIds = state.selectedLayers.map((layer: CrgLayer) => layer.id);
@@ -240,10 +240,12 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
   return (
     <Dialog
       className={cnExportGeoPackageDialog()}
-      PaperProps={{ className: cnExportGeoPackageDialog('Paper') }}
       maxWidth={'md'}
       fullWidth
       open={open}
+      slotProps={{
+        paper: { className: cnExportGeoPackageDialog('Paper') }
+      }}
     >
       <DialogTitle className={cnExportGeoPackageDialog('Title')}>
         <span>Экспорт в GeoPackage</span>

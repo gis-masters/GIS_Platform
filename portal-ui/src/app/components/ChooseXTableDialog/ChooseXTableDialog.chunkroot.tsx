@@ -1,18 +1,15 @@
-import React, { Component, type ReactNode } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { type ReactElement, type ReactNode, useCallback, useRef } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { type Breakpoint, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
-import { boundMethod } from 'autobind-decorator';
-import { isEqual } from 'lodash';
 
 import { type PageOptions } from '../../services/models';
 import { type SortParams } from '../../services/util/sortObjects';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button, type ButtonProps } from '../Button/Button';
-import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
+import { ChooseXTable, type ChooseXTableSelectionStatus } from '../ChooseXTable/ChooseXTable';
 import { type XTableColumn } from '../XTable/XTable.models';
 
 import './Content/ChooseXTableDialog-Content.scss';
@@ -28,14 +25,12 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   maxWidth?: Breakpoint;
   fullWidth?: boolean;
   selectedItems?: T[];
-  disabledItems?: T[];
-  disabledItemsMessage?: string;
+  disabledTester?(item: T): boolean | string;
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
   afterTable?: ReactNode;
   single?: boolean;
-  alwaysShowActionButton?: boolean;
   withoutSelectAll?: boolean;
   additionalAction?: ReactNode;
   getRowId?(rowData: T): string | number;
@@ -54,115 +49,117 @@ interface ChooseXTableDialogAsyncProps<T> extends ChooseXTableDialogBaseProps<T>
 
 export type ChooseXTableDialogProps<T> = ChooseXTableDialogAsyncProps<T> | ChooseXTableDialogSyncProps<T>;
 
-@observer
-export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogProps<T>> {
-  @observable private selected: T[] = [];
+type ChooseXTableDialogState = {
+  empty: boolean;
+  changed: boolean;
+  setStatus(status: ChooseXTableSelectionStatus): void;
+};
 
-  constructor(props: ChooseXTableDialogProps<T>) {
-    super(props);
-    makeObservable(this);
-  }
+function ChooseXTableDialog<T>(props: ChooseXTableDialogProps<T>): ReactElement {
+  const {
+    className,
+    title,
+    open,
+    data,
+    defaultSort,
+    secondarySortField,
+    actionButtonProps = {},
+    single,
+    disabledTester,
+    withoutSelectAll,
+    loading,
+    afterTable,
+    maxWidth = 'xl',
+    fullWidth,
+    additionalAction,
+    selectedItems,
+    cols,
+    getRowId,
+    onClose,
+    onSelect,
+    onChange
+  } = props as ChooseXTableDialogSyncProps<T>;
+  const { getData } = props as ChooseXTableDialogAsyncProps<T>;
+  const tableRef = useRef<ChooseXTable<T>>(null);
 
-  render() {
-    const {
-      className,
-      title,
-      open,
-      data,
-      defaultSort,
-      secondarySortField,
-      actionButtonProps = {},
-      single,
-      alwaysShowActionButton,
-      disabledItems,
-      disabledItemsMessage,
-      withoutSelectAll,
-      loading,
-      afterTable,
-      maxWidth = 'xl',
-      fullWidth,
-      additionalAction,
-      selectedItems,
-      cols,
-      getRowId
-    } = this.props as ChooseXTableDialogSyncProps<T>;
-    const { getData } = this.props as ChooseXTableDialogAsyncProps<T>;
-
-    return (
-      <Dialog
-        slotProps={{ paper: { className: cnChooseXTableDialog(null, [className]) } }}
-        open={open}
-        onClose={this.close}
-        maxWidth={maxWidth}
-        fullWidth={fullWidth}
-      >
-        <DialogContent className={cnChooseXTableDialog('Content')}>
-          <ChooseXTable<T>
-            className={cnChooseXTableDialog('Table')}
-            title={title}
-            data={data}
-            cols={cols}
-            defaultSort={defaultSort}
-            secondarySortField={secondarySortField}
-            filterable
-            loading={loading}
-            disabledItems={disabledItems}
-            disabledItemsMessage={disabledItemsMessage}
-            filtersAlwaysEnabled
-            single={single}
-            withoutSelectAll={withoutSelectAll}
-            selectedItems={selectedItems}
-            onSelect={this.select}
-            getRowId={getRowId}
-            getData={getData}
-          />
-
-          {afterTable}
-        </DialogContent>
-        <DialogActions>
-          <ActionsLeft>{additionalAction}</ActionsLeft>
-          <ActionsRight>
-            {(alwaysShowActionButton || this.changed) && (
-              <Button
-                disabled={!this.selected.length}
-                onClick={this.submit}
-                color='primary'
-                loading={loading}
-                {...actionButtonProps}
-                className={cnChooseXTableDialog('Submit', [actionButtonProps.className])}
-              >
-                {actionButtonProps.children || 'Выбрать'}
-              </Button>
-            )}
-            <Button onClick={this.close}>{alwaysShowActionButton || this.changed ? 'Отмена' : 'Закрыть'}</Button>
-          </ActionsRight>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
-  @boundMethod
-  private close() {
-    this.props.onClose();
-    this.select([]);
-  }
-
-  @computed
-  private get changed(): boolean {
-    return !isEqual(this.selected, this.props.selectedItems);
-  }
-
-  @action.bound
-  private select(selected: T[]) {
-    this.selected = selected;
-
-    if (this.props.onChange) {
-      this.props.onChange(selected);
+  const state = useLocalObservable<ChooseXTableDialogState>(() => ({
+    empty: !(selectedItems && selectedItems.length),
+    changed: false,
+    setStatus(status) {
+      this.empty = status.empty;
+      this.changed = status.changed;
     }
-  }
+  }));
 
-  @action.bound
-  private submit() {
-    this.props.onSelect(this.selected);
-  }
+  const handleSelect = useCallback(
+    (selected: T[]) => {
+      onChange?.(selected);
+    },
+    [onChange]
+  );
+
+  const handleClose = useCallback(() => {
+    onClose();
+    onChange?.([]);
+    state.setStatus({ empty: true, changed: false });
+  }, [onChange, onClose, state]);
+
+  const handleSubmit = useCallback(() => {
+    onSelect(tableRef.current?.getSelected() ?? []);
+  }, [onSelect]);
+
+  return (
+    <Dialog
+      slotProps={{ paper: { className: cnChooseXTableDialog(null, [className]) } }}
+      open={open}
+      onClose={handleClose}
+      maxWidth={maxWidth}
+      fullWidth={fullWidth}
+    >
+      <DialogContent className={cnChooseXTableDialog('Content')}>
+        <ChooseXTable<T>
+          ref={tableRef}
+          className={cnChooseXTableDialog('Table')}
+          title={title}
+          data={data}
+          cols={cols}
+          defaultSort={defaultSort}
+          secondarySortField={secondarySortField}
+          filterable
+          loading={loading}
+          disabledTester={disabledTester}
+          filtersAlwaysEnabled
+          single={single}
+          withoutSelectAll={withoutSelectAll}
+          selectedItems={selectedItems}
+          onSelect={handleSelect}
+          onSelectionStatusChange={state.setStatus}
+          getRowId={getRowId}
+          getData={getData}
+        />
+
+        {afterTable}
+      </DialogContent>
+      <DialogActions>
+        <ActionsLeft>{additionalAction}</ActionsLeft>
+        <ActionsRight>
+          <Button
+            disabled={state.empty}
+            onClick={handleSubmit}
+            color='primary'
+            loading={loading}
+            {...actionButtonProps}
+            className={cnChooseXTableDialog('Submit', [actionButtonProps.className])}
+          >
+            {actionButtonProps.children || 'Выбрать'}
+          </Button>
+          <Button onClick={handleClose} className={cnChooseXTableDialog('Close')}>
+            {state.changed ? 'Отмена' : 'Закрыть'}
+          </Button>
+        </ActionsRight>
+      </DialogActions>
+    </Dialog>
+  );
 }
+
+export default observer(ChooseXTableDialog);

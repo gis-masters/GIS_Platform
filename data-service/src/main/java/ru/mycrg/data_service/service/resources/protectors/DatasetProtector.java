@@ -35,7 +35,8 @@ public class DatasetProtector implements IResourceProtector {
 
     @Override
     public void throwIfNotExist(@NotNull ResourceQualifier dQualifier) {
-        Optional<SchemasAndTables> dataset = schemasAndTablesRepository.findByIdentifier(dQualifier.toString());
+        Optional<SchemasAndTables> dataset = schemasAndTablesRepository
+                .findByIdentifierAndIsFolder(dQualifier.toString(), true);
 
         if (dataset.isEmpty()) {
             throw new NotFoundException(dQualifier.getQualifier());
@@ -44,7 +45,8 @@ public class DatasetProtector implements IResourceProtector {
 
     @Override
     public void throwIfExists(@NotNull ResourceQualifier dQualifier) {
-        Optional<SchemasAndTables> dataset = schemasAndTablesRepository.findByIdentifier(dQualifier.toString());
+        Optional<SchemasAndTables> dataset = schemasAndTablesRepository
+                .findByIdentifierAndIsFolder(dQualifier.toString(), true);
 
         if (dataset.isPresent()) {
             throw new ConflictException("Набор данных " + dQualifier + " уже существует");

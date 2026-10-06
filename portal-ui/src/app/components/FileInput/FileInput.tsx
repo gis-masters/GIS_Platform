@@ -9,7 +9,7 @@ import React, {
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { AddCircleOutline, Close } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
@@ -34,8 +34,8 @@ export interface FileInputProps
 
 @observer
 export class FileInput extends Component<FileInputProps> {
-  private inputRef: RefObject<HTMLInputElement> = createRef();
-  private btnRef: RefObject<HTMLButtonElement> = createRef();
+  private inputRef: RefObject<HTMLInputElement | null> = createRef();
+  private btnRef: RefObject<HTMLButtonElement | null> = createRef();
   @observable private _empty = true;
   @observable private files: FileList | null = null;
 
@@ -87,7 +87,7 @@ export class FileInput extends Component<FileInputProps> {
               onClick={this.handleBrowseClick}
               className={cnFileInput('Browse')}
             >
-              <AddCircleOutline />
+              <AddCircleOutlineOutlined />
             </IconButton>
           </Tooltip>
         ) : (

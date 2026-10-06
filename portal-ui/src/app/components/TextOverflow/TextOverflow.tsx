@@ -25,8 +25,8 @@ export class TextOverflow extends Component<TextOverflowProps> {
   @observable private textOverflow = false;
   @observable private isAllTextVisible = false;
 
-  private ref: RefObject<HTMLSpanElement> = createRef();
-  private wrapperRef: RefObject<HTMLDivElement> = createRef();
+  private ref: RefObject<HTMLSpanElement | null> = createRef();
+  private wrapperRef: RefObject<HTMLDivElement | null> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
 
   constructor(props: TextOverflowProps) {

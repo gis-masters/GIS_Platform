@@ -89,7 +89,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               onChange={this.handleSelectChange}
               error={!!errors?.length}
               color={getFieldInputColor(errors, warnings)}
-              inputProps={{ id: htmlId }}
+              slotProps={{ input: { id: htmlId } }}
               // eslint-disable-next-line react/jsx-no-bind -- FIXME #3792
               renderValue={selected => {
                 if (multiple) {

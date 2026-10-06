@@ -1,37 +1,24 @@
-export function copyToClipboard(value: string): void {
-  if (navigator.clipboard?.writeText) {
-    void navigator.clipboard.writeText(value);
+import { Mime } from './Mime';
 
-    return;
-  }
-
-  const parent = document.querySelector('.MuiModal-root :focus')?.parentNode || document.body;
-  const area = document.createElement('textarea');
-  parent.append(area);
-
-  area.value = value;
-  area.select();
-  try {
-    document.execCommand('copy');
-  } catch {
-    throw new Error('Не копируется :(');
-  }
-
-  area.remove();
+export async function copyToClipboard(value: string): Promise<void> {
+  await navigator.clipboard.writeText(value);
 }
 
-export function copyNodeToClipboard(node: HTMLElement): void {
+export async function copyNodeToClipboard(node: HTMLElement): Promise<void> {
   const selection = window.getSelection();
   const range = document.createRange();
   range.selectNodeContents(node);
   selection?.removeAllRanges();
   selection?.addRange(range);
 
-  try {
-    document.execCommand('copy');
-  } catch {
-    throw new Error('Не копируется :(');
-  }
-
+  // Выделение сохраняет переносы строк и табуляции между ячейками, textContent склеил бы всё в одну строку
+  const text = selection?.toString() ?? '';
   selection?.removeAllRanges();
+
+  await navigator.clipboard.write([
+    new ClipboardItem({
+      [Mime.HTML]: new Blob([node.outerHTML], { type: Mime.HTML }),
+      [Mime.TEXT]: new Blob([text], { type: Mime.TEXT })
+    })
+  ]);
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { AddCircle, AddCircleOutline } from '@mui/icons-material';
+import { AddCircle, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -45,7 +45,7 @@ export class UsersAdd extends Component<UsersAddProps> {
         <Button
           className={cnUsersAdd()}
           variant='text'
-          startIcon={this.dialogOpen ? <AddCircle /> : <AddCircleOutline />}
+          startIcon={this.dialogOpen ? <AddCircle /> : <AddCircleOutlineOutlined />}
           color='primary'
           onClick={this.openDialog}
         >

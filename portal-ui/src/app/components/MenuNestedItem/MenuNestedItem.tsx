@@ -35,9 +35,9 @@ interface MenuNestedItemProps extends Omit<MenuItemProps, 'ref'> {
 @observer
 class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
   @observable private submenuOpen = false;
-  private containerRef: RefObject<HTMLDivElement> = createRef();
-  private menuContainerRef: RefObject<HTMLDivElement> = createRef();
-  private anchorRef: RefObject<HTMLSpanElement> = createRef();
+  private containerRef: RefObject<HTMLDivElement | null> = createRef();
+  private menuContainerRef: RefObject<HTMLDivElement | null> = createRef();
+  private anchorRef: RefObject<HTMLSpanElement | null> = createRef();
 
   constructor(props: MenuNestedItemProps) {
     super(props);

@@ -7,8 +7,25 @@ class ToastBlock extends Block {
     close: '.Toast-Close',
     details: '.Toast-Details',
     title: '.Toast-Title',
-    error: '.Toast_type_error'
+    error: '.Toast_type_error',
+    loader: '.Toast-Loader',
+    icon: '.Toast-Icon',
+    detailsTypeIcon: '.Toast .GpkgImportToastDetails .GpkgPlacementDialog-TypeIcon'
   };
+
+  async hoverDetailsTypeIcon(): Promise<void> {
+    const $icon = await this.findBySelector('detailsTypeIcon');
+    await $icon.waitForDisplayed();
+
+    const $$icons = await this.findAllBySelector('detailsTypeIcon');
+    const $last = $$icons.at(-1);
+
+    if (!$last) {
+      throw new Error('В подробностях уведомления нет иконки типа слоя');
+    }
+
+    await $last.moveTo();
+  }
 
   async clickMoar(): Promise<void> {
     const $moar = await this.findBySelector('moar');
@@ -120,15 +137,50 @@ class ToastBlock extends Block {
     }
   }
 
-  private async getTitleTexts(): Promise<string[]> {
-    const $$titles = await this.findAllBySelector('title');
-    const texts: string[] = [];
+  async getCount(): Promise<number> {
+    const $$toasts = await this.findAllBySelector('root');
 
-    for (const $title of $$titles) {
-      texts.push(normalizeToastText(await $title.getText()));
+    return $$toasts.length;
+  }
+
+  async waitForTitle(msg: string): Promise<void> {
+    const msgNorm = msg.replaceAll(/\s+/g, ' ').trim();
+    await browser.waitUntil(
+      async () => {
+        try {
+          const raw = await this.getTitle();
+          const text = raw.replaceAll(/\s+/g, ' ').trim();
+
+          return text === msgNorm;
+        } catch {
+          return false;
+        }
+      },
+      { timeoutMsg: `Не дождались уведомления "${msg}"` }
+    );
+    await browser.pause(300); // анимация смены содержимого
+  }
+
+  async assertStillVisible(ms = 1000): Promise<void> {
+    await browser.pause(ms);
+    const $root = await this.findBySelector('root');
+    if (!(await $root.isDisplayed())) {
+      throw new Error('Уведомление исчезло раньше, чем ожидалось');
+    }
+  }
+
+  async assertPart(key: 'loader' | 'close' | 'icon', present: boolean): Promise<void> {
+    const $el = await this.findBySelector(key);
+    const labels = { loader: 'лоадер', close: 'крестик', icon: 'иконка типа' };
+    const label = labels[key];
+
+    if (present) {
+      await $el.waitForDisplayed({ timeoutMsg: `В уведомлении нет: ${label}` });
+
+      return;
     }
 
-    return texts;
+    await $el.waitForExist({ reverse: true, timeoutMsg: `В уведомлении есть: ${label}` });
   }
 
   /**
@@ -166,6 +218,17 @@ class ToastBlock extends Block {
     if (forbiddenSeen) {
       throw new Error(`Не ожидали уведомление "${msg}", но оно отобразилось`);
     }
+  }
+
+  private async getTitleTexts(): Promise<string[]> {
+    const $$titles = await this.findAllBySelector('title');
+    const texts: string[] = [];
+
+    for (const $title of $$titles) {
+      texts.push(normalizeToastText(await $title.getText()));
+    }
+
+    return texts;
   }
 }
 

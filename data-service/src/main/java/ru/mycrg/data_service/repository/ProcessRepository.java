@@ -12,6 +12,7 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,18 @@ public interface ProcessRepository extends JpaRepository<Process, Long> {
                                            Pageable pageable);
 
     Page<Process> findAllByUserName(String userName, Pageable pageable);
+
+    @RestResource(exported = false)
+    @Query(value = "SELECT EXISTS (" +
+            "SELECT 1 FROM processes " +
+            "WHERE type = :type " +
+            "AND status IN (:statuses) " +
+            "AND LOWER(extra->>'fileId') = LOWER(:fileId)" +
+            ")",
+           nativeQuery = true)
+    boolean existsImportByFileId(@Param("type") String type,
+                                 @Param("statuses") Collection<String> statuses,
+                                 @Param("fileId") String fileId);
 
     @Override
     @RestResource(exported = false)

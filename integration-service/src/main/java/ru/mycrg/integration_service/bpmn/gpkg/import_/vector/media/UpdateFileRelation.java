@@ -61,7 +61,11 @@ public class UpdateFileRelation implements JavaDelegate {
             log.warn("При создании файлов на data-service произошли критичные ошибки! " +
                              "Дальнейшая работа по добавления файла в фичу невозможна.");
 
-            reportManager.updateFileReportWithError(rabbitDto, importReport, currentFileIds);
+            reportManager.updateFileReportWithErrorCustomMsg(rabbitDto,
+                                                             importReport,
+                                                             currentFileIds,
+                                                             "Не удалось создать сопутствующий файл на сервере",
+                                                             true);
 
             return;
         }
@@ -69,7 +73,11 @@ public class UpdateFileRelation implements JavaDelegate {
         if (oldNewIds.isEmpty()) {
             log.warn("Статус успех, но файлов не создали.");
 
-            reportManager.updateFileReportWithError(rabbitDto, importReport, currentFileIds);
+            reportManager.updateFileReportWithErrorCustomMsg(rabbitDto,
+                                                             importReport,
+                                                             currentFileIds,
+                                                             "Сопутствующий файл не был создан на сервере",
+                                                             true);
 
             return;
         }

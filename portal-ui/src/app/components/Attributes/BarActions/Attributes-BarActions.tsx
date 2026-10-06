@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { Delete, DeleteOutline } from '@mui/icons-material';
+import { Delete, DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
@@ -101,7 +101,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
                     color='error'
                     disabled={editFeatureStore.dirty}
                   >
-                    {this.dialogOpen ? <Delete fontSize='small' /> : <DeleteOutline fontSize='small' />}
+                    {this.dialogOpen ? <Delete fontSize='small' /> : <DeleteOutlined fontSize='small' />}
                   </IconButton>
                 </span>
               </Tooltip>

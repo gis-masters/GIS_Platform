@@ -24,10 +24,10 @@ import {
   EditOutlined,
   FingerprintOutlined,
   FormatListBulletedOutlined,
-  HelpOutline,
+  HelpOutlineOutlined,
   LinkOutlined,
   LooksOneOutlined,
-  PersonOutline,
+  PersonOutlined,
   PersonSearchOutlined,
   Pin,
   PinOutlined,
@@ -63,12 +63,12 @@ export const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
     [PropertyType.TEXT]: [TextFieldsOutlined, 'Многострочный текст'],
     [PropertyType.STRING]: [AbcOutlined, 'Строка'],
     [PropertyType.URL]: [LinkOutlined, 'Ссылка'],
-    [PropertyType.USER]: [PersonOutline, 'Пользователь'],
+    [PropertyType.USER]: [PersonOutlined, 'Пользователь'],
     [PropertyType.USER_ID]: [PersonSearchOutlined, 'Идентификатор пользователя'],
     [PropertyType.UUID]: [FingerprintOutlined, 'Уникальный идентификатор']
   };
 
-  return icons[type] || [HelpOutline, type];
+  return icons[type] || [HelpOutlineOutlined, type];
 };
 
 interface SchemaPropertiesItemProps {
@@ -119,7 +119,7 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
             <>
               {description && (
                 <Tooltip title={description}>
-                  <HelpOutline fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
+                  <HelpOutlineOutlined fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
                 </Tooltip>
               )}
 

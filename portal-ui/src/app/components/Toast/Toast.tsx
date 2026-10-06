@@ -2,37 +2,24 @@ import React, { Component, type FC, type ReactNode } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { CheckCircle, Error, Info, Warning } from '@mui/icons-material';
-import { type SvgIconProps } from '@mui/material/SvgIcon/';
+import { type SvgIconProps } from '@mui/material/SvgIcon';
 import nl2br from 'react-nl2br';
 import { type Id, toast, type ToastOptions, type TypeOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { environment } from '../../services/environment';
-import { sendTelegramError } from '../../services/telegram.service';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { ToastCloseButton } from './CloseButton/Toast-CloseButton';
+import { ToastLoader } from './Loader/Toast-Loader';
 import { cnToast } from './Toast.classname';
 
 import './Toast.scss';
-
-function reactNodeToTelegramText(node: unknown): string {
-  if (node === null || node === undefined) {
-    return '';
-  }
-  if (typeof node === 'string' || typeof node === 'number' || typeof node === 'boolean') {
-    return String(node);
-  }
-  try {
-    return JSON.stringify(node, null, 2) ?? '';
-  } catch {
-    return '';
-  }
-}
 
 interface ToastOpts extends ToastOptions {
   message?: ReactNode;
   details?: ReactNode;
   duration?: number;
+  loader?: boolean;
 }
 
 interface ToastErrorOpts extends ToastOpts {
@@ -44,7 +31,7 @@ interface ToastErrorOpts extends ToastOpts {
   suppress?: boolean;
 }
 
-interface ToastProps extends ToastOpts {
+interface ToastProps extends Omit<ToastOpts, 'icon'> {
   toastInfo: {
     id: Id;
   };
@@ -60,8 +47,7 @@ export class Toast extends Component<ToastProps> {
     success: CheckCircle,
     warning: Warning,
     info: Info,
-    default: Info,
-    dark: Info
+    default: Info
   };
 
   @observable open = false;
@@ -71,42 +57,45 @@ export class Toast extends Component<ToastProps> {
     makeObservable(this);
   }
 
-  static show(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
-    const normalizedOpts = this.normalizeOpts(message, opts);
-    const Icon = this.icons[normalizedOpts.type || 'default'] || null;
-    const toastInfo: { id: Id } = { id: '0' };
-
-    opts = {
-      ...normalizedOpts,
-      className: cnToast('Toastify'),
-      closeButton: <ToastCloseButton toastId={toastInfo} />
-    };
-
-    const props: ToastProps = {
-      ...opts,
-      icon: Icon ? <Icon className={cnToast('Icon')} /> : null,
-      toastInfo
-    };
-
-    toastInfo.id = toast(<Toast {...props} />, opts);
+  static dismiss(id: Id): void {
+    toast.dismiss(id);
   }
 
-  static info(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
-    this.show({
+  static show(message: ReactNode | ToastOpts, opts?: ToastOpts): Id {
+    const { toastifyOpts, props, toastInfo } = this.prepare(message, opts);
+
+    toastInfo.id = toast(<Toast {...props} />, toastifyOpts);
+
+    return toastInfo.id;
+  }
+
+  static update(id: Id, message: ReactNode | ToastOpts, opts?: ToastOpts): void {
+    const { toastifyOpts, props, toastInfo } = this.prepare(message, opts);
+    toastInfo.id = id;
+
+    toast.update(id, {
+      ...toastifyOpts,
+      autoClose: toastifyOpts.autoClose ?? Toast.defaultDuration,
+      render: <Toast {...props} />
+    });
+  }
+
+  static info(message: ReactNode | ToastOpts, opts?: ToastOpts): Id {
+    return this.show({
       ...this.normalizeOpts(message, opts),
       type: 'info'
     } as ToastOpts);
   }
 
-  static warn(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
-    this.show({
+  static warn(message: ReactNode | ToastOpts, opts?: ToastOpts): Id {
+    return this.show({
       ...this.normalizeOpts(message, opts),
       type: 'warning'
     } as ToastOpts);
   }
 
-  static success(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
-    this.show({
+  static success(message: ReactNode | ToastOpts, opts?: ToastOpts): Id {
+    return this.show({
       ...this.normalizeOpts(message, opts),
       autoClose: opts?.duration || Toast.defaultDuration,
       type: 'success'
@@ -127,6 +116,37 @@ export class Toast extends Component<ToastProps> {
       ...opts,
       message: message as ReactNode
     };
+  }
+
+  private static prepare(
+    message: ReactNode | ToastOpts,
+    opts?: ToastOpts
+  ): { toastifyOpts: ToastOpts; props: ToastProps; toastInfo: { id: Id } } {
+    const normalizedOpts = this.normalizeOpts(message, opts);
+    const Icon = this.icons[normalizedOpts.type || 'default'] || null;
+    const toastInfo: { id: Id } = { id: normalizedOpts.toastId ?? '0' };
+
+    let icon: ReactNode = null;
+    if (normalizedOpts.loader) {
+      icon = <ToastLoader />;
+    } else if (Icon) {
+      icon = <Icon className={cnToast('Icon')} />;
+    }
+
+    const toastifyOpts: ToastOpts = {
+      ...normalizedOpts,
+      className: cnToast('Toastify'),
+      closeButton: normalizedOpts.closeButton === false ? false : <ToastCloseButton toastId={toastInfo} />,
+      icon: false
+    };
+
+    const props: ToastProps = {
+      ...toastifyOpts,
+      icon,
+      toastInfo
+    };
+
+    return { toastifyOpts, props, toastInfo };
   }
 
   static error(messageOrOpts: ReactNode | ToastErrorOpts, opts?: ToastErrorOpts): void {
@@ -153,19 +173,6 @@ export class Toast extends Component<ToastProps> {
     const sourceFile = source ? new URL(source).pathname : '';
     const protocol = window.location.protocol.slice(0, -1);
 
-    let tgMsg =
-      (typeof message === 'string' ? message : reactNodeToTelegramText(message)) +
-      (details
-        ? `
-${reactNodeToTelegramText(details)}`
-        : '');
-    if (error) {
-      tgMsg += `
-${error.message || error.toString()}`;
-    }
-
-    void sendTelegramError(tgMsg);
-
     if (
       (isRecordStringUnknown(environment.suppressToastErrors) &&
         environment.suppressToastErrors[protocol] &&
@@ -175,7 +182,7 @@ ${error.message || error.toString()}`;
       return;
     }
 
-    this.show({
+    const errorToastOpts = {
       autoClose: 10_000,
       ...opts,
       type: 'error',
@@ -197,7 +204,15 @@ ${error.message || error.toString()}`;
             ) : null}
           </>
         ) : null
-    } as ToastOpts);
+    } as ToastOpts;
+
+    if (opts.toastId != null) {
+      this.update(opts.toastId, errorToastOpts);
+
+      return;
+    }
+
+    this.show(errorToastOpts);
   }
 
   render() {
@@ -220,10 +235,16 @@ ${error.message || error.toString()}`;
   }
 
   @action.bound
-  private toggleOpen() {
+  private toggleOpen(e: React.MouseEvent<HTMLElement>) {
+    e.stopPropagation();
     this.open = !this.open;
-    toast.update(this.props.toastInfo.id, {
-      autoClose: !this.open && (this.props.autoClose || Toast.defaultDuration)
-    });
+
+    if (this.props.autoClose === false) {
+      return;
+    }
+
+    const autoClose = this.open ? false : this.props.autoClose ?? Toast.defaultDuration;
+
+    toast.update(this.props.toastInfo.id, { autoClose });
   }
 }

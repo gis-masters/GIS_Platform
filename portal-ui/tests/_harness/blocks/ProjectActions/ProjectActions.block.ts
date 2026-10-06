@@ -8,7 +8,7 @@ class ProjectActionsBlock extends Block {
     editBtn: '.ProjectActions .ProjectActions-Edit',
     moveBtn: '.ProjectActions .ProjectActions-Move',
     editDialog: '.ProjectActions-EditDialog',
-    editDialogSave: '.ProjectActions-EditDialog .MuiButton-outlinedPrimary'
+    editDialogSave: '.ProjectActions-EditDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async clickDeleteBtn(): Promise<void> {

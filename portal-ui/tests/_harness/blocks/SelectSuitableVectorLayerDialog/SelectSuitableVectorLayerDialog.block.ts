@@ -4,7 +4,7 @@ import { xTableBlock } from '../XTable/XTable.block';
 class SelectSuitableVectorLayerDialog extends Block {
   selectors = {
     root: '.SelectSuitableVectorLayerDialog',
-    copyBtn: '.SelectSuitableVectorLayerDialog .MuiButton-outlinedPrimary',
+    copyBtn: '.SelectSuitableVectorLayerDialog .MuiButton-outlined.MuiButton-colorPrimary',
     loading: '.SelectSuitableVectorLayerDialog .Loading',
     projectRow: '.SelectSuitableVectorLayerDialog .MuiTable-root .MuiTableRow-root'
   };

@@ -4,7 +4,7 @@ import { FormBlock } from '../../Form/Form.block';
 class LibraryDocumentActionsEditDialogBlock extends Block {
   selectors = {
     root: '.LibraryDocumentActions-EditDialog',
-    save: '.LibraryDocumentActions-EditDialog .MuiButton-outlinedPrimary'
+    save: '.LibraryDocumentActions-EditDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async clickDeleteFilesInField(field: string) {

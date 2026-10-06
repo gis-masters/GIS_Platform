@@ -270,6 +270,53 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         downloadFile(firstFileId);
     }
 
+    @Given("Запрошено удаление загруженного файла")
+    @When("Пользователь делает запрос на удаление загруженного файла")
+    public void deleteFirstFile() {
+        deleteFile(firstFileId);
+    }
+
+    @When("Пользователь делает запрос на удаление текущего файла")
+    public void deleteCurrentFile() {
+        deleteFile(resolveCurrentUploadedFileId());
+    }
+
+    @When("Пользователь делает запрос на удаление второго файла")
+    public void deleteSecondFile() {
+        deleteFile(secondFileId);
+    }
+
+    @When("Пользователь делает запрос на удаление файла с ID: {string}")
+    public void deleteFileById(String fileId) {
+        deleteFile(UUID.fromString(fileId));
+    }
+
+    @When("Пользователь делает запрос на получение загруженного файла")
+    public void getFirstFile() {
+        getFile(firstFileId);
+    }
+
+    @And("В ответе пункт {string} соответствует сообщению об отсутствии загруженного файла")
+    public void checkNotFoundMessageForUploadedFile(String field) {
+        checkResponseValue(field, "Ресурс не найден по идентификатору: " + firstFileId);
+    }
+
+    @Then("{word} файл на месте")
+    public void fileStillExists(String which) {
+        UUID fileId;
+        if ("Загруженный".equals(which)) {
+            fileId = firstFileId;
+        } else if ("Второй".equals(which)) {
+            fileId = secondFileId;
+        } else if ("Текущий".equalsIgnoreCase(which)) {
+            fileId = resolveCurrentUploadedFileId();
+        } else {
+            throw new IllegalArgumentException("Неизвестный файл: " + which);
+        }
+
+        assertFileStillExists(fileId);
+    }
+
     @When("файл {string} скачивается")
     public void fileSuccessfullyDownload(String fileName) {
         downloadFile(getFileDescription(fileName).getId());
@@ -556,6 +603,31 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     public void downloadFile(UUID fileId) {
         downloadFile(String.format("/%s/download", fileId));
+    }
+
+    private void deleteFile(UUID fileId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete("/" + fileId);
+    }
+
+    private UUID resolveCurrentUploadedFileId() {
+        if (!currentFiles.isEmpty()) {
+            return currentFiles.get(0).getId();
+        }
+        if (currentFileId != null) {
+            return currentFileId;
+        }
+
+        throw new IllegalStateException("В контексте нет загруженного файла");
+    }
+
+    private void assertFileStillExists(UUID fileId) {
+        getFile(fileId);
+        assertEquals(SC_OK, response.getStatusCode());
+
+        downloadFile(fileId);
+        assertEquals(SC_OK, response.getStatusCode());
     }
 
     public void getFile(UUID id) {

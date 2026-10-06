@@ -8,8 +8,8 @@ class AddLayerDialogBlock extends Block {
     layerFormDialogSelectDatasource: '.AddLayerDialog .SelectVectorTableControl',
     layerFormDialogSelectLibraryRecord: '.AddLayerDialog .SelectFileInLibraryRecordControl',
     layerTypesControl: '.AddLayerDialog .Form-Control',
-    addLayerBtn: '.AddLayerDialog .MuiButton-outlinedPrimary',
-    loader: '.AddLayerDialog .MuiButton-outlinedPrimary.MuiLoadingButton-root'
+    addLayerBtn: '.AddLayerDialog .MuiButton-outlined.MuiButton-colorPrimary',
+    loader: '.AddLayerDialog .MuiButton-outlined.MuiButton-colorPrimary.MuiButton-loading'
   };
 
   async checkViewFieldIsAppear(): Promise<void> {

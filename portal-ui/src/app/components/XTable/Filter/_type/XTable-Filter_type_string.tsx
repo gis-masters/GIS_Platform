@@ -34,14 +34,16 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
         className={cnXTableFilter(null, [className])}
         onChange={this.handleChange}
         value={this.value}
-        InputProps={{
-          endAdornment: (
-            <XTableFilterStrictness
-              onClick={this.toggleStrictFiltering}
-              strict={this.strictFiltering}
-              filtered={this.strictFiltering || !!this.value}
-            />
-          )
+        slotProps={{
+          input: {
+            endAdornment: (
+              <XTableFilterStrictness
+                onClick={this.toggleStrictFiltering}
+                strict={this.strictFiltering}
+                filtered={this.strictFiltering || !!this.value}
+              />
+            )
+          }
         }}
       />
     );

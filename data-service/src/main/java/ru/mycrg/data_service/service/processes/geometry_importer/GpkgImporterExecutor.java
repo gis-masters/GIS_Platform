@@ -31,6 +31,7 @@ import ru.mycrg.data_service.service.processes.file_placement.IFilePlacer;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.DocLibraryRecordsProtector;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
+import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.FileType;
@@ -71,6 +72,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
     private final FileStorageService fileStorage;
     private final ProcessService processService;
     private final IMasterResourceProtector resourceProtector;
+    private final IResourceProtector datasetProtector;
 
     private ProcessModel processModel;
     private DataFromGpkgPlacementModel dataFromGpkgPlacementModel;
@@ -86,7 +88,8 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
                                 CreateDatasetRequestHandler createDatasetRequestHandler,
                                 FileStorageService fileStorage,
                                 ProcessService processService,
-                                DocLibraryRecordsProtector resourceProtector) {
+                                DocLibraryRecordsProtector resourceProtector,
+                                IResourceProtector datasetProtector) {
         this.messageBus = messageBus;
         this.authenticationFacade = authenticationFacade;
         this.fileRepository = fileRepository;
@@ -98,6 +101,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
         this.fileStorage = fileStorage;
         this.processService = processService;
         this.resourceProtector = resourceProtector;
+        this.datasetProtector = datasetProtector;
     }
 
     @Override
@@ -114,34 +118,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
 
         processService.updateProcessTitle(processModel.getId(), getDefaultDatabaseName(orgId), "Импорт GPKG " + title);
 
-        Optional<String> datasetName;
-        try {
-            datasetName = createDataset(title);
-        } catch (Exception e) {
-            msg = "Ошибка создания набора данных для результирующих данных. Причина: " + e.getMessage();
-            log.debug(msg);
-            this.importReport.setStatus(ERROR);
-            this.importReport.getMessages().add(msg);
-            processService.updateProcess(processModel.getId(),
-                                         ProcessStatus.ERROR,
-                                         getDefaultDatabaseName(orgId),
-                                         toJsonNode(importReport));
-
-            throw new BadRequestException(msg);
-        }
-
-        if (datasetName.isEmpty()) {
-            msg = "Ошибка создания набора данных для результирующих данных. Набор данных не был создан корректно.";
-            log.debug(msg);
-            this.importReport.setStatus(ERROR);
-            this.importReport.getMessages().add(msg);
-            processService.updateProcess(processModel.getId(),
-                                         ProcessStatus.ERROR,
-                                         getDefaultDatabaseName(orgId),
-                                         toJsonNode(importReport));
-
-            throw new BadRequestException(msg);
-        }
+        String datasetName = resolveTargetDataset(title, orgId);
 
         messageBus.produce(new ImportGpkgEvent(processModel.getId(),
                                                getDefaultDatabaseName(orgId),
@@ -149,9 +126,11 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
                                                authenticationFacade.getLogin(),
                                                importReport.getFileId(),
                                                dataFromGpkgPlacementModel.getProjectId(),
-                                               datasetName.get(),
+                                               datasetName,
                                                title,
-                                               importReport));
+                                               importReport,
+                                               dataFromGpkgPlacementModel.isKeepSourceFile(),
+                                               dataFromGpkgPlacementModel.getLayerGroupId()));
 
         return importReport;
     }
@@ -193,6 +172,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
     public IExecutor<GpkgProcessReport> validate() {
         this.importReport = new GpkgProcessReport();
         UUID fileId = dataFromGpkgPlacementModel.getFileId();
+        validateExistingDatasetIfPresent();
         try {
             File file = fileRepository
                     .findById(fileId)
@@ -269,6 +249,14 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
 
     @Override
     public void cleanup() {
+        if (dataFromGpkgPlacementModel == null) {
+            return;
+        }
+
+        if (dataFromGpkgPlacementModel.isKeepSourceFile()) {
+            return;
+        }
+
         try {
             UUID fileId = dataFromGpkgPlacementModel.getFileId();
             File file = fileRepository
@@ -286,7 +274,67 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
         }
     }
 
-    private Optional<String> createDataset(String title) {
+    private void validateExistingDatasetIfPresent() {
+        Optional<String> requested = getRequestedDatasetIdentifier();
+        if (requested.isEmpty()) {
+            return;
+        }
+
+        String datasetIdentifier = requested.get();
+        Optional<SchemasAndTables> found = schemasAndTablesRepository.findByIdentifier(datasetIdentifier);
+        if (found.isEmpty()) {
+            failRequestedDataset("Набор данных не найден: " + datasetIdentifier);
+        }
+
+        if (!found.get().isFolder()) {
+            failRequestedDataset("Указанный ресурс не является набором данных: " + datasetIdentifier);
+        }
+
+        ResourceQualifier qualifier = new ResourceQualifier(datasetIdentifier);
+        if (!datasetProtector.isEditAllowed(qualifier)) {
+            failRequestedDataset("Недостаточно прав для редактирования набора: " + datasetIdentifier);
+        }
+    }
+
+    private void failRequestedDataset(String msg) {
+        log.warn(msg);
+        updateImportReportWithStatusError(dataFromGpkgPlacementModel.getFileId(), msg);
+
+        throw new BadRequestException(msg);
+    }
+
+    private Optional<String> getRequestedDatasetIdentifier() {
+        String requested = dataFromGpkgPlacementModel.getDatasetIdentifier();
+        if (requested == null || requested.isBlank()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(requested);
+    }
+
+    private String resolveTargetDataset(String title, long orgId) {
+        Optional<String> requested = getRequestedDatasetIdentifier();
+        if (requested.isPresent()) {
+            return requested.get();
+        }
+
+        try {
+            return createDataset(title);
+        } catch (Exception e) {
+            String msg = "Ошибка создания набора данных для результирующих данных. Причина: " + e.getMessage();
+            log.debug(msg);
+            this.importReport.setStatus(ERROR);
+            this.importReport.getMessages().add(msg);
+            processService.updateProcess(processModel.getId(),
+                                         ProcessStatus.ERROR,
+                                         getDefaultDatabaseName(orgId),
+                                         toJsonNode(importReport));
+
+            throw new BadRequestException(msg);
+        }
+    }
+
+    private String createDataset(String title) {
         String datasetName = generateDatasetName();
         ResourceQualifier dQualifier = new ResourceQualifier(datasetName);
         ddlSchemas.create(dQualifier);
@@ -304,7 +352,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFile
                                                                          dQualifier,
                                                                          ownerPermission);
 
-        return Optional.of(datasetName);
+        return datasetName;
     }
 
     /**

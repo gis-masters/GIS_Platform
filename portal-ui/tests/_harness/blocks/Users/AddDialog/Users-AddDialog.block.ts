@@ -4,7 +4,7 @@ import { XTableBlock } from '../../XTable/XTable.block';
 class UsersAddDialogBlock extends Block {
   selectors = {
     root: '.Users-AddDialog',
-    saveBtn: '.Users-AddDialog .MuiButton-outlinedPrimary',
+    saveBtn: '.Users-AddDialog .MuiButton-outlined.MuiButton-colorPrimary',
     userRow: '.Users-AddDialog .MuiTable-root .MuiTableRow-root',
     tableContainer: '.Users-AddDialog .XTable-Container',
     loading: '.Users-AddDialog .Loading'

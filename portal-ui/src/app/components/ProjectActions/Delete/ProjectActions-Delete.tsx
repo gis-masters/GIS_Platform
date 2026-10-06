@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
-import { Delete, DeleteOutline } from '@mui/icons-material';
+import { Delete, DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { doAlert, doConfirm } from '../../../services/answer-modals.service';
@@ -74,7 +74,7 @@ export const ProjectActionsDelete = observer((props: ProjectActionsDeleteProps) 
       title={disabled && tooltipText ? tooltipText : 'Удалить'}
       tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.DELETE, role, DataTypes.PROJECT) : undefined}
       className={cnProjectActionsDelete()}
-      icon={dialogOpen ? <Delete /> : <DeleteOutline />}
+      icon={dialogOpen ? <Delete /> : <DeleteOutlined />}
       onClick={project.folder ? testEmptiness : handleDelete}
       color='error'
       as={as}

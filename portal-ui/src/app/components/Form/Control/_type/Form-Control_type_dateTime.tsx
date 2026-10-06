@@ -38,12 +38,14 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           value={date?.isValid?.() ? date.format(systemFormat) : ''}
           onChange={this.handleChange}
           label={inSet ? property.title : undefined}
-          InputLabelProps={{
-            shrink: true
-          }}
           error={!!errors?.length}
           color={getFieldInputColor(errors, warnings)}
           variant={variant}
+          slotProps={{
+            inputLabel: {
+              shrink: true
+            }
+          }}
         />
         <FormErrors warnings={warnings} errors={errors} />
       </div>

@@ -655,6 +655,11 @@ public class GDALService implements IExporter {
      * @param filePath   Путь к файлу GeoPackage
      *                   <p>
      *                   -Можно использовать флаг -progress, но он работает в специфических условиях.
+     *                   <p>
+     *                   -schemas=%s в строке подключения обязателен: без него ogr2ogr ищет существующие таблицы
+     *                   в public, и при совпадении имени (например, QGIS-овская public.layer_styles) начинает
+     *                   дописывать в неё вместо создания таблицы в целевой схеме. Транзакция падает, и все
+     *                   последующие слои (crg_*) не импортируются.
      *
      * @return Команда ogr2ogr
      */
@@ -662,12 +667,13 @@ public class GDALService implements IExporter {
                                                     String schemaName,
                                                     String filePath) {
         return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" " +
-                                     "PG:\"host=postgis user=%s password=%s port=5432 dbname=%s\" " +
+                                     "PG:\"host=postgis user=%s password=%s port=5432 dbname=%s schemas=%s\" " +
                                      "-lco SCHEMA=%s -lco GEOMETRY_NAME=shape -nlt PROMOTE_TO_MULTI " +
                                      " --config PG_USE_COPY YES %s;",
                              DATASOURCE_USERNAME,
                              DATASOURCE_PASSWORD,
                              dbName,
+                             schemaName,
                              schemaName,
                              filePath);
     }

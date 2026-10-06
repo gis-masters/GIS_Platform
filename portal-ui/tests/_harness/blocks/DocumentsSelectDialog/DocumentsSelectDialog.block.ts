@@ -5,7 +5,7 @@ class DocumentsSelectDialogBlock extends Block {
   selectors = {
     root: '.DocumentsSelectDialog',
     switcher: '.DocumentsSelectDialog .DocumentsSelectDialog-Switcher button',
-    select: '.DocumentsSelectDialog .MuiButton-outlinedPrimary'
+    select: '.DocumentsSelectDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async openLibrary(title: string): Promise<void> {

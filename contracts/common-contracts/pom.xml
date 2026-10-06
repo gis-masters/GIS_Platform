@@ -125,6 +125,7 @@
                     <sourceDirectory>${basedir}/../../auth-service/src/main/resources/specializations-template</sourceDirectory>
                     <targetPackage>ru.mycrg.common_contracts.specialization</targetPackage>
                     <sourceType>json</sourceType>
+                    <includeAdditionalProperties>false</includeAdditionalProperties>
                 </configuration>
                 <executions>
                     <execution>

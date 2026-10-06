@@ -6,7 +6,8 @@ class ConnectionsToProjectsWidgetBlock extends Block {
     root: '.ConnectionsToProjectsWidget',
     connectionToProjectDialogViewSelector:
       '.ConnectionsToProjectsWidget-SelectProjectDialog .ConnectionsToProjectsWidget-ViewSelector .Form-Control',
-    connectionToProjectDialogAccept: '.ConnectionsToProjectsWidget-SelectProjectDialog .MuiButton-outlinedPrimary'
+    connectionToProjectDialogAccept:
+      '.ConnectionsToProjectsWidget-SelectProjectDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async projectSelectDialogProjectAcceptBtn(): Promise<void> {

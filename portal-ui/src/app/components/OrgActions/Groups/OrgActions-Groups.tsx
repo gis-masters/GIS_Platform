@@ -2,7 +2,7 @@ import React, { Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
-import { People, PeopleOutline } from '@mui/icons-material';
+import { People, PeopleOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
@@ -59,7 +59,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
       <>
         <Tooltip title='Группы'>
           <IconButton className={cnOrgActionsGroups()} onClick={this.openDialog}>
-            {this.dialogOpen ? <People /> : <PeopleOutline />}
+            {this.dialogOpen ? <People /> : <PeopleOutlined />}
           </IconButton>
         </Tooltip>
 

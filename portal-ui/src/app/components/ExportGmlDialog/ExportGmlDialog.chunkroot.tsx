@@ -1,4 +1,4 @@
-import React, { type FC, useCallback, useEffect } from 'react';
+import React, { type FC, type SyntheticEvent, useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import {
   Dialog,
@@ -184,7 +184,7 @@ export const ExportGmlDialog: FC<ExportGmlDialogProps> = observer(({ open, onClo
   );
 
   const executeExport = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: SyntheticEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const resources: ExportResourceModel[] = selectedLayers.map(layer => {

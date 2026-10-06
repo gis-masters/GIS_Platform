@@ -11,7 +11,6 @@ import {
   SettingsSuggestOutlined,
   Straighten
 } from '@mui/icons-material';
-import { TabContext } from '@mui/lab';
 import { cn } from '@bem-react/classname';
 
 import {
@@ -104,21 +103,19 @@ export const AnnotationSettings: FC = observer(() => {
       <Dialog open={isOpen} onClose={handleCloseDialog}>
         <DialogTitle align='center'>Настройка стиля новых аннотаций</DialogTitle>
         <DialogContent>
-          <TabContext value={selectedAnnotationType}>
-            <Tabs value={selectedAnnotationType} onChange={handleAnnotationTypeChange}>
-              {tabs.map(({ title, value, element }, idx) => (
-                <Tab
-                  label={
-                    <Tooltip title={title} placement='top'>
-                      {element}
-                    </Tooltip>
-                  }
-                  value={value}
-                  key={idx}
-                />
-              ))}
-            </Tabs>
-          </TabContext>
+          <Tabs value={selectedAnnotationType} onChange={handleAnnotationTypeChange}>
+            {tabs.map(({ title, value, element }, idx) => (
+              <Tab
+                label={
+                  <Tooltip title={title} placement='top'>
+                    {element}
+                  </Tooltip>
+                }
+                value={value}
+                key={idx}
+              />
+            ))}
+          </Tabs>
           <div className={cnAnnotationSettings('SettingsWrap')}>
             {tabs.find(({ value }) => value === selectedAnnotationType)?.title || null}
             {selectedAnnotationType === 'turningPointsSettings' ? (

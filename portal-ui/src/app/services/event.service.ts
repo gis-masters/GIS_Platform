@@ -1,6 +1,6 @@
 import { remove } from 'lodash';
-import { BehaviorSubject, type Observable } from 'rxjs';
-import { filter, publishReplay, refCount } from 'rxjs/operators';
+import { BehaviorSubject, type Observable, shareReplay } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { communicationService } from './communication.service';
 import { type ProcessType, type WsImportModel } from './data/processes/processes.models';
@@ -30,8 +30,7 @@ class EventService {
   private _events$: BehaviorSubject<IEvent[]> = new BehaviorSubject<IEvent[]>([]);
   events$: Observable<IEvent[]> = this._events$.asObservable().pipe(
     // компоненты при подписке должны видеть одно последнее значение в потоке
-    publishReplay(1),
-    refCount()
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   /**

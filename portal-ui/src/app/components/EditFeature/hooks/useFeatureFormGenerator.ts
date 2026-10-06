@@ -52,7 +52,7 @@ export const useFeatureFormGenerator = (
   featureDescription?: OldSchema,
   layer?: CrgVectorableLayer | CrgVectorLayer | CrgExternalLayer
 ): void => {
-  const currentDepsRef = useRef<EditFeatureFormControl[]>();
+  const currentDepsRef = useRef<EditFeatureFormControl[] | undefined>(undefined);
 
   useEffect(() => {
     if (!layerSchema || !currentFeature || !featureDescription || !layer) {

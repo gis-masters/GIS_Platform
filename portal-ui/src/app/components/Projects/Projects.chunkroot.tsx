@@ -26,7 +26,7 @@ const Projects: FC = observer(() => {
   const store = useMemo(() => new ProjectsStore(), []);
   const { busy, setBusy, setProjects, displayedList } = store;
 
-  const debouncedFetchProjectsRef = useRef<DebouncedFunc<() => Promise<void>>>();
+  const debouncedFetchProjectsRef = useRef<DebouncedFunc<() => Promise<void>> | undefined>(undefined);
 
   const folderId = route.queryParams[FOLDER_PARAM];
 

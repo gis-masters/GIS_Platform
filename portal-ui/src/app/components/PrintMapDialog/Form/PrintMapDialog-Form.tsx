@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, type SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -238,7 +238,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
   }
 
   @boundMethod
-  private handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  private handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     e.stopPropagation();
     this.props.onSubmit();

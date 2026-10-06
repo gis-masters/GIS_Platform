@@ -50,10 +50,6 @@ const emptyEnv: EnvironmentData = {
     http: false,
     https: false
   },
-  sendErrorsToTG: {
-    http: false,
-    https: false
-  },
   captcha: {
     enabled: false,
     siteKey: 'wrongSiteKey',
@@ -82,7 +78,6 @@ export interface EnvironmentData {
   background?: string;
   favicon?: string;
   suppressToastErrors: ProtocolsBoolean;
-  sendErrorsToTG: ProtocolsBoolean;
 }
 
 export class Environment implements EnvironmentData {
@@ -112,7 +107,6 @@ export class Environment implements EnvironmentData {
   background?: string;
   favicon?: string;
   suppressToastErrors: ProtocolsBoolean = emptyEnv.suppressToastErrors;
-  sendErrorsToTG: ProtocolsBoolean = emptyEnv.sendErrorsToTG;
 
   private constructor() {
     if (typeof _environmentRaw === 'object') {

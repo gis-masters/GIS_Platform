@@ -48,9 +48,13 @@ export const SchemaActionsViewJson = observer(({ schema, as }: SchemaActionsView
     state.setDialogOpen(false);
   }, [state]);
 
-  const copyJson = useCallback(() => {
-    copyToClipboard(schemaJson);
-    Toast.success('Сохранено в буфер обмена');
+  const copyJson = useCallback(async () => {
+    try {
+      await copyToClipboard(schemaJson);
+      Toast.success('Сохранено в буфер обмена');
+    } catch {
+      Toast.error('Не удалось скопировать в буфер обмена');
+    }
   }, [schemaJson]);
 
   const Icon = state.dialogOpen ? DataObject : DataObjectOutlined;

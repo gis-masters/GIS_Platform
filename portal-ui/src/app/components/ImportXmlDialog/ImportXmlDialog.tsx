@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, type SyntheticEvent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
@@ -69,7 +69,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
   }
 
   @boundMethod
-  private async handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  private async handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const { datasetId, tableId, onClose, complexName } = this.props;

@@ -351,26 +351,31 @@ public class GpkgReportManager {
              .ifPresent(svg -> svg.setBody("hidden body: ********"));
     }
 
-    public void updateFileReportWithError(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
-                                          List<UUID> currentFileIds) {
-        updateFileReportWithErrorCustomMsg(rabbitDto,
-                                           processReport,
-                                           currentFileIds,
-                                           "При сохранении файла на сервере произошла ошибка!");
+    public void updateFileReportWithErrorCustomMsg(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                                   List<UUID> currentFileIds, String msg) {
+        updateFileReportWithErrorCustomMsg(rabbitDto, processReport, currentFileIds, msg, false);
     }
 
     public void updateFileReportWithErrorCustomMsg(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
-                                                   List<UUID> currentFileIds, String msg) {
+                                                   List<UUID> currentFileIds, String msg, boolean appendTitle) {
         List<GpkgFile> filesReport = processReport.getPayload().getFiles();
 
         filesReport.stream()
                    .filter(fr -> currentFileIds.contains(fr.getOldId()))
                    .forEach((fileReport) -> {
                        fileReport.setStatus(ERROR);
-                       fileReport.getMessages().add(msg);
+                       fileReport.getMessages().add(messageWithTitle(msg, appendTitle, fileReport.getTitle()));
                    });
 
         sendReportInQueue(rabbitDto, processReport);
+    }
+
+    private String messageWithTitle(String msg, boolean appendTitle, String title) {
+        if (!appendTitle || title == null || title.isBlank()) {
+            return msg;
+        }
+
+        return msg + ": " + title;
     }
 
     public void updateFileIdInReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -58,7 +58,7 @@ export default class UrlsList extends Component<UrlsListProps> {
           <Tooltip title='Добавить URL'>
             <span>
               <IconButton onClick={this.openCreateDialog} className={cnUrlsList('AddUrl')}>
-                <AddCircleOutline color='primary' fontSize='small' />
+                <AddCircleOutlineOutlined color='primary' fontSize='small' />
               </IconButton>
             </span>
           </Tooltip>

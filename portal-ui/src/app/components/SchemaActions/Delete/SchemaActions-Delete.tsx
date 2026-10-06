@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
-import { Delete, DeleteOutline } from '@mui/icons-material';
+import { Delete, DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { doConfirm } from '../../../services/answer-modals.service';
@@ -61,7 +61,7 @@ export const SchemaActionsDelete = observer((props: SchemaActionsDeleteProps) =>
       as={as}
       onClick={handleDelete}
       color='error'
-      icon={state.dialogOpen ? <Delete /> : <DeleteOutline />}
+      icon={state.dialogOpen ? <Delete /> : <DeleteOutlined />}
       disabled={disabled}
     />
   );

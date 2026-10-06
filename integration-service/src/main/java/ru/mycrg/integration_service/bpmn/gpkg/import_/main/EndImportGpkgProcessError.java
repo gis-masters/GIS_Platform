@@ -50,21 +50,24 @@ public class EndImportGpkgProcessError implements JavaDelegate {
                 createReport(importReport, "Невозможно продолжать импорт. Ошибка при проверки прав на проект!");
                 messageBus.produce(new ImportGpkgClearTemplatesEvent(event.getDbName(),
                                                                      schema,
-                                                                     event.getFileId()));
+                                                                     event.getFileId(),
+                                                                     event.isKeepSourceFile()));
                 break;
 
             case GDAL_IMPORT_VECTOR_FAILED:
                 createReport(importReport, "Невозможно продолжать импорт. Распаковка geoPackage завершилась ошибкой!");
                 messageBus.produce(new ImportGpkgClearTemplatesEvent(event.getDbName(),
                                                                      schema,
-                                                                     event.getFileId()));
+                                                                     event.getFileId(),
+                                                                     event.isKeepSourceFile()));
                 break;
             default:
                 createReport(importReport,
                              "Невозможно продолжать импорт. Процесс не изменился спустя 5 минут!");
                 messageBus.produce(new ImportGpkgClearTemplatesEvent(event.getDbName(),
                                                                      schema,
-                                                                     event.getFileId()));
+                                                                     event.getFileId(),
+                                                                     event.isKeepSourceFile()));
         }
 
         log.debug("importReport перед отправкой о завершении{}", importReport);

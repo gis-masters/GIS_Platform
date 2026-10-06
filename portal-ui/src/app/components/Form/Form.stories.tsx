@@ -1,6 +1,14 @@
 import React from 'react';
 import { action, observable } from 'mobx';
-import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
+import {
+  Agriculture,
+  Biotech,
+  CheckCircleOutlined,
+  Clear,
+  DataUsage,
+  ErrorOutlineOutlined,
+  Send
+} from '@mui/icons-material';
 import { type StoryFn } from '@storybook/react';
 import { cloneDeep } from 'lodash';
 
@@ -291,7 +299,7 @@ const storyActions = (
     </Button>
     <Button
       color='success'
-      startIcon={<CheckCircleOutline />}
+      startIcon={<CheckCircleOutlined />}
       className={cnFormStoryActions('SetValidData')}
       onClick={setValidData}
     >
@@ -299,7 +307,7 @@ const storyActions = (
     </Button>
     <Button
       color='error'
-      startIcon={<ErrorOutline />}
+      startIcon={<ErrorOutlineOutlined />}
       className={cnFormStoryActions('SetErrorData')}
       onClick={setErrorData}
     >

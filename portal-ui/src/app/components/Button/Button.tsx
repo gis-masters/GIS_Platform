@@ -12,7 +12,7 @@ const cnButton = cn('Button');
 
 export interface ButtonProps extends BaseButtonProps {
   routerLink?: string;
-  innerRef?: RefObject<HTMLButtonElement> | ForwardedRef<HTMLButtonElement>;
+  innerRef?: RefObject<HTMLButtonElement | null> | ForwardedRef<HTMLButtonElement>;
 }
 
 class ButtonComponent extends Component<ButtonProps> {

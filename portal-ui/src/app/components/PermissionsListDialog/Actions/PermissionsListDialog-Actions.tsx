@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip } from '@mui/material';
-import { DeleteOutline } from '@mui/icons-material';
+import { DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -20,7 +20,7 @@ export class PermissionsListActions extends Component<PermissionsListActionsProp
       <div className={cnPermissionsListDialogActions()}>
         <Tooltip title='Удалить'>
           <IconButton onClick={this.handleDelete}>
-            <DeleteOutline color='error' />
+            <DeleteOutlined color='error' />
           </IconButton>
         </Tooltip>
       </div>

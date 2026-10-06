@@ -18,13 +18,17 @@ import { ChooseXTableTitle } from './Title/ChooseXTable-Title';
 
 const cnChooseXTable = cn('ChooseXTable');
 
+export type ChooseXTableSelectionStatus = {
+  empty: boolean;
+  changed: boolean;
+};
+
 interface ChooseXTableBaseProps<T> extends IClassNameProps {
   title?: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   data?: T[];
   selectedItems?: T[];
-  disabledItems?: T[];
-  disabledItemsMessage?: string;
+  disabledTester?(item: T): boolean | string;
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
@@ -36,6 +40,7 @@ interface ChooseXTableBaseProps<T> extends IClassNameProps {
   filtersAlwaysEnabled?: boolean;
   getRowId?(rowData: T): string | number;
   onSelect(items: T[]): void;
+  onSelectionStatusChange?(status: ChooseXTableSelectionStatus): void;
 }
 
 interface ChooseXTableSyncProps<T> extends ChooseXTableBaseProps<T> {
@@ -52,6 +57,7 @@ export type ChooseXTableProps<T> = ChooseXTableSyncProps<T> | ChooseXTableAsyncP
 export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
   @observable private selected: T[] = [];
   @observable private viewed: T[] = [];
+  private mounted = false;
 
   constructor(props: ChooseXTableProps<T>) {
     super(props);
@@ -61,12 +67,30 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
     this.setSelected([...(props.selectedItems || [])]);
   }
 
+  componentDidMount() {
+    this.mounted = true;
+    this.emitSelectionStatusChange();
+  }
+
   componentDidUpdate(prevProps: ChooseXTableProps<T>) {
     const { data } = this.props;
 
     if (this.isItemsCanBeViewed(prevProps) && data) {
       this.setViewed([...data]);
     }
+
+    if (
+      prevProps.disabledTester !== this.props.disabledTester ||
+      prevProps.selectedItems !== this.props.selectedItems ||
+      prevProps.data !== data ||
+      this.getSelectedIdsSignature(this.selected) !== this.getSelectedIdsSignature(this.selectedAvailable)
+    ) {
+      this.setSelected(this.selected);
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {
@@ -86,7 +110,9 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
     return (
       <XTable<T>
         className={cnChooseXTable(null, [className])}
-        title={<ChooseXTableTitle title={title} items={data || []} selectedItems={this.selected} single={single} />}
+        title={
+          <ChooseXTableTitle title={title} items={data || []} selectedItems={this.selectedAvailable} single={single} />
+        }
         data={data}
         cols={this.cols}
         loading={loading}
@@ -101,6 +127,10 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
     );
   }
 
+  getSelected(): T[] {
+    return this.selectedAvailable;
+  }
+
   @computed
   get cols(): XTableColumn<T>[] {
     return [
@@ -109,7 +139,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
           ? null
           : !this.props.single && (
               <Checkbox
-                indeterminate={this.selected.length > 0 && !this.allSelected}
+                indeterminate={this.selectedAvailable.length > 0 && !this.allSelected}
                 checked={this.allSelected}
                 onChange={this.selectAll}
               />
@@ -122,20 +152,31 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
   }
 
   @computed
+  private get selectedAvailable(): T[] {
+    return this.selected.map(item => this.getCurrentItem(item)).filter(item => !this.isItemDisabled(item));
+  }
+
+  @computed
   private get changed(): boolean {
-    return !isEqual(this.selected, this.props.selectedItems);
+    return !isEqual(this.selectedAvailable, this.props.selectedItems || []);
   }
 
   @computed
   private get allSelected(): boolean {
-    const { disabledItems = [] } = this.props;
+    const { getRowId = defaultRowIdGetter } = this.props;
+    const availableViewed = this.getAvailable(this.viewed);
+    const selectedIds = new Set(this.selectedAvailable.map(item => getRowId(item)));
 
-    return this.viewed.length > 0 && this.selected.length === this.viewed.length - disabledItems.length;
+    return availableViewed.length > 0 && availableViewed.every(item => selectedIds.has(getRowId(item)));
   }
 
   @action
   private setSelected(items: T[]): void {
-    this.selected = items;
+    this.selected = items.map(item => this.getCurrentItem(item)).filter(item => !this.isItemDisabled(item));
+
+    if (this.mounted) {
+      this.emitSelectionStatusChange();
+    }
   }
 
   @action.bound
@@ -145,26 +186,83 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
   @boundMethod
   private renderCheckbox({ rowData }: { rowData: T }): ReactElement {
-    const { single = false, disabledItems, disabledItemsMessage, getRowId = defaultRowIdGetter, onSelect } = this.props;
+    const { single = false, getRowId = defaultRowIdGetter } = this.props;
 
     return (
       <ChooseXTableCheck
         single={single}
         item={rowData}
-        disabled={disabledItems?.includes(rowData)}
-        disabledItemsMessage={disabledItemsMessage}
+        disabled={this.isItemDisabled(rowData)}
+        disabledMessage={this.getDisabledMessage(rowData)}
         selectedItems={this.selected}
         getRowId={getRowId}
-        onSelect={onSelect}
+        onSelect={this.handleItemsSelect}
       />
     );
   }
 
   @boundMethod
+  private handleItemsSelect(items: T[]): void {
+    this.setSelected(items);
+    this.props.onSelect(this.selected);
+  }
+
+  @boundMethod
   private selectAll() {
-    this.setSelected(this.allSelected ? [] : [...this.viewed]);
+    const { getRowId = defaultRowIdGetter } = this.props;
+    const availableViewed = this.getAvailable(this.viewed);
+    const availableViewedIds = new Set(availableViewed.map(item => getRowId(item)));
+
+    if (this.allSelected) {
+      this.setSelected(this.selectedAvailable.filter(item => !availableViewedIds.has(getRowId(item))));
+    } else {
+      const kept = this.selectedAvailable.filter(item => !availableViewedIds.has(getRowId(item)));
+      this.setSelected([...kept, ...availableViewed]);
+    }
 
     this.props.onSelect(this.selected);
+  }
+
+  private emitSelectionStatusChange(): void {
+    this.props.onSelectionStatusChange?.({
+      empty: this.selectedAvailable.length === 0,
+      changed: this.changed
+    });
+  }
+
+  private getSelectedIdsSignature(items: T[]): string {
+    const { getRowId = defaultRowIdGetter } = this.props;
+
+    return items.map(item => String(getRowId(item))).join(',');
+  }
+
+  private getCurrentItem(item: T): T {
+    const { data, getRowId = defaultRowIdGetter } = this.props;
+    if (!data?.length) {
+      return item;
+    }
+
+    return data.find(row => getRowId(row) === getRowId(item)) ?? item;
+  }
+
+  private getDisabledResult(item: T): boolean | string | undefined {
+    return this.props.disabledTester?.(this.getCurrentItem(item));
+  }
+
+  private isItemDisabled(item: T): boolean {
+    const result = this.getDisabledResult(item);
+
+    return result === true || (typeof result === 'string' && result.length > 0);
+  }
+
+  private getDisabledMessage(item: T): string {
+    const result = this.getDisabledResult(item);
+
+    return typeof result === 'string' ? result : '';
+  }
+
+  private getAvailable(items: T[]): T[] {
+    return items.filter(item => !this.isItemDisabled(item));
   }
 
   private isItemsCanBeViewed(prevProps: ChooseXTableProps<T>) {

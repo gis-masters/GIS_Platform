@@ -34,8 +34,10 @@ export const ProjectsFilter: FC<ProjectsFilterProps> = observer(({ store }) => {
       value={store.nameFilter}
       className={cnProjectsFilter()}
       onChange={handleChange}
-      InputProps={{
-        startAdornment: ' '
+      slotProps={{
+        input: {
+          startAdornment: ' '
+        }
       }}
     />
   );

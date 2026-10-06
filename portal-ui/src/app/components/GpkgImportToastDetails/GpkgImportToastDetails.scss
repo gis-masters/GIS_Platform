@@ -1,0 +1,12 @@
+.GpkgImportToastDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &-Item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}

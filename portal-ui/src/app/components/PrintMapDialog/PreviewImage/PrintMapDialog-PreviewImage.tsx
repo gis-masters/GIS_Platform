@@ -7,7 +7,7 @@ const cnPrintMapDialogPreviewImage = cn('PrintMapDialog', 'PreviewImage');
 
 interface PrintMapDialogPreviewImageProps {
   src: string;
-  imgRef: RefObject<HTMLImageElement>;
+  imgRef: RefObject<HTMLImageElement | null>;
 }
 
 export const PrintMapDialogPreviewImage: FC<PrintMapDialogPreviewImageProps> = ({ src, imgRef }) => (

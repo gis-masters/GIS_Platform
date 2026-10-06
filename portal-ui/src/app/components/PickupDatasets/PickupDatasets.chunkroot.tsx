@@ -41,7 +41,7 @@ export default class PickupDatasets extends Component<PickupDatasetsProps> {
         <Button className={cnPickupDatasets('Button')} color='primary' onClick={this.openDialog}>
           Выбрать набор данных
         </Button>
-        <Dialog disableEscapeKeyDown fullWidth maxWidth={'md'} open={this.open} onClose={this.handleClose}>
+        <Dialog fullWidth maxWidth={'md'} open={this.open} onClose={this.handleClose}>
           <DialogTitle>
             <div className={cnPickupDatasets('DialogTitle')}>
               Выбор набора данных
@@ -92,7 +92,11 @@ export default class PickupDatasets extends Component<PickupDatasetsProps> {
   }
 
   @action.bound
-  private handleClose() {
+  private handleClose(_event?: unknown, reason?: string) {
+    if (reason === 'escapeKeyDown') {
+      return;
+    }
+
     this.setOpen(false);
   }
 

@@ -26,7 +26,7 @@ export default class SearchResultHighlightItem extends Component<SearchResultHig
   @observable private popoverCoordinates?: DOMRect;
   @observable private popoverAnchor?: HTMLButtonElement | null;
 
-  private paperRef: RefObject<HTMLDivElement> = createRef();
+  private paperRef: RefObject<HTMLDivElement | null> = createRef();
 
   constructor(props: SearchResultHighlightItemProps) {
     super(props);

@@ -1,10 +1,12 @@
 import { createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { ThemeProvider } from '@mui/material/styles';
 import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import { Toast } from '../../components/Toast/Toast';
+import { toastTooltipTheme } from '../../components/Toast/toastTooltipTheme';
 import { registry } from '../../services/di-registry';
 
 const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
@@ -67,18 +69,23 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
 
   private renderReactElement() {
     const props = {
-      position: toast.POSITION.TOP_RIGHT,
+      position: 'top-right' as const,
       autoClose: Toast.defaultDuration,
       hideProgressBar: false,
       newestOnTop: false,
       closeOnClick: false,
       rtl: false,
-      pauseOnVisibilityChange: false,
+      pauseOnFocusLoss: false,
       draggable: false,
-      pauseOnHover: true
+      pauseOnHover: true,
+      icon: false as const
     };
 
-    const reactElement = createElement(ToastContainerWithRegistry, props);
+    const reactElement = createElement(
+      ThemeProvider,
+      { theme: toastTooltipTheme },
+      createElement(ToastContainerWithRegistry, props)
+    );
 
     this.root?.render(reactElement);
   }

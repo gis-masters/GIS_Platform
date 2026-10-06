@@ -3,7 +3,7 @@ import { Block } from '../../classes/Block';
 class SelectFileInLibraryRecordControlDialogBlock extends Block {
   selectors = {
     root: '.SelectFileInLibraryRecordControl-Dialog',
-    datasourceDialogAddBtn: '.SelectFileInLibraryRecordControl-Dialog .MuiButton-outlinedPrimary'
+    datasourceDialogAddBtn: '.SelectFileInLibraryRecordControl-Dialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async selectVectorTableBtn(): Promise<void> {

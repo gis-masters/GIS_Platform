@@ -4,7 +4,7 @@ import { FormBlock } from '../Form/Form.block';
 class TasksJournalCreateDialogBlock extends Block {
   selectors = {
     root: '.TasksJournal-CreateDialog',
-    tasksJournalCreateDialogYes: '.TasksJournal-CreateDialog .MuiButton-outlinedPrimary'
+    tasksJournalCreateDialogYes: '.TasksJournal-CreateDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async clickSelectSchemaConfirm(): Promise<void> {

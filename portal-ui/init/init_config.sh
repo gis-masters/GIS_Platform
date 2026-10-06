@@ -47,10 +47,6 @@ echo -e "{\
 \"suppressToastErrors\":{\
   \"http\":\"$UI_SUPRESS_TOAST_ERRORS_HTTP\",\
   \"https\":\"$UI_SUPRESS_TOAST_ERRORS_HTTPS\"\
-},\
-\"sendErrorsToTG\":{\
-  \"http\":\"$UI_SEND_ERRORS_TO_TG_HTTP\",\
-  \"https\":\"$UI_SEND_ERRORS_TO_TG_HTTPS\"\
 }\
 }" > environment.json
 

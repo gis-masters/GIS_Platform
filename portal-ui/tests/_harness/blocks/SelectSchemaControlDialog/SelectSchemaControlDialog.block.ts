@@ -4,7 +4,7 @@ class SelectSchemaControlDialogBlock extends Block {
   selectors = {
     root: '.SelectSchemaControl-Dialog',
     xTable: '.SelectSchemaControl-Dialog .XTable',
-    yes: '.SelectSchemaControl-Dialog .MuiButton-outlinedPrimary',
+    yes: '.SelectSchemaControl-Dialog .MuiButton-outlined.MuiButton-colorPrimary',
     filters: '.SelectSchemaControl-Dialog .XTable-HeadCell_filterable',
     inputs: '.SelectSchemaControl-Dialog .PrivateSwitchBase-input'
   };

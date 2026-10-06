@@ -89,7 +89,10 @@ export interface TaskLogDto {
 export interface DataFromGpkgPlacementModel {
   fileId: string;
   projectId: number;
+  datasetIdentifier: string;
+  layerGroupId: number;
   layersPlacement: GpkgLayersPlacementModel;
+  keepSourceFile: boolean;
 }
 
 export interface GpkgFileMetadata extends FileMetadata<GpkgContentsBaseDtoUnion[]> {
@@ -281,6 +284,8 @@ export interface TemplateFullInfo extends TemplateCreateDto {
   id: number;
   createdBy: string;
   createdAt: string;
+  type: string;
+  hidden: boolean;
   system: boolean;
 }
 
@@ -338,15 +343,7 @@ export type GpkgProcessStatus = 'ACTIVE' | 'COMPLETED' | 'ERROR';
 export type FtsType = 'DOCUMENT' | 'FEATURE';
 
 export type LayerType =
-  | 'VECTOR'
-  | 'DXF'
-  | 'TAB'
-  | 'MID'
-  | 'SHP'
-  | 'RASTER'
-  | 'EXTERNAL'
-  | 'EXTERNAL_NSPD'
-  | 'EXTERNAL_GEOSERVER';
+  'VECTOR' | 'DXF' | 'TAB' | 'MID' | 'SHP' | 'RASTER' | 'EXTERNAL' | 'EXTERNAL_NSPD' | 'EXTERNAL_GEOSERVER';
 
 export type ReportOutputFormat = 'PDF' | 'DOCX' | 'ODT' | 'JPEG';
 

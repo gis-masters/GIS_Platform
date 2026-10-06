@@ -1,0 +1,9 @@
+body .GpkgPlacementDialog-Loading {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 12px;
+
+  padding: 24px 0;
+}

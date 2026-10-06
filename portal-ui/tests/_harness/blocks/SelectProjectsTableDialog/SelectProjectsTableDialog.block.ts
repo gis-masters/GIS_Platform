@@ -5,7 +5,7 @@ import { xTableBlock } from '../XTable/XTable.block';
 class SelectProjectsTableDialogBlock extends Block {
   selectors = {
     root: '.SelectProjectsTableDialog',
-    submit: '.SelectProjectsTableDialog .MuiButton-outlinedPrimary',
+    submit: '.SelectProjectsTableDialog .MuiButton-outlined.MuiButton-colorPrimary',
     projectRow: '.SelectProjectsTableDialog .MuiTable-root .MuiTableRow-root'
   };
 

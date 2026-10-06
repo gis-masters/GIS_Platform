@@ -84,7 +84,6 @@ export class SelectSuitableLayerDialog extends Component<SelectSuitableLayerDial
           open={this.open}
           cols={this.layerDialogCols}
           selectedItems={this.selectedLayer ? [this.selectedLayer] : []}
-          alwaysShowActionButton
           onClose={this.onClose}
           onSelect={this.selectLayer}
           onChange={this.onChange}

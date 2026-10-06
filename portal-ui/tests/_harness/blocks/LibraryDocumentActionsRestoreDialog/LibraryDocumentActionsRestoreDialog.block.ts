@@ -3,7 +3,7 @@ import { Block } from '../../classes/Block';
 class LibraryDocumentVersionsActionsDialogBlock extends Block {
   selectors = {
     root: '.LibraryDocumentVersionsActionsRestore-Dialog',
-    acceptRestoreBtn: '.LibraryDocumentVersionsActionsRestore-Dialog .MuiButton-outlinedPrimary'
+    acceptRestoreBtn: '.LibraryDocumentVersionsActionsRestore-Dialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async clickAcceptRestoreBtn(): Promise<void> {

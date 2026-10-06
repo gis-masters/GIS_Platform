@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, Component } from 'react';
+import React, { type ChangeEvent, Component, type SyntheticEvent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -42,10 +42,12 @@ export class ProjectForm extends Component<ProjectFormProps> {
           className={cnProjectForm('Input')}
           helperText={`${this.newProjectName.length}/${this.maxLength}`}
           autoFocus
-          inputProps={{ maxLength: this.maxLength }}
-          FormHelperTextProps={{ className: cnProjectForm('HelperText') }}
           onChange={this.handleChange}
           variant='standard'
+          slotProps={{
+            htmlInput: { maxLength: this.maxLength },
+            formHelperText: { className: cnProjectForm('HelperText') }
+          }}
         />
 
         {errors.map((error, index) => (
@@ -79,7 +81,7 @@ export class ProjectForm extends Component<ProjectFormProps> {
   }
 
   @boundMethod
-  private handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  private handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
 
     this.props.onSubmit(this.newProjectName);

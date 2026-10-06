@@ -1,0 +1,15 @@
+---
+description: server-types пишет только генератор контрактов, без ручных правок
+globs: src/server-types/**/*.d.ts, portal-ui/src/server-types/**/*.d.ts
+alwaysApply: false
+---
+
+# Сгенерированные типы
+
+Файлы в `src/server-types` пишет бэкенд-генератор. Ручные правки `.d.ts` запрещены.
+
+Источник: пакет `generated` в `contracts/common-contracts`.
+Обновление: `scripts/build-and-copy-generated-types.sh` из корня gisportal.
+
+Нужно поле или тип — менять Java-контракт и перегенерировать. Не дописывать руками.
+Дополнительные поля фронта держать в моделях приложения, не в `server-types`.

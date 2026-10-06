@@ -11,7 +11,7 @@ interface ChooseXTableCheckProps<T> {
   selectedItems: T[];
   single: boolean;
   disabled?: boolean;
-  disabledItemsMessage?: string;
+  disabledMessage?: string;
   getRowId(rowData: T): string | number;
   onSelect(items: T[]): void;
 }
@@ -24,11 +24,11 @@ export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
   }
 
   render() {
-    const { single, disabledItemsMessage, disabled = false } = this.props;
+    const { single, disabledMessage, disabled = false } = this.props;
     const Check = single ? Radio : Checkbox;
 
     return (
-      <Tooltip title={disabled && disabledItemsMessage} placement='top'>
+      <Tooltip title={disabled && disabledMessage} placement='top'>
         <span>
           <Check
             disabled={disabled}
@@ -43,14 +43,22 @@ export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
 
   @computed
   private get selected(): boolean {
-    const { item, selectedItems, getRowId } = this.props;
+    const { item, selectedItems, getRowId, disabled } = this.props;
+
+    if (disabled) {
+      return false;
+    }
 
     return selectedItems.some(selectedItem => getRowId(selectedItem) === getRowId(item));
   }
 
   @action.bound
   private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
-    const { item, selectedItems, getRowId, single, onSelect } = this.props;
+    const { item, selectedItems, getRowId, single, onSelect, disabled } = this.props;
+    if (disabled) {
+      return;
+    }
+
     if (single && checked) {
       selectedItems.splice(0, selectedItems.length, item);
     } else if (checked) {

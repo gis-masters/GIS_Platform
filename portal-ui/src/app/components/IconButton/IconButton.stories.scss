@@ -1,0 +1,10 @@
+body .IconButtonStory {
+  &_bg_header {
+    display: inline-flex;
+
+    padding: 4px 16px;
+
+    color: var(--white);
+    background: var(--blue);
+  }
+}

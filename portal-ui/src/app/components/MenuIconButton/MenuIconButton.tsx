@@ -31,7 +31,7 @@ interface MenuIconButtonProps extends Omit<IconButtonProps, 'ref'> {
 
 @observer
 class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
-  private anchorRef: RefObject<HTMLButtonElement> = createRef();
+  private anchorRef: RefObject<HTMLButtonElement | null> = createRef();
   @observable private menuOpen = false;
   private anchorEl: HTMLButtonElement | null = null;
 

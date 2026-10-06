@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { Delete, DeleteOutline } from '@mui/icons-material';
+import { Delete, DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -36,7 +36,7 @@ export class OrgActionsDel extends Component<OrgActionsDelProps> {
       <>
         <Tooltip title='Удалить'>
           <IconButton className={cnOrgActionsDel()} onClick={this.handleDelete} color='error'>
-            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+            {this.dialogOpen ? <Delete /> : <DeleteOutlined />}
           </IconButton>
         </Tooltip>
         <Loading visible={this.loading} global />

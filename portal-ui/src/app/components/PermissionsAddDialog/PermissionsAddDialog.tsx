@@ -75,7 +75,9 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
         open={open}
         onClose={this.close}
         maxWidth='xl'
-        PaperProps={{ className: cnPermissionsAddDialog('Paper') }}
+        slotProps={{
+          paper: { className: cnPermissionsAddDialog('Paper') }
+        }}
       >
         <DialogContent>
           <XTable<any> title='Добавление разрешений' {...this.tableProps[type]} data={this.availableItems} filterable />

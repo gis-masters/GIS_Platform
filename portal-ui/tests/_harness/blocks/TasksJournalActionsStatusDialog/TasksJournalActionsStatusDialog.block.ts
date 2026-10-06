@@ -4,7 +4,7 @@ import { FormBlock } from '../Form/Form.block';
 class TasksJournalActionsStatusDialogBlock extends Block {
   selectors = {
     root: '.TasksJournalActions-StatusDialog',
-    tasksJournalActionStatusSave: '.TasksJournalActions-StatusDialog .MuiButton-outlinedPrimary'
+    tasksJournalActionStatusSave: '.TasksJournalActions-StatusDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async saveChangeStatusAction(): Promise<void> {

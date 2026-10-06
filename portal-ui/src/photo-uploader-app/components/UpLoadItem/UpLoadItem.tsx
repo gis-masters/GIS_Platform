@@ -24,7 +24,6 @@ export const UpLoadItem: FC<UpPhotoLoadListItemProps> = observer(({ item: { titl
       </ListItemAvatar>
       <ListItemText
         primary={<div className={cnUpLoadItem('Title')}>{title}</div>}
-        primaryTypographyProps={feature.geometry?.coordinates?.length ? undefined : { color: 'error' }}
         secondary={
           <>
             <div className={cnUpLoadItem('Coordinates')}>
@@ -33,7 +32,10 @@ export const UpLoadItem: FC<UpPhotoLoadListItemProps> = observer(({ item: { titl
             <div className={cnUpLoadItem('Size')}>{`${Math.ceil(size / 1024)} КБ`}</div>
           </>
         }
-        secondaryTypographyProps={feature.geometry?.coordinates?.length ? undefined : { color: 'error' }}
+        slotProps={{
+          primary: feature.geometry?.coordinates?.length ? undefined : { color: 'error' },
+          secondary: feature.geometry?.coordinates?.length ? undefined : { color: 'error' }
+        }}
       />
     </ListItem>
   );

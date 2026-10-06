@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, Component } from 'react';
+import React, { type ChangeEvent, Component, type SyntheticEvent } from 'react';
 import { action, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -71,7 +71,7 @@ export class ExplorerSearch extends Component<ExplorerSearchProps> {
   }
 
   @boundMethod
-  private onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  private onSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
 
     this.setSearchInfo(this.search.searchValue);

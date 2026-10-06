@@ -5,7 +5,7 @@ class SelectSuitableLayerDialogBlock extends Block {
   selectors = {
     root: '.SelectSuitableLayerDialog',
     openSelectLayerDialogBtn: '.SelectSuitableLayerDialog-LayerSelect',
-    saveBtn: '.SelectSuitableLayerDialog .MuiButton-outlinedPrimary',
+    saveBtn: '.SelectSuitableLayerDialog .MuiButton-outlined.MuiButton-colorPrimary',
     loading: '.SelectSuitableLayerDialog .Loading',
     projectRow: '.SelectSuitableLayerDialog .MuiTable-root .MuiTableRow-root'
   };

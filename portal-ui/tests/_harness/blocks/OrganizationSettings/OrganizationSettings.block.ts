@@ -5,7 +5,7 @@ import { FormBlock } from '../Form/Form.block';
 class OrganizationSettingsBlock extends Block {
   selectors = {
     root: '.OrganizationSettings',
-    save: '.OrganizationSettings .MuiButton-outlinedPrimary'
+    save: '.OrganizationSettings .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async disableOrgOption(option: string): Promise<void> {

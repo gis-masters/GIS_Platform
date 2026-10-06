@@ -73,6 +73,12 @@ export function isZipFile(file: File | FileInfo): boolean {
   return normalizeExtension(getFileExtension(title)) === 'zip';
 }
 
+export function isGpkgFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'gpkg';
+}
+
 export function isPdfFile(file: File | FileInfo): boolean {
   const title = isFileInfo(file) ? file.title : file.name;
 

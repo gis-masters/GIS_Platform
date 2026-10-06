@@ -11,6 +11,7 @@ import { authService } from '../../services/auth/auth/auth.service';
 import { copyToClipboard } from '../../services/util/clipboard.util';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
 import './User.scss';
 
@@ -55,7 +56,7 @@ export class User extends Component<UserProps> {
                 <div className={cnUser('Email')}>
                   {currentUser.email}
                   <Tooltip title='Копировать email'>
-                    <ContentCopy className={cnUser('Email-CopyIcon')} onClick={this.handleCopyClick} />
+                    <ContentCopy className={cnUser('EmailCopyIcon')} onClick={this.handleCopyClick} />
                   </Tooltip>
                 </div>
               </div>
@@ -85,8 +86,13 @@ export class User extends Component<UserProps> {
   }
 
   @boundMethod
-  private handleCopyClick(e: React.MouseEvent) {
+  private async handleCopyClick(e: React.MouseEvent) {
     e.stopPropagation();
-    copyToClipboard(currentUser.email);
+
+    try {
+      await copyToClipboard(currentUser.email);
+    } catch {
+      Toast.error('Не удалось скопировать в буфер обмена');
+    }
   }
 }

@@ -31,7 +31,7 @@ interface TaskDialogProps {
 export const TaskDialog = observer(({ task: initialTask, open, onClose }: TaskDialogProps) => {
   const [currentTask, setCurrentTask] = useState<Task>(initialTask);
   const [primalSchema, setPrimalSchema] = useState<Schema>();
-  const operationIdRef = useRef<symbol>();
+  const operationIdRef = useRef<symbol | undefined>(undefined);
 
   const schema = useMemo(() => {
     if (currentTask && primalSchema) {

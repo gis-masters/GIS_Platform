@@ -1,4 +1,10 @@
-import React, { Component, type DetailedHTMLProps, type FormHTMLAttributes, type ReactNode } from 'react';
+import React, {
+  Component,
+  type DetailedHTMLProps,
+  type FormHTMLAttributes,
+  type ReactNode,
+  type SyntheticEvent
+} from 'react';
 import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -205,7 +211,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   }
 
   @boundMethod
-  private async handleSubmit(e: React.FormEvent<HTMLElement>) {
+  private async handleSubmit(e: SyntheticEvent<HTMLElement>) {
     e.preventDefault();
     e.stopPropagation();
 

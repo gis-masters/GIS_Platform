@@ -59,22 +59,26 @@ public class ImportGpkgClearTemplatesEventHandler implements IEventHandler {
         }
 
         //2. Удалим файл
-        // TODO: а чё рантайм то.... уфф нужно пересмотреть
-        Optional<File> file;
-        file = fileRepository.findByIdentifier(jdbcTemplate, event.getFileId());
+        if (!event.isKeepSourceFile()) {
+            // TODO: а чё рантайм то.... уфф нужно пересмотреть
+            Optional<File> file;
+            file = fileRepository.findByIdentifier(jdbcTemplate, event.getFileId());
 
-        file.ifPresent(f -> {
-            try {
-                fileRepository.deleteByIdentifier(jdbcTemplate, f.getId());
-                fileStorage.deleteIfExists(f.getPath());
-            } catch (Exception e) {
-                log.error("После импорта GPKG удалить файл по пути '{}' не удалось. Причина: {}",
-                          event.getFileId(), e.getMessage());
+            file.ifPresent(f -> {
+                try {
+                    fileRepository.deleteByIdentifier(jdbcTemplate, f.getId());
+                    fileStorage.deleteIfExists(f.getPath());
+                } catch (Exception e) {
+                    log.error("После импорта GPKG удалить файл по пути '{}' не удалось. Причина: {}",
+                              event.getFileId(), e.getMessage());
 
-                throw new DataServiceException("Удалить GPKG после обработки не получилось!!!");
-            }
+                    throw new DataServiceException("Удалить GPKG после обработки не получилось!!!");
+                }
 
-            log.debug("После импорта GPKG успешно удалили файл '{}'.", file.get().getTitle());
-        });
+                log.debug("После импорта GPKG успешно удалили файл '{}'.", file.get().getTitle());
+            });
+        } else {
+            log.debug("После импорта GPKG исходный файл '{}' оставили по флагу keepSourceFile", event.getFileId());
+        }
     }
 }

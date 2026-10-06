@@ -1,0 +1,7 @@
+body .GpkgPlacementDialog {
+  max-height: min(92vh, 1200px);
+
+  &_view_advanced {
+    min-height: 480px;
+  }
+}

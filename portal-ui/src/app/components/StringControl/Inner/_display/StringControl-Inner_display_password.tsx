@@ -27,14 +27,16 @@ class StringControlInnerDisplayPassword extends Component<StringControlInnerProp
         {...this.props}
         textFieldProps={{
           type: this.show ? 'text' : 'password',
-          InputProps: {
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton aria-label='Показать пароль' onClick={this.toggleShow} edge='end' size='small'>
-                  {this.show ? <Visibility fontSize='small' /> : <VisibilityOff fontSize='small' />}
-                </IconButton>
-              </InputAdornment>
-            )
+          slotProps: {
+            input: {
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton aria-label='Показать пароль' onClick={this.toggleShow} edge='end' size='small'>
+                    {this.show ? <Visibility fontSize='small' /> : <VisibilityOff fontSize='small' />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }
           }
         }}
       />

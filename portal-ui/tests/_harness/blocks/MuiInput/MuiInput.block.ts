@@ -49,4 +49,60 @@ export class MuiInputBlock extends Block {
 
     return await $warning.isDisplayed();
   }
+
+  async pressBackspaceFromEnd(times: number): Promise<void> {
+    const $input = await this.findBySelector('input');
+    await $input.waitForClickable();
+
+    for (let i = 0; i < times; i++) {
+      await $input.click();
+      await browser.keys([Key.End]);
+      await browser.keys([Key.Backspace]);
+      await browser.pause(100);
+    }
+  }
+
+  async pressBackspace(): Promise<void> {
+    await browser.keys([Key.Backspace]);
+    await browser.pause(100);
+  }
+
+  async setCursorAt(position: number): Promise<void> {
+    const $input = await this.findBySelector('input');
+    await $input.waitForClickable();
+    await $input.click();
+
+    await browser.execute((pos: number) => {
+      const input = document.activeElement;
+      if (!(input instanceof HTMLInputElement)) {
+        throw new TypeError('Активный элемент не является полем ввода');
+      }
+
+      input.setSelectionRange(pos, pos);
+    }, position);
+  }
+
+  async typeAtCursor(value: string): Promise<void> {
+    for (const char of value) {
+      await browser.keys(char);
+      await browser.pause(100);
+    }
+  }
+
+  async pasteValue(value: string): Promise<void> {
+    const $input = await this.findBySelector('input');
+    await $input.waitForClickable();
+    await $input.click();
+
+    await browser.execute((pasted: string) => {
+      const input = document.activeElement;
+      if (!(input instanceof HTMLInputElement)) {
+        throw new TypeError('Активный элемент не является полем ввода');
+      }
+
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+      setter?.call(input, pasted);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }, value);
+  }
 }

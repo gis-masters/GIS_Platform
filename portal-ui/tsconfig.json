@@ -26,6 +26,6 @@
     "strict": true,
     "strictBindCallApply": true
   },
-  "include": ["src/**/*", ".storybook/**/*"],
+  "include": ["src/**/*", ".storybook/**/*", "jest.setup.ts", "jest.config.ts"],
   "exclude": ["my", "bl", ".vscode", "test", "dist", "dist*", "node_modules", "**/dist/*", "**/node_modules/*"]
 }

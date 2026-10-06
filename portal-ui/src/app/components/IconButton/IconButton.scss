@@ -8,6 +8,11 @@ body .IconButton {
     }
   }
 
+  &.MuiIconButton-colorInherit.Mui-disabled {
+    opacity: 0.38;
+    color: inherit;
+  }
+
   &-Loader {
     position: absolute;
     inset: 0;

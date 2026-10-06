@@ -101,7 +101,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   @observable private colsSettings: XTableColsSettings<T> = {};
 
   private fetchingOperationId?: symbol;
-  private tableRef: RefObject<HTMLDivElement> = createRef();
+  private tableRef: RefObject<HTMLDivElement | null> = createRef();
   private pageOptionsReactionDisposer?: IReactionDisposer;
   private pagedDataReactionDisposer?: IReactionDisposer;
 

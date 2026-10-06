@@ -105,6 +105,13 @@ PhoneEditable.args = {
   auto: true
 };
 
+export const PhoneEditableEmpty = Template.bind({});
+PhoneEditableEmpty.args = {
+  schema: { properties: [{ ...stringField, display: 'phone' }] },
+  value: emptyValue,
+  auto: true
+};
+
 export const PhoneView = Template.bind({});
 PhoneView.args = {
   schema: { properties: [{ ...stringField, display: 'phone' }] },

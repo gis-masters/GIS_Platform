@@ -30,8 +30,10 @@ export class CustomStyleControlColorSelect extends Component<CustomStyleControlC
         <TiledSelect
           value={value}
           MenuProps={{
-            MenuListProps: {
-              className: cnCustomStyleControl('MenuList')
+            slotProps: {
+              list: {
+                className: cnCustomStyleControl('MenuList')
+              }
             }
           }}
           dropdownColumns={6}

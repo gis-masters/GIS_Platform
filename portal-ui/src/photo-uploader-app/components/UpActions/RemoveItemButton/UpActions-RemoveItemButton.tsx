@@ -1,6 +1,6 @@
 import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
-import { DeleteOutline } from '@mui/icons-material';
+import { DeleteOutlined } from '@mui/icons-material';
 
 import { IconButton } from '../../../../app/components/IconButton/IconButton';
 import { doConfirm } from '../../../../app/services/answer-modals.service';
@@ -24,7 +24,7 @@ export const UpActionsRemoveItemButton: FC<UpActionsRemoveItemButtonProps> = obs
 
   return (
     <IconButton onClick={clickHandler} color={error ? 'error' : undefined}>
-      <DeleteOutline color='error' />
+      <DeleteOutlined color='error' />
     </IconButton>
   );
 });

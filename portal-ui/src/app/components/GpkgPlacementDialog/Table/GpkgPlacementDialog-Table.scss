@@ -1,0 +1,9 @@
+body .GpkgPlacementDialog-Table {
+  min-width: 500px;
+  max-height: calc(100vh - 320px);
+  margin-top: 16px;
+
+  .XTable-Title {
+    display: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { isArray } from './isArray';
+
 export function isStringArray(values: unknown): values is string[] {
   if (!isArray(values)) {
     return false;

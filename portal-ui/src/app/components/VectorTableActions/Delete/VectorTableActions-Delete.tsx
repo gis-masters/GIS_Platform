@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip } from '@mui/material';
-import { Delete, DeleteOutline } from '@mui/icons-material';
+import { Delete, DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
@@ -43,7 +43,7 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
             disabled={disabled}
             color='error'
           >
-            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+            {this.dialogOpen ? <Delete /> : <DeleteOutlined />}
           </IconButton>
         </Tooltip>
 

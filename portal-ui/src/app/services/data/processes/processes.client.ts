@@ -1,5 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
@@ -34,6 +35,15 @@ class ProcessesClient extends Client {
   async getProcess(id: number): Promise<Process> {
     return http.get<Process>(this.getProcessUrl(id), {
       cache: { disabled: true }
+    });
+  }
+
+  async getProcesses(pageOptions: PageOptions): Promise<PageableResources<Process>> {
+    const params = preparePageOptions(pageOptions);
+
+    return http.get<PageableResources<Process>>(this.getProcessesUrl(), {
+      cache: { disabled: true },
+      params
     });
   }
 

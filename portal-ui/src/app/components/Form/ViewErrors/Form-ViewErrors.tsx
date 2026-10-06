@@ -1,6 +1,6 @@
 import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
-import { ErrorOutline } from '@mui/icons-material';
+import { ErrorOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import './Form-ViewErrors.scss';
@@ -15,7 +15,7 @@ export const FormViewErrors: FC<FormViewErrorsProps> = ({ errors = [] }) =>
   errors.length > 0 && (
     <Tooltip title={errors.join('\n')} className={cnFormViewErrors()}>
       <span>
-        <ErrorOutline color='error' />
+        <ErrorOutlineOutlined color='error' />
       </span>
     </Tooltip>
   );

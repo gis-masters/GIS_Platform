@@ -17,13 +17,13 @@ const cnBboxPreview = cn('BboxPreview');
 export default observer(({ fieldValue }: FormControlProps) => {
   const bboxString = typeof fieldValue === 'string' ? fieldValue : '';
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = useCallback(async () => {
     if (!bboxString) {
       return;
     }
 
     try {
-      copyToClipboard(bboxString);
+      await copyToClipboard(bboxString);
     } catch (error) {
       services.logger.error('BboxPreview: Ошибка при копировании bbox координат', error);
       Toast.error('Не удалось скопировать bbox координаты');

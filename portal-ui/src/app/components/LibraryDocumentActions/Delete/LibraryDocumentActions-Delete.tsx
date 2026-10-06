@@ -12,7 +12,7 @@ import {
   DialogTitle,
   List
 } from '@mui/material';
-import { Delete, DeleteOutline, ExpandMore } from '@mui/icons-material';
+import { Delete, DeleteOutlined, ExpandMore } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -78,7 +78,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
           as={as}
           onClick={this.openDialog}
           disabled={this.busy || disabled}
-          icon={this.dialogOpen ? <Delete /> : <DeleteOutline />}
+          icon={this.dialogOpen ? <Delete /> : <DeleteOutlined />}
         />
 
         {this.busy || Boolean(this.deleteAllowed) ? (

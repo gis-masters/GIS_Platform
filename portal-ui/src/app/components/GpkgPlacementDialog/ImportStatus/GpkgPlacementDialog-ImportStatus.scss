@@ -1,0 +1,15 @@
+body .GpkgPlacementDialog-ImportStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 8px;
+
+  &_footer {
+    margin-top: 0;
+  }
+
+  > :first-child {
+    flex-shrink: 0;
+  }
+}

@@ -33,7 +33,7 @@ interface FeaturesListProps {
 
 @observer
 export class FeaturesList extends Component<FeaturesListProps> {
-  private ref: RefObject<HTMLDivElement> = createRef();
+  private ref: RefObject<HTMLDivElement | null> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
 
   @observable private width = 0;

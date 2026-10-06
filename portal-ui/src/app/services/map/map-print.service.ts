@@ -101,21 +101,6 @@ export async function exportMap(directly = false): Promise<string> {
   return mapImage;
 }
 
-// Подготовка карты для копирования в буфер обмена
-export async function prepareMapCopying(): Promise<HTMLDivElement> {
-  const img = document.createElement('img');
-  const div = document.createElement('div');
-  img.src = await getMapImage({ hideScaleDigits: true });
-  div.append(img);
-  document.body.append(div);
-
-  return new Promise<HTMLDivElement>(resolve => {
-    img.addEventListener('load', () => {
-      resolve(div);
-    });
-  });
-}
-
 interface MapImageOptions {
   resolution?: number;
   withDesignations?: boolean;

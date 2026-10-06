@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
@@ -146,7 +146,7 @@ export default class Files extends Component<FilesProps> {
                 buttonCaption={value.length ? 'Добавить' : 'Выбрать'}
                 autoClear
                 iconButton={!value.length}
-                buttonProps={{ variant: 'text', startIcon: <AddCircleOutline />, color: 'primary' }}
+                buttonProps={{ variant: 'text', startIcon: <AddCircleOutlineOutlined />, color: 'primary' }}
               />
             </LookupAdd>
           )}

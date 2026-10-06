@@ -103,10 +103,15 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
         } else if (!layerGroupPool.isEmpty()) {
             makeLastAvailableLayerGroupAsCurrent();
         } else {
-            createLayerGroup(title, position);
-            assertEquals(SC_CREATED, response.getStatusCode());
-            extractAndSetLayerGroupIdFromBody();
+            createLayerGroupInCurrentProject(title, position);
         }
+    }
+
+    @Given("В текущем проекте создана группа слоёв {string}, {string}")
+    public void createLayerGroupInCurrentProject(String title, String position) {
+        createLayerGroup(title, position);
+        assertEquals(SC_CREATED, response.getStatusCode());
+        extractAndSetLayerGroupIdFromBody();
     }
 
     @Given("В проекте существует группа {string}")
@@ -187,6 +192,20 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на все группы слоев организации")
     public void getAllLayerGroups() {
         super.get1000Entities();
+    }
+
+    @And("количество групп слоёв в текущем проекте равно: {int}")
+    public void countLayerGroupsInCurrentProject(int expectedCount) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+
+        List<Map<String, Object>> groups = response.jsonPath().getList("");
+        assertEquals(expectedCount, groups.size());
+
+        if (expectedCount == 1) {
+            layerGroupId = ((Number) groups.get(0).get("id")).intValue();
+        }
     }
 
     @Given("Существуют группы слоев проектов")

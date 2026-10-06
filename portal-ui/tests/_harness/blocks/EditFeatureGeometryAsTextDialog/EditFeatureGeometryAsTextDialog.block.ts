@@ -6,8 +6,8 @@ import { Block } from '../../classes/Block';
 class EditFeatureGeometryAsTextDialogBlock extends Block {
   selectors = {
     root: '.EditFeatureGeometry-AsTextDialog',
-    dialogTextarea: '.EditFeatureGeometry-AsTextDialog .MuiInputBase-inputMultiline:not([readonly])',
-    saveBtn: '.EditFeatureGeometry-AsTextDialog .MuiButton-outlinedPrimary',
+    dialogTextarea: '.EditFeatureGeometry-AsTextDialog .MuiInputBase-multiline > .MuiInputBase-input:not([readonly])',
+    saveBtn: '.EditFeatureGeometry-AsTextDialog .MuiButton-outlined.MuiButton-colorPrimary',
     textarea: '.EditFeatureGeometry-Text textarea'
   };
 

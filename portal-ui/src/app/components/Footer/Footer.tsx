@@ -12,7 +12,13 @@ const cnFooter = cn('Footer');
 export const Footer: FC = observer(() => (
   <Container className={cnFooter()} maxWidth={false}>
     <Container className={cnFooter('Info')} maxWidth='md'>
-      <Grid container spacing={2} justifyContent='center'>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          justifyContent: 'center'
+        }}
+      >
         {environment.description && (
           <Grid size={6}>
             <h2 className={cnFooter('Title')}>{environment.title}:</h2>
@@ -32,7 +38,14 @@ export const Footer: FC = observer(() => (
 
     <Divider color='#49a6ff' />
 
-    <Grid className={cnFooter('Copyright')} container alignItems='center' justifyContent='center'>
+    <Grid
+      className={cnFooter('Copyright')}
+      container
+      sx={{
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
       © {environment.owner}
     </Grid>
   </Container>

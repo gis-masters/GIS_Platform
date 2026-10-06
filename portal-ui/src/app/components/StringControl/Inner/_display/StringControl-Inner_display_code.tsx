@@ -13,7 +13,7 @@ const StringControlInnerDisplayCode: FC<StringControlInnerProps> = props => (
   <StringControlInnerBase
     {...props}
     textFieldProps={{
-      inputProps: { className: 'scroll' },
+      slotProps: { htmlInput: { className: 'scroll' } },
       multiline: true,
       minRows: 2,
       maxRows: 10

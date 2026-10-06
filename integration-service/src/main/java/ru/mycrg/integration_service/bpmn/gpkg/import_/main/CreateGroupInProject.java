@@ -37,6 +37,16 @@ public class CreateGroupInProject implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         log.debug("Класс {} начал работу.", CreateGroupInProject.class.getSimpleName());
 
+        ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(IMPORT_GPKG_EVENT);
+
+        if (event.getLayerGroupId() != null) {
+            log.debug("Используем существующую группу слоёв с ID: {}", event.getLayerGroupId());
+            delegateExecution.setVariable(IMPORT_GPKG_CREATED_LAYER_GROUP_ID, event.getLayerGroupId());
+            delegateExecution.setVariable(IMPORT_GPKG_COUNT_HTTP_ERRORS, 0);
+
+            return;
+        }
+
         int currentIteration = (int) delegateExecution.getVariable(IMPORT_GPKG_COUNT_HTTP_ERRORS);
         if (currentIteration >= 4) {
             String msg = "Превышено максимальное количество попыток создания группы слоёв в проекте!!!";
@@ -45,8 +55,6 @@ public class CreateGroupInProject implements JavaDelegate {
 
             throw new BpmnError("createGroupInProjectFail", msg);
         }
-
-        ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(IMPORT_GPKG_EVENT);
 
         Optional<Long> groupId = createParentGroup(event.getToken(),
                                                    event.getProjectId(),

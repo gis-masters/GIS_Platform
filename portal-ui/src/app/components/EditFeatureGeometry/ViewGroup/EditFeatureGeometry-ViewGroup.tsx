@@ -31,7 +31,7 @@ interface EditFeatureGeometryViewGroupProps {
 const Container: FC<PaperProps> = props => <Paper {...props} square />;
 
 export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryViewGroupProps> {
-  tableRef: RefObject<HTMLTableElement> = createRef();
+  tableRef: RefObject<HTMLTableElement | null> = createRef();
 
   render() {
     const { coordinates, isPoint, index, startIndex = 0 } = this.props;

@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, Component } from 'react';
+import React, { type ChangeEvent, Component, type SyntheticEvent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { DialogContent, DialogContentText, TextField } from '@mui/material';
@@ -41,7 +41,7 @@ class AnswerModalContentTypePrompt extends Component<AnswerModalContentProps> {
   }
 
   @boundMethod
-  private handleOk(e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  private handleOk(e: SyntheticEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     const { id, defaultValue = '' } = this.props.info;
     communicationService.answerModalClosed.emit({ id, answer: true, value: this.text ?? defaultValue });

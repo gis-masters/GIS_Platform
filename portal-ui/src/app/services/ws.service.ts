@@ -1,6 +1,5 @@
 import { type CompatClient, Stomp } from '@stomp/stompjs';
-import { BehaviorSubject, type Observable } from 'rxjs';
-import { publishReplay, refCount } from 'rxjs/operators';
+import { BehaviorSubject, type Observable, shareReplay } from 'rxjs';
 import SockJS from 'sockjs-client';
 
 import { getWsEndpointUrl } from './api/server-urls.service';
@@ -49,8 +48,7 @@ class WsService {
 
   messages$: Observable<IWsMessage | undefined> = this._wsMsg$.asObservable().pipe(
     // компоненты при подписке должны видеть одно последнее значение в потоке
-    publishReplay(1),
-    refCount()
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   disabled = true;

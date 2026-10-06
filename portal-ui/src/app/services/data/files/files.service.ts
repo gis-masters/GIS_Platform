@@ -1,4 +1,4 @@
-import { type VerifyEcpResponse } from '../../../../server-types/common-contracts';
+import { type GpkgFileMetadata, type VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { filesClient } from './files.client';
 import { type FileConnection, type FileInfo } from './files.models';
 
@@ -13,6 +13,21 @@ export async function createFile(file: File): Promise<FileInfo> {
 
 export async function getFileInfo(id: string): Promise<FileInfo> {
   return await filesClient.getFileInfo(id);
+}
+
+async function getGpkgFileMetadata(fileId: string): Promise<GpkgFileMetadata> {
+  return await filesClient.getGpkgFileMetadata(fileId);
+}
+
+/** Загрузка .gpkg в файловое хранилище и чтение метаданных (ручка metadata). */
+export async function uploadGpkgAndFetchMetadata(file: File): Promise<GpkgFileMetadata> {
+  const info = await createFile(file);
+
+  return getGpkgFileMetadata(info.id);
+}
+
+export async function deleteFile(id: string): Promise<void> {
+  await filesClient.deleteFile(id);
 }
 
 export async function verifyEcp(id: string): Promise<VerifyEcpResponse[]> {

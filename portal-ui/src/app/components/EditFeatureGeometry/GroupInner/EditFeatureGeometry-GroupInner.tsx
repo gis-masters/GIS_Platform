@@ -12,7 +12,7 @@ interface EditFeatureGeometryGroupInnerProps extends ChildrenProps {
   coordsInViewport: number;
   startOffset: number;
   endOffset: number;
-  innerRef: RefObject<HTMLDivElement>;
+  innerRef: RefObject<HTMLDivElement | null>;
   onScroll(e: React.UIEvent<HTMLDivElement>): void;
 }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { DeleteOutline, EditLocationOutlined, MyLocationOutlined } from '@mui/icons-material';
+import { DeleteOutlined, EditLocationOutlined, MyLocationOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { EditFeatureMode } from 'src/app/services/map/mode/map-mode.models';
@@ -44,7 +44,7 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
         {editable && (
           <ActionsItem
             as='menu'
-            icon={<DeleteOutline color='error' />}
+            icon={<DeleteOutlined color='error' />}
             title='Удалить'
             onClick={this.delete}
             disabled={editFeatureStore.dirty}

@@ -94,7 +94,7 @@ export default class Explorer extends Component<ExplorerProps> {
   private service: ExplorerService;
   private channels: Emitter<DataChangeEventDetail<unknown>>[] = [];
   private savingToUrl = false;
-  private explorerRef: RefObject<HTMLDivElement> = createRef();
+  private explorerRef: RefObject<HTMLDivElement | null> = createRef();
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 

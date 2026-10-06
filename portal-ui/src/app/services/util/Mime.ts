@@ -6,6 +6,7 @@ export enum Mime {
   XML = 'application/xml',
   TEXT_XML = 'text/xml',
   TEXT = 'text/plain',
+  HTML = 'text/html',
   ZIP = 'application/zip, application/x-zip-compressed, multipart/x-zip',
   SHAPE_ZIP = 'shape-zip',
   FORM_DATA = 'multipart/form-data',

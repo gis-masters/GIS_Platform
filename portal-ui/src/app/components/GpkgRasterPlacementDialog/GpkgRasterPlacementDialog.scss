@@ -1,0 +1,13 @@
+.GpkgRasterPlacementDialog {
+  &-Content {
+    min-height: 360px;
+  }
+
+  &-Explorer {
+    max-height: calc(100vh - 240px);
+  }
+
+  &-FieldTable {
+    min-height: 240px;
+  }
+}

@@ -16,14 +16,18 @@ interface ProjectActionsShareProps {
 }
 
 export const ProjectActionsShare: FC<ProjectActionsShareProps> = ({ project, as }) => {
-  const handleClick = useCallback(() => {
-    copyToClipboard(
-      project.folder
-        ? `${location.protocol}//${location.host}/data-management/projectFolder/${project.id}`
-        : `${location.protocol}//${location.host}/projects/${project.id}/map`
-    );
+  const handleClick = useCallback(async () => {
+    try {
+      await copyToClipboard(
+        project.folder
+          ? `${location.protocol}//${location.host}/data-management/projectFolder/${project.id}`
+          : `${location.protocol}//${location.host}/projects/${project.id}/map`
+      );
 
-    Toast.success('Сохранено в буфер обмена');
+      Toast.success('Сохранено в буфер обмена');
+    } catch {
+      Toast.error('Не удалось скопировать в буфер обмена');
+    }
   }, [project]);
 
   return (

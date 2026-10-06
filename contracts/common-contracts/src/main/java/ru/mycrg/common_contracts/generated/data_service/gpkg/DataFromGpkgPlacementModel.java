@@ -6,7 +6,10 @@ public class DataFromGpkgPlacementModel {
 
     private UUID fileId;
     private Long projectId;
+    private String datasetIdentifier;
+    private Long layerGroupId;
     private GpkgLayersPlacementModel layersPlacement;
+    private boolean keepSourceFile;
 
     public DataFromGpkgPlacementModel() {
         // Required
@@ -34,6 +37,22 @@ public class DataFromGpkgPlacementModel {
         this.fileId = fileId;
     }
 
+    public String getDatasetIdentifier() {
+        return datasetIdentifier;
+    }
+
+    public void setDatasetIdentifier(String datasetIdentifier) {
+        this.datasetIdentifier = datasetIdentifier;
+    }
+
+    public Long getLayerGroupId() {
+        return layerGroupId;
+    }
+
+    public void setLayerGroupId(Long layerGroupId) {
+        this.layerGroupId = layerGroupId;
+    }
+
     public GpkgLayersPlacementModel getLayersPlacement() {
         return layersPlacement;
     }
@@ -42,12 +61,23 @@ public class DataFromGpkgPlacementModel {
         this.layersPlacement = layersPlacement;
     }
 
+    public boolean isKeepSourceFile() {
+        return keepSourceFile;
+    }
+
+    public void setKeepSourceFile(boolean keepSourceFile) {
+        this.keepSourceFile = keepSourceFile;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"fileId\":" + (fileId == null ? "null" : fileId) + ", " +
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
-                "\"layersPlacement\":" + (layersPlacement == null ? "null" : layersPlacement) +
+                "\"datasetIdentifier\":" + (datasetIdentifier == null ? "null" : "\"" + datasetIdentifier + "\"") + ", " +
+                "\"layerGroupId\":" + (layerGroupId == null ? "null" : layerGroupId) + ", " +
+                "\"layersPlacement\":" + (layersPlacement == null ? "null" : layersPlacement) + ", " +
+                "\"keepSourceFile\":" + keepSourceFile +
                 "}";
     }
 }

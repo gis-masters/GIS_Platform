@@ -13,7 +13,7 @@ const cnEditFeatureGeometryViewGroupControls = cn('EditFeatureGeometry', 'ViewGr
 
 interface EditFeatureGeometryViewGroupControlsProps {
   coordinates: Coordinate[];
-  tableRef: RefObject<HTMLTableElement>;
+  tableRef: RefObject<HTMLTableElement | null>;
   index: number;
 }
 

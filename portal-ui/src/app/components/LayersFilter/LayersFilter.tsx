@@ -28,17 +28,19 @@ export const LayersFilter: FC<LayersFilterProps> = observer(({ turnOffLayersFilt
         onChange={handleFilterChange}
         placeholder='Фильтрация'
         autoFocus
-        InputProps={{
-          startAdornment: <FilterAltOutlined className={cnLayersFilter('InputIcon')} />,
-          endAdornment: (
-            <Tooltip title={'Отменить фильтрацию'}>
-              <IconButton className={cnLayersFilter('Close')} onClick={turnOffLayersFilter} size='small'>
-                <Close />
-              </IconButton>
-            </Tooltip>
-          )
-        }}
         variant='standard'
+        slotProps={{
+          input: {
+            startAdornment: <FilterAltOutlined className={cnLayersFilter('InputIcon')} />,
+            endAdornment: (
+              <Tooltip title={'Отменить фильтрацию'}>
+                <IconButton className={cnLayersFilter('Close')} onClick={turnOffLayersFilter} size='small'>
+                  <Close />
+                </IconButton>
+              </Tooltip>
+            )
+          }
+        }}
       />
     </div>
   );

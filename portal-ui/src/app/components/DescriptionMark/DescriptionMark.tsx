@@ -1,6 +1,6 @@
 import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
-import { HelpOutline } from '@mui/icons-material';
+import { HelpOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 
@@ -17,7 +17,7 @@ const handleMouseEvent = (e: React.MouseEvent) => {
 export const DescriptionMark: FC<ChildrenProps & IClassNameProps> = ({ children, className }) => {
   return (
     <Tooltip title={children} open={!!children && undefined}>
-      <HelpOutline
+      <HelpOutlineOutlined
         className={cnDescriptionMark(null, [className])}
         color='primary'
         fontSize='inherit'

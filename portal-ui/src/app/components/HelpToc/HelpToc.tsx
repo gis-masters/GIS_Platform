@@ -47,15 +47,17 @@ export class HelpToc extends Component<HelpTocProps> {
           placeholder='Поиск'
           value={this.filterParam}
           onChange={this.handleFilterChange}
-          InputProps={{
-            startAdornment: <HelpTocSearchIcon />,
-            endAdornment: (
-              <IconButton size='small' onClick={this.handleFilterClear} className={cnHelpToc('SearchClear')}>
-                <Clear />
-              </IconButton>
-            )
-          }}
           variant='standard'
+          slotProps={{
+            input: {
+              startAdornment: <HelpTocSearchIcon />,
+              endAdornment: (
+                <IconButton size='small' onClick={this.handleFilterClear} className={cnHelpToc('SearchClear')}>
+                  <Clear />
+                </IconButton>
+              )
+            }
+          }}
         />
         {this.tocTreeHidden
           ? this.searchResults.map(item => (

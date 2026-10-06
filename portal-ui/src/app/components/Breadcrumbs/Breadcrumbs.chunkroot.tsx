@@ -51,8 +51,8 @@ export default class Breadcrumbs extends Component<BreadcrumbsProps> {
   @observable private menuAnchorEl: HTMLElement | null = null;
   private handleMouseMoveDebounced: (e: MouseEvent) => void;
 
-  private containerRef: RefObject<HTMLDivElement> = createRef();
-  private menuRef: RefObject<HTMLDivElement> = createRef();
+  private containerRef: RefObject<HTMLDivElement | null> = createRef();
+  private menuRef: RefObject<HTMLDivElement | null> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
 
   constructor(props: BreadcrumbsProps) {

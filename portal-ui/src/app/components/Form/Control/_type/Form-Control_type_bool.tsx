@@ -30,8 +30,10 @@ class FormControlTypeBool extends Component<FormControlProps> {
           name={property.name}
           checked={Boolean(fieldValue)}
           onChange={this.handleChange}
-          inputProps={{ id: htmlId }}
           color='primary'
+          slotProps={{
+            input: { id: htmlId }
+          }}
         />
         {inSet && property.title && <label htmlFor={htmlId}>{property.title}</label>}
         <FormErrors warnings={warnings} errors={errors} />

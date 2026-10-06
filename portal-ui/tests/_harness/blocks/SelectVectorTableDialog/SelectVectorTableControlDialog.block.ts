@@ -3,7 +3,7 @@ import { Block } from '../../classes/Block';
 class SelectVectorTableControlDialogBlock extends Block {
   selectors = {
     root: '.SelectVectorTableControl-Dialog',
-    datasourceDialogAddBtn: '.SelectVectorTableControl-Dialog .MuiButton-outlinedPrimary'
+    datasourceDialogAddBtn: '.SelectVectorTableControl-Dialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async selectVectorTableBtn(): Promise<void> {

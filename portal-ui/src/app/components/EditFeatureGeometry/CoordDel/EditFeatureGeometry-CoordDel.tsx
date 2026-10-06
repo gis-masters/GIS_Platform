@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { DeleteOutline } from '@mui/icons-material';
+import { DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -34,7 +34,7 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
             size='small'
             disabled={disabled}
           >
-            <DeleteOutline color={disabled ? 'disabled' : 'error'} fontSize='small' />
+            <DeleteOutlined color={disabled ? 'disabled' : 'error'} fontSize='small' />
           </IconButton>
         </span>
       </Tooltip>

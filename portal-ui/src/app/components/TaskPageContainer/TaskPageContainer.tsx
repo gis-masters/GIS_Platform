@@ -64,7 +64,7 @@ export const TaskPageContainer = observer(() => {
     }
   }));
 
-  const operationIdRef = useRef<symbol>();
+  const operationIdRef = useRef<symbol | undefined>(undefined);
 
   const fetchSchema = async () => {
     try {

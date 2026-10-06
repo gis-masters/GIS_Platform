@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, Component } from 'react';
+import React, { type ChangeEvent, Component, type SyntheticEvent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { CircularProgress, FormControl, InputBase, Paper, Popover, Tooltip } from '@mui/material';
@@ -126,7 +126,7 @@ export default class Search extends Component {
   }
 
   @boundMethod
-  private handleSubmit(e: React.FormEvent<HTMLElement>) {
+  private handleSubmit(e: SyntheticEvent<HTMLElement>) {
     e.preventDefault();
 
     void this.submitSearch(e.currentTarget);

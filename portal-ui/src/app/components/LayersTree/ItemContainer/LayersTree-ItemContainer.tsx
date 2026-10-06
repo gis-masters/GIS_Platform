@@ -1,13 +1,13 @@
 import React, { type FC } from 'react';
 import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable } from '@hello-pangea/dnd';
 
 import { type ChildrenProps } from '../../../services/models';
 
 import './LayersTree-ItemContainer.scss';
 
-declare module 'react-beautiful-dnd' {
+declare module '@hello-pangea/dnd' {
   export interface DraggingStyle {
     [key: string]: string | number;
   }

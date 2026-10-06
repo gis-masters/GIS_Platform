@@ -32,7 +32,7 @@ const MAP_UNAVAILABLE_MESSAGE = (
 
 @observer
 export class SelectBboxControl extends Component<FormControlProps> {
-  private mapContainerRef: RefObject<HTMLDivElement> = createRef();
+  private mapContainerRef: RefObject<HTMLDivElement | null> = createRef();
   private mapInstanceRef: Map | null = null;
   private loadingTimeoutRef: number | null = null;
   private moveEndHandlerRef: (() => void) | null = null;

@@ -53,7 +53,8 @@ public class EndImportGpkgProcessDone implements JavaDelegate {
         String schema = (String) delegateExecution.getVariable(IMPORT_GPKG_EXTRACTED_SCHEMA_NAME);
         messageBus.produce(new ImportGpkgClearTemplatesEvent(event.getDbName(),
                                                              schema,
-                                                             event.getFileId()));
+                                                             event.getFileId(),
+                                                             event.isKeepSourceFile()));
 
         GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
                                                               event.getDbName(),

@@ -4,7 +4,7 @@ class UserCreateEditDialogBlock extends Block {
   selectors = {
     root: '.UserCreateEditDialog',
     loading: '.UserCreateEditDialog .Loading',
-    saveBtn: '.UserCreateEditDialog .MuiButton-outlinedPrimary'
+    saveBtn: '.UserCreateEditDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async clickSaveBtn(): Promise<void> {

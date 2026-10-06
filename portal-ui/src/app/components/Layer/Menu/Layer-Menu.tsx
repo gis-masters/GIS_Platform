@@ -12,10 +12,10 @@ import {
   MenuItem
 } from '@mui/material';
 import {
-  AddCircleOutline,
+  AddCircleOutlineOutlined,
   CropFree,
   Delete,
-  DeleteOutline,
+  DeleteOutlined,
   Edit,
   FileOpenOutlined,
   ListAlt,
@@ -176,7 +176,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
                   disabled={!mapStore.allowedActions.includes(MapAction.ADD_FEATURE)}
                 >
                   <ListItemIcon>
-                    <AddCircleOutline />
+                    <AddCircleOutlineOutlined />
                   </ListItemIcon>
                   Добавить объект
                 </MenuItem>
@@ -300,7 +300,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
                 disabled={!mapStore.allowedActions.includes(MapAction.DELETE_LAYER)}
               >
                 <ListItemIcon>
-                  <DeleteOutline color='error' />
+                  <DeleteOutlined color='error' />
                 </ListItemIcon>
                 Удалить слой
               </MenuItem>

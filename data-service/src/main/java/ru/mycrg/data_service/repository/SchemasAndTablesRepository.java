@@ -15,6 +15,8 @@ public interface SchemasAndTablesRepository extends JpaRepository<SchemasAndTabl
 
     Optional<SchemasAndTables> findByIdentifier(String identifier);
 
+    Optional<SchemasAndTables> findByIdentifierAndIsFolder(String identifier, boolean isFolder);
+
     void deleteByIdentifier(String identifier);
 
     @Query(value = "SELECT * FROM schemas_and_tables WHERE (schema->>'name')\\:\\:text = :schemaId",

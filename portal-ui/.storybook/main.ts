@@ -1,11 +1,12 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-webpack5';
 import * as sass from 'sass';
 import type { Configuration, RuleSetRule } from 'webpack';
 
 import { isArray } from '../src/app/services/util/typeGuards/isArray';
 
-const srcDir = path.resolve(__dirname, '../src');
+const srcDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src');
 
 const mjsRule: RuleSetRule = {
   test: /\.mjs$/,
@@ -31,12 +32,16 @@ const scssRule: RuleSetRule = {
 };
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
+  stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: ['@storybook/addon-webpack5-compiler-babel', '@storybook/addon-links'],
 
   framework: {
     name: '@storybook/react-webpack5',
     options: {}
+  },
+
+  typescript: {
+    reactDocgen: false
   },
 
   staticDirs: [{ from: '../src/assets', to: '/assets' }],
@@ -58,10 +63,6 @@ const config: StorybookConfig = {
     };
 
     return webpackConfig;
-  },
-
-  docs: {
-    autodocs: false
   }
 };
 

@@ -3,7 +3,7 @@ import { Block } from '../../../classes/Block';
 class LibraryDocumentActionsCreateChildEditDialogBlock extends Block {
   selectors = {
     root: '.LibraryDocumentActions-CreateChildEditDialog',
-    save: '.LibraryDocumentActions-CreateChildEditDialog .MuiButton-outlinedPrimary'
+    save: '.LibraryDocumentActions-CreateChildEditDialog .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async clickSave() {

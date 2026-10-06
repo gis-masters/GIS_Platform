@@ -30,7 +30,11 @@ export const LibraryMassKptLoadUploader: FC<LibraryMassKptLoadProps> = ({
   <Dialog open={isOpen} className={cnLibraryMassKptLoad('Uploader')}>
     <DialogTitle>Массовая загрузка КПТ</DialogTitle>
     <DialogContent className={cnLibraryMassKptLoad('Content')}>
-      <Typography paragraph>
+      <Typography
+        sx={{
+          marginBottom: '16px'
+        }}
+      >
         Загружено/размещено {handledCount} из {count}
       </Typography>
       <Typography>Успешно загружено {successCount}</Typography>

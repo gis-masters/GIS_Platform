@@ -13,6 +13,7 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.PayloadTooLargeException;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
+import ru.mycrg.data_service.service.cqrs.files.requests.DeleteFileRequest;
 import ru.mycrg.data_service.service.resources.protectors.IFileResourceProtector;
 import ru.mycrg.data_service.service.storage.FileStorageSizeGuarder;
 import ru.mycrg.mediator.Mediator;
@@ -68,6 +69,14 @@ public class FileCrudController extends BaseController {
         }
 
         return ResponseEntity.ok(toProjection(file));
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFile(@PathVariable UUID id) {
+        mediator.execute(new DeleteFileRequest(id));
+
+        return ResponseEntity.noContent().build();
     }
 
     private void validateRequest(MultipartFile[] files) {

@@ -4,7 +4,7 @@ class CreateDatasetFormBlock extends Block {
   selectors = {
     root: '.CreateDataset-Form',
     title: '.CreateDataset-Form input[name="title"]',
-    submit: '.CreateDataset-Form .MuiButton-outlinedPrimary'
+    submit: '.CreateDataset-Form .MuiButton-outlined.MuiButton-colorPrimary'
   };
 
   async setTitleValue(title: string): Promise<void> {

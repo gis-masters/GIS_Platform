@@ -27,7 +27,7 @@ export interface ExplorerItemProps {
   isFolder: boolean;
   customOpenActionIcon?: ReactNode;
   store: ExplorerStore;
-  itemRef?: RefObject<HTMLDivElement>;
+  itemRef?: RefObject<HTMLDivElement | null>;
   onOpen(item: ExplorerItemData): void;
   disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
   customOpenAction?(item: ExplorerItemData, store: ExplorerStore): void;

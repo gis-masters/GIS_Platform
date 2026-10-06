@@ -18,7 +18,13 @@ export const ServicesCalculatorSelectAll: FC<ServicesCalculatorSelectAllProps> =
   selectedAllServices
 }) => (
   <div className={cnServicesCalculatorSelectAll()}>
-    <Checkbox onChange={selectAllService} inputProps={{ id: htmlId }} checked={selectedAllServices} />
+    <Checkbox
+      onChange={selectAllService}
+      checked={selectedAllServices}
+      slotProps={{
+        input: { id: htmlId }
+      }}
+    />
     <label htmlFor={htmlId}>Выделить все</label>
   </div>
 );

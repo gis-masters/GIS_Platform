@@ -81,6 +81,34 @@ When('в форме в поле {string} типа string я ввожу текс�
   await formBlock.setStringValue(title, text);
 });
 
+When('в форме в поле {string} типа string я нажимаю Backspace {int} раз', async (title: string, times: number) => {
+  const formBlock = new FormBlock();
+  await formBlock.pressBackspaceFromEndInStringField(title, times);
+});
+
+When(
+  'в форме в поле {string} типа string я ставлю курсор на позицию {int}',
+  async (title: string, position: number) => {
+    const formBlock = new FormBlock();
+    await formBlock.setStringFieldCursor(title, position);
+  }
+);
+
+When('в форме в поле {string} типа string я нажимаю Backspace', async (title: string) => {
+  const formBlock = new FormBlock();
+  await formBlock.pressBackspaceInStringField(title);
+});
+
+When('в форме в поле {string} типа string я ввожу в позицию курсора {string}', async (title: string, text: string) => {
+  const formBlock = new FormBlock();
+  await formBlock.typeAtCursorInStringField(title, text);
+});
+
+When('в форме в поле {string} типа string я вставляю из буфера {string}', async (title: string, text: string) => {
+  const formBlock = new FormBlock();
+  await formBlock.pasteInStringField(title, text);
+});
+
 Then('в форме в поле {string} типа string значение {string}', async (title: string, value: string) => {
   const formBlock = new FormBlock();
   expect(await formBlock.getStringValue(title)).toBe(value);

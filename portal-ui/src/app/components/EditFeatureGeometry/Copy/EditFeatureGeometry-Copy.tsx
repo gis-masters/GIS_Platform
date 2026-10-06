@@ -9,12 +9,13 @@ import { type GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
 import { IconButton } from '../../IconButton/IconButton';
+import { Toast } from '../../Toast/Toast';
 
 const cnEditFeatureGeometryCopy = cn('EditFeatureGeometry', 'Copy');
 
 interface EditFeatureGeometryCopyProps {
   coordinates: Coordinate[];
-  tableRef: RefObject<HTMLTableElement>;
+  tableRef: RefObject<HTMLTableElement | null>;
   geometryType: GeometryType;
   first: boolean;
 }
@@ -40,10 +41,16 @@ export class EditFeatureGeometryCopy extends Component<EditFeatureGeometryCopyPr
   }
 
   @boundMethod
-  private handleClick() {
+  private async handleClick() {
     const { tableRef } = this.props;
-    if (tableRef.current) {
-      copyNodeToClipboard(tableRef.current);
+    if (!tableRef.current) {
+      return;
+    }
+
+    try {
+      await copyNodeToClipboard(tableRef.current);
+    } catch {
+      Toast.error('Не удалось скопировать в буфер обмена');
     }
   }
 }

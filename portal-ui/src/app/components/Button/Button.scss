@@ -1,7 +1,7 @@
 .Button {
   color: rgb(0 0 0 / 87%);
 
-  &:not(.MuiButton-containedPrimary) {
+  &:not(.MuiButton-contained.MuiButton-colorPrimary) {
     &.MuiButton-root {
       text-transform: none;
 

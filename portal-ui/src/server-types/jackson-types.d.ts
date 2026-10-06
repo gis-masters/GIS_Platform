@@ -2,7 +2,6 @@ export interface JsonNode extends Base, TreeNode, Iterable<JsonNode> {
   empty: boolean;
   float: boolean;
   number: boolean;
-  nodeType: JsonNodeType;
   pojo: boolean;
   integralNumber: boolean;
   floatingPointNumber: boolean;
@@ -19,6 +18,7 @@ export interface JsonNode extends Base, TreeNode, Iterable<JsonNode> {
   boolean: boolean;
   binary: boolean;
   string: boolean;
+  nodeType: JsonNodeType;
 }
 
 export interface Base extends JacksonSerializable {}

@@ -4,6 +4,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -30,6 +31,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 import static ru.mycrg.acceptance.integration_service.GpkgTemplates.makeProcessableModelByGpkgName;
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.*;
@@ -420,20 +422,63 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @When("я выполняю импорт текущего файла в текущий проект")
     @When("Текущий пользователь импортирует GeoPackage в текущий проект")
     public void importGeoPackageInCurrentProject() {
-        FileDescriptionModel fdm = currentFiles.get(currentFiles.size() - 1);
-        UUID fileId = fdm.getId();
+        initGeoPackageImport(Map.of("fileId", currentFiles.get(currentFiles.size() - 1).getId().toString(),
+                                    "projectId", projectId));
+    }
 
-        ProcessableModel processableModel = new ProcessableModel();
-        processableModel.setType(String.valueOf(IMPORT));
+    @Given("Идёт импорт текущего GeoPackage в текущий проект")
+    public void geoPackageImportIsRunning() {
+        importGeoPackageInCurrentProject();
+        assertEquals(202, response.getStatusCode());
+    }
 
-        processableModel.setPayload(Map.of("fileId", fileId.toString(),
-                                           "projectId", projectId));
+    @Given("GeoPackage импортирован в текущий проект с сохранением исходного файла")
+    public void geoPackageImportedKeepingSourceFile() {
+        importGeoPackageInCurrentProjectKeepingSourceFile();
+        assertEquals(202, response.getStatusCode());
+        waitUntilCurrentProcessIsDone();
+    }
 
-        initProcess(processableModel);
+    @When("Текущий пользователь импортирует GeoPackage в текущий проект с сохранением исходного файла")
+    public void importGeoPackageInCurrentProjectKeepingSourceFile() {
+        initGeoPackageImport(Map.of("fileId", currentFiles.get(currentFiles.size() - 1).getId().toString(),
+                                    "projectId", projectId,
+                                    "keepSourceFile", true));
+    }
 
-        if (response.getStatusCode() != 400 && response.getStatusCode() != 500) {
-            currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
-        }
+    @When("Текущий пользователь импортирует GeoPackage в текущий набор данных текущего проекта")
+    public void importGeoPackageInCurrentDatasetOfCurrentProject() {
+        assertNotNull("Набор данных обязательно должен быть в контексте сценария!", currentDatasetIdentifier);
+
+        initGeoPackageImport(Map.of("fileId", currentFiles.get(currentFiles.size() - 1).getId().toString(),
+                                    "projectId", projectId,
+                                    "datasetIdentifier", currentDatasetIdentifier));
+    }
+
+    @When("Текущий пользователь импортирует GeoPackage в несуществующий набор данных текущего проекта")
+    public void importGeoPackageInMissingDatasetOfCurrentProject() {
+        initGeoPackageImport(Map.of("fileId", currentFiles.get(currentFiles.size() - 1).getId().toString(),
+                                    "projectId", projectId,
+                                    "datasetIdentifier", "dataset_missing_" + UUID.randomUUID()));
+    }
+
+    @When("Текущий пользователь импортирует GeoPackage в текущую таблицу как набор данных текущего проекта")
+    public void importGeoPackageInCurrentTableAsDatasetOfCurrentProject() {
+        assertNotNull("Таблица обязательно должна быть в контексте сценария!", currentTableName);
+
+        initGeoPackageImport(Map.of("fileId", currentFiles.get(currentFiles.size() - 1).getId().toString(),
+                                    "projectId", projectId,
+                                    "datasetIdentifier", currentTableName));
+    }
+
+    @When("Текущий пользователь импортирует GeoPackage в текущую группу слоёв текущего проекта")
+    public void importGeoPackageInCurrentLayerGroupOfCurrentProject() {
+        importGeoPackageTableInCurrentLayerGroup(firstVectorTableNameFromCurrentGpkg());
+    }
+
+    @When("Текущий пользователь импортирует таблицу {string} из GeoPackage в текущую группу слоёв текущего проекта")
+    public void importGeoPackageTableInCurrentLayerGroupOfCurrentProject(String tableName) {
+        importGeoPackageTableInCurrentLayerGroup(tableName);
     }
 
     public void waitUntilProcessCompleteWithStatus(Integer processId, String status) {
@@ -498,6 +543,58 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                 .queryParam("title", title)
                 .when().
                         get();
+    }
+
+    private void importGeoPackageTableInCurrentLayerGroup(String tableName) {
+        assertNotNull("Группа слоёв обязательно должна быть в контексте сценария!", layerGroupId);
+        assertNotNull("Имя векторной таблицы обязательно должно быть задано!", tableName);
+
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("fileId", currentFiles.get(currentFiles.size() - 1).getId().toString());
+        payload.put("projectId", projectId);
+        payload.put("layerGroupId", layerGroupId);
+        payload.put("keepSourceFile", true);
+        payload.put("layersPlacement", Map.of("vectorLayers", List.of(tableName)));
+
+        initGeoPackageImport(payload);
+    }
+
+    private String firstVectorTableNameFromCurrentGpkg() {
+        UUID fileId = currentFiles.get(currentFiles.size() - 1).getId();
+        Response metadataResponse = super.getBaseRequestWithCurrentCookie()
+                .basePath("/api/data/files")
+                .when()
+                .get("/" + fileId + "/metadata");
+
+        assertEquals("Не удалось получить метаданные GPKG файла", 200, metadataResponse.getStatusCode());
+
+        List<Map<String, Object>> tables = metadataResponse.jsonPath().getList("payload");
+        assertNotNull("В метаданных GPKG нет списка таблиц", tables);
+
+        return tables.stream()
+                     .filter(table -> {
+                         String dataType = String.valueOf(table.get("dataType"));
+                         String type = String.valueOf(table.get("type"));
+
+                         return "FEATURES".equalsIgnoreCase(dataType)
+                                 || "features".equalsIgnoreCase(dataType)
+                                 || "features".equalsIgnoreCase(type);
+                     })
+                     .map(table -> String.valueOf(table.get("tableName")))
+                     .findFirst()
+                     .orElseThrow(() -> new IllegalStateException("В GPKG нет векторных таблиц для импорта"));
+    }
+
+    private void initGeoPackageImport(Map<String, Object> payload) {
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType(String.valueOf(IMPORT));
+        processableModel.setPayload(payload);
+
+        initProcess(processableModel);
+
+        if (response.getStatusCode() != 400 && response.getStatusCode() != 500) {
+            currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+        }
     }
 
     private void initProcess(ProcessableModel payload) {

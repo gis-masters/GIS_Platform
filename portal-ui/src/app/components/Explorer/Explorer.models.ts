@@ -36,6 +36,7 @@ export type ExplorerRole =
   | 'FolderPreview'
   | 'SelectProjectFromExplorer'
   | 'BasemapsSelectAddButtonDialog'
+  | 'GpkgRasterPlacement'
   | '';
 
 export enum ExplorerItemType {

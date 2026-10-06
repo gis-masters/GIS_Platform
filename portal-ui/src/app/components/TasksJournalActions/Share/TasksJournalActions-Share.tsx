@@ -17,9 +17,13 @@ interface TasksJournalActionsShareProps {
 }
 
 export const TasksJournalActionsShare = observer(({ task, as }: TasksJournalActionsShareProps) => {
-  const handleClick = useCallback(() => {
-    copyToClipboard(`${location.protocol}//${location.host}/data-management/tasks-journal/${task.id}`);
-    Toast.success('Сохранено в буфер обмена');
+  const handleClick = useCallback(async () => {
+    try {
+      await copyToClipboard(`${location.protocol}//${location.host}/data-management/tasks-journal/${task.id}`);
+      Toast.success('Сохранено в буфер обмена');
+    } catch {
+      Toast.error('Не удалось скопировать в буфер обмена');
+    }
   }, [task.id]);
 
   return (

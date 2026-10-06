@@ -1,7 +1,7 @@
-import React, { type FC, type LegacyRef, type ReactNode } from 'react';
+import React, { type FC, type ReactNode, type Ref } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { type DroppableProvidedProps } from 'react-beautiful-dnd';
+import { type DroppableProvidedProps } from '@hello-pangea/dnd';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { LayersTreeItem } from '../Item/LayersTree-Item';
@@ -10,7 +10,7 @@ import { LayersTreeItemContainer } from '../ItemContainer/LayersTree-ItemContain
 const cnLayersTreeInner = cn('LayersTree', 'Inner');
 
 interface LayersTreeInnerProps {
-  innerRef: LegacyRef<HTMLDivElement> | undefined;
+  innerRef: Ref<HTMLDivElement> | undefined;
   droppableProvidedProps: DroppableProvidedProps;
   editMode: boolean;
   placeholder: ReactNode;

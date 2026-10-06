@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, type SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -60,7 +60,7 @@ export default class ExportValidationReportDialog extends Component<ExportValida
   }
 
   @boundMethod
-  private async executeExport(e: React.FormEvent<HTMLFormElement>) {
+  private async executeExport(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
 
     await getExportValidationReport(this.selectedLayers);

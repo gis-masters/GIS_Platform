@@ -21,18 +21,18 @@ body .User {
     font-family: monospace;
     font-size: initial;
     font-weight: lighter;
+  }
 
-    &-CopyIcon {
-      cursor: pointer;
-      transition: opacity 0.2s;
+  &-EmailCopyIcon {
+    cursor: pointer;
+    transition: opacity 0.2s;
 
-      opacity: 0.5;
+    opacity: 0.5;
 
-      font-size: 16px !important;
+    font-size: 16px !important;
 
-      &:hover {
-        opacity: 1;
-      }
+    &:hover {
+      opacity: 1;
     }
   }
 

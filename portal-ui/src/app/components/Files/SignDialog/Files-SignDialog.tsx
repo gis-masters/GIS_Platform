@@ -183,6 +183,15 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
       return rowData.thumbprint;
     }, []);
 
+    const disabledTester = useCallback(
+      (item: Certificate) => {
+        const used = disabledCertificates.some(disabledCertificate => getRowId(disabledCertificate) === getRowId(item));
+
+        return used ? 'Уже подписано эти сертификатом ' : false;
+      },
+      [disabledCertificates, getRowId]
+    );
+
     return (
       <>
         <ChooseXTableDialog<Certificate>
@@ -216,8 +225,7 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
           open={open}
           onClose={handleCloseClick}
           onSelect={handleSelectClick}
-          disabledItems={disabledCertificates}
-          disabledItemsMessage={disabledCertificates ? 'Уже подписано эти сертификатом ' : ''}
+          disabledTester={disabledTester}
           getRowId={getRowId}
           loading={loading}
           single

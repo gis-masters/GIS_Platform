@@ -8,7 +8,7 @@ class EditLayerPropertiesDialogBlock extends Block {
   selectors = {
     root: '.EditLayerDialog',
     layerPropertyFormDialogViewSelect: '.EditLayerDialog .Form-Field:first-child .MuiSelect-select',
-    formDialogLayerPropertySaveBtn: '.EditLayerDialog .MuiButton-outlinedPrimary',
+    formDialogLayerPropertySaveBtn: '.EditLayerDialog .MuiButton-outlined.MuiButton-colorPrimary',
     loading: '.EditLayerDialog .Loading'
   };
 

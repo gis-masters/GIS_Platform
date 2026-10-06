@@ -6,6 +6,10 @@ When(/^я нажимаю на псевдоссылку Подробнее\/Ск�
   await toastBlock.clickMoar();
 });
 
+When('я навожусь на иконку типа слоя в подробностях уведомления', async () => {
+  await toastBlock.hoverDetailsTypeIcon();
+});
+
 When('я нажимаю на крестик в уведомлении', async () => {
   await toastBlock.clickClose();
 });
@@ -52,8 +56,27 @@ Then(/^не появляется уведомление об ошибке(?: в 
 });
 
 When('я жду появления уведомления {string}', async (msg: string) => {
-  await toastBlock.waitForVisible();
-  expect(await toastBlock.getTitle()).toEqual(msg);
+  await toastBlock.waitForTitle(msg);
+});
+
+Then(/^в уведомлении (есть лоадер|нет лоадера)$/, async (presence: string) => {
+  await toastBlock.assertPart('loader', presence === 'есть лоадер');
+});
+
+Then(/^в уведомлении (есть крестик|нет крестика)$/, async (presence: string) => {
+  await toastBlock.assertPart('close', presence === 'есть крестик');
+});
+
+Then(/^в уведомлении (есть иконка типа|нет иконки типа)$/, async (presence: string) => {
+  await toastBlock.assertPart('icon', presence === 'есть иконка типа');
+});
+
+Then('отображается одно уведомление', async () => {
+  expect(await toastBlock.getCount()).toBe(1);
+});
+
+Then('уведомление не исчезает за короткое время', async () => {
+  await toastBlock.assertStillVisible();
 });
 
 Then('блок Toast вариант {string} выглядит как положено', async (variant: string) => {
